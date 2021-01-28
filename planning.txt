@@ -1,0 +1,97 @@
+MVP
+set bot activity channel/s
+reactions to take actions
+world automatically expands as servers join so we keep a generally even level of encounter rate
+make sure to completely divorce game logic from discord logic
+
+commands
+	status: 1-stop for ship status, needs, sensors
+
+ascii graphics for radar(map) and such
+
+sensors are a little opaque and unreliable until you upgrade
+
+democratically elected roles
+
+3 or 4 global factions
+
+stats for servers
+	ship name
+	ship age
+	health
+		run out, and the server has to restart from a new ship
+		but user skills carry through (although lessened a bit)
+	credits
+	shields
+	fuel
+	location (x, y, z, area name)
+	bearing
+	speed
+	food (number of players)
+		run out, and players get put into cryo-sleep until we can get more
+		min 1 player left (captain)
+	aggregate "levels" in each user skill
+
+items
+	tracker beacon (stick onto enemies)
+	map
+upgrades
+	sensors
+		text-based to ascii to images lol
+		range
+	enemy scanners
+		ship size
+		
+	weapons
+	
+ship models
+	
+the first time a user uses a bot command, they're welcomed aboard the ship
+
+user stats
+	skills
+		engineering (typing test)
+		piloting (twitch plays pokemon aggregate of everyone's input)
+	legacy (points for activity)
+	rank (set by admin for privs)
+	perks system (still start from 0 on death but level up faster)
+
+servers have abilities that the members have trained
+
+server member general tasks
+	require trained skills
+		operate radar
+		fly ship
+		fire weapons (coords)
+		take evasive action
+		repairs
+		scan for X Y Z (trackers etc)
+	anyone
+		"gather" (solar, space junk, etc)
+		start vote to kill crewmate
+
+when two servers encounter each other, 
+	they can...
+		pass like two ships in the night
+		trade
+		attack
+		hire to perform task
+			use item on other
+		travel together
+
+planets
+	occasional encounters
+	refuel
+	buy/sell supplies
+	repair
+	upgrade ship
+	depart
+	bank - store or withdraw
+	mining
+	quests
+
+exploration as a goal
+
+every x units traveled, there's a random encounter?
+
+treasure goblins

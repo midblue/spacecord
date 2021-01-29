@@ -4,6 +4,9 @@ reactions to take actions
 world automatically expands as servers join so we keep a generally even level of encounter rate
 make sure to completely divorce game logic from discord logic
 
+load entire world in chunks and update in massive "steps" every hour or so, re-saving position, etc to db every time
+
+
 commands
 	status: 1-stop for ship status, needs, sensors
 

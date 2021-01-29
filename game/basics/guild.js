@@ -64,6 +64,12 @@ function liveify(baseGuildObject) {
     console.log('updating', this.baseGuildObject.guildId, updates)
   }
 
+  // add base properties to ship
+  baseGuildObject.ship = {
+    ...baseGuildObject.ship,
+    ...shipsData[baseGuildObject.ship.model],
+  }
+
   // add base properties to items onboard
   Object.keys(baseGuildObject.ship.equipment || {}).forEach((equipmentType) => {
     baseGuildObject.ship.equipment[
@@ -84,7 +90,6 @@ function liveify(baseGuildObject) {
         id: baseGuildObject.guildId,
         name: baseGuildObject.guildName,
       },
-      ...shipsData[baseGuildObject.ship.id],
     }
   })
 }

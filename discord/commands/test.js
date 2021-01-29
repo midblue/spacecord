@@ -1,12 +1,12 @@
 const send = require('../actions/send')
-const { logCommand } = require('../common')
+const { log } = require('../common')
 
 module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:test)$`, 'gi').exec(content)
   },
   async action({ msg, settings }) {
-    logCommand(msg, 'Test', msg.author.username)
+    log(msg, 'Test', 'message')
     send(msg, `Hiya!`)
   },
 }

@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function (gameController) {
   const Discord = require('discord.js')
   const client = new Discord.Client({
     messageCacheMaxSize: 2,
@@ -23,6 +23,8 @@ module.exports = function () {
   const privateMessage = require('./events/privateMessage')
   const guildMessage = require('./events/guildMessage')
 
+  client.game = gameController
+
   client.on('error', (e) => console.log('Discord.js error:', e.message))
   client.on('ready', async () => {
     console.log(
@@ -36,16 +38,16 @@ module.exports = function () {
   client.on('message', async (msg) => {
     if (!msg.author || msg.author.bot) return
     if (!msg.guild || !msg.guild.available) return privateMessage(msg)
-    return guildMessage(msg, client)
+    return guildMessage({ msg, client, game: gameController })
   })
 
   // added to a server
   // client.on('guildCreate', addedToServer)
 
-  // // removed from a server
+  // removed from a server
   // client.on('guildDelete', kickedFromServer)
 
-  // // other user leaves a guild
+  // other user leaves a guild
   // client.on('guildMemberRemove', otherMemberLeaveServer)
 
   client.login(process.env.DISCORD_TOKEN)

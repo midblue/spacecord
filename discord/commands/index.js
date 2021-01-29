@@ -11,7 +11,7 @@ fs.readdir('./discord/commands', (err, files) => {
   console.log(`Loaded ${commands.length} commands`)
 })
 
-module.exports = async function ({ msg, settings, client }) {
+module.exports = async function ({ msg, settings, client, game }) {
   const author = msg.author
   for (let command of commands) {
     // * run test to see if command triggers
@@ -35,6 +35,7 @@ module.exports = async function ({ msg, settings, client }) {
         authorIsAdmin,
         author,
         client,
+        game,
       })
     }
   }

@@ -1,7 +1,9 @@
 const send = require('../actions/send')
 const { log } = require('../common')
+const { spawn } = require('../../game/manager')
 
 module.exports = {
+  tag: 'spawn',
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:spawn)$`, 'gi').exec(content)
   },

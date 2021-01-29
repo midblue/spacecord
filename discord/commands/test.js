@@ -2,6 +2,7 @@ const send = require('../actions/send')
 const { log } = require('../common')
 
 module.exports = {
+  tag: 'test',
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:test)$`, 'gi').exec(content)
   },

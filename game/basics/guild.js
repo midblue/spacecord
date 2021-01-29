@@ -3,7 +3,7 @@ const equipmentData = require('./equipment')
 
 function spawn(guild) {
   const ship = {
-    name: 'our ship',
+    name: 'HMS Fanniel Bomb',
     launched: Date.now(),
     model: 'shipA',
     credits: 50,

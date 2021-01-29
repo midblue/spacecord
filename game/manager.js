@@ -5,15 +5,15 @@ const story = require('./basics/story')
 const { log } = require('./common')
 
 /* 
----------------- Game Core ----------------
+---------------- Game Object ----------------
 This object is our "instance" of the game that will handle updates,
 the core loop, etc.
-
 */
 
 const game = {
   // ---------------- Game Properties ----------------
   guilds: [],
+  startTime: new Date(),
 
   // ---------------- Game Loop Functions ----------------
 
@@ -99,8 +99,31 @@ const game = {
       newMember.id,
       thisGuild.guildName,
     )
-    // todo different message for the first user
+    if (thisGuild.members.length === 1)
+      return {
+        ok: true,
+        message: [
+          story.crew.add.first(newMember, thisGuild),
+          story.prompts.startGame(),
+        ],
+      }
     return { ok: true, message: story.crew.add.success(newMember, thisGuild) }
+  },
+
+  guildStatus(id) {
+    const thisGuild = this.guilds.find((g) => g.guildId === id)
+    if (!thisGuild) {
+      log(
+        'guildStatus',
+        `Attempted to get status for a guild that does not exist`,
+        id,
+      )
+      return {
+        ok: false,
+        message: story.status.get.fail.noGuild(),
+      }
+    }
+    return { ok: true, ...thisGuild }
   },
 }
 
@@ -116,12 +139,13 @@ from discord types to game types, and vice versa.
 module.exports = {
   spawn(discordGuild) {
     const newGuild = guild.spawn(discordGuild)
-    const res = game.addGuild(newGuild)
-    return res
+    return game.addGuild(newGuild)
   },
   addCrewMember({ discordUser, guildId }) {
     const member = crewMember.spawn(discordUser)
-    const res = game.addCrewMember(member, guildId)
-    return res
+    return game.addCrewMember(member, guildId)
+  },
+  status(guildId) {
+    return game.guildStatus(guildId)
   },
 }

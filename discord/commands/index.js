@@ -11,32 +11,35 @@ fs.readdir('./discord/commands', (err, files) => {
   console.log(`Loaded ${commands.length} commands`)
 })
 
-module.exports = async function ({ msg, settings, client, game }) {
-  const author = msg.author
-  for (let command of commands) {
-    // * run test to see if command triggers
-    const match = await command.test(msg.content, settings)
+module.exports = {
+  test: async ({ msg, settings, client, game }) => {
+    const author = msg.author
+    for (let command of commands) {
+      // * run test to see if command triggers
+      const match = await command.test(msg.content, settings)
 
-    if (match) {
-      const authorIsAdmin =
-        msg.guild &&
-        msg.guild.member(msg.author) &&
-        msg.guild.member(msg.author).permissions.has('BAN_MEMBERS')
-      if (command.admin && !authorIsAdmin) {
-        send(msg, `That command is only available to server admins.`)
-        return true
+      if (match) {
+        const authorIsAdmin =
+          msg.guild &&
+          msg.guild.member(msg.author) &&
+          msg.guild.member(msg.author).permissions.has('BAN_MEMBERS')
+        if (command.admin && !authorIsAdmin) {
+          send(msg, `That command is only available to server admins.`)
+          return true
+        }
+
+        // * execute command
+        await command.action({
+          msg,
+          match,
+          settings,
+          authorIsAdmin,
+          author,
+          client,
+          game,
+        })
       }
-
-      // * execute command
-      await command.action({
-        msg,
-        match,
-        settings,
-        authorIsAdmin,
-        author,
-        client,
-        game,
-      })
     }
-  }
+  },
+  commands,
 }

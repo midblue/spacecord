@@ -2,6 +2,7 @@ const ships = {
   shipA: {
     baseHp: 100,
     baseCost: 2000,
+    baseScanRange: 1,
     modelDisplayName: 'Model D',
     equipmentSlots: {
       weapon: {

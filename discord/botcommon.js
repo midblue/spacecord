@@ -23,9 +23,10 @@ async function getUserInGuildById(msgOrGuild, id) {
   }
 }
 
-async function username(msgOrUser, id) {
+async function username(msgOrUserOrChannel, id) {
   let user
-  if (id) user = (await getUserInGuildById(msgOrUser.guild, id)) || {}
-  else if (msgOrUser.author) user = msgOrUser.author
-  return user.nickame || user.username || user.user.username || 'Unknown User'
+  if (id) user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
+  else if (msgOrUserOrChannel.author) user = msgOrUserOrChannel.author
+  if (!user) return 'System'
+  return user.nickname || user.username || user.user.username || 'Unknown User'
 }

@@ -7,6 +7,12 @@ make sure to completely divorce game logic from discord logic
 load entire world in chunks and update in massive "steps" every hour or so, re-saving position, etc to db every time
 
 
+suggest faction
+admirals for factions
+change your faction
+neutral faction
+
+
 commands
 	status: 1-stop for ship status, needs, sensors
 

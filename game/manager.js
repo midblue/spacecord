@@ -1,8 +1,10 @@
-const constants = require('./basics/constants')
 const crewMember = require('./basics/crewMember')
-const guild = require('./basics/guild')
-const story = require('./basics/story')
-const { log } = require('./common')
+const guild = require('./basics/guild/guild')
+const story = require('./basics/story/story')
+const { log } = require('./gamecommon')
+const { pointIsInsideCircle } = require('../common')
+const coreLoop = require('./core loop/index')
+const constants = require('./basics/constants')
 
 /* 
 ---------------- Game Object ----------------
@@ -14,29 +16,11 @@ const game = {
   // ---------------- Game Properties ----------------
   guilds: [],
   startTime: new Date(),
+  lastTick: new Date(),
 
   // ---------------- Game Loop Functions ----------------
 
-  async start() {
-    log('Core', 'STARTING GAME')
-
-    // setInterval(async () => {
-    //   console.log('')
-    //   log('', '============= NEW GAME STEP =============')
-    //   await this.beforeUpdate()
-    //   await this.update()
-    //   await this.afterUpdate()
-    // }, constants.STEP_INTERVAL)
-  },
-  async beforeUpdate() {
-    log('beforeUpdate')
-  },
-  async update() {
-    log('update')
-  },
-  async afterUpdate() {
-    log('afterUpdate')
-  },
+  ...coreLoop,
 
   // ---------------- Game Functions ----------------
 
@@ -60,12 +44,13 @@ const game = {
     }
 
     // success
+    newGuild.context = this // gives access to game context
     this.guilds.push(newGuild)
     log('addGuild', 'Added guild to game', newGuild.guildName)
     return { ok: true, message: story.ship.get.first(newGuild) }
   },
 
-  addCrewMember(newMember, guildId) {
+  addCrewMember({ newMember, guildId }) {
     const thisGuild = this.guilds.find((g) => g.guildId === guildId)
     if (!thisGuild) {
       log(
@@ -78,7 +63,7 @@ const game = {
         message: story.crew.add.fail.noShip(),
       }
     }
-    if (thisGuild.members.find((m) => m.id === newMember.id)) {
+    if (thisGuild.ship.members.find((m) => m.id === newMember.id)) {
       log(
         'addCrew',
         `Attempted to add a member that already exists.`,
@@ -92,14 +77,14 @@ const game = {
     }
 
     // success
-    thisGuild.members.push(newMember)
+    thisGuild.ship.members.push(newMember)
     log(
-      'addGuild',
+      'addCrew',
       'Added new member to guild',
       newMember.id,
       thisGuild.guildName,
     )
-    if (thisGuild.members.length === 1)
+    if (thisGuild.ship.members.length === 1)
       return {
         ok: true,
         message: [
@@ -110,7 +95,7 @@ const game = {
     return { ok: true, message: story.crew.add.success(newMember, thisGuild) }
   },
 
-  guildStatus(id) {
+  ship(id) {
     const thisGuild = this.guilds.find((g) => g.guildId === id)
     if (!thisGuild) {
       log(
@@ -123,7 +108,20 @@ const game = {
         message: story.status.get.fail.noGuild(),
       }
     }
-    return { ok: true, ...thisGuild }
+    return {
+      ok: true,
+      ...thisGuild.ship,
+    }
+  },
+
+  scanArea({ x, y, range, excludeIds = [] }) {
+    if (!Array.isArray(excludeIds)) excludeIds = [excludeIds]
+    return this.guilds.filter((g) => {
+      return (
+        !excludeIds.includes(g.guildId) &&
+        pointIsInsideCircle(x, y, ...g.ship.location, range)
+      )
+    })
   },
 }
 
@@ -137,15 +135,25 @@ from discord types to game types, and vice versa.
 
 */
 module.exports = {
-  spawn(discordGuild) {
-    const newGuild = guild.spawn(discordGuild)
+  async spawn({ discordGuild, channelId }) {
+    const newGuild = await guild({ discordGuild, channelId })
     return game.addGuild(newGuild)
   },
-  addCrewMember({ discordUser, guildId }) {
-    const member = crewMember.spawn(discordUser)
-    return game.addCrewMember(member, guildId)
+  async addCrewMember({ discordUser, guildId }) {
+    const newMember = await crewMember(discordUser)
+    return game.addCrewMember({ newMember, guildId })
   },
-  status(guildId) {
-    return game.guildStatus(guildId)
+  ship(guildId) {
+    return game.ship(guildId)
+  },
+  timeUntilNextTick() {
+    const currentTickProgress = Date.now() - game.lastTick
+    return constants.STEP_INTERVAL - currentTickProgress
+  },
+  getCrewMember({ memberId, guildId }) {
+    const guild = game.guilds.find((g) => g.guildId === guildId) || {}
+    if (!guild || !guild.ship) return
+    const member = (guild.ship.members || []).find((m) => m.id === memberId)
+    return member
   },
 }

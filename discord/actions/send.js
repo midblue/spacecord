@@ -1,9 +1,11 @@
-const { resolveTxt } = require('dns')
-const { resolve } = require('path')
-const { username } = require('../common')
+const { username } = require('../botcommon')
 const defaultServerSettings = require('../defaults/defaultServerSettings')
 
-module.exports = async function (msg, messages, surroundingCharacters = '```') {
+module.exports = async function (
+  msgOrChannel,
+  messages = '',
+  surroundingCharacters = '```',
+) {
   const sentMessages = []
   if (!Array.isArray(messages)) messages = [messages]
   for (let message of messages) {
@@ -13,7 +15,7 @@ module.exports = async function (msg, messages, surroundingCharacters = '```') {
     // * otherwise, split messages because Discord won't let us send longer than 2000 characters
     else {
       // * here, we also apply custom params we've built into our story text.
-      let remainingText = await applyCustomParams(msg, message)
+      let remainingText = await applyCustomParams(msgOrChannel, message)
       const surroundingCharactersToUse =
         remainingText.indexOf('`') === -1 ? surroundingCharacters : ''
       while (remainingText.length > 0) {
@@ -28,9 +30,11 @@ module.exports = async function (msg, messages, surroundingCharacters = '```') {
 
     for (let textEl of splitMessage)
       sentMessages.push(
-        await msg.channel.send(textEl).catch((err) => {
-          console.error('Failed to send!', err.message)
-        }),
+        await (msgOrChannel.channel ? msgOrChannel.channel : msgOrChannel)
+          .send(textEl)
+          .catch((err) => {
+            console.error('Failed to send!', err.message)
+          }),
       )
   }
   return sentMessages
@@ -39,26 +43,26 @@ module.exports = async function (msg, messages, surroundingCharacters = '```') {
 const customParams = [
   {
     regex: /%username%(\d+)%/,
-    async replace([unused, userId], msg) {
-      return await username(msg, userId)
+    async replace([unused, userId], msgOrChannel) {
+      return await username(msgOrChannel, userId)
     },
   },
   {
     regex: /%command%(.+)%/,
-    async replace([unused, command], msg) {
+    async replace([unused, command], msgOrChannel) {
       // todo get server command prefix here (once we implement that)
       return defaultServerSettings.prefix + command
     },
   },
 ]
-function applyCustomParams(msg, text) {
+function applyCustomParams(msgOrChannel, text) {
   return new Promise(async (resolve) => {
     let newText = text
     for (let param of customParams) {
       param.regex.lastIndex = 0
       let foundInstance = param.regex.exec(newText)
       while (foundInstance) {
-        const replaceValue = await param.replace(foundInstance, msg)
+        const replaceValue = await param.replace(foundInstance, msgOrChannel)
         newText = newText.replace(foundInstance[0], replaceValue)
         param.regex.lastIndex = 0
         foundInstance = param.regex.exec(newText)

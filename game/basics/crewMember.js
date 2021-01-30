@@ -11,6 +11,4 @@ function liveify(baseMemberObject) {
   return
 }
 
-module.exports = {
-  spawn,
-}
+module.exports = spawn

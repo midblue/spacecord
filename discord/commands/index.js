@@ -8,7 +8,7 @@ fs.readdir('./discord/commands', (err, files) => {
     if (!file.endsWith('.js') || file === 'index.js') return
     commands.push(require(`./${file}`))
   })
-  console.log(`Loaded ${commands.length} commands`)
+  // console.log(`Loaded ${commands.length} commands`)
 })
 
 module.exports = {
@@ -23,9 +23,25 @@ module.exports = {
           msg.guild &&
           msg.guild.member(msg.author) &&
           msg.guild.member(msg.author).permissions.has('BAN_MEMBERS')
-        if (command.admin && !authorIsAdmin) {
-          send(msg, `That command is only available to server admins.`)
-          return true
+        if (command.admin && !authorIsAdmin)
+          return send(msg, `That command is only available to server admins.`)
+
+        const authorCrewMemberObject =
+          msg.guild &&
+          (await client.game.getCrewMember({
+            memberId: author.id,
+            guildId: msg.guild.id,
+          }))
+        if (!command.public && !authorCrewMemberObject)
+          return send(
+            msg,
+            `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
+          )
+
+        let ship
+        if (!command.noShip) {
+          ship = await game.ship(msg.guild.id)
+          if (!ship.ok) return send(msg, ship.message)
         }
 
         // * execute command
@@ -33,7 +49,9 @@ module.exports = {
           msg,
           match,
           settings,
+          ship,
           authorIsAdmin,
+          authorCrewMemberObject,
           author,
           client,
           game,

@@ -1,16 +1,21 @@
 const send = require('../actions/send')
-const { log } = require('../common')
-const { spawn } = require('../../game/manager')
+const { log } = require('../botcommon')
 
 module.exports = {
   tag: 'spawn',
+  public: true,
+  admin: true,
+  noShip: true,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:spawn)$`, 'gi').exec(content)
   },
   async action({ msg, settings, game }) {
     log(msg, 'Spawn', msg.guild.name)
 
-    const res = await game.spawn(msg.guild)
+    const res = await game.spawn({
+      discordGuild: msg.guild,
+      channelId: msg.channel.id,
+    })
     send(msg, res.message)
 
     if (!res.ok) return

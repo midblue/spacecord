@@ -14,6 +14,7 @@ module.exports = async function (
     if (typeof message === 'object') splitMessage.push(message)
     // * otherwise, split messages because Discord won't let us send longer than 2000 characters
     else {
+      message = `${message}` // some types (i.e. raw numbers) couldn't have 'indexOf' run on them
       // * here, we also apply custom params we've built into our story text.
       let remainingText = await applyCustomParams(msgOrChannel, message)
       const surroundingCharactersToUse =

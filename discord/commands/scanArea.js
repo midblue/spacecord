@@ -4,8 +4,16 @@ const Discord = require('discord.js')
 
 module.exports = {
   tag: 'scanArea',
+  documentation: {
+    name: `scan`,
+    value: `Scan the ship's surroundings.`,
+    emoji: '📡',
+    priority: 85,
+  },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:scan)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:scan|scanarea)$`, 'gi').exec(
+      content,
+    )
   },
   async action({ msg, settings, client, ship }) {
     log(msg, 'Scan Area', msg.guild.name)

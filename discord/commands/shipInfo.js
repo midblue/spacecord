@@ -3,6 +3,12 @@ const { log } = require('../botcommon')
 
 module.exports = {
   tag: 'shipInfo',
+  documentation: {
+    name: `shipinfo`,
+    value: `Ship equipment, age, status.`,
+    emoji: '📊',
+    priority: 80,
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:shipinfo)$`, 'gi').exec(content)
   },

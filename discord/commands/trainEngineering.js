@@ -6,6 +6,7 @@ const lunicode = require('Lunicode')
 
 module.exports = {
   tag: 'trainEngineering',
+  documentation: { name: `trainengineering` },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:trainengineering)$`, 'gi').exec(
       content,
@@ -40,6 +41,8 @@ Your crewmates can help too, if they want to.`)
         )
       )[0],
     )
+
+    const responses = []
 
     setTimeout(() => {
       console.log(challenges)

@@ -6,6 +6,11 @@ module.exports = {
   public: true,
   admin: true,
   noShip: true,
+  documentation: {
+    value: `Adds your server's ship into the game!`,
+    emoji: '🏁',
+    priority: 90,
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:spawn)$`, 'gi').exec(content)
   },

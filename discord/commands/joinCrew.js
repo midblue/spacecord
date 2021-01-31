@@ -5,6 +5,12 @@ module.exports = {
   tag: 'joinCrew',
   public: true,
   noShip: true,
+  documentation: {
+    name: `join`,
+    value: `Become a member of the ship's crew.`,
+    emoji: '💪',
+    priority: 95,
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:join)$`, 'gi').exec(content)
   },

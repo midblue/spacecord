@@ -9,6 +9,11 @@ const voteTime = process.env.DEV ? 10 * 1000 : process.env.GENERAL_VOTE_TIME
 module.exports = {
   tag: 'direction',
   equipmentType: 'telemetry',
+  documentation: {
+    value: `Starts a vote to steer the ship in any direction.`,
+    emoji: '🧭',
+    priority: 75,
+  },
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:direction|steer|turn|rotate)$`,

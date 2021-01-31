@@ -3,6 +3,10 @@ const { log, username } = require('../botcommon')
 
 module.exports = {
   tag: 'crew',
+  documentation: {
+    value: `Lists the ship's crew, leadership, and top scorers.`,
+    emoji: '👩‍🏭👷🧑‍✈️',
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:crew)$`, 'gi').exec(content)
   },

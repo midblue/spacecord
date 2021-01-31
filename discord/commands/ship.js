@@ -5,6 +5,11 @@ const Discord = require('discord.js')
 
 module.exports = {
   tag: 'ship',
+  documentation: {
+    value: `Rundown of the ship's status, and ship-related actions.`,
+    emoji: '🚀',
+    priority: 80,
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:ship)$`, 'gi').exec(content)
   },

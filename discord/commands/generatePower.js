@@ -5,12 +5,17 @@ const Discord = require('discord.js')
 
 module.exports = {
   tag: 'generatePower',
+  documentation: {
+    name: `generatepower`,
+    value: `Hop on the treadmill to make some power for the ship!`,
+    emoji: '🏃',
+  },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:generatepower)$`, 'gi').exec(
       content,
     )
   },
-  async action({ msg, settings, client, type, ship }) {
+  async action({ msg, settings, client, type, ship, authorCrewMemberObject }) {
     log(msg, 'Generate Power', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()

@@ -8,6 +8,11 @@ const voteTime = process.env.DEV ? 10 * 1000 : process.env.GENERAL_VOTE_TIME
 module.exports = {
   tag: 'speed',
   equipmentType: 'engine',
+  documentation: {
+    value: `Starts a vote to set the ship's speed.`,
+    emoji: '⏩',
+    priority: 75,
+  },
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:speed|speedup|slowdown|accelerate|decelerate|accel|decel|thrust|go|move|forward)$`,

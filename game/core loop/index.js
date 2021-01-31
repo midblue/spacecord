@@ -1,4 +1,3 @@
-const constants = require('../basics/constants')
 const { log } = require('../gamecommon')
 const { bearingToRadians } = require('../../common')
 
@@ -12,7 +11,8 @@ module.exports = {
       log('', '============= NEW GAME STEP =============')
       await this.update()
       log('', '============= END GAME STEP =============')
-    }, constants.STEP_INTERVAL)
+      console.log('')
+    }, process.env.STEP_INTERVAL)
   },
 
   async update() {

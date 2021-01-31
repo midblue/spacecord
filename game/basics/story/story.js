@@ -1,3 +1,5 @@
+const { capitalize } = require('../../../common')
+
 module.exports = {
   status: {
     get: {
@@ -36,13 +38,28 @@ module.exports = {
   },
   power: {
     insufficient: (guild, amountNeeded) =>
-      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_POWER <NEED ${amountNeeded} | HAVE ${guild.ship.power}>"`,
+      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_POWER <NEED ${amountNeeded}${process.env.POWER_UNIT} | HAVE ${guild.ship.power}${process.env.POWER_UNIT}>"`,
     add: {
       treadmill: (input, toAdd, total, max) =>
-        `With ${input} runners, you generated ${toAdd} power. The ship is now charged to ${total} power. (${Math.round(
-          (total / max) * 100,
-        )}%)`,
+        `With ${input} runners, you generated ${toAdd}${
+          process.env.POWER_UNIT
+        } of power. The ship is now charged to ${total}${
+          process.env.POWER_UNIT
+        }. (${Math.round((total / max) * 100)}%)`,
     },
+  },
+  action: {
+    doesNotMeetRequirements: (requirements, member) =>
+      `You need at least ${Object.keys(requirements)
+        .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
+        .join('and ')}to use that. You have${Object.keys(requirements)
+        .map(
+          (r) =>
+            ` level \`${(member.skills || {})[r] || 0}\` in \`${capitalize(
+              r,
+            )}\` `,
+        )
+        .join('and')}.`,
   },
   move: {
     // redirect: {

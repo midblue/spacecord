@@ -3,9 +3,9 @@ const send = require('../actions/send')
 const { log } = require('../botcommon')
 
 module.exports = {
-  tag: 'me',
+  tag: 'me', // this is also the 'train' command
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:me)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:me|train)$`, 'gi').exec(content)
   },
   async action({ msg, settings, game, client, ship, authorCrewMemberObject }) {
     log(msg, 'Me', msg.guild.name)

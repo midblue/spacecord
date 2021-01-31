@@ -6,41 +6,38 @@ module.exports = function ({ discordGuild, channelId }) {
     credits: 50,
     status: 'flying',
     power: 11,
+    faction: Math.floor(Math.random() * 3),
     members: [],
     equipment: {
       engine: [
         {
-          id: 'engine/basic1',
+          id: 'basic1',
           bought: Date.now(),
           maintained: Date.now(),
           performance: 0.8,
         },
       ],
-      upgrade: [
+      telemetry: [
         {
-          id: 'upgrade/telemetry1',
+          id: 'telemetry1',
           performance: 0.9,
         },
       ],
       battery: [
         {
-          id: 'upgrade/battery1',
+          id: 'battery1',
           performance: 0.7,
         },
       ],
     },
     cargo: [
       {
-        type: 'metal',
-        amount: 10,
-      },
-      {
         type: 'fuel',
-        amount: 20,
+        amount: 8,
       },
       {
         type: 'food',
-        amount: 10,
+        amount: 2,
       },
     ],
     location: [Math.random() * 4, Math.random() * 4],

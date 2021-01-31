@@ -26,6 +26,12 @@ module.exports = {
         if (command.admin && !authorIsAdmin)
           return send(msg, `That command is only available to server admins.`)
 
+        let ship
+        if (!command.noShip) {
+          ship = await game.ship(msg.guild.id)
+          if (!ship.ok) return send(msg, ship.message)
+        }
+
         const authorCrewMemberObject =
           msg.guild &&
           (await client.game.getCrewMember({
@@ -38,10 +44,16 @@ module.exports = {
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
           )
 
-        let ship
-        if (!command.noShip) {
-          ship = await game.ship(msg.guild.id)
-          if (!ship.ok) return send(msg, ship.message)
+        let requirements
+        if (command.equipmentType) {
+          const requirementsResponse = ship.getRequirements(
+            command.equipmentType,
+            settings,
+            authorCrewMemberObject,
+          )
+          if (!requirementsResponse.ok)
+            return send(msg, requirementsResponse.message)
+          requirements = requirementsResponse.requirements
         }
 
         // * execute command
@@ -52,6 +64,7 @@ module.exports = {
           ship,
           authorIsAdmin,
           authorCrewMemberObject,
+          requirements,
           author,
           client,
           game,

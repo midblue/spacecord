@@ -20,18 +20,18 @@ function liveify(guild) {
 
   // add base properties to ship
   guild.ship = {
-    ...guild.ship,
     ...shipsData[guild.ship.model],
+    ...guild.ship, // this order allows us to have "unique" items/ships
   }
 
   // add base properties to items onboard
   Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
     guild.ship.equipment[equipmentType] = guild.ship.equipment[equipmentType]
       .map((part) => {
-        const itemData = equipmentData[part.id]
+        const itemData = equipmentData[equipmentType][part.id]
         return {
-          ...part,
           ...itemData,
+          ...part,
         }
       })
       .filter((p) => p)

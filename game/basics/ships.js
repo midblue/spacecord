@@ -16,7 +16,7 @@ const ships = {
         small: 1,
       },
     },
-    cargoSpace: 50,
+    cargoSpace: 20,
   },
 }
 

@@ -11,7 +11,6 @@ module.exports = {
     log(msg, 'Scan Area', msg.guild.name)
 
     const scanRes = await ship.scanArea()
-    const timeUntilNextTick = client.game.timeUntilNextTick()
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
@@ -23,11 +22,6 @@ module.exports = {
         {
           name: 'Key',
           value: scanRes.key.map((k) => '`' + k + '`').join(', '),
-        },
-        {
-          name: 'Next update',
-          value: `${Math.ceil(timeUntilNextTick / 1000 / 60)}m`,
-          inline: true,
         },
         ...scanRes.data.map((d) => ({ ...d, inline: true })),
       )

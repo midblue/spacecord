@@ -1,12 +1,10 @@
-const { client } = require('../bot')
-const send = require('./send')
-
 module.exports = async ({
   msg,
   reactions,
   embed,
   time = 60000,
   listeningType,
+  respondeeFilter,
 }) => {
   return new Promise(async (resolve) => {
     if (embed) {
@@ -29,6 +27,7 @@ module.exports = async ({
 
     const filter = (reaction, user) =>
       !user.bot &&
+      (respondeeFilter ? respondeeFilter(user) : true) &&
       (reactions
         ? reactions.map((r) => r.emoji).includes(reaction.emoji.name)
         : true)
@@ -42,7 +41,7 @@ module.exports = async ({
         !reactions[reaction.emoji.name].action
       )
         return
-      reactions[reaction.emoji.name].action(user)
+      reactions[reaction.emoji.name].action({ user, embed, msg, reaction })
     })
 
     collector.on('end', (collected) => {

@@ -1,4 +1,3 @@
-const constants = require('../../../basics/constants')
 const { bearingToDegrees, bearingToArrow } = require('../../../../common')
 
 module.exports = (guild) => {
@@ -7,7 +6,10 @@ module.exports = (guild) => {
 
     statusFields.push({
       name: `Location`,
-      value: guild.ship.location.map((l) => l.toFixed(2)) + ' units',
+      value:
+        guild.ship.location.map((l) => l.toFixed(2)) +
+        ' ' +
+        process.env.DISTANCE_UNIT,
     })
 
     statusFields.push({
@@ -20,7 +22,7 @@ module.exports = (guild) => {
     })
     statusFields.push({
       name: `Speed`,
-      value: guild.ship.speed,
+      value: guild.ship.speed + ' ' + process.env.SPEED_UNIT,
     })
     statusFields.push({
       name: `Ship Model`,
@@ -28,12 +30,18 @@ module.exports = (guild) => {
     })
     statusFields.push({
       name: `Fuel`,
-      value: guild.ship.cargo.find((c) => c.type === 'fuel').amount.toFixed(1),
+      value:
+        guild.ship.cargo.find((c) => c.type === 'fuel').amount.toFixed(1) +
+        ' ' +
+        process.env.WEIGHT_UNIT_PLURAL,
     })
     statusFields.push({
       name: `Power`,
       value:
-        guild.ship.power.toFixed(1) + '/' + guild.ship.maxPower().toFixed(0),
+        guild.ship.power.toFixed(1) +
+        '/' +
+        guild.ship.maxPower().toFixed(0) +
+        ` (${Math.round(guild.ship.power / guild.ship.maxPower())}%)`,
     })
     statusFields.push({
       name: `Crew Members`,
@@ -44,8 +52,11 @@ module.exports = (guild) => {
       value:
         (
           (Date.now() - guild.ship.launched) *
-          constants.REAL_TIME_TO_GAME_TIME_MULTIPLIER
-        ).toFixed(2) + ' years',
+          process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
+          process.env.TIME_UNIT_LONG_MULTIPLIER
+        ).toFixed(2) +
+        ' ' +
+        process.env.TIME_UNIT_LONG,
     })
     return {
       headline: `All systems normal.`,

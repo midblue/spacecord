@@ -4,7 +4,6 @@ const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
 const { pointIsInsideCircle } = require('../common')
 const coreLoop = require('./core loop/index')
-const constants = require('./basics/constants')
 
 /* 
 ---------------- Game Object ----------------
@@ -23,6 +22,11 @@ const game = {
   ...coreLoop,
 
   // ---------------- Game Functions ----------------
+
+  timeUntilNextTick() {
+    const currentTickProgress = Date.now() - this.lastTick
+    return process.env.STEP_INTERVAL - currentTickProgress
+  },
 
   addGuild(newGuild) {
     if (!newGuild) {
@@ -147,8 +151,7 @@ module.exports = {
     return game.ship(guildId)
   },
   timeUntilNextTick() {
-    const currentTickProgress = Date.now() - game.lastTick
-    return constants.STEP_INTERVAL - currentTickProgress
+    return game.timeUntilNextTick()
   },
   getCrewMember({ memberId, guildId }) {
     const guild = game.guilds.find((g) => g.guildId === guildId) || {}

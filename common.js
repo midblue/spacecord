@@ -9,6 +9,11 @@ module.exports = {
       radius * radius
     )
   },
+  capitalize(string) {
+    return (
+      string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()
+    )
+  },
 }
 
 function bearingToRadians(bearing) {

@@ -1,7 +1,9 @@
+const { bearingToDegrees, bearingToArrow } = require('../../../../common')
+
 module.exports = (guild) => {
   guild.ship.scanArea = () => {
-    const telemetry = guild.ship.equipment.upgrade.find((upgrade) =>
-      upgrade.id.startsWith('upgrade/telemetry'),
+    const telemetry = guild.ship.equipment.telemetry.find((upgrade) =>
+      upgrade.id.startsWith('telemetry'),
     )
     let range = guild.ship.baseScanRange
     if (telemetry) range = telemetry.range
@@ -40,9 +42,43 @@ module.exports = (guild) => {
       x: guild.ship.location[0],
       y: guild.ship.location[1],
     })
+
+    const data = [
+      {
+        name: 'Our Coordinates',
+        value: `${guild.ship.location[0].toFixed(
+          2,
+        )}, ${guild.ship.location[1].toFixed(2)}`,
+      },
+      {
+        name: 'Our Bearing',
+        value:
+          bearingToArrow(guild.ship.bearing) +
+          ' ' +
+          bearingToDegrees(guild.ship.bearing).toFixed(0) +
+          ' degrees',
+      },
+      {
+        name: 'Our Speed',
+        value: `${guild.ship.speed.toFixed(2)}`,
+      },
+      {
+        name: 'Scan Radius',
+        value: `${telemetry.range} ${process.env.DISTANCE_UNIT}`,
+      },
+      {
+        name: 'Power Used on Scan',
+        value: telemetry.powerUse + process.env.POWER_UNIT,
+      },
+      {
+        name: 'Next Update',
+        value: `${Math.ceil(guild.context.timeUntilNextTick() / 1000 / 60)}m`,
+      },
+    ]
     return {
       message: `Scan Results`,
       ...telemetryResult,
+      data,
     }
   }
 }

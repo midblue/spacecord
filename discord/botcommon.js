@@ -27,6 +27,7 @@ async function username(msgOrUserOrChannel, id) {
   let user
   if (id) user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
   else if (msgOrUserOrChannel.author) user = msgOrUserOrChannel.author
+  else if (msgOrUserOrChannel.username) user = msgOrUserOrChannel
   if (!user) return 'System'
   return user.nickname || user.username || user.user.username || 'Unknown User'
 }

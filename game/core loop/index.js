@@ -36,8 +36,12 @@ module.exports = {
         const newY =
           currentLocation[1] + guild.ship.speed * Math.sin(currentBearing)
         guild.ship.location = [newX, newY]
+
         const fuel = guild.ship.cargo.find((c) => c.type === 'fuel')
         if (fuel) fuel.amount -= currentStepFuelLoss
+
+        const food = guild.ship.cargo.find((c) => c.type === 'fuel')
+        if (food) food.amount -= 0.01 * guild.ship.members.length
 
         if (!process.env.DEV) guild.pushStatusUpdate()
         resolve()

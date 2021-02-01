@@ -32,18 +32,15 @@ module.exports = {
         if (command.admin && !authorIsAdmin)
           return send(msg, `That command is only available to server admins.`)
 
-        let ship
+        let ship, guild
         if (!command.noShip) {
-          ship = await game.ship(msg.guild.id)
-          if (!ship.ok) return send(msg, ship.message)
+          guild = await game.guild(msg.guild.id)
+          if (!guild.ok) return send(msg, guild.message)
+          ship = guild.ship
         }
 
         const authorCrewMemberObject =
-          msg.guild &&
-          (await client.game.getCrewMember({
-            memberId: author.id,
-            guildId: msg.guild.id,
-          }))
+          msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
         if (!command.public && !authorCrewMemberObject)
           return send(
             msg,
@@ -70,6 +67,7 @@ module.exports = {
           match,
           settings,
           ship,
+          guild,
           authorIsAdmin,
           authorCrewMemberObject,
           requirements,

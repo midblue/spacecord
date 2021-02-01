@@ -1,4 +1,3 @@
-const crewMember = require('./basics/crewMember')
 const guild = require('./basics/guild/guild')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
@@ -44,6 +43,7 @@ const game = {
       return {
         ok: false,
         message: story.ship.get.fail.existing(existingGuildInGame),
+        guild: existingGuildInGame,
       }
     }
 
@@ -51,70 +51,25 @@ const game = {
     newGuild.context = this // gives access to game context
     this.guilds.push(newGuild)
     log('addGuild', 'Added guild to game', newGuild.guildName)
-    return { ok: true, message: story.ship.get.first(newGuild) }
+    return {
+      ok: true,
+      message: story.ship.get.first(newGuild),
+      guild: newGuild,
+    }
   },
 
-  addCrewMember({ newMember, guildId }) {
-    const thisGuild = this.guilds.find((g) => g.guildId === guildId)
-    if (!thisGuild) {
-      log(
-        'addCrew',
-        `Attempted to add a member to a guild that doesn't exist in the game`,
-        guildId,
-      )
-      return {
-        ok: false,
-        message: story.crew.add.fail.noShip(),
-      }
-    }
-    if (thisGuild.ship.members.find((m) => m.id === newMember.id)) {
-      log(
-        'addCrew',
-        `Attempted to add a member that already exists.`,
-        newMember.id,
-        thisGuild.id,
-      )
-      return {
-        ok: false,
-        message: story.crew.add.fail.existing(newMember.id),
-      }
-    }
-
-    // success
-    thisGuild.ship.members.push(newMember)
-    log(
-      'addCrew',
-      'Added new member to guild',
-      newMember.id,
-      thisGuild.guildName,
-    )
-    if (thisGuild.ship.members.length === 1)
-      return {
-        ok: true,
-        message: [
-          story.crew.add.first(newMember, thisGuild),
-          story.prompts.startGame(),
-        ],
-      }
-    return { ok: true, message: story.crew.add.success(newMember, thisGuild) }
-  },
-
-  ship(id) {
+  getGuild(id) {
     const thisGuild = this.guilds.find((g) => g.guildId === id)
     if (!thisGuild) {
-      log(
-        'guildStatus',
-        `Attempted to get status for a guild that does not exist`,
-        id,
-      )
+      log('guildStatus', `Attempted to get a guild that does not exist`, id)
       return {
         ok: false,
-        message: story.status.get.fail.noGuild(),
+        message: story.guild.get.fail.noGuild(),
       }
     }
     return {
       ok: true,
-      ...thisGuild.ship,
+      ...thisGuild,
     }
   },
 
@@ -143,12 +98,8 @@ module.exports = {
     const newGuild = await guild({ discordGuild, channelId })
     return game.addGuild(newGuild)
   },
-  async addCrewMember({ discordUser, guildId }) {
-    const newMember = await crewMember(discordUser)
-    return game.addCrewMember({ newMember, guildId })
-  },
-  ship(guildId) {
-    return game.ship(guildId)
+  guild(guildId) {
+    return game.getGuild(guildId)
   },
   timeUntilNextTick() {
     return game.timeUntilNextTick()
@@ -156,7 +107,7 @@ module.exports = {
   getCrewMember({ memberId, guildId }) {
     const guild = game.guilds.find((g) => g.guildId === guildId) || {}
     if (!guild || !guild.ship) return
-    const member = (guild.ship.members || []).find((m) => m.id === memberId)
+    const member = (guild.members || []).find((m) => m.id === memberId)
     return member
   },
 }

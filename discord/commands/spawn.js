@@ -24,10 +24,7 @@ module.exports = {
     send(msg, res.message)
 
     if (!res.ok) return
-    const res2 = await game.addCrewMember({
-      discordUser: msg.author,
-      guildId: msg.guild.id,
-    })
+    const res2 = await res.guild.ship.addCrewMember(msg.author)
     send(msg, res2.message)
   },
 }

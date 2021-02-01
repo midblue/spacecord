@@ -10,13 +10,23 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:crew)$`, 'gi').exec(content)
   },
-  async action({ msg, settings, game, client, ship, authorCrewMemberObject }) {
+  async action({
+    msg,
+    settings,
+    game,
+    client,
+    ship,
+    guild,
+    authorCrewMemberObject,
+  }) {
     log(msg, 'Crew', msg.guild.name)
     // leaderboards, number of members, top at different skills, etc
     send(
       msg,
       JSON.stringify(
-        ship.members.map((m) => username(m.id)),
+        await Promise.all(
+          ship.members.map(async (m) => await username(msg, m.id)),
+        ),
         null,
         2,
       ),

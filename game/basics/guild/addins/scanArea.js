@@ -46,9 +46,11 @@ module.exports = (guild) => {
     const data = [
       {
         name: 'Our Coordinates',
-        value: `${guild.ship.location[0].toFixed(
-          2,
-        )}, ${guild.ship.location[1].toFixed(2)}`,
+        value:
+          `${guild.ship.location[0].toFixed(
+            2,
+          )}, ${guild.ship.location[1].toFixed(2)} ` +
+          process.env.DISTANCE_UNIT,
       },
       {
         name: 'Our Bearing',
@@ -60,7 +62,7 @@ module.exports = (guild) => {
       },
       {
         name: 'Our Speed',
-        value: `${guild.ship.speed.toFixed(2)}`,
+        value: `${guild.ship.speed.toFixed(2)} ` + process.env.SPEED_UNIT,
       },
       {
         name: 'Scan Radius',

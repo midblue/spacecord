@@ -4,7 +4,6 @@ const { log } = require('../botcommon')
 module.exports = {
   tag: 'joinCrew',
   public: true,
-  noShip: true,
   documentation: {
     name: `join`,
     value: `Become a member of the ship's crew.`,
@@ -14,13 +13,10 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:join)$`, 'gi').exec(content)
   },
-  async action({ msg, settings, game }) {
-    log(msg, 'Spawn', msg.guild.name)
+  async action({ msg, settings, game, ship }) {
+    log(msg, 'Join Crew', msg.guild.name)
 
-    const res = await game.addCrewMember({
-      discordUser: msg.author,
-      guildId: msg.guild.id,
-    })
+    const res = await ship.addCrewMember(msg.author)
     send(msg, res.message)
   },
 }

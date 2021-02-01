@@ -87,6 +87,7 @@ when two servers encounter each other,
 		hire to perform task
 			use item on other
 		travel together
+	add ship in THAT state to log
 
 planets
 	occasional encounters

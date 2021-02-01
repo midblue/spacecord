@@ -1,7 +1,7 @@
 const { capitalize } = require('../../../common')
 
 module.exports = {
-  status: {
+  guild: {
     get: {
       fail: {
         noGuild: () =>

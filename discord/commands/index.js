@@ -1,19 +1,25 @@
 const send = require('../actions/send')
+const { username } = require('../botcommon')
 
 // * get all commands from files in this folder
 const fs = require('fs')
 const commands = []
 fs.readdir('./discord/commands', (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith('.js') || file === 'index.js') return
+    if (
+      !file.endsWith('.js') ||
+      file === 'index.js' ||
+      (!process.env.DEV && file.startsWith('debug'))
+    )
+      return
     commands.push(require(`./${file}`))
   })
-  // console.log(`Loaded ${commands.length} commands`)
+  console.log(`Loaded ${commands.length} commands`)
 })
 
 module.exports = {
   test: async ({ msg, settings, client, game }) => {
-    const author = msg.author
+    let author = msg.author
     for (let command of commands) {
       // * run test to see if command triggers
       const match = await command.test(msg.content, settings)
@@ -55,6 +61,8 @@ module.exports = {
             return send(msg, requirementsResponse.message)
           requirements = requirementsResponse.requirements
         }
+
+        author.nickname = await username(msg, author.id)
 
         // * execute command
         await command.action({

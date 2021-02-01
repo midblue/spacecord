@@ -19,16 +19,15 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({ msg, settings, game, client, ship, requirements }) {
+  async action({ msg, settings, author, game, client, ship, requirements }) {
     log(msg, 'Speed Vote', msg.guild.name)
 
     const maxSpeed = ship.maxSpeed()
     const availableSpeedLevels = ship.getAvailableSpeedLevels()
-    const authorName = await username(msg.author)
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`Speed Vote Called by ${authorName}`)
+      .setTitle(`Speed Vote Called by ${author.nickname}`)
       .setDescription(
         `Crew with at least ${Object.keys(requirements)
           .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)

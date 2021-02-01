@@ -1,5 +1,4 @@
-const { username } = require('../botcommon')
-const defaultServerSettings = require('../defaults/defaultServerSettings')
+const { username, applyCustomParams } = require('../botcommon')
 
 module.exports = async function (
   msgOrChannel,
@@ -14,7 +13,7 @@ module.exports = async function (
     if (typeof message === 'object') splitMessage.push(message)
     // * otherwise, split messages because Discord won't let us send longer than 2000 characters
     else {
-      message = `${message}` // some types (i.e. raw numbers) couldn't have 'indexOf' run on them
+      message = `${message}` // some types (i.e. raw numbers) couldn't have 'indexOf' run on them. this makes everything a string.
       // * here, we also apply custom params we've built into our story text.
       let remainingText = await applyCustomParams(msgOrChannel, message)
       const surroundingCharactersToUse =
@@ -39,36 +38,4 @@ module.exports = async function (
       )
   }
   return sentMessages
-}
-
-const customParams = [
-  {
-    regex: /%username%(\d+)%/,
-    async replace([unused, userId], msgOrChannel) {
-      return await username(msgOrChannel, userId)
-    },
-  },
-  {
-    regex: /%command%(.+)%/,
-    async replace([unused, command], msgOrChannel) {
-      // todo get server command prefix here (once we implement that)
-      return defaultServerSettings.prefix + command
-    },
-  },
-]
-function applyCustomParams(msgOrChannel, text) {
-  return new Promise(async (resolve) => {
-    let newText = text
-    for (let param of customParams) {
-      param.regex.lastIndex = 0
-      let foundInstance = param.regex.exec(newText)
-      while (foundInstance) {
-        const replaceValue = await param.replace(foundInstance, msgOrChannel)
-        newText = newText.replace(foundInstance[0], replaceValue)
-        param.regex.lastIndex = 0
-        foundInstance = param.regex.exec(newText)
-      }
-    }
-    resolve(newText)
-  })
 }

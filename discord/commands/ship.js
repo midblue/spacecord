@@ -6,7 +6,7 @@ const Discord = require('discord.js')
 module.exports = {
   tag: 'ship',
   documentation: {
-    value: `Rundown of the ship's status, and ship-related actions.`,
+    value: `High-level overview of the ship's status and ship-related actions.`,
     emoji: '🚀',
     priority: 80,
   },

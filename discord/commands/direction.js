@@ -20,15 +20,14 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({ msg, settings, game, client, ship, requirements }) {
+  async action({ msg, settings, author, game, client, ship, requirements }) {
     log(msg, 'Direction Vote', msg.guild.name)
 
     const availableDirections = ship.getAvailableDirections()
-    const authorName = await username(msg.author)
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`Direction Vote Called by ${authorName}`)
+      .setTitle(`Direction Vote Called by ${author.nickname}`)
       .setDescription(
         `Crew with at least ${Object.keys(requirements)
           .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)

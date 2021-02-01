@@ -48,6 +48,23 @@ module.exports = {
         }. (${Math.round((total / max) * 100)}%)`,
     },
   },
+  xp: {
+    add: {
+      missingUser: () => `Couldn't find the user to give experience!`,
+      success: (
+        id,
+        skill,
+        xpAmount,
+        level,
+        didLevelUp,
+        levelSize,
+        toNextLevel,
+      ) =>
+        `%username%${id}% gains ${xpAmount} experience in ${skill}${
+          didLevelUp ? `, leveling up to Level ${level}! 🎉🎊` : '.'
+        } levelSize ${levelSize}, toNextLevel ${toNextLevel}`,
+    },
+  },
   action: {
     doesNotMeetRequirements: (requirements, member) =>
       `You need at least ${Object.keys(requirements)

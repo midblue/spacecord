@@ -5,7 +5,7 @@ module.exports = {
   tag: 'shipInfo',
   documentation: {
     name: `shipinfo`,
-    value: `Ship equipment, age, status.`,
+    value: `Ship equipment, age, health, etc.`,
     emoji: '📊',
     priority: 80,
   },

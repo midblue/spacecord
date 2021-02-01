@@ -8,7 +8,12 @@ const fs = require('fs')
 const commands = []
 fs.readdir('./discord/commands', (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith('.js') || file === 'index.js') return
+    if (
+      !file.endsWith('.js') ||
+      file === 'index.js' ||
+      file.startsWith('debug')
+    )
+      return
     commands.push(require(`./${file}`))
   })
   // console.log(`Loaded ${commands.length} commands`)
@@ -39,6 +44,7 @@ module.exports = {
       .setDescription(`It's a space game, know what I mean?`)
       .addFields(
         commands
+          .filter((c) => c !== false)
           .sort(
             (a, b) =>
               ((b.documentation || {}).priority || 0) -

@@ -24,10 +24,7 @@ module.exports = (guild) => {
       name: `Speed`,
       value: guild.ship.speed + ' ' + process.env.SPEED_UNIT,
     })
-    statusFields.push({
-      name: `Ship Model`,
-      value: guild.ship.modelDisplayName,
-    })
+
     statusFields.push({
       name: `Fuel`,
       value:
@@ -41,25 +38,32 @@ module.exports = (guild) => {
         guild.ship.power.toFixed(1) +
         '/' +
         guild.ship.maxPower().toFixed(0) +
-        ` (${Math.round(guild.ship.power / guild.ship.maxPower())}%)`,
+        ` (${Math.round((guild.ship.power / guild.ship.maxPower()) * 100)}%)`,
     })
     statusFields.push({
       name: `Crew Members`,
       value: guild.ship.members.length,
     })
-    statusFields.push({
-      name: `Ship Age`,
-      value:
-        (
-          (Date.now() - guild.ship.launched) *
-          process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
-          process.env.TIME_UNIT_LONG_MULTIPLIER
-        ).toFixed(2) +
-        ' ' +
-        process.env.TIME_UNIT_LONG,
-    })
+
+    // todo put this into shipInfo command
+    // statusFields.push({
+    //   name: `Ship Model`,
+    //   value: guild.ship.modelDisplayName,
+    // })
+    // statusFields.push({
+    //   name: `Ship Age`,
+    //   value:
+    //     (
+    //       (Date.now() - guild.ship.launched) *
+    //       process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
+    //       process.env.TIME_UNIT_LONG_MULTIPLIER
+    //     ).toFixed(2) +
+    //     ' ' +
+    //     process.env.TIME_UNIT_LONG,
+    // })
+
     return {
-      headline: `All systems normal.`,
+      headline: `All systems normal.`, // todo
       fields: statusFields,
     }
   }

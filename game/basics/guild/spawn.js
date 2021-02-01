@@ -14,19 +14,19 @@ module.exports = function ({ discordGuild, channelId }) {
           id: 'basic1',
           bought: Date.now(),
           maintained: Date.now(),
-          performance: 0.8,
+          repair: 0.8,
         },
       ],
       telemetry: [
         {
           id: 'telemetry1',
-          performance: 0.9,
+          repair: 0.7,
         },
       ],
       battery: [
         {
           id: 'battery1',
-          performance: 0.7,
+          repair: 1,
         },
       ],
     },

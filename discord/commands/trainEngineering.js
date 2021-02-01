@@ -41,7 +41,7 @@ Your crewmates can help too, if they want to.`)
     const challengeCount = 5
     const timePerCharacter = 160
 
-    // from here is extractable into a common class
+    //  this whole promise is extractable into a common function
     const { hits, sentTextOptions, time } = await new Promise(
       async (resolve) => {
         const averageCharacters =
@@ -55,6 +55,10 @@ Your crewmates can help too, if they want to.`)
         let fuse
         const sentTextOptions = []
         const messagesToDelete = []
+
+        messagesToDelete.push(
+          (await send(msg, `You have ${(time / 1000).toFixed(0)} seconds.`))[0],
+        )
 
         let challengeTextInOneArray = []
         for (let i = 0; i < challengeCount; i++) {
@@ -75,6 +79,10 @@ Your crewmates can help too, if they want to.`)
           keys: ['target'],
           threshold: 1, // 1 is anything
         })
+
+        setTimeout(async () => {
+          messagesToDelete.push((await send(msg, `Time's up!`))[0])
+        }, time - 1000)
 
         const filter = (receivedMessage) => {
           const sender = receivedMessage.author
@@ -121,18 +129,23 @@ Your crewmates can help too, if they want to.`)
 
     const res = ship.addXp(authorCrewMemberObject.id, 'engineering', xp)
 
+    console.log(sentTextOptions)
+
     embed.setDescription(
       `**${challengeCount} challenges in ${(time / 1000).toFixed(1)} seconds**
 ${sentTextOptions
   .map(
     (o) =>
+      (o.bestScore === 0 ? '❌' : o.bestScore > 0.99 ? '✅' : '👍') +
       `"${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
-        o.bestAttemptText ? ` ("${o.bestAttemptText.toLowerCase()}")` : ''
+        o.bestAttemptText && o.bestScore !== 1
+          ? ` ("${o.bestAttemptText.toLowerCase()}")`
+          : ''
       }`,
   )
   .join('\n')}
 
-Result: ${await applyCustomParams(msg, res.message)}.`,
+Result: ${await applyCustomParams(msg, res.message)}`,
     )
     lastMessage.edit(embed)
   },

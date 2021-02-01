@@ -2,6 +2,22 @@ module.exports = {
   bearingToRadians,
   bearingToDegrees,
   bearingToArrow,
+  numberToEmoji(number) {
+    const emojis = [
+      '0️⃣',
+      '1️⃣',
+      '2️⃣',
+      '3️⃣',
+      '4️⃣',
+      '5️⃣',
+      '6️⃣',
+      '7️⃣',
+      '8️⃣',
+      '9️⃣',
+      '🔟',
+    ]
+    return emojis[number]
+  },
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
@@ -30,7 +46,7 @@ function bearingToDegrees(bearing) {
 }
 const directionArrows = ['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
 function bearingToArrow(bearing) {
-  const normalizedAngle = bearingToDegrees(bearing) / 360
+  const normalizedAngle = ((bearingToDegrees(bearing) + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)
   return directionArrows[arrayIndex]
 }

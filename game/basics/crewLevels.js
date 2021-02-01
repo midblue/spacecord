@@ -1,4 +1,5 @@
-const factions = [
+const levels = [
+  0,
   400,
   900,
   1400,
@@ -80,6 +81,6 @@ const factions = [
   891000,
   1686300,
   2121500,
-];
+]
 
-module.exports = factions;
+module.exports = levels

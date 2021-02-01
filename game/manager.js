@@ -104,10 +104,4 @@ module.exports = {
   timeUntilNextTick() {
     return game.timeUntilNextTick()
   },
-  getCrewMember({ memberId, guildId }) {
-    const guild = game.guilds.find((g) => g.guildId === guildId) || {}
-    if (!guild || !guild.ship) return
-    const member = (guild.members || []).find((m) => m.id === memberId)
-    return member
-  },
 }

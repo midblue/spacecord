@@ -8,13 +8,10 @@ module.exports = (guild) => {
       availableActions.push({
         emoji: '🚀',
         label: 'Take Off',
-        skillRequirement: [
-          {
-            skill: 'piloting',
-            requirement: 2,
-          },
-        ],
-        action() {
+        requirements: {
+          piloting: 2,
+        },
+        action({ user }) {
           console.log('Take Off')
         },
       })
@@ -24,13 +21,10 @@ module.exports = (guild) => {
       availableActions.push({
         emoji: '🪐',
         label: 'Land On Planet',
-        skillRequirement: [
-          {
-            skill: 'piloting',
-            requirement: 4,
-          },
-        ],
-        action() {
+        requirements: {
+          piloting: 4,
+        },
+        action({ user }) {
           console.log('Land On Planet')
         },
       })
@@ -38,7 +32,7 @@ module.exports = (guild) => {
     availableActions.push({
       emoji: '🎛',
       label: 'Ship Controls',
-      action() {
+      action({ user }) {
         console.log('Ship Controls')
       },
     })
@@ -46,16 +40,14 @@ module.exports = (guild) => {
     availableActions.push({
       emoji: '📡',
       label: 'Scan Area',
-      skillRequirement: [
-        {
-          skill: 'engineering',
-          requirement: 2,
-        },
-      ],
-      async action() {
+      requirements: {
+        engineering: 2,
+      },
+      async action({ user }) {
         await runGuildCommand({
           guildId: guild.guildId,
           channelId: guild.channel,
+          author: user,
           commandTag: 'scanArea',
         })
       },
@@ -64,12 +56,13 @@ module.exports = (guild) => {
     availableActions.push({
       emoji: '🏃‍♀️',
       label: 'Run on Treadmill',
-      async action() {
+      async action({ user }) {
         await runGuildCommand({
           guildId: guild.guildId,
           channelId: guild.channel,
           commandTag: 'generatePower',
-          props: { type: 'Treadmill' },
+          author: user,
+          props: { exerciseType: 'Treadmill' },
         })
       },
     })

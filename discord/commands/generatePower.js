@@ -15,16 +15,23 @@ module.exports = {
       content,
     )
   },
-  async action({ msg, settings, client, type, ship, authorCrewMemberObject }) {
+  async action({
+    msg,
+    settings,
+    client,
+    exerciseType,
+    ship,
+    authorCrewMemberObject,
+  }) {
     log(msg, 'Generate Power', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(type || 'Treadmill')
+      .setTitle(exerciseType || 'Treadmill')
       .addFields({
         name: 'Work out to generate power!',
-        value:
-          'React to this message with running emoji as many times as you can within 10 seconds!',
+        value: `React to this message with running emoji (🏃‍♀️🏃🏻‍🎽💨👟) as many times as you can within 10 seconds!
+Other crew members can help out, too.`,
       })
 
     const sentMessages = await send(msg, embed)

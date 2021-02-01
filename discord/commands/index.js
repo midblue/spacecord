@@ -1,5 +1,6 @@
 const send = require('../actions/send')
 const { username } = require('../botcommon')
+const defaultServerSettings = require('../defaults/defaultServerSettings')
 
 // * get all commands from files in this folder
 const fs = require('fs')
@@ -18,11 +19,17 @@ fs.readdir('./discord/commands', (err, files) => {
 })
 
 module.exports = {
-  test: async ({ msg, settings, client, game }) => {
+  test: async ({ msg, client, predeterminedCommandTag, props }) => {
+    const settings = defaultServerSettings // todo link to real settings eventually
+    const game = client.game
     let author = msg.author
+
     for (let command of commands) {
       // * run test to see if command triggers
-      const match = await command.test(msg.content, settings)
+      const match =
+        predeterminedCommandTag === command.tag ||
+        (!predeterminedCommandTag &&
+          (await command.test(msg.content, settings)))
 
       if (match) {
         const authorIsAdmin =
@@ -74,6 +81,7 @@ module.exports = {
           author,
           client,
           game,
+          ...props,
         })
       }
     }

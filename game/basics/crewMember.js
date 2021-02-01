@@ -5,6 +5,7 @@ function spawn(user) {
     skills: {
       piloting: 2,
       engineering: 2,
+      mechanics: 4,
     },
   }
   liveify(data)

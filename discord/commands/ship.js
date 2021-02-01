@@ -13,7 +13,7 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:ship)$`, 'gi').exec(content)
   },
-  async action({ msg, settings, game, client, ship }) {
+  async action({ msg, guild, ship }) {
     log(msg, 'Ship', msg.guild.name)
 
     const status = ship.statusReport()
@@ -29,6 +29,7 @@ module.exports = {
       msg: lastMessage,
       reactions: ship.getAvailableActions(),
       embed,
+      guild,
     })
   },
 }

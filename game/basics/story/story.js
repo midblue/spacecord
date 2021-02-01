@@ -58,16 +58,19 @@ module.exports = {
         level,
         didLevelUp,
         levelSize,
-        toNextLevel,
+        levelProgress,
+        percentToLevel,
       ) =>
-        `%username%${id}% gains ${xpAmount} experience in ${skill}${
-          didLevelUp ? `, leveling up to Level ${level}! 🎉🎊` : '.'
-        } levelSize ${levelSize}, toNextLevel ${toNextLevel}`,
+        `%username%${id}% gains ${xpAmount} experience in \`${skill}\`${
+          didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : '.'
+        } You're \`${levelProgress}/${levelSize}\` (\`${(
+          percentToLevel * 100
+        ).toFixed()}%\`) to \`Level ${level + 1}\`.`,
     },
   },
   action: {
     doesNotMeetRequirements: (requirements, member) =>
-      `You need at least ${Object.keys(requirements)
+      `%username%${member.id}%, you need at least ${Object.keys(requirements)
         .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
         .join('and ')}to use that. You have${Object.keys(requirements)
         .map(

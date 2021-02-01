@@ -30,6 +30,6 @@ module.exports = (guild) => {
           story.prompts.startGame(),
         ],
       }
-    return { ok: true, message: story.crew.add.success(newMember) }
+    return { ok: true, message: story.crew.add.success(newMember, guild) }
   }
 }

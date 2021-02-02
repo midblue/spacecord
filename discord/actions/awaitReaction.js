@@ -6,6 +6,7 @@ module.exports = async ({
   reactions,
   embed,
   time = 60000,
+  commandsLabel,
   listeningType,
   respondeeFilter,
   guild,
@@ -19,7 +20,7 @@ module.exports = async ({
       )
       if (reactions && reactions[0].label)
         embed.fields.push({
-          name: `Commands`,
+          name: commandsLabel || `Commands`,
           value: reactions
             .map(({ emoji, label }) => `${emoji} - ${label}`)
             .join('\n'),
@@ -43,7 +44,7 @@ module.exports = async ({
         const member = guild.ship.members.find((m) => m.id === user.id)
         if (!member) return false
         for (let r in reaction.requirements)
-          if (((member.skills || {})[r] || 0) < reaction.requirements[r]) {
+          if ((member?.level?.[r] || 0) < reaction.requirements[r]) {
             send(
               msg,
               story.action.doesNotMeetRequirements(

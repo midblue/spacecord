@@ -16,7 +16,6 @@ fs.readdir('./discord/commands', (err, files) => {
       return
     commands.push(require(`./${file}`))
   })
-  // console.log(`Loaded ${commands.length} commands`)
 })
 
 //{ name: '\u200B', value: '\u200B' },
@@ -47,14 +46,14 @@ module.exports = {
           .filter((c) => c !== false)
           .sort(
             (a, b) =>
-              ((b.documentation || {}).priority || 0) -
-              ((a.documentation || {}).priority || 0),
+              (b?.documentation?.priority || 0) -
+              (a?.documentation?.priority || 0),
           )
           .map((c) => ({
-            name: `${(c.documentation || {}).emoji || ''} \`${
-              (settings || {}).prefix || defaultServerSettings.prefix
-            }${(c.documentation || {}).name || c.tag}\``,
-            value: (c.documentation || {}).value || 'Self-explanatory.',
+            name: `${c?.documentation?.emoji || ''} \`${
+              settings?.prefix || defaultServerSettings.prefix
+            }${c?.documentation?.name || c.tag}\``,
+            value: c.documentation?.value || 'Self-explanatory.',
             inline: true,
           })),
       )

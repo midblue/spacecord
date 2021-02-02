@@ -17,17 +17,28 @@ const items = {
       // emoji: '📡',
       emoji: '😜',
       modelDisplayName: 'Emoji Scanner v1',
-      powerUse: 0.5,
+      powerUse: 5,
       range: 5,
       needsRepairAt: 0.8,
-      breakdownSeverity: 0.02, // Math.random() > this to run mistake check
+      breakdownSeverity: 0.05,
+      durabilityLostOnUse: 0.01,
+      repairDifficulty: 1,
       repairRequirements: { mechanics: 4 },
       requirements: { engineering: 2 },
       use({ scanResult, x, y }) {
-        const repair = this.repair ?? 1,
+        this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
+
+        const repair = this.repair,
           range = this.range
 
-        console.log(repair)
+        if (repair <= 0)
+          return {
+            map: `**  BROKEN_DOWN  **
+								** PLEASE_REPAIR **`,
+            key: [],
+            model: this.modelDisplayName,
+            repair,
+          }
 
         const emptySpace = '  '
 
@@ -40,11 +51,14 @@ const items = {
           '❌',
           '❌',
           '❌',
+          emptySpace,
+          emptySpace,
+          emptySpace,
           '🛸',
         ]
 
         const getChar = (base) =>
-          Math.random() > this.breakdownSeverity ||
+          Math.random() > this.breakdownSeverity / repair ||
           Math.random() * this.needsRepairAt < repair
             ? base
             : deadCharacters[Math.floor(Math.random() * deadCharacters.length)]
@@ -87,7 +101,7 @@ const items = {
         key.push(`🛸 Spacecraft`)
 
         if (repair < this.needsRepairAt) {
-          key.push(`❓ Not Sure`)
+          key.push(`❌ Not Sure`)
           map = map + `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
         }
 
@@ -95,6 +109,7 @@ const items = {
           map,
           key,
           model: this.modelDisplayName,
+          repair,
         }
       },
     },

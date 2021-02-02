@@ -68,6 +68,8 @@ module.exports = {
 
         author.nickname = await username(msg, author.id)
 
+        if (msg.delete) msg.delete()
+
         // * execute command
         await command.action({
           msg,

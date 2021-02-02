@@ -1,5 +1,5 @@
 const story = require('../../story/story')
-const crewMember = require('../../crewMember')
+const crewMember = require('../../crew/crew')
 const { log } = require('../../../gamecommon')
 
 module.exports = (guild) => {

@@ -20,7 +20,7 @@ module.exports = {
           `Your server already has a ship! It's called '${guild.ship.name}'. How rude of you to forget!`,
       },
       first: (guild) =>
-        `You're aboard a discount ${guild.ship.modelDisplayName} dubbed '${guild.ship.name}' by its bawdry crew. It groans under your weight as you make your way along the bridge.`,
+        `You find yourself aboard a discount ${guild.ship.modelDisplayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
     },
   },
   crew: {
@@ -31,7 +31,7 @@ module.exports = {
           `%username%${id}% is already a crew member on this ship! How rude of you to forget!`,
       },
       first: (member, guild) =>
-        `Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain %username%${member.id}%, eh?" you chuckle. "Wonder how long that'll last?"`,
+        `Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain %username%${member.id}%, eh?" you chuckle. "I wonder how long that'll last?"`,
       success: (member, guild) =>
         `%username%${member.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
@@ -63,9 +63,9 @@ module.exports = {
       ) =>
         `%username%${id}% gains ${xpAmount} experience in \`${skill}\`${
           didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : '.'
-        } You're \`${levelProgress}/${levelSize}\` (\`${(
+        } You're \`${levelProgress}/${levelSize} (${(
           percentToLevel * 100
-        ).toFixed()}%\`) to \`Level ${level + 1}\`.`,
+        ).toFixed()}%)\` to \`Level ${level + 1}\`.`,
     },
   },
   action: {
@@ -75,9 +75,7 @@ module.exports = {
         .join('and ')}to use that. You have${Object.keys(requirements)
         .map(
           (r) =>
-            ` level \`${(member.skills || {})[r] || 0}\` in \`${capitalize(
-              r,
-            )}\` `,
+            ` level \`${member?.level?.[r] || 0}\` in \`${capitalize(r)}\` `,
         )
         .join('and')}.`,
   },

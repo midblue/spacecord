@@ -1,6 +1,7 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
 const Discord = require('discord.js')
+const awaitReaction = require('../actions/awaitReaction')
 
 module.exports = {
   tag: 'scanArea',
@@ -15,10 +16,11 @@ module.exports = {
       content,
     )
   },
-  async action({ msg, settings, client, ship }) {
+  async action({ msg, settings, client, guild, ship }) {
     log(msg, 'Scan Area', msg.guild.name)
 
     const scanRes = await ship.scanArea()
+    if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
@@ -33,6 +35,31 @@ module.exports = {
         },
         ...scanRes.data.map((d) => ({ ...d, inline: true })),
       )
-    send(msg, embed)
+    const lastMessage = (await send(msg, embed))[0]
+
+    if (scanRes.repair <= 0.6 || scanRes.lowPower) {
+      const reactions = []
+      if (scanRes.repair <= 0.6)
+        reactions.push({
+          emoji: '🔧',
+          action() {
+            console.log('Repair Telemetry')
+          },
+        })
+      if (scanRes.lowPower)
+        reactions.push({
+          emoji: '🏃‍♀️',
+          action() {
+            console.log('Generate Power')
+          },
+        })
+
+      await awaitReaction({
+        msg: lastMessage,
+        reactions,
+        embed,
+        guild,
+      })
+    }
   },
 }

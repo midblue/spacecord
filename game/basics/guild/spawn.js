@@ -20,7 +20,7 @@ module.exports = function ({ discordGuild, channelId }) {
       telemetry: [
         {
           id: 'telemetry1',
-          repair: 0.7,
+          repair: 0.6,
         },
       ],
       battery: [

@@ -30,7 +30,7 @@ module.exports = {
       .setTitle(exerciseType || 'Treadmill')
       .addFields({
         name: 'Work out to generate power!',
-        value: `React to this message with running emoji (🏃‍♀️🏃🏻‍🎽💨👟) as many times as you can within 10 seconds!
+        value: `React to this message with running emoji (🏃‍♀️💨👟) as many times as you can within 10 seconds!
 Other crew members can help out, too.`,
       })
 

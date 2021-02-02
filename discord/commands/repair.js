@@ -25,12 +25,10 @@ module.exports = {
     allRepairableEquipment = allRepairableEquipment
       .filter((e) => e.repair < 1)
       .slice(0, 10)
+      .sort((a, b) => a.repair - b.repair)
       .map((e, index) => ({ ...e, numberEmoji: numberToEmoji(index + 1) }))
 
-    const sortedEquipment = allRepairableEquipment.sort(
-      (a, b) => a.repair - b.repair,
-    )
-    const equipmentAsReactionOptions = sortedEquipment.map((e) => ({
+    const equipmentAsReactionOptions = allRepairableEquipment.map((e) => ({
       emoji: e.numberEmoji,
       label:
         `${e.emoji} \`${e.modelDisplayName}\` (${capitalize(e.type)}) - ${(
@@ -59,5 +57,6 @@ module.exports = {
       embed,
       guild,
     })
+    lastMessage.delete()
   },
 }

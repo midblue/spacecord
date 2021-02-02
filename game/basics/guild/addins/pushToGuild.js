@@ -5,7 +5,6 @@ module.exports = (guild) => {
     await pushToGuild({
       guildId: guild.guildId,
       channelId: guild.channel,
-      client: guild.client,
       message,
     })
   }

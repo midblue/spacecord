@@ -45,7 +45,7 @@ module.exports = async ({
       if (!member) return false
       if (requirements)
         for (let r in requirements)
-          if (member.skills[r] < requirements[r]) return false
+          if ((member?.level?.[r] || 0) < requirements[r]) return false
       return true
     }
 

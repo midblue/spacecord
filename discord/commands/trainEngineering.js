@@ -8,9 +8,10 @@ module.exports = {
   tag: 'trainEngineering',
   documentation: { name: `trainengineering` },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:trainengineering)$`, 'gi').exec(
-      content,
-    )
+    return new RegExp(
+      `^${settings.prefix}(?:trainengineering|engineeringtraining)$`,
+      'gi',
+    ).exec(content)
   },
   async action({ msg, author, ship, authorCrewMemberObject }) {
     log(msg, 'Train Engineering', msg.guild.name)
@@ -56,9 +57,10 @@ Your crewmates can help too, if they want to.`)
         const sentTextOptions = []
         const messagesToDelete = []
 
-        messagesToDelete.push(
-          (await send(msg, `You have ${(time / 1000).toFixed(0)} seconds.`))[0],
-        )
+        embed.description += `\n\n**You have ${(time / 1000).toFixed(
+          0,
+        )} seconds.**`
+        lastMessage.edit(embed)
 
         let challengeTextInOneArray = []
         for (let i = 0; i < challengeCount; i++) {
@@ -96,9 +98,11 @@ Your crewmates can help too, if they want to.`)
           const target = fuse.search(content)[0].item.target
           const hitOption = sentTextOptions.find((o) => o.target === target)
           const score = 1 - fuse.search(content)[0].score
-          if (hitOption && score > 0.5 && hitOption.bestScore < score) {
-            hitOption.bestScore = score
-            hitOption.bestAttemptText = content
+          if (hitOption && score > 0.35) {
+            if (hitOption.bestScore < score) {
+              hitOption.bestScore = score
+              hitOption.bestAttemptText = content
+            }
             messagesToDelete.push(receivedMessage)
             try {
               receivedMessage.react('👀')
@@ -127,17 +131,21 @@ Your crewmates can help too, if they want to.`)
 
     const xp = Math.round(hits * 1000)
 
-    const res = ship.addXp(authorCrewMemberObject.id, 'engineering', xp)
-
-    console.log(sentTextOptions)
+    const res = authorCrewMemberObject.addXp('engineering', xp)
 
     embed.setDescription(
       `**${challengeCount} challenges in ${(time / 1000).toFixed(1)} seconds**
 ${sentTextOptions
   .map(
     (o) =>
-      (o.bestScore === 0 ? '❌' : o.bestScore > 0.99 ? '✅' : '👍') +
-      `"${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
+      (o.bestScore === 0
+        ? '❌'
+        : o.bestScore > 0.99
+        ? '✅'
+        : o.bestScore > 0.5
+        ? '👍'
+        : '👎') +
+      ` "${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
         o.bestAttemptText && o.bestScore !== 1
           ? ` ("${o.bestAttemptText.toLowerCase()}")`
           : ''

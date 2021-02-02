@@ -1,8 +1,10 @@
+const addins = require('./addins/index')
+
 function spawn(user) {
   const id = user.id || user.user.id
   const data = {
     id,
-    skills: {
+    level: {
       piloting: 2,
       engineering: 2,
       mechanics: 4,
@@ -12,6 +14,8 @@ function spawn(user) {
   return data
 }
 
-function liveify(baseMemberObject) {}
+function liveify(member) {
+  addins.forEach((addin) => addin(member))
+}
 
 module.exports = spawn

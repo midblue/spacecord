@@ -18,7 +18,7 @@ module.exports = (guild) => {
     if (member)
       if (
         Object.keys(requirements).find(
-          (skill) => requirements[skill] > ((member.skills || {})[skill] || 0),
+          (skill) => requirements[skill] > (member?.level?.[skill] || 0),
         )
       )
         ok = false

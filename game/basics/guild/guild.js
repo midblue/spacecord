@@ -2,13 +2,15 @@ const shipsData = require('../ships')
 const equipmentData = require('../equipment')
 const addins = require('./addins/index')
 const spawn = require('./spawn')
+const db = require('../../../db/db')
 
 async function make({ discordGuild, channelId }) {
   let guild
-  // todo when we have database
-  //  const savedServer = await db.getServer(discordGuild.id)
+  guild = await db.guild.get({ guildId: discordGuild.id })
   if (!guild) guild = spawn({ discordGuild, channelId })
   liveify(guild)
+  console.log(guild.saveableData())
+  db.guild.add({ guildId: discordGuild.id, data: guild.saveableData() })
   return guild
 }
 

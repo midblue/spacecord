@@ -1,4 +1,5 @@
 const { username, applyCustomParams } = require('../botcommon')
+const Discord = require('discord.js')
 
 module.exports = async function (
   msgOrChannel,
@@ -28,7 +29,10 @@ module.exports = async function (
       }
     }
 
-    for (let textEl of splitMessage)
+    for (let textEl of splitMessage) {
+      // const embed = new Discord.MessageEmbed()
+      //   .setColor(process.env.APP_COLOR)
+      //   .setDescription(textEl)
       sentMessages.push(
         await (msgOrChannel.channel ? msgOrChannel.channel : msgOrChannel)
           .send(textEl)
@@ -36,6 +40,7 @@ module.exports = async function (
             console.error('Failed to send!', err.message)
           }),
       )
+    }
   }
   return sentMessages
 }

@@ -51,7 +51,16 @@ function bearingToDegrees(bearing) {
   let degrees = (180 * angle) / Math.PI //degrees
   return (360 + Math.round(degrees)) % 360 //round number, avoid decimal fragments
 }
-const directionArrows = ['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
+const directionArrows = [
+  ':arrow_right:',
+  ':arrow_upper_right:',
+  ':arrow_up:',
+  ':arrow_upper_left:',
+  ':arrow_left:',
+  ':arrow_lower_left:',
+  ':arrow_down:',
+  ':arrow_lower_right:',
+] //['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
 function bearingToArrow(bearing) {
   const normalizedAngle = ((bearingToDegrees(bearing) + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)

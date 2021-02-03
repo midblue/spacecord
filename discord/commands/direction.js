@@ -35,7 +35,7 @@ module.exports = {
             'and ',
           )}can vote on the ship's bearing. The final direction will be an average of the crew's vote.
 					
-Current direction is \`${ship.getDirectionString()}\`
+Current direction is ${ship.getDirectionString()}
 
 Your ship's engine supports \`${
           availableDirections.length
@@ -65,7 +65,7 @@ Your ship's engine supports \`${
     embed.fields.push({
       name: 'Vote Complete!',
       value: res.ok
-        ? `Result: Steering to \`${res.arrow} ${res.degrees} degrees\``
+        ? `Result: Steering to ${res.arrow} \`${res.degrees} degrees\``
         : `Result: Stay the course`,
     })
 

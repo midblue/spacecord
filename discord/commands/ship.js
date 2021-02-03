@@ -11,7 +11,9 @@ module.exports = {
     priority: 80,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:ship)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:s|ship|status)$`, 'gi').exec(
+      content,
+    )
   },
   async action({ msg, guild, ship }) {
     log(msg, 'Ship', msg.guild.name)

@@ -15,13 +15,14 @@ module.exports = (guild) => {
     const amountConsumed = 0.01 * ship.members.length
 
     food.amount -= amountConsumed
+    const ticksLeftBeforeStarvation = Math.ceil(food.amount / amountConsumed)
+
     if (food.amount <= 0) {
       food.amount = 0
       ship.status.starving = true
       message = story.food.insufficient()
       ok = false
-    } else if (food.amount < amountConsumed * 10 && Math.random() > 0.9) {
-      const ticksLeftBeforeStarvation = Math.ceil(food.amount / amountConsumed)
+    } else if (ticksLeftBeforeStarvation < 20 && Math.random() > 0.9) {
       message = story.food.low(food.amount, ticksLeftBeforeStarvation)
     }
 

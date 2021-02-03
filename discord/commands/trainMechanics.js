@@ -55,7 +55,7 @@ ${sentTextOptions
         ? '👍'
         : '👎') +
       ` "${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
-        o.bestAttemptText && o.bestScore !== 1
+        o.bestAttemptText && o.bestScore < 0.99
           ? ` ("${o.bestAttemptText.toLowerCase()}")`
           : ''
       }`,

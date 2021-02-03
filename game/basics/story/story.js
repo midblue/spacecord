@@ -41,7 +41,7 @@ module.exports = {
       `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_FUEL"`,
   },
   food: {
-    insufficient: () => `Your ship is dangerously low on food`,
+    insufficient: () => `Your ship is out of food!`,
     low: (amount, ticksLeft) =>
       `Your ship is dangerously low on food! You only have ${amount}${process.env.WEIGHT_UNIT_PLURAL}, which should only last ${ticksLeft} more ${process.env.TIME_UNIT}`,
   },

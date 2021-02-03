@@ -2,6 +2,7 @@ const send = require('../actions/send')
 const { log } = require('../botcommon')
 const Discord = require('discord.js')
 const awaitReaction = require('../actions/awaitReaction')
+const runGuildCommand = require('../actions/runGuildCommand')
 
 module.exports = {
   tag: 'scanArea',
@@ -39,18 +40,24 @@ module.exports = {
 
     if (scanRes.repair <= 0.6 || scanRes.lowPower) {
       const reactions = []
+      reactions.push({
+        emoji: '📡',
+        action() {
+          runGuildCommand({ msg, commandTag: 'scanArea' })
+        },
+      })
       if (scanRes.repair <= 0.6)
         reactions.push({
           emoji: '🔧',
           action() {
-            console.log('Repair Telemetry')
+            runGuildCommand({ msg, commandTag: 'repair' })
           },
         })
       if (scanRes.lowPower)
         reactions.push({
           emoji: '🏃‍♀️',
           action() {
-            console.log('Generate Power')
+            runGuildCommand({ msg, commandTag: 'generatePower' })
           },
         })
 

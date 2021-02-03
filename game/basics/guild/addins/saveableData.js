@@ -17,6 +17,7 @@ module.exports = (guild) => {
     )
 
     delete guildToSave.context
+    delete guildToSave.previousDiff
     delete guildToSave.ship.guild
 
     // remove base properties from ship

@@ -10,6 +10,7 @@ module.exports = (guild) => {
     const directionVector = getShipDirectionFromAggregate(aggregate)
     // const previousBearing = guild.ship.bearing
     guild.ship.bearing = directionVector
+    guild.saveNewDataToDb()
     const arrow = bearingToArrow(directionVector)
     const degrees = bearingToDegrees(directionVector)
     return {

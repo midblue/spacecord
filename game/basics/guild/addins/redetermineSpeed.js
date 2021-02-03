@@ -7,6 +7,7 @@ module.exports = (guild) => {
     const { voteResult, newSpeed } = getShipSpeedFromAggregate(aggregate, guild)
     const previousSpeed = guild.ship.speed
     guild.ship.speed = newSpeed
+    guild.saveNewDataToDb()
     return {
       ok: true,
       newSpeed,

@@ -158,8 +158,14 @@ module.exports = {
   async guild(guildId) {
     return await game.getGuild(guildId)
   },
+  async guilds() {
+    return game.guilds
+  },
   async removeGuild(guildId) {
     return await game.removeGuild(guildId)
+  },
+  tick() {
+    return game.update()
   },
   timeUntilNextTick() {
     return game.timeUntilNextTick()

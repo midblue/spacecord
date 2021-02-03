@@ -68,6 +68,7 @@ module.exports = async ({
         !reactions.find((r) => r.emoji === reaction.emoji.name).action
       )
         return
+      msg.author = user
       reactions
         .find((r) => r.emoji === reaction.emoji.name)
         .action({ user, embed, msg, reaction })

@@ -6,6 +6,7 @@ module.exports = function ({ discordGuild, channelId }) {
     launched: Date.now(),
     model: 'shipA',
     credits: 50,
+    hp: 1,
     status: {
       flying: true,
     },

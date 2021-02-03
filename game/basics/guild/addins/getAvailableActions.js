@@ -1,4 +1,6 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
+const ship = require('../../../../discord/commands/ship')
+const { guilds } = require('../../../manager')
 
 module.exports = (guild) => {
   guild.ship.getAvailableActions = () => {
@@ -53,6 +55,35 @@ module.exports = (guild) => {
         })
       },
     })
+
+    if (guild.ship.status.flying) {
+      availableActions.push({
+        emoji: '🧭',
+        label: 'Direction Vote',
+        async action({ user, msg }) {
+          await runGuildCommand({
+            guildId: guild.guildId,
+            channelId: guild.channel,
+            msg,
+            author: user,
+            commandTag: 'direction',
+          })
+        },
+      })
+      availableActions.push({
+        emoji: '⏩',
+        label: 'Speed Vote',
+        async action({ user, msg }) {
+          await runGuildCommand({
+            guildId: guild.guildId,
+            channelId: guild.channel,
+            msg,
+            author: user,
+            commandTag: 'speed',
+          })
+        },
+      })
+    }
 
     availableActions.push({
       emoji: '🏃‍♀️',

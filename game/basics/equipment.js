@@ -17,7 +17,7 @@ const items = {
       // emoji: '📡',
       emoji: '😜',
       modelDisplayName: 'Emoji Scanner v1',
-      powerUse: 5,
+      powerUse: 2,
       range: 5,
       needsRepairAt: 0.8,
       breakdownSeverity: 0.05,

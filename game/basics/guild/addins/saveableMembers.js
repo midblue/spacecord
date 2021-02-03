@@ -1,5 +1,5 @@
 module.exports = (guild) => {
   guild.saveableMembers = () => {
-    return guild.saveableData().ship.members
+    return guild.ship.members.map((m) => m.saveableData())
   }
 }

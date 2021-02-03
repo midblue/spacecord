@@ -36,7 +36,6 @@ module.exports = (guild) => {
         currentLocation[1] + distanceToTravel * Math.sin(currentBearing)
       ship.location = [newX, newY]
     }
-    console.log(ship.location)
 
     fuel.amount -= fuelLoss
     if (fuel.amount <= 0) {

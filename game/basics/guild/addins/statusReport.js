@@ -26,7 +26,9 @@ module.exports = (guild) => {
     })
     statusFields.push({
       name: `Speed`,
-      value: guild.ship.speed + ' ' + process.env.SPEED_UNIT,
+      value: guild.ship.speed
+        ? guild.ship.speed + ' ' + process.env.SPEED_UNIT
+        : 'Stopped',
     })
 
     statusFields.push({

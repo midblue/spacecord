@@ -5,7 +5,8 @@ module.exports = {
     console.log(
       `${
         msg.guild
-          ? msg.guild.name.substring(0, 15) + `(${msg.guild.id})`
+          ? msg.guild.name.substring(0, 15).padEnd(15, ' ') +
+            ` (${msg.guild.id})`
           : 'Private Message'
       }`.padEnd(30, ' ') +
         ` | ${identifier}` +

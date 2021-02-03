@@ -108,3 +108,21 @@ treasure goblins
 
 horde alliance garbled chat
 
+
+game types
+	anagrams
+	all the words you can make out of these letters
+	type as many 5 letter words that start with L and end with Y that you can in 10 secs
+	country flag emojis
+		countries with space programs
+	country outlines, add the right flag
+	name the space themed tv show or movie
+	Generate images with various numbers of space emojis in them, enough that it’s hard to count quickly
+		And the user has to respond with the number of that emoji in the picture
+		Under a time limit
+		Leveling up makes the average number higher and higher
+		Get xp based on how close you are to the real number
+
+exploration
+	map
+		shows sensor range over time, what you saw, where you went

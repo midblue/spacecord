@@ -58,7 +58,8 @@ module.exports = {
 
         const authorCrewMemberObject =
           msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
-        if (!command.public && !authorCrewMemberObject)
+        if (!command.public && !authorCrewMemberObject && !msg.author.bot)
+          // bots are ok because of 2ndhand commands from reactions
           return send(
             msg,
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,

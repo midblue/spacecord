@@ -37,7 +37,7 @@ module.exports = async function (
         await (msgOrChannel.channel ? msgOrChannel.channel : msgOrChannel)
           .send(textEl)
           .catch((err) => {
-            console.error('Failed to send!', err)
+            console.error('Failed to send!', err.message)
           }),
       )
     }

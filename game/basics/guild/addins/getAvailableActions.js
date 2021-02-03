@@ -4,38 +4,38 @@ module.exports = (guild) => {
   guild.ship.getAvailableActions = () => {
     const availableActions = []
 
-    if (guild.status === 'landed')
-      availableActions.push({
-        emoji: '🚀',
-        label: 'Take Off',
-        requirements: {
-          piloting: 2,
-        },
-        action({ user }) {
-          console.log('Take Off')
-        },
-      })
+    // if (guild.status.landed)
+    //   availableActions.push({
+    //     emoji: '🚀',
+    //     label: 'Take Off',
+    //     requirements: {
+    //       piloting: 2,
+    //     },
+    //     action({ user, msg }) {
+    //       console.log('Take Off')
+    //     },
+    //   })
 
-    const landablePlanets = false
-    if (landablePlanets)
-      availableActions.push({
-        emoji: '🪐',
-        label: 'Land On Planet',
-        requirements: {
-          piloting: 4,
-        },
-        action({ user }) {
-          console.log('Land On Planet')
-        },
-      })
+    // const landablePlanets = false
+    // if (landablePlanets)
+    //   availableActions.push({
+    //     emoji: '🪐',
+    //     label: 'Land On Planet',
+    //     requirements: {
+    //       piloting: 4,
+    //     },
+    //     action({ user, msg }) {
+    //       console.log('Land On Planet')
+    //     },
+    //   })
 
-    availableActions.push({
-      emoji: '🎛',
-      label: 'Ship Controls',
-      action({ user }) {
-        console.log('Ship Controls')
-      },
-    })
+    // availableActions.push({
+    //   emoji: '🎛',
+    //   label: 'Ship Controls',
+    //   action({ user, msg }) {
+    //     console.log('Ship Controls')
+    //   },
+    // })
 
     availableActions.push({
       emoji: '📡',
@@ -43,10 +43,11 @@ module.exports = (guild) => {
       requirements: {
         engineering: 2,
       },
-      async action({ user }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           guildId: guild.guildId,
           channelId: guild.channel,
+          msg,
           author: user,
           commandTag: 'scanArea',
         })
@@ -56,12 +57,13 @@ module.exports = (guild) => {
     availableActions.push({
       emoji: '🏃‍♀️',
       label: 'Run on Treadmill',
-      async action({ user }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           guildId: guild.guildId,
           channelId: guild.channel,
           commandTag: 'generatePower',
           author: user,
+          msg,
           props: { exerciseType: 'Treadmill' },
         })
       },

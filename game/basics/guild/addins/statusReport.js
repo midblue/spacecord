@@ -5,41 +5,63 @@ const {
 } = require('../../../../common')
 
 module.exports = (guild) => {
-  guild.ship.statusReport = () => {
-    const statusFields = []
+  guild.ship.statusReport = async () => {
+    const fields = [],
+      actions = await guild.ship.getAvailableActions()
 
-    statusFields.push({
-      name: `Location`,
-      value:
-        guild.ship.location.map((l) => l.toFixed(2)) +
-        ' ' +
-        process.env.DISTANCE_UNIT,
+    const fuel = guild.ship.cargo.find((c) => c.type === 'fuel').amount
+
+    fields.push({
+      name: `⏩ Speed`,
+      value: guild.ship.status.stranded
+        ? 'Out of Fuel!'
+        : guild.ship.speed
+        ? guild.ship.speed + ' ' + process.env.SPEED_UNIT
+        : 'Stopped',
     })
 
-    statusFields.push({
-      name: `Bearing`,
+    fields.push({
+      name: `🧭 Bearing`,
       value:
         bearingToArrow(guild.ship.bearing) +
         ' ' +
         bearingToDegrees(guild.ship.bearing).toFixed(0) +
         ' degrees',
     })
-    statusFields.push({
-      name: `Speed`,
-      value: guild.ship.speed
-        ? guild.ship.speed + ' ' + process.env.SPEED_UNIT
-        : 'Stopped',
+
+    fields.push({
+      name: `📍 Location`,
+      value:
+        guild.ship.location.map((l) => l.toFixed(2)) +
+        ' ' +
+        process.env.DISTANCE_UNIT,
     })
 
-    statusFields.push({
-      name: `Fuel`,
+    fields.push({
+      name: `🇨🇭 Health`,
       value:
-        guild.ship.cargo.find((c) => c.type === 'fuel').amount.toFixed(1) +
-        ' ' +
-        process.env.WEIGHT_UNIT_PLURAL,
+        percentToTextBars(guild.ship.hp) +
+        '\n' +
+        `${Math.ceil(guild.ship.hp * guild.ship.baseHp)}/${guild.ship.baseHp} ${
+          process.env.HEALTH_UNIT
+        }`,
     })
-    statusFields.push({
-      name: `Power`,
+
+    fields.push({
+      name: `⛽️ Fuel`,
+      value:
+        fuel.toFixed(1) +
+        ' ' +
+        process.env.WEIGHT_UNIT_PLURAL +
+        (guild.ship.speed
+          ? `\n${Math.floor(fuel / guild.ship.fuelUsePerTick())} ${
+              process.env.TIME_UNIT
+            } at current speed`
+          : ''),
+    })
+
+    fields.push({
+      name: `⚡️ Power`,
       value:
         percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
         '\n' +
@@ -49,31 +71,11 @@ module.exports = (guild) => {
         process.env.POWER_UNIT +
         ` (${Math.round((guild.ship.power / guild.ship.maxPower()) * 100)}%)`,
     })
-    statusFields.push({
-      name: `Crew Members`,
-      value: guild.ship.members.length,
-    })
-
-    // todo put this into shipInfo command
-    // statusFields.push({
-    //   name: `Ship Model`,
-    //   value: guild.ship.modelDisplayName,
-    // })
-    // statusFields.push({
-    //   name: `Ship Age`,
-    //   value:
-    //     (
-    //       (Date.now() - guild.ship.launched) *
-    //       process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
-    //       process.env.TIME_UNIT_LONG_MULTIPLIER
-    //     ).toFixed(2) +
-    //     ' ' +
-    //     process.env.TIME_UNIT_LONG,
-    // })
 
     return {
       headline: `All systems normal.`, // todo
-      fields: statusFields,
+      fields,
+      actions,
     }
   }
 }

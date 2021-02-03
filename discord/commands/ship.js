@@ -18,7 +18,7 @@ module.exports = {
   async action({ msg, guild, ship }) {
     log(msg, 'Ship', msg.guild.name)
 
-    const status = ship.statusReport()
+    const status = await ship.statusReport()
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`${ship.name} | Status Report`)
@@ -28,7 +28,7 @@ module.exports = {
     const lastMessage = (await send(msg, embed))[0]
     await awaitReaction({
       msg: lastMessage,
-      reactions: ship.getAvailableActions(),
+      reactions: status.actions,
       embed,
       guild,
     })

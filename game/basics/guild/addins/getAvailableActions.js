@@ -1,13 +1,11 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
-const ship = require('../../../../discord/commands/ship')
-const { guilds } = require('../../../manager')
 
 module.exports = (guild) => {
   guild.ship.getAvailableActions = () => {
-    const availableActions = []
+    const actions = []
 
     // if (guild.status.landed)
-    //   availableActions.push({
+    //   actions.push({
     //     emoji: '🚀',
     //     label: 'Take Off',
     //     requirements: {
@@ -20,7 +18,7 @@ module.exports = (guild) => {
 
     // const landablePlanets = false
     // if (landablePlanets)
-    //   availableActions.push({
+    //   actions.push({
     //     emoji: '🪐',
     //     label: 'Land On Planet',
     //     requirements: {
@@ -31,7 +29,7 @@ module.exports = (guild) => {
     //     },
     //   })
 
-    // availableActions.push({
+    // actions.push({
     //   emoji: '🎛',
     //   label: 'Ship Controls',
     //   action({ user, msg }) {
@@ -39,7 +37,7 @@ module.exports = (guild) => {
     //   },
     // })
 
-    availableActions.push({
+    actions.push({
       emoji: '📡',
       label: 'Scan Area',
       requirements: {
@@ -57,7 +55,7 @@ module.exports = (guild) => {
     })
 
     if (guild.ship.status.flying) {
-      availableActions.push({
+      actions.push({
         emoji: '🧭',
         label: 'Direction Vote',
         async action({ user, msg }) {
@@ -70,7 +68,7 @@ module.exports = (guild) => {
           })
         },
       })
-      availableActions.push({
+      actions.push({
         emoji: '⏩',
         label: 'Speed Vote',
         async action({ user, msg }) {
@@ -85,7 +83,7 @@ module.exports = (guild) => {
       })
     }
 
-    availableActions.push({
+    actions.push({
       emoji: '🏃‍♀️',
       label: 'Run on Treadmill',
       async action({ user, msg }) {
@@ -100,6 +98,18 @@ module.exports = (guild) => {
       },
     })
 
-    return availableActions
+    actions.push({
+      emoji: 'ℹ️',
+      label: 'Ship Info',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          commandTag: 'shipInfo',
+          author: user,
+          msg,
+        })
+      },
+    })
+
+    return actions
   }
 }

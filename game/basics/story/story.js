@@ -88,6 +88,16 @@ module.exports = {
         )
         .join('and')}.`,
   },
+  repair: {
+    equipment: {
+      notFound: () =>
+        `Sorry, I couldn't find the equipment you're trying to repair.`,
+      success: (name, repairLevel) =>
+        `You give your ship's ${name} a few good whacks with the hammer, and that seems to do the trick. It's repaired to ${Math.round(
+          repairLevel * 100,
+        )}% efficiency.`,
+    },
+  },
   move: {
     // redirect: {
     //   noVotes: () => `Your crew decides to stay the course.`,

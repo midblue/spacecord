@@ -7,7 +7,7 @@ module.exports = {
   percentToTextBars(percent, barCount = 10) {
     const bars = []
     for (let i = 0; i < 1; i += 1 / barCount) bars.push(i < percent ? '▓' : '░')
-    return bars.join('')
+    return '`' + bars.join('') + '`'
   },
   numberToEmoji(number) {
     const emojis = [

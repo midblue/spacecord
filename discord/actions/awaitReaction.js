@@ -18,7 +18,7 @@ module.exports = async ({
           listeningType ? listeningType : reactions ? 'commands' : 'reactions'
         }...`,
       )
-      if (reactions && reactions[0].label && embed)
+      if (reactions && reactions.length && reactions[0].label && embed)
         embed.fields.push({
           name: commandsLabel || `Commands`,
           value: reactions
@@ -28,12 +28,13 @@ module.exports = async ({
       msg.edit(embed)
     }
 
-    if (reactions) for (let r of reactions) msg.react(r.emoji)
+    if (reactions && reactions.length)
+      for (let r of reactions) msg.react(r.emoji)
 
     const filter = (userReaction, user) => {
       if (user.bot) return false
       if (respondeeFilter && !respondeeFilter(user)) return false
-      if (!reactions) return true
+      if (!reactions || !reactions.length) return true
 
       const reaction = reactions.find(
         (r) => r.emoji === userReaction.emoji.name,
@@ -77,7 +78,8 @@ module.exports = async ({
     collector.on('end', (collected) => {
       if (embed) {
         delete embed.footer
-        if (reactions && reactions[0].label) embed.fields.pop()
+        if (reactions && reactions.length && reactions[0].label)
+          embed.fields.pop()
         msg.edit(embed)
       }
       msg.reactions.removeAll().catch((e) => {})

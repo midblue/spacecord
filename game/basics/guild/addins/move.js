@@ -6,7 +6,7 @@ module.exports = (guild) => {
     const ship = guild.ship
 
     const fuel = ship.cargo.find((c) => c.type === 'fuel')
-    if (!fuel.amount)
+    if (!fuel.amount && useFuel)
       return {
         ok: false,
       }
@@ -22,11 +22,7 @@ module.exports = (guild) => {
         b = ship.location[1] - coordinates[1]
       distanceToTravel = Math.sqrt(a * a + b * b)
     }
-    const fuelLoss = useFuel
-      ? (ship.equipment.engine || []).reduce((total, engine) => {
-          return total + (engine.fuelUse || 0) * distanceToTravel
-        }, 0)
-      : 0
+    const fuelLoss = useFuel ? ship.fuelUsePerTick() : 0
 
     if (coordinates) ship.location = coordinates
     else {

@@ -26,7 +26,11 @@ module.exports = {
       .filter((e) => e.repair < 1)
       .slice(0, 10)
       .sort((a, b) => a.repair - b.repair)
-      .map((e, index) => ({ ...e, numberEmoji: numberToEmoji(index + 1) }))
+      .map((e, index) => ({
+        ...e,
+        numberEmoji: numberToEmoji(index + 1),
+        index,
+      }))
 
     const equipmentAsReactionOptions = allRepairableEquipment.map((e) => ({
       emoji: e.numberEmoji,
@@ -41,7 +45,12 @@ module.exports = {
           : ''),
       requirements: e.repairRequirements,
       action() {
-        console.log(e.modelDisplayName)
+        const res = guild.ship.repairEquipment({
+          type: e.type,
+          index: e.index,
+          add: 1,
+        }) // 1 = full repair
+        send(msg, res.message)
       },
     }))
 

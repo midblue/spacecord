@@ -34,11 +34,12 @@ module.exports = {
           return JSON.stringify(guild.saveableData(), null, 2)
         },
       },
-      listguilds: {
-        description: 'listguilds',
+      guilds: {
+        description: 'guilds',
         action: async () => {
           const res = (await client.game.guilds())
             .map((g) => g.guildName + ': ' + g.guildId)
+            .sort((a, b) => b - a)
             .join('\n')
           return '\n' + res
         },
@@ -64,7 +65,7 @@ module.exports = {
           } catch (e) {
             return 'invalid coords: ' + x + ' ' + y
           }
-          const res = await guild.ship.move(false, [x, y])
+          await guild.ship.move(false, [x, y])
           return 'moved ship.'
         },
       },

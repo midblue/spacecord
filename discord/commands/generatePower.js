@@ -34,8 +34,7 @@ module.exports = {
 Other crew members can help out, too.`,
       })
 
-    const sentMessages = await send(msg, embed)
-    const lastMessage = sentMessages[sentMessages.length - 1]
+    const lastMessage = (await send(msg, embed))[0]
     const collected = await awaitReaction({
       msg: lastMessage,
       embed,

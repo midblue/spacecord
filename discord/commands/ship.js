@@ -23,8 +23,7 @@ module.exports = {
       .setDescription(status.headline)
       .addFields(status.fields.map((s) => ({ ...s, inline: true })))
 
-    const sentMessages = await send(msg, embed)
-    const lastMessage = sentMessages[sentMessages.length - 1]
+    const lastMessage = (await send(msg, embed))[0]
     await awaitReaction({
       msg: lastMessage,
       reactions: ship.getAvailableActions(),

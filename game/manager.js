@@ -1,8 +1,9 @@
-const guild = require('./basics/guild/guild')
+const { spawn, liveify } = require('./basics/guild/guild')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
 const { pointIsInsideCircle } = require('../common')
 const coreLoop = require('./core loop/index')
+const db = require('../db/db')
 
 /* 
 ---------------- Game Object ----------------
@@ -11,8 +12,17 @@ the core loop, etc.
 */
 
 const game = {
+  async init() {
+    ;(await db.guild.getAll()).forEach((g) => this.loadExistingGuild(g))
+    log('init', `Loaded ${this.guilds.length} guilds from db`)
+
+    this.start()
+  },
+
   // ---------------- Game Properties ----------------
   guilds: [],
+  planets: [],
+  npcs: [],
   startTime: new Date(),
   lastTick: new Date(),
 
@@ -27,6 +37,16 @@ const game = {
     return process.env.STEP_INTERVAL - currentTickProgress
   },
 
+  loadExistingGuild(guild) {
+    liveify(guild, this)
+    this.guilds.push(guild)
+    return {
+      ok: false,
+      message: story.ship.get.fail.existing(guild),
+      guild: guild,
+    }
+  },
+
   addGuild(newGuild) {
     if (!newGuild) {
       log('addGuild', 'Attempted to add nonexistent guild')
@@ -38,7 +58,7 @@ const game = {
     if (existingGuildInGame) {
       log(
         'addGuild',
-        'Attempted to add a guild that already exists in the game',
+        'Attempted to spawn a guild that already exists in the game',
       )
       return {
         ok: false,
@@ -48,7 +68,6 @@ const game = {
     }
 
     // success
-    newGuild.context = this // gives access to game context
     this.guilds.push(newGuild)
     log('addGuild', 'Added guild to game', newGuild.guildName)
     return {
@@ -58,8 +77,38 @@ const game = {
     }
   },
 
-  getGuild(id) {
-    const thisGuild = this.guilds.find((g) => g.guildId === id)
+  async removeGuild(guildId) {
+    if (!guildId) {
+      return { ok: false, message: 'missing id' }
+    }
+    const existingGuildInGame = this.guilds.findIndex(
+      (g) => g.guildId === guildId,
+    )
+    if (existingGuildInGame === -1) {
+      return {
+        ok: false,
+        message: 'no such guild',
+      }
+    }
+    // success
+    this.guilds.splice(existingGuildInGame, 1)
+    await db.guild.remove(guildId)
+    return {
+      ok: true,
+      message: 'deleted guild',
+    }
+  },
+
+  async getGuild(id) {
+    let thisGuild = this.guilds.find((g) => g.guildId === id) // check local
+    if (!thisGuild) {
+      thisGuild = await db.guild.get({ guildId: id })
+      if (thisGuild) {
+        liveify(thisGuild, this)
+        this.guilds.push(thisGuild)
+      }
+    }
+
     if (!thisGuild) {
       log('guildStatus', `Attempted to get a guild that does not exist`, id)
       return {
@@ -69,7 +118,7 @@ const game = {
     }
     return {
       ok: true,
-      ...thisGuild,
+      guild: thisGuild,
     }
   },
 
@@ -84,7 +133,7 @@ const game = {
   },
 }
 
-game.start()
+game.init()
 
 /* 
 ---------------- Exports ----------------
@@ -95,11 +144,22 @@ from discord types to game types, and vice versa.
 */
 module.exports = {
   async spawn({ discordGuild, channelId }) {
-    const newGuild = await guild({ discordGuild, channelId })
+    const existingGuildInDb = await game.getGuild(discordGuild.id)
+    if (existingGuildInDb.ok)
+      return {
+        ...existingGuildInDb,
+        ok: false,
+        message: story.ship.get.fail.existing(existingGuildInDb.guild),
+      }
+
+    const newGuild = await spawn({ discordGuild, channelId, context: game })
     return game.addGuild(newGuild)
   },
-  guild(guildId) {
-    return game.getGuild(guildId)
+  async guild(guildId) {
+    return await game.getGuild(guildId)
+  },
+  async removeGuild(guildId) {
+    return await game.removeGuild(guildId)
   },
   timeUntilNextTick() {
     return game.timeUntilNextTick()

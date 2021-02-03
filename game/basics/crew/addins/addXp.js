@@ -1,5 +1,6 @@
 const story = require('../../story/story')
 const levelNumbers = require('../levels')
+const db = require('../../../../db/db')
 
 module.exports = (member) => {
   member.addXp = (skill, xpAmount) => {
@@ -11,6 +12,11 @@ module.exports = (member) => {
     member.xp[skill] = newXp
 
     const result = member.skillLevelDetails(skill)
+
+    db.guild.updateCrewMembers({
+      guildId: member.guild.guildId,
+      members: member.guild.saveableMembers(),
+    })
 
     return {
       ok: true,

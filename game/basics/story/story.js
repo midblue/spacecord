@@ -36,6 +36,15 @@ module.exports = {
         `%username%${member.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
   },
+  fuel: {
+    insufficient: () =>
+      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_FUEL"`,
+  },
+  food: {
+    insufficient: () => `Your ship is dangerously low on food`,
+    low: (amount, ticksLeft) =>
+      `Your ship is dangerously low on food! You only have ${amount}${process.env.WEIGHT_UNIT_PLURAL}, which should only last ${ticksLeft} more ${process.env.TIME_UNIT}`,
+  },
   power: {
     insufficient: (guild, amountNeeded) =>
       `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_POWER <NEED ${amountNeeded}${process.env.POWER_UNIT} | HAVE ${guild.ship.power}${process.env.POWER_UNIT}>"`,

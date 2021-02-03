@@ -18,7 +18,7 @@ module.exports = async ({
           listeningType ? listeningType : reactions ? 'commands' : 'reactions'
         }...`,
       )
-      if (reactions && reactions[0].label)
+      if (reactions && reactions[0].label && embed)
         embed.fields.push({
           name: commandsLabel || `Commands`,
           value: reactions

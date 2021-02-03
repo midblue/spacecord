@@ -1,17 +1,23 @@
 const spawn = require('../spawn')
 const shipsData = require('../../ships')
 const equipmentData = require('../../equipment')
-const addins = require('./index')
+const { ship } = require('../../story/story')
 
 module.exports = (guild) => {
   guild.saveableData = () => {
-    const guildToSave = {
-      ...guild,
-      ship: {
-        ...guild.ship,
-        members: [...guild.ship.members.map((m) => ({ ...m }))],
-      },
-    }
+    const guildToSave = JSON.parse(
+      JSON.stringify({
+        ...guild,
+        context: undefined,
+        ship: {
+          ...guild.ship,
+          members: (guild.ship.members || []).map((m) => m.saveableData()),
+        },
+      }),
+    )
+
+    delete guildToSave.context
+    delete guildToSave.ship.guild
 
     // remove base properties from ship
     Object.keys(shipsData[guild.ship.model]).forEach(
@@ -26,26 +32,16 @@ module.exports = (guild) => {
       })
     })
 
-    Object.keys(guildToSave).forEach((key) => {
-      if (typeof guildToSave[key] === 'function') delete guildToSave[key]
+    const dummyGuildObject = spawn({
+      discordGuild: { name: 'asdf', id: 1234 },
+      channelId: 'asdf',
     })
-
-    Object.keys(guildToSave.ship).forEach((key) => {
-      if (typeof guildToSave.ship[key] === 'function')
+    for (let key of Object.keys(guildToSave))
+      if (!dummyGuildObject[key] && dummyGuildObject[key] !== 0)
+        delete guildToSave[key]
+    for (let key of Object.keys(guildToSave.ship))
+      if (!dummyGuildObject.ship[key] && dummyGuildObject.ship[key] !== 0)
         delete guildToSave.ship[key]
-    })
-
-    for (let member of guildToSave.ship.members) {
-      Object.keys(member).forEach((key) => {
-        if (typeof member[key] === 'function') delete member[key]
-      })
-    }
-
-    const dummyGuildObject = spawn({ name: 'asdf', id: 1234 }, 'asdf')
-    for (let prop of guildToSave)
-      if (!dummyGuildObject[prop]) delete guildToSave[prop]
-    for (let prop of guildToSave.ship)
-      if (!dummyGuildObject.ship[prop]) delete guildToSave.ship[prop]
 
     return guildToSave
   }

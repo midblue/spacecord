@@ -1,6 +1,7 @@
 const send = require('../actions/send')
 const { username } = require('../botcommon')
 const defaultServerSettings = require('../defaults/defaultServerSettings')
+const db = require('../../db/db')
 
 // * get all commands from files in this folder
 const fs = require('fs')
@@ -32,6 +33,14 @@ module.exports = {
           (await command.test(msg.content, settings)))
 
       if (match) {
+        if (command.gameAdminsOnly)
+          if (
+            !['244651135984467968', '395634705120100367'].includes(
+              msg.author.id,
+            )
+          )
+            return
+
         const authorIsAdmin =
           msg.guild &&
           msg.guild.member(msg.author) &&
@@ -41,8 +50,9 @@ module.exports = {
 
         let ship, guild
         if (!command.noShip) {
-          guild = await game.guild(msg.guild.id)
-          if (!guild.ok) return send(msg, guild.message)
+          let res = await game.guild(msg.guild.id)
+          if (!res.ok) return send(msg, res.message)
+          guild = res.guild
           ship = guild.ship
         }
 
@@ -68,7 +78,16 @@ module.exports = {
 
         author.nickname = await username(msg, author.id)
 
-        if (msg.delete) msg.delete()
+        // in case the server changes their name, update it here
+        if (guild && msg.guild && msg.guild.name !== guild.guildName) {
+          guild.guildName = msg.guild.name
+          db.guild.update({
+            guildId: msg.guild.id,
+            updates: { guildName: msg.guild.name },
+          })
+        }
+
+        // if (msg.delete) msg.delete()
 
         // * execute command
         await command.action({

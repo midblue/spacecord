@@ -3,9 +3,11 @@ const defaultServerSettings = require('./defaults/defaultServerSettings')
 module.exports = {
   async log(msg, identifier, context, type = 'command') {
     console.log(
-      `${msg.guild ? msg.guild.name : 'Private Message'}`
-        .substring(0, 25)
-        .padEnd(25, ' ') +
+      `${
+        msg.guild
+          ? msg.guild.name.substring(0, 15) + `(${msg.guild.id})`
+          : 'Private Message'
+      }`.padEnd(30, ' ') +
         ` | ${identifier}` +
         (context ? `: ${context}` : ``) +
         ` (${await username(msg)}) `,

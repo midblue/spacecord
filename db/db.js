@@ -8,9 +8,10 @@ admin.initializeApp({
   }),
 })
 
-let firestore = admin.firestore()
+let db = admin.firestore()
+db.settings({ ignoreUndefinedProperties: true })
 
-const guild = require('./guild')(firestore)
+const guild = require('./guild')(db)
 
 module.exports = {
   guild,

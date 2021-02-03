@@ -1,4 +1,8 @@
-const { bearingToDegrees, bearingToArrow } = require('../../../../common')
+const {
+  bearingToDegrees,
+  bearingToArrow,
+  percentToTextBars,
+} = require('../../../../common')
 
 module.exports = (guild) => {
   guild.ship.statusReport = () => {
@@ -35,9 +39,12 @@ module.exports = (guild) => {
     statusFields.push({
       name: `Power`,
       value:
+        percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
+        '\n' +
         guild.ship.power.toFixed(1) +
         '/' +
         guild.ship.maxPower().toFixed(0) +
+        process.env.POWER_UNIT +
         ` (${Math.round((guild.ship.power / guild.ship.maxPower()) * 100)}%)`,
     })
     statusFields.push({

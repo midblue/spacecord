@@ -1,5 +1,5 @@
 const { log } = require('../gamecommon')
-const { bearingToRadians } = require('../../common')
+const db = require('../../db/db')
 
 module.exports = {
   async start() {
@@ -21,33 +21,37 @@ module.exports = {
     // * it has access to game object properties, such as this.guilds.
     this.lastTick = Date.now()
 
-    const repositions = this.guilds.map((guild) => {
+    const updates = this.guilds.map((guild) => {
       return new Promise((resolve) => {
-        const currentLocation = [...guild.ship.location]
-        const currentBearing = bearingToRadians(guild.ship.bearing)
-        const currentStepFuelLoss = (guild.ship.equipment.engine || []).reduce(
-          (total, engine) => {
-            return total + engine.fuelUse * guild.ship.speed
-          },
-          0,
-        )
-        const newX =
-          currentLocation[0] + guild.ship.speed * Math.cos(currentBearing)
-        const newY =
-          currentLocation[1] + guild.ship.speed * Math.sin(currentBearing)
-        guild.ship.location = [newX, newY]
+        const ship = guild.ship
 
-        const fuel = guild.ship.cargo.find((c) => c.type === 'fuel')
-        if (fuel) fuel.amount -= currentStepFuelLoss
+        // take every-step actions
 
-        const food = guild.ship.cargo.find((c) => c.type === 'fuel')
-        if (food) food.amount -= 0.01 * guild.ship.members.length
+        const moveRes = ship.move()
+        if (!moveRes.ok && moveRes.message) guild.pushToGuild(moveRes.message)
 
-        if (!process.env.DEV) guild.pushStatusUpdate()
+        const eatRes = ship.eat()
+        if (!eatRes.ok && eatRes.message) guild.pushToGuild(eatRes.message)
+
+        // mirror relevant changes into DB
+
+        const dbShipData = guild.saveableData().ship
+        const updates = {
+          'ship.cargo': dbShipData.cargo,
+          'ship.location': dbShipData.location,
+        }
+        if (!moveRes.ok || !eatRes.ok)
+          updates['ship.status'] = dbShipData.status
+
+        db.guild.update({
+          guildId: guild.guildId,
+          updates,
+        })
+
         resolve()
       })
     })
-    await Promise.all(repositions)
+    await Promise.all(updates)
     log('update', `Repositioned all ${this.guilds.length} ships`)
   },
 }

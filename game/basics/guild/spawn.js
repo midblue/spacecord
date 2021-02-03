@@ -1,10 +1,14 @@
+const defaultServerSettings = require('../../../discord/defaults/defaultServerSettings')
+
 module.exports = function ({ discordGuild, channelId }) {
   const ship = {
     name: 'HMS Fanniel Bomb',
     launched: Date.now(),
     model: 'shipA',
     credits: 50,
-    status: 'flying',
+    status: {
+      flying: true,
+    },
     power: 11,
     faction: Math.floor(Math.random() * 3),
     members: [],
@@ -42,7 +46,7 @@ module.exports = function ({ discordGuild, channelId }) {
     ],
     location: [Math.random() * 4, Math.random() * 4],
     bearing: [Math.random() - 0.5, Math.random() - 0.5],
-    speed: 0.01,
+    speed: 0,
   }
 
   const data = {
@@ -51,6 +55,7 @@ module.exports = function ({ discordGuild, channelId }) {
     channel: channelId,
     ship,
     created: Date.now(),
+    settings: { ...defaultServerSettings },
   }
   return data
 }

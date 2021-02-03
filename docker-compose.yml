@@ -4,6 +4,8 @@ services:
     image: "node:15.7.0"
     user: "node"
     working_dir: /home/node/app
+    ports:
+      - 8080:8080
     volumes:
       - ./:/home/node/app
     command: "node index.js"

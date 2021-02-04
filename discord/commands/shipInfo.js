@@ -22,7 +22,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`${ship.name} | Ship Info`)
-      .addFields(status.fields.map((s) => ({ ...s, inline: true })))
+      .addFields(status.fields.map((s) => ({ ...s, inline: s.inline ?? true })))
 
     const lastMessage = (await send(msg, embed))[0]
     await awaitReaction({

@@ -31,6 +31,7 @@ module.exports = (guild) => {
     Object.keys(guild.ship.equipment).forEach((eqType) => {
       fields.push({
         name: capitalize(eqType),
+        inline: false,
         value: guild.ship.equipment[eqType]
           .map(
             (e) =>
@@ -50,6 +51,17 @@ module.exports = (guild) => {
           msg,
           author: user,
           commandTag: 'repair',
+        })
+      },
+    })
+    actions.push({
+      emoji: '🏆',
+      label: 'Crew Rankings',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          author: user,
+          commandTag: 'rankings',
         })
       },
     })

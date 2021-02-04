@@ -37,6 +37,10 @@ module.exports = {
       string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()
     )
   },
+  checkForHateSpeech(string) {
+    // todo
+    return { ok: true }
+  },
 }
 
 function bearingToRadians(bearing) {

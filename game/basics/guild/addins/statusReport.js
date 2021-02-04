@@ -32,7 +32,7 @@ module.exports = (guild) => {
     fields.push({
       name: `📍 Location`,
       value:
-        guild.ship.location.map((l) => l.toFixed(2)) +
+        guild.ship.location.map((l) => l.toFixed(2)).join(', ') +
         ' ' +
         process.env.DISTANCE_UNIT,
     })

@@ -45,8 +45,6 @@ module.exports = (guild) => {
       },
       async action({ user, msg }) {
         await runGuildCommand({
-          guildId: guild.guildId,
-          channelId: guild.channel,
           msg,
           author: user,
           commandTag: 'scanArea',
@@ -60,8 +58,6 @@ module.exports = (guild) => {
         label: 'Direction Vote',
         async action({ user, msg }) {
           await runGuildCommand({
-            guildId: guild.guildId,
-            channelId: guild.channel,
             msg,
             author: user,
             commandTag: 'direction',
@@ -73,8 +69,6 @@ module.exports = (guild) => {
         label: 'Speed Vote',
         async action({ user, msg }) {
           await runGuildCommand({
-            guildId: guild.guildId,
-            channelId: guild.channel,
             msg,
             author: user,
             commandTag: 'speed',
@@ -84,12 +78,22 @@ module.exports = (guild) => {
     }
 
     actions.push({
-      emoji: '🏃‍♀️',
-      label: 'Run on Treadmill',
+      emoji: '🧾',
+      label: 'Ship Log',
       async action({ user, msg }) {
         await runGuildCommand({
-          guildId: guild.guildId,
-          channelId: guild.channel,
+          msg,
+          author: user,
+          commandTag: 'log',
+        })
+      },
+    })
+
+    actions.push({
+      emoji: '🏃‍♀️',
+      label: 'Generate Power',
+      async action({ user, msg }) {
+        await runGuildCommand({
           commandTag: 'generatePower',
           author: user,
           msg,
@@ -99,7 +103,7 @@ module.exports = (guild) => {
     })
 
     actions.push({
-      emoji: 'ℹ️',
+      emoji: '📊',
       label: 'Ship Info',
       async action({ user, msg }) {
         await runGuildCommand({

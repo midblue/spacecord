@@ -13,6 +13,9 @@ module.exports = (guild) => {
     guild.saveNewDataToDb()
     const arrow = bearingToArrow(directionVector)
     const degrees = bearingToDegrees(directionVector)
+    guild.ship.logEntry(
+      story.move.redirect.success(degrees, arrow, aggregate.length),
+    )
     return {
       ok: true,
       arrow,

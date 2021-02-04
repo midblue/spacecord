@@ -34,7 +34,7 @@ module.exports = {
           .join(
             'and ',
           )}can vote on the ship's bearing. The final direction will be an average of the crew's vote.
-					
+
 Current direction is ${ship.getDirectionString()}
 
 Your ship's engine supports \`${

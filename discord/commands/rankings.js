@@ -10,7 +10,7 @@ module.exports = {
   tag: 'rankings',
   documentation: {
     name: `rankings`,
-    value: `Crew member rankinds`,
+    value: `Crew member rankings.`,
     emoji: '🏆',
     priority: 60,
   },

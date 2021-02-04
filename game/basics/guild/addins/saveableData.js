@@ -1,4 +1,4 @@
-const spawn = require('../spawn')
+const createDefaultGuild = require('../createDefaultGuild')
 const shipsData = require('../../ships')
 const equipmentData = require('../../equipment/equipment')
 const { ship } = require('../../story/story')
@@ -33,7 +33,7 @@ module.exports = (guild) => {
       })
     })
 
-    const dummyGuildObject = spawn({
+    const dummyGuildObject = createDefaultGuild({
       discordGuild: { name: 'asdf', id: 1234 },
       channelId: 'asdf',
     })

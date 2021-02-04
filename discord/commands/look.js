@@ -6,7 +6,7 @@ module.exports = {
   tag: 'look',
   documentation: {
     name: `look`,
-    value: `Look out the window`,
+    value: `Look out the window.`,
     emoji: '👀',
     priority: 0,
   },

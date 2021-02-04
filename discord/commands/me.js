@@ -31,8 +31,28 @@ module.exports = {
     log(msg, 'Me', msg.guild.name)
     // my skills, my options to train things, etc
 
+    const embed = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(`${author.nickname}'s Stats`)
+
+    const userAge =
+      ((Date.now() - (authorCrewMemberObject.joined || Date.now())) *
+        process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER) /
+      process.env.TIME_UNIT_SHORTS_PER_LONG
+    embed.fields.push(
+      ...[
+        {
+          name: `👵🏽 Age`,
+          value: userAge.toFixed(2) + ' ' + process.env.TIME_UNIT_LONG,
+          inline: true,
+        },
+      ],
+    )
+
+    // skills section
+
     let trainableSkills = await authorCrewMemberObject.getTrainableSkills()
-    const trainingActionArguments = { ...arguments[0] }
+    const trainingActionArguments = arguments[0]
 
     trainableSkills = trainableSkills
       .slice(0, 10)
@@ -49,20 +69,19 @@ module.exports = {
       },
     }))
 
-    const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
-      .setTitle(`${author.nickname}'s Stats`)
-      .setDescription(
-        trainableSkills
-          .map((e) => {
-            return `${e.emoji} **${capitalize(e.name)}**: **Level ${
-              e.level
-            }** (${e.levelProgress}/${e.levelSize}, ${(
-              e.percentToLevel * 100
-            ).toFixed(0)}% to level ${e.level + 1})`
-          })
-          .join('\n'),
-      )
+    const trainableSkillsField = {
+      name: 'Skills',
+      value: trainableSkills
+        .map((e) => {
+          return `${e.emoji} **${capitalize(e.name)}**: **Level ${e.level}** (${
+            e.levelProgress
+          }/${e.levelSize}, ${(e.percentToLevel * 100).toFixed(0)}% to level ${
+            e.level + 1
+          })`
+        })
+        .join('\n'),
+    }
+    embed.fields.push(trainableSkillsField)
 
     const sentMessages = await send(msg, embed)
     const lastMessage = sentMessages[sentMessages.length - 1]

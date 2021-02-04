@@ -62,7 +62,9 @@ module.exports = async ({
 
     const collector = msg.createReactionCollector(filter, { time })
 
+    let collected = []
     collector.on('collect', (reaction, user) => {
+      collected.push(reaction)
       if (
         !reactions ||
         !reactions.find((r) => r.emoji === reaction.emoji.name) ||
@@ -75,7 +77,7 @@ module.exports = async ({
         .action({ user, embed, msg, reaction })
     })
 
-    collector.on('end', (collected) => {
+    collector.on('end', () => {
       if (embed) {
         delete embed.footer
         if (reactions && reactions.length && reactions[0].label)

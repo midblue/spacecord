@@ -9,6 +9,7 @@ module.exports = {
   documentation: {
     value: `Adds your server's ship into the game!`,
     emoji: '🏁',
+    category: 'settings',
     priority: 90,
   },
   test(content, settings) {

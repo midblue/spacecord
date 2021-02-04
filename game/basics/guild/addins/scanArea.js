@@ -1,5 +1,9 @@
-const { bearingToDegrees, bearingToArrow } = require('../../../../common')
-const { power } = require('../../story/story')
+const {
+  bearingToDegrees,
+  bearingToArrow,
+  percentToTextBars,
+} = require('../../../../common')
+const story = require('../../story/story')
 
 module.exports = (guild) => {
   guild.ship.scanArea = (eyesOnly) => {
@@ -61,6 +65,20 @@ You see ${
       excludeIds: guild.guildId,
     })
 
+    for (let planet of scanResult.planets) {
+      const seenPlanets = guild.ship.seen.planets
+      if (!seenPlanets.find((p) => p.name === planet.name)) {
+        seenPlanets.push({
+          name: planet.name,
+          color: planet.color,
+          size: planet.size,
+          landed: false,
+        })
+        guild.ship.logEntry(story.discovery.planet(planet))
+        messages.push(story.discovery.planet(planet))
+      }
+    }
+
     const telemetryResult = telemetry.use({
       scanResult,
       x: guild.ship.location[0],
@@ -85,7 +103,7 @@ You see ${
           ' degrees',
       },
       {
-        name: '📍 Our Coordinates',
+        name: '📍 Our Location',
         value:
           `${guild.ship.location[0].toFixed(
             2,
@@ -97,13 +115,16 @@ You see ${
         value: `${telemetry.range} ${process.env.DISTANCE_UNIT}`,
       },
       {
-        name: '⚡Power Used/Left',
+        name: '⚡Power',
         value:
+          percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
+          '\n' +
           telemetry.powerUse +
-          process.env.POWER_UNIT +
           '/' +
-          guild.ship.power +
-          process.env.POWER_UNIT,
+          guild.ship.maxPower() +
+          ' ' +
+          process.env.POWER_UNIT +
+          ' used',
       },
       {
         name: '⏱ Next Update',
@@ -120,7 +141,7 @@ You see ${
 
     return {
       ok: true,
-      message: `Scan Results`,
+      message: messages,
       ...telemetryResult,
       data,
       lowPower,

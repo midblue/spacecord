@@ -8,7 +8,10 @@ module.exports = (guild) => {
       guild.ship.power -= amount
       return { ok: true, message }
     }
-    if (notify) message = story.power.insufficient(guild, amount)
+    if (notify) {
+      message = story.power.insufficient(guild, amount)
+      guild.ship.logEntry(story.power.insufficient(guild, amount))
+    }
     return { ok: false, message }
   }
 }

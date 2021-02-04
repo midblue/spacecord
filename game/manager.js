@@ -162,6 +162,8 @@ module.exports = {
       }
 
     const newGuild = await spawn({ discordGuild, channelId, context: game })
+    if (!newGuild)
+      return { ok: false, message: 'This guild has been banned from the game.' }
     return game.addGuild(newGuild)
   },
   async guild(guildId) {

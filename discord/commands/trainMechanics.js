@@ -6,7 +6,7 @@ const textOptions = require('../defaults/typingTestOptions')
 
 module.exports = {
   tag: 'trainMechanics',
-  documentation: { name: `trainmechanics` },
+  documentation: false,
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:trainmechanics|mechanicstraining)$`,

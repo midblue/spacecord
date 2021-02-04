@@ -8,7 +8,7 @@ const awaitReaction = require('../actions/awaitReaction')
 module.exports = {
   tag: 'repair', // this is also the 'train' command
   documentation: {
-    value: `Repair parts of the ship`,
+    value: `Repair parts of the ship.`,
     emoji: '🛠',
     priority: 50,
   },

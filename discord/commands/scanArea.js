@@ -37,6 +37,8 @@ module.exports = {
     embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })))
     const lastMessage = (await send(msg, embed))[0]
 
+    if (scanRes.message) send(msg, scanRes.message)
+
     const reactions = []
 
     if (scanRes.lowPower)

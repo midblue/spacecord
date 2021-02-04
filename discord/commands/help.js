@@ -28,6 +28,7 @@ module.exports = {
     name: `help`,
     value: `Shows this command.`,
     emoji: 'ℹ️',
+    category: 'settings',
     priority: 100,
   },
   test(content, settings) {
@@ -39,10 +40,15 @@ module.exports = {
     log(msg, 'Test')
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`Info`)
-      .setDescription(`It's a space game, know what I mean?`)
+      .setTitle(`Gameplay`)
+      .setDescription(`Controls and commands for playing the game.`)
       .addFields(
         commands
+          .filter(
+            (c) =>
+              c.documentation?.category === 'gameplay' ||
+              !c.documentation?.category,
+          )
           .filter((c) => c !== false)
           .sort(
             (a, b) =>
@@ -59,5 +65,29 @@ module.exports = {
       )
 
     send(msg, embed)
+
+    const embed2 = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(`Settings`)
+      .setDescription(`Help and settings for the bot itself.`)
+      .addFields(
+        commands
+          .filter((c) => c.documentation?.category === 'settings')
+          .filter((c) => c !== false)
+          .sort(
+            (a, b) =>
+              (b?.documentation?.priority || 0) -
+              (a?.documentation?.priority || 0),
+          )
+          .map((c) => ({
+            name: `${c?.documentation?.emoji || ''} \`${
+              settings?.prefix || defaultServerSettings.prefix
+            }${c?.documentation?.name || c.tag}\``,
+            value: c.documentation?.value || 'Self-explanatory.',
+            inline: true,
+          })),
+      )
+
+    send(msg, embed2)
   },
 }

@@ -1,3 +1,5 @@
+const story = require('../../story/story')
+
 module.exports = (guild) => {
   guild.ship.redetermineSpeed = (aggregate = []) => {
     if (!aggregate.length)
@@ -6,8 +8,18 @@ module.exports = (guild) => {
       }
     const { voteResult, newSpeed } = getShipSpeedFromAggregate(aggregate, guild)
     const previousSpeed = guild.ship.speed
-    guild.ship.speed = newSpeed
-    guild.saveNewDataToDb()
+    if (previousSpeed !== newSpeed) {
+      guild.ship.speed = newSpeed
+      guild.ship.logEntry(
+        story.move.adjustSpeed.success(
+          newSpeed > previousSpeed,
+          newSpeed,
+          voteResult / 10,
+          aggregate.length,
+        ),
+      )
+      guild.saveNewDataToDb()
+    }
     return {
       ok: true,
       newSpeed,

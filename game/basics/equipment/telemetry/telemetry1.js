@@ -1,3 +1,5 @@
+const { numberToEmoji, percentToTextBars } = require('../../../../common')
+
 module.exports = {
   // emoji: '📡',
   emoji: '😜',
@@ -11,19 +13,25 @@ module.exports = {
   repairRequirements: { mechanics: 4 },
   requirements: { engineering: 2 },
   use({ scanResult, x, y }) {
+    const previousRepair = this.repair
     this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
+    if (this.repair < 0) this.repair = 0
 
     const repair = this.repair,
       range = this.range
 
-    if (repair <= 0)
+    if (repair <= 0) {
+      if (previousRepair !== repair)
+        guild.ship.logEntry(story.repair.breakdown(this.modelDisplayName))
       return {
         map: `**  BROKEN_DOWN  **
-					** PLEASE_REPAIR **`,
+				** PLEASE_REPAIR **
+				**       🤕      **`,
         key: [],
         model: this.modelDisplayName,
         repair,
       }
+    }
 
     const emptySpace = '  '
 

@@ -17,10 +17,14 @@ module.exports = {
     get: {
       fail: {
         existing: (guild) =>
-          `Your server already has a ship! It's called '${guild.ship.name}'. How rude of you to forget!`,
+          `Your server already has a ship! It's called '${guild.ship.name}'.`,
       },
       first: (guild) =>
         `You find yourself aboard a discount ${guild.ship.modelDisplayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
+    },
+    name: {
+      change: (newName) =>
+        `Your crew cheers with applause as you unveil the ship's new name: "${newName}".`,
     },
   },
   crew: {
@@ -28,7 +32,7 @@ module.exports = {
       fail: {
         noShip: () => `Your server doesn't have a ship to join yet!`,
         existing: (id) =>
-          `%username%${id}% is already a crew member on this ship! How rude of you to forget!`,
+          `%username%${id}% is already a crew member on this ship!`,
       },
       first: (member, guild) =>
         `Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain %username%${member.id}%, eh?" you chuckle. "I wonder how long that'll last?"`,
@@ -90,6 +94,7 @@ module.exports = {
   },
   repair: {
     equipment: {
+      beakdown: (model) => `Your ${model} has broken down.`,
       notFound: () =>
         `Sorry, I couldn't find the equipment you're trying to repair.`,
       success: (name, repairLevel) =>
@@ -99,10 +104,31 @@ module.exports = {
     },
   },
   move: {
-    // redirect: {
-    //   noVotes: () => `Your crew decides to stay the course.`,
-    //   success: (degrees, arrow) =>
-    //     `The crew has spoken. Your ship rotates to face ${arrow} ${degrees} degrees.`,
-    // },
+    redirect: {
+      success: (degrees, arrow, voteCount) =>
+        `With ${voteCount} vote${
+          voteCount === '1' ? '' : 's'
+        }, your ship rotates to face ${arrow} ${degrees} degrees.`,
+    },
+    adjustSpeed: {
+      success: (spedUp, newSpeed, speedPercent, voteCount) =>
+        `With ${voteCount} vote${voteCount === '1' ? '' : 's'}, your ship ${
+          spedUp ? 'speeds up' : 'slows down'
+        } to ${newSpeed}${process.env.SPEED_UNIT}, which is ${Math.round(
+          speedPercent * 100,
+        )}% of its maximum power.`,
+    },
+  },
+  log: {
+    empty: () =>
+      `Looks like there's nothing in your log yet. Explore the galaxy to discover things!`,
+  },
+  discovery: {
+    planet: (planet) =>
+      `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${
+        planet.color
+      } planet located at [${planet.location.join(', ')}]${
+        process.env.DISTANCE_UNIT
+      }. It has been added to your galaxy map. Congratulations!`,
   },
 }

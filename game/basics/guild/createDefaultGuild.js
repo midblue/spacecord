@@ -13,6 +13,8 @@ module.exports = function ({ discordGuild, channelId }) {
     power: 11,
     faction: Math.floor(Math.random() * 3),
     members: [],
+    seen: { planets: [] },
+    log: [],
     equipment: {
       engine: [
         {

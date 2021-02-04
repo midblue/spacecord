@@ -1,5 +1,3 @@
-const { spawn } = require('../manager')
-
 async function spawnAll({ context }) {
   livePlanets = planets.map((planet) => {
     planet = { ...planetDefaults(), ...planet }
@@ -12,6 +10,12 @@ async function spawnAll({ context }) {
 function liveify(planet, context) {
   planet.context = context
 
+  planet.getSizeDescriptor = function () {
+    if (this.size > 5) return 'large'
+    if (this.size < 2) return 'small'
+    return 'normal-sized'
+  }
+
   // // add base properties to ship
   // planet.ship = {
   //   ...shipsData[planet.ship.model],
@@ -23,7 +27,11 @@ function liveify(planet, context) {
 
 module.exports = spawnAll
 
-const planetDefaults = () => ({ location: [0, 0], color: 'green', size: 1 })
+const planetDefaults = () => ({
+  location: [0, 0],
+  color: 'green',
+  size: 1,
+})
 const planets = [
   {
     name: 'Origin',
@@ -31,5 +39,6 @@ const planets = [
   {
     name: 'Exodus',
     location: [-3, -3],
+    color: 'black',
   },
 ]

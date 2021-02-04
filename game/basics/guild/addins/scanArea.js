@@ -23,6 +23,10 @@ module.exports = (guild) => {
         range,
         excludeIds: guild.guildId,
       })
+      const thingsFoundCount = Object.values(scanResult).reduce(
+        (total, found) => (total += found.length),
+        0,
+      )
       let preMessage = `Since you're out of power,`
       if (!telemetry) preMessage = `Since you don't have any telemetry`
       if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
@@ -31,10 +35,10 @@ module.exports = (guild) => {
           ` you look out out the window. 
 You can see for about ${range}${process.env.DISTANCE_UNIT}.
 You see ${
-            scanResult.length
-              ? scanResult.length +
+            thingsFoundCount
+              ? thingsFoundCount +
                 ` unidentifiable thing${
-                  scanResult.length === 1 ? '' : 's'
+                  thingsFoundCount === 1 ? '' : 's'
                 } out there in the dark.`
               : 'nothing but the inky void of space.'
           }` +
@@ -65,15 +69,15 @@ You see ${
 
     const data = [
       {
-        name: 'Our Coordinates',
-        value:
-          `${guild.ship.location[0].toFixed(
-            2,
-          )}, ${guild.ship.location[1].toFixed(2)} ` +
-          process.env.DISTANCE_UNIT,
+        name: '⏩ Our Speed',
+        value: guild.ship.status.stranded
+          ? 'Out of Fuel!'
+          : guild.ship.speed
+          ? guild.ship.speed.toFixed(2) + ' ' + process.env.SPEED_UNIT
+          : 'Stopped',
       },
       {
-        name: 'Our Bearing',
+        name: '🧭 Our Bearing',
         value:
           bearingToArrow(guild.ship.bearing) +
           ' ' +
@@ -81,19 +85,28 @@ You see ${
           ' degrees',
       },
       {
-        name: 'Our Speed',
-        value: `${guild.ship.speed.toFixed(2)} ` + process.env.SPEED_UNIT,
+        name: '📍 Our Coordinates',
+        value:
+          `${guild.ship.location[0].toFixed(
+            2,
+          )}, ${guild.ship.location[1].toFixed(2)} ` +
+          process.env.DISTANCE_UNIT,
       },
       {
-        name: 'Scan Radius',
+        name: '📡 Scan Radius',
         value: `${telemetry.range} ${process.env.DISTANCE_UNIT}`,
       },
       {
-        name: 'Power Used on Scan',
-        value: telemetry.powerUse + process.env.POWER_UNIT,
+        name: '⚡Power Used/Left',
+        value:
+          telemetry.powerUse +
+          process.env.POWER_UNIT +
+          '/' +
+          guild.ship.power +
+          process.env.POWER_UNIT,
       },
       {
-        name: 'Next Update',
+        name: '⏱ Next Update',
         value: `${Math.ceil(guild.context.timeUntilNextTick() / 1000 / 60)}m`,
       },
     ]

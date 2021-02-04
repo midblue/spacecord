@@ -113,5 +113,5 @@ module.exports = function (passedDb) {
 }
 
 function errorHandler(e) {
-  console.log(e)
+  console.log(e.code, e.details, e.metadata, e.note)
 }

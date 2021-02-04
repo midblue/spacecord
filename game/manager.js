@@ -1,4 +1,5 @@
 const { spawn, liveify } = require('./basics/guild/guild')
+const spawnPlanets = require('./basics/planets')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
 const { pointIsInsideCircle } = require('../common')
@@ -15,6 +16,9 @@ const game = {
   async init() {
     ;(await db.guild.getAll()).forEach((g) => this.loadExistingGuild(g))
     log('init', `Loaded ${this.guilds.length} guilds from db`)
+
+    this.planets = await spawnPlanets({ context: this })
+    log('init', `Loaded ${this.planets.length} planets`)
 
     this.start()
   },
@@ -124,12 +128,17 @@ const game = {
 
   scanArea({ x, y, range, excludeIds = [] }) {
     if (!Array.isArray(excludeIds)) excludeIds = [excludeIds]
-    return this.guilds.filter((g) => {
-      return (
-        !excludeIds.includes(g.guildId) &&
-        pointIsInsideCircle(x, y, ...g.ship.location, range)
-      )
-    })
+    return {
+      guilds: this.guilds.filter((g) => {
+        return (
+          !excludeIds.includes(g.guildId) &&
+          pointIsInsideCircle(x, y, ...g.ship.location, range)
+        )
+      }),
+      planets: this.planets.filter((p) =>
+        pointIsInsideCircle(x, y, ...p.location, range),
+      ),
+    }
   },
 }
 

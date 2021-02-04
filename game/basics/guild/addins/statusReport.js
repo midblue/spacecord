@@ -16,7 +16,7 @@ module.exports = (guild) => {
       value: guild.ship.status.stranded
         ? 'Out of Fuel!'
         : guild.ship.speed
-        ? guild.ship.speed + ' ' + process.env.SPEED_UNIT
+        ? guild.ship.speed.toFixed(2) + ' ' + process.env.SPEED_UNIT
         : 'Stopped',
     })
 
@@ -61,7 +61,7 @@ module.exports = (guild) => {
     })
 
     fields.push({
-      name: `⚡️ Power`,
+      name: `⚡️Power`,
       value:
         percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
         '\n' +

@@ -1,6 +1,6 @@
 const spawn = require('../spawn')
 const shipsData = require('../../ships')
-const equipmentData = require('../../equipment')
+const equipmentData = require('../../equipment/equipment')
 const { ship } = require('../../story/story')
 
 module.exports = (guild) => {

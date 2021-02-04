@@ -29,44 +29,44 @@ module.exports = {
       .setDescription(
         '```Telemetry Unit: ' + scanRes.model + '\n' + scanRes.map + '```',
       )
-      .addFields(
-        {
-          name: 'Key',
-          value: scanRes.key.map((k) => '`' + k + '`').join(', '),
-        },
-        ...scanRes.data.map((d) => ({ ...d, inline: true })),
-      )
+    if (scanRes.key)
+      embed.addFields({
+        name: 'Key',
+        value: scanRes.key.map((k) => '`' + k + '`').join(', '),
+      })
+    embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })))
     const lastMessage = (await send(msg, embed))[0]
 
-    if (scanRes.repair <= 0.6 || scanRes.lowPower) {
-      const reactions = []
+    const reactions = []
+
+    if (scanRes.lowPower)
       reactions.push({
-        emoji: '📡',
+        emoji: '🏃‍♀️',
         action() {
-          runGuildCommand({ msg, commandTag: 'scanArea' })
+          runGuildCommand({ msg, commandTag: 'generatePower' })
         },
       })
-      if (scanRes.repair <= 0.6)
-        reactions.push({
-          emoji: '🔧',
-          action() {
-            runGuildCommand({ msg, commandTag: 'repair' })
-          },
-        })
-      if (scanRes.lowPower)
-        reactions.push({
-          emoji: '🏃‍♀️',
-          action() {
-            runGuildCommand({ msg, commandTag: 'generatePower' })
-          },
-        })
 
-      await awaitReaction({
-        msg: lastMessage,
-        reactions,
-        embed,
-        guild,
+    if (scanRes.repair <= 0.8)
+      reactions.push({
+        emoji: '🔧',
+        action() {
+          runGuildCommand({ msg, commandTag: 'repair' })
+        },
       })
-    }
+
+    reactions.push({
+      emoji: '📡',
+      action() {
+        runGuildCommand({ msg, commandTag: 'scanArea' })
+      },
+    })
+
+    await awaitReaction({
+      msg: lastMessage,
+      reactions,
+      embed,
+      guild,
+    })
   },
 }

@@ -1,5 +1,5 @@
 const shipsData = require('../ships')
-const equipmentData = require('../equipment')
+const equipmentData = require('../equipment/equipment')
 const addins = require('./addins/index')
 const makeNew = require('./spawn')
 const db = require('../../../db/db')

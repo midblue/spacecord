@@ -54,9 +54,9 @@ module.exports = (guild) => {
         ' ' +
         process.env.WEIGHT_UNIT_PLURAL +
         (guild.ship.speed
-          ? `\n${Math.floor(fuel / guild.ship.fuelUsePerTick())} ${
+          ? `\n(${Math.floor(fuel / guild.ship.fuelUsePerTick())} ${
               process.env.TIME_UNIT
-            } at current speed`
+            } at\ncurrent speed)`
           : ''),
     })
 

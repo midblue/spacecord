@@ -1,15 +1,19 @@
 const { bearingToDegrees, bearingToArrow } = require('../../../../common')
-const guildMessage = require('../../../../discord/events/guildMessage')
+const { power } = require('../../story/story')
 
 module.exports = (guild) => {
   guild.ship.scanArea = (eyesOnly) => {
+    const messages = []
     const telemetry = guild.ship.equipment.telemetry.find((upgrade) =>
       upgrade.id.startsWith('telemetry'),
     )
 
-    let haveEnoughPower = true
+    let haveEnoughPower = true,
+      powerRes = { ok: true }
     if (telemetry && !eyesOnly)
-      haveEnoughPower = guild.ship.usePower(telemetry.powerUse)
+      powerRes = guild.ship.usePower(telemetry.powerUse)
+    if (!powerRes.ok) haveEnoughPower = false
+    if (powerRes.message) messages.push(powerRes.message)
 
     if (!telemetry || !haveEnoughPower || eyesOnly) {
       let range = guild.ship.baseScanRange
@@ -22,10 +26,8 @@ module.exports = (guild) => {
       let preMessage = `Since you're out of power,`
       if (!telemetry) preMessage = `Since you don't have any telemetry`
       if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
-      return {
-        ok: false,
-        message:
-          preMessage +
+      messages.push(
+        preMessage +
           ` you look out out the window. 
 You can see for about ${range}${process.env.DISTANCE_UNIT}.
 You see ${
@@ -39,6 +41,10 @@ You see ${
           (haveEnoughPower || eyesOnly
             ? ''
             : '\nMaybe you should think about generating some power.'),
+      )
+      return {
+        ok: false,
+        message: messages,
       }
     }
 

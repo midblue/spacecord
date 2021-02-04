@@ -1,5 +1,6 @@
 const story = require('../../story/story')
 const { bearingToRadians } = require('../../../../common')
+const shipInfo = require('./shipInfo')
 
 module.exports = (guild) => {
   guild.ship.move = (useFuel = true, coordinates) => {
@@ -39,6 +40,8 @@ module.exports = (guild) => {
       ship.status.stranded = true
       ok = false
       message = story.fuel.insufficient()
+    } else {
+      ship.status.stranded = false
     }
 
     return {

@@ -73,7 +73,10 @@ Your ship's engine supports \`${
 Final speed is \`${res.newSpeed} ${
             process.env.SPEED_UNIT
           }\` out of a maximum of \`${maxSpeed}\`.`
-        : `Result: Maintain speed`,
+        : `Result: Maintain speed` +
+          (ship.status.stranded
+            ? `\n\nHowever, your ship is out of fuel, so it won't be going at any speed.`
+            : ''),
     }
 
     lastMessage.edit(embed)

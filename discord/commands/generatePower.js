@@ -1,7 +1,8 @@
 const send = require('../actions/send')
-const awaitReaction = require('../actions/awaitReaction')
 const { log } = require('../botcommon')
 const Discord = require('discord.js')
+const awaitReaction = require('../actions/awaitReaction')
+const runGuildCommand = require('../actions/runGuildCommand')
 
 module.exports = {
   tag: 'generatePower',
@@ -15,14 +16,7 @@ module.exports = {
       content,
     )
   },
-  async action({
-    msg,
-    settings,
-    client,
-    exerciseType,
-    ship,
-    authorCrewMemberObject,
-  }) {
+  async action({ msg, settings, exerciseType, ship, guild }) {
     log(msg, 'Generate Power', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
@@ -60,6 +54,7 @@ Other crew members can help out, too.`,
           '💨',
           '🎽',
           '👟',
+          '🌬️',
         ].includes(e.emoji.name),
       )
       .reduce((total, c) => total + c.count, 0)
@@ -71,5 +66,22 @@ Other crew members can help out, too.`,
       }
       lastMessage.edit(embed)
     } else send(msg, powerRes.message)
+
+    setTimeout(async () => {
+      const reactionOptions = [
+        {
+          emoji: '🏃‍♀️',
+          action() {
+            runGuildCommand({ msg, commandTag: 'generatePower' })
+          },
+        },
+      ]
+      await awaitReaction({
+        msg: lastMessage,
+        reactions: reactionOptions,
+        embed,
+        guild,
+      })
+    }, 500)
   },
 }

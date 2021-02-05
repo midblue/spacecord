@@ -1,5 +1,5 @@
 const send = require('../actions/send')
-const { log } = require('../botcommon')
+const { log, applyCustomParams } = require('../botcommon')
 const Discord = require('discord.js')
 
 module.exports = {
@@ -11,13 +11,15 @@ module.exports = {
     priority: 50,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:log|journal|shiplog)$`, 'gi').exec(
-      content,
-    )
+    return new RegExp(
+      `^${settings.prefix}(?:l|log|journal|shiplog)$`,
+      'gi',
+    ).exec(content)
   },
   async action({ msg, settings, client, ship }) {
     log(msg, 'Log', msg.guild.name)
     const res = ship.getLog(10)
-    return send(msg, res.message)
+    const text = await applyCustomParams(msg, res.message)
+    return send(msg, text)
   },
 }

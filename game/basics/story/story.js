@@ -61,6 +61,36 @@ module.exports = {
         }. (${Math.round((total / max) * 100)}%)`,
     },
   },
+  broadcast: {
+    tooSoon: (model) =>
+      `Your ${model} is still recharging from your previous broadcast.`,
+    voteFailed: () =>
+      `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
+    location: {
+      send: (model, range, powerUse, yesPercent) =>
+        `${Math.round(
+          yesPercent * 100,
+        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${model} begins to hum. Your location has been broadcast to any ship within ${range} ${
+          process.env.DISTANCE_UNIT
+        }. This action uses ${powerUse} ${process.env.POWER_UNIT} of power.`,
+      receive: ([x, y]) =>
+        `Your ship's antenna picks up a broadcast containing the coordinates [${Math.round(
+          x,
+        )}, ${Math.round(y)}], but with no further information.`,
+    },
+    distress: {
+      send: (model, range, powerUse, yesPercent) =>
+        `${Math.round(
+          yesPercent * 100,
+        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${model} begins to hum. A distress signal has been broadcast to any ship within ${range} ${
+          process.env.DISTANCE_UNIT
+        }. This action uses ${powerUse} ${process.env.POWER_UNIT} of power.`,
+      receive: ([x, y]) =>
+        `Your ship's antenna picks up a distress signal coming from the coordinates [${Math.round(
+          x,
+        )}, ${Math.round(y)}]!`,
+    },
+  },
   xp: {
     add: {
       missingUser: () => `Couldn't find the user to give experience!`,
@@ -103,6 +133,10 @@ module.exports = {
         )}% efficiency.`,
     },
   },
+  vote: {
+    insufficientVotes: () =>
+      `Not enough crew members voted, and you don't feel comfortable making such an important decision without getting everyone's input. You decide to hold off for now.`,
+  },
   move: {
     redirect: {
       success: (degrees, arrow, voteCount) =>
@@ -122,6 +156,9 @@ module.exports = {
   log: {
     empty: () =>
       `Looks like there's nothing in your log yet. Explore the galaxy to discover things!`,
+  },
+  interact: {
+    noShips: () => `There's no ship close enough to interact with.`,
   },
   discovery: {
     planet: (planet) =>

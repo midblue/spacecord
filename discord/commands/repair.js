@@ -59,13 +59,13 @@ module.exports = {
       .setTitle(`Which equipment would you like to repair?`)
 
     const sentMessages = await send(msg, embed)
-    const lastMessage = sentMessages[sentMessages.length - 1]
+    const sentMessage = sentMessages[sentMessages.length - 1]
     await awaitReaction({
-      msg: lastMessage,
+      msg: sentMessage,
       reactions: equipmentAsReactionOptions,
       embed,
       guild,
     })
-    lastMessage.delete()
+    sentMessage.delete()
   },
 }

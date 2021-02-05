@@ -24,9 +24,9 @@ module.exports = {
       .setTitle(`${ship.name} | Ship Info`)
       .addFields(status.fields.map((s) => ({ ...s, inline: s.inline ?? true })))
 
-    const lastMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg, embed))[0]
     await awaitReaction({
-      msg: lastMessage,
+      msg: sentMessage,
       reactions: status.actions,
       embed,
       guild,

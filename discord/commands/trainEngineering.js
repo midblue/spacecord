@@ -24,7 +24,7 @@ You'll gain XP for speed and accuracy.
 Capitalization doesn't matter, but copy-and-pasting won't work.
 Your crewmates can help too, if they want to.`)
 
-    const lastMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg, embed))[0]
 
     let textOptions = [
       `test target`,
@@ -60,7 +60,7 @@ Your crewmates can help too, if they want to.`)
         embed.description += `\n\n**You have ${(time / 1000).toFixed(
           0,
         )} seconds.**`
-        lastMessage.edit(embed)
+        sentMessage.edit(embed)
 
         let challengeTextInOneArray = []
         for (let i = 0; i < challengeCount; i++) {
@@ -155,6 +155,6 @@ ${sentTextOptions
 
 Result: ${await applyCustomParams(msg, res.message)}`,
     )
-    lastMessage.edit(embed)
+    sentMessage.edit(embed)
   },
 }

@@ -4,33 +4,32 @@ const { log } = require('../botcommon')
 const Discord = require('discord.js')
 
 module.exports = {
-  tag: 'ship',
+  tag: 'broadcast',
   documentation: {
-    value: `High-level overview of the ship's status and ship-related actions.`,
-    emoji: '🚀',
-    priority: 80,
+    value: `Send a broadcast to the area`,
+    emoji: '📣',
+    priority: 60,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:s|ship|status)$`, 'gi').exec(
-      content,
-    )
+    return new RegExp(`^${settings.prefix}(?:broadcast|b)$`, 'gi').exec(content)
   },
   async action({ msg, guild, ship }) {
-    log(msg, 'Ship', msg.guild.name)
+    log(msg, 'Broadcast', msg.guild.name)
 
-    const status = await ship.statusReport()
+    const broadcastRes = ship.broadcastOptions()
+    if (!broadcastRes.ok) return send(msg, broadcastRes.message)
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`${ship.name} | Status Report`)
-      .setDescription(status.headline)
-      .addFields(status.fields.map((s) => ({ ...s, inline: true })))
+      .setTitle(`Start a Broadcast Vote`)
+      .addFields(broadcastRes.fields.map((s) => ({ inline: true, ...s })))
 
     const sentMessage = (await send(msg, embed))[0]
     await awaitReaction({
       msg: sentMessage,
-      reactions: status.actions,
+      reactions: broadcastRes.actions,
       embed,
       guild,
     })
+    sentMessage.delete()
   },
 }

@@ -5,7 +5,7 @@ module.exports = async ({
   msg,
   reactions,
   embed,
-  time = 60000,
+  time = process.env.GENERAL_VOTE_TIME,
   commandsLabel,
   listeningType,
   respondeeFilter,
@@ -64,6 +64,7 @@ module.exports = async ({
 
     let collected = []
     collector.on('collect', (reaction, user) => {
+      console.log(reaction.emoji.name)
       collected.push(reaction)
       if (
         !reactions ||
@@ -74,13 +75,20 @@ module.exports = async ({
       msg.author = user
       reactions
         .find((r) => r.emoji === reaction.emoji.name)
-        .action({ user, embed, msg, reaction })
+        .action({ user, embed, msg, reaction, guild })
     })
 
     collector.on('end', () => {
+      console.log('end reaction collector')
       if (embed) {
         delete embed.footer
-        if (reactions && reactions.length && reactions[0].label)
+        if (
+          reactions &&
+          reactions.length &&
+          reactions[0].label &&
+          embed.fields &&
+          embed.fields.length
+        )
           embed.fields.pop()
         msg.edit(embed)
       }

@@ -140,6 +140,14 @@ const game = {
       ),
     }
   },
+
+  broadcast({ x, y, range, message, excludeIds = [] }) {
+    const guildsInRangeToHear = this.scanArea({ x, y, range, excludeIds })
+      .guilds
+    guildsInRangeToHear.forEach((g) => {
+      g.pushToGuild(message)
+    })
+  },
 }
 
 game.init()

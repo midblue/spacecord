@@ -37,6 +37,29 @@ module.exports = (guild) => {
     //   },
     // })
 
+    const interactableGuilds = guild.context.scanArea({
+      x: guild.ship.location[0],
+      y: guild.ship.location[1],
+      range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+      excludeIds: guild.guildId,
+    }).guilds
+    if (interactableGuilds && interactableGuilds.length)
+      actions.push({
+        emoji: '🛸',
+        label: 'Nearby Ships',
+        requirements: {
+          piloting: 2,
+        },
+        async action({ user, msg }) {
+          await runGuildCommand({
+            msg,
+            author: user,
+            commandTag: 'nearbyShips',
+            props: { interactableGuilds },
+          })
+        },
+      })
+
     actions.push({
       emoji: '📡',
       label: 'Scan Area',

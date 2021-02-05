@@ -41,6 +41,12 @@ module.exports = {
     // todo
     return { ok: true }
   },
+  msToTimeString(ms) {
+    let seconds = Math.floor(ms / 1000)
+    if (seconds < 9) seconds = '0' + seconds
+    let minutes = Math.floor(ms / 1000 / 60)
+    return `${minutes}:${seconds}`
+  },
 }
 
 function bearingToRadians(bearing) {

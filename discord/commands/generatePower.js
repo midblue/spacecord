@@ -28,9 +28,9 @@ module.exports = {
 Other crew members can help out, too.`,
       })
 
-    const lastMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg, embed))[0]
     const collected = await awaitReaction({
-      msg: lastMessage,
+      msg: sentMessage,
       embed,
       time: 10000,
       listeningType: 'running emoji',
@@ -64,7 +64,7 @@ Other crew members can help out, too.`,
         name: `Time's Up!`,
         value: powerRes.message,
       }
-      lastMessage.edit(embed)
+      sentMessage.edit(embed)
     } else send(msg, powerRes.message)
 
     setTimeout(async () => {
@@ -77,7 +77,7 @@ Other crew members can help out, too.`,
         },
       ]
       await awaitReaction({
-        msg: lastMessage,
+        msg: sentMessage,
         reactions: reactionOptions,
         embed,
         guild,

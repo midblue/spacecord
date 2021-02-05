@@ -8,7 +8,7 @@ module.exports = {
     emoji: '👩‍🏭👷🧑‍✈️',
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:crew)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:crew|c)$`, 'gi').exec(content)
   },
   async action({
     msg,
@@ -21,6 +21,7 @@ module.exports = {
   }) {
     log(msg, 'Crew', msg.guild.name)
     // leaderboards, number of members, top at different skills, etc
+    // todo, maybe combine with .ranking
     send(
       msg,
       JSON.stringify(

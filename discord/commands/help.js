@@ -26,7 +26,7 @@ module.exports = {
   noShip: true,
   documentation: {
     name: `help`,
-    value: `Shows this command.`,
+    value: `Shows this message.`,
     emoji: 'ℹ️',
     category: 'settings',
     priority: 100,

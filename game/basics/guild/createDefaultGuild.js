@@ -20,19 +20,31 @@ module.exports = function ({ discordGuild, channelId }) {
         {
           id: 'basic1',
           bought: Date.now(),
-          maintained: Date.now(),
+          repaired: Date.now(),
           repair: 0.8,
         },
       ],
       telemetry: [
         {
           id: 'telemetry1',
+          bought: Date.now(),
+          repaired: Date.now(),
           repair: 0.6,
+        },
+      ],
+      transciever: [
+        {
+          id: 'transciever1',
+          bought: Date.now(),
+          repaired: Date.now(),
+          repair: 0.75,
         },
       ],
       battery: [
         {
           id: 'battery1',
+          bought: Date.now(),
+          repaired: Date.now(),
           repair: 1,
         },
       ],

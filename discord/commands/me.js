@@ -84,9 +84,9 @@ module.exports = {
     embed.fields.push(trainableSkillsField)
 
     const sentMessages = await send(msg, embed)
-    const lastMessage = sentMessages[sentMessages.length - 1]
+    const sentMessage = sentMessages[sentMessages.length - 1]
     await awaitReaction({
-      msg: lastMessage,
+      msg: sentMessage,
       reactions: trainableSkillsAsReactionOptions,
       embed,
       guild,

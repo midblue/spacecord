@@ -20,7 +20,7 @@ module.exports = (guild) => {
     if (powerRes.message) messages.push(powerRes.message)
 
     if (!telemetry || !haveEnoughPower || eyesOnly) {
-      let range = guild.ship.baseScanRange
+      let range = process.env.INTERACT_RADIUS
       const scanResult = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
@@ -37,7 +37,7 @@ module.exports = (guild) => {
       messages.push(
         preMessage +
           ` you look out out the window. 
-You can see for about ${range}${process.env.DISTANCE_UNIT}.
+You can see for about ${range} ${process.env.DISTANCE_UNIT}.
 You see ${
             thingsFoundCount
               ? thingsFoundCount +

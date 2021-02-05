@@ -50,7 +50,7 @@ module.exports = {
       .setTitle(`Crew Rankings`)
       .addFields(rankings.map((s) => ({ ...s, inline: s.inline ?? true })))
 
-    const lastMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg, embed))[0]
 
     const trainableSkillActions = allSkills.map((skill) => {
       return {
@@ -61,7 +61,7 @@ module.exports = {
       }
     })
     await awaitReaction({
-      msg: lastMessage,
+      msg: sentMessage,
       reactions: trainableSkillActions,
       embed,
       guild,

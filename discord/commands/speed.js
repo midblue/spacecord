@@ -45,7 +45,7 @@ Your ship's engine supports \`${
         }\` choices for voting.`,
       )
 
-    const { userReactions, lastMessage } = await runPoll({
+    const { userReactions, sentMessage } = await runPoll({
       embed,
       time: voteTime,
       reactions: availableSpeedLevels,
@@ -79,6 +79,6 @@ Final speed is \`${res.newSpeed} ${
             : ''),
     }
 
-    lastMessage.edit(embed)
+    sentMessage.edit(embed)
   },
 }

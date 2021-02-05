@@ -16,7 +16,7 @@ module.exports = {
   },
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:direction|steer|turn|rotate)$`,
+      `^${settings.prefix}(?:dir|direction|steer|turn|rotate)$`,
       'gi',
     ).exec(content)
   },
@@ -42,7 +42,7 @@ Your ship's engine supports \`${
         }\` choices for voting.`,
       )
 
-    const { userReactions, lastMessage } = await runPoll({
+    const { userReactions, sentMessage } = await runPoll({
       embed,
       time: voteTime,
       reactions: availableDirections,
@@ -69,6 +69,6 @@ Your ship's engine supports \`${
         : `Result: Stay the course`,
     })
 
-    lastMessage.edit(embed)
+    sentMessage.edit(embed)
   },
 }

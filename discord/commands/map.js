@@ -6,7 +6,7 @@ module.exports = {
   tag: 'map',
   documentation: {
     name: `map`,
-    value: `The ship's map of discoveries.`,
+    value: `The ship's map of its discoveries.`,
     emoji: '🗺',
     priority: 40,
   },
@@ -21,5 +21,9 @@ module.exports = {
     // todo
     // const res = ship.getMap()
     // return send(msg, res.message)
+    send(
+      msg,
+      `All you have is a sketch that the captain drew on the back of a napkin. It doesn't look like much of anything, as far as you can tell.`,
+    )
   },
 }

@@ -1,19 +1,35 @@
 const send = require('./send')
 const awaitReaction = require('./awaitReaction')
+const { msToTimeString } = require('../../common')
 
 module.exports = async ({
   embed,
-  time,
+  time = process.env.GENERAL_VOTE_TIME,
   reactions,
   requirements,
+  minimumMemberPercent,
   msg,
   respondeeFilter,
   ship,
 }) => {
   if (!embed.fields) embed.fields = []
+
+  const minimumMembersMustVote = minimumMemberPercent
+    ? Math.ceil(ship.members.length * minimumMemberPercent)
+    : -1
+  let currentMembersVoted = {}
+
+  if (minimumMembersMustVote > 0)
+    embed.fields.push({
+      name: 'Member requirement',
+      value: `At least ${Math.round(
+        minimumMemberPercent * 100,
+      )}% of the crew (${minimumMembersMustVote} members) must vote for this vote to be valid.`,
+    })
+
   embed.fields.push({
     name: 'Remaining vote time:',
-    value: (time / 60 / 1000).toFixed(2) + ' minutes',
+    value: msToTimeString(time),
   })
 
   const startTime = Date.now()
@@ -21,22 +37,22 @@ module.exports = async ({
   let done = false
 
   const sentMessages = await send(msg, embed)
-  const lastMessage = sentMessages[sentMessages.length - 1]
+  const sentMessage = sentMessages[sentMessages.length - 1]
 
   const embedUpdateInterval = setInterval(() => {
     if (done === true) return clearInterval(embedUpdateInterval)
     remainingTime = startTime + time - Date.now()
     if (remainingTime < 0) remainingTime = 0
-    embed.fields = {
+    embed.fields[embed.fields.length - 2] = {
       name: 'Remaining vote time:',
-      value: (remainingTime / 60 / 1000).toFixed(2) + ' minutes',
+      value: msToTimeString(time),
     }
 
     if (remainingTime <= 0) {
       clearInterval(embedUpdateInterval)
       done = true
     }
-    lastMessage.edit(embed)
+    sentMessage.edit(embed)
   }, 5000)
 
   if (!respondeeFilter)
@@ -50,7 +66,7 @@ module.exports = async ({
     }
 
   const gatheredReactions = await awaitReaction({
-    msg: lastMessage,
+    msg: sentMessage,
     reactions,
     embed,
     time: time,
@@ -72,6 +88,7 @@ module.exports = async ({
       .map((u) => u.id)
 
     ids.forEach((id) => {
+      currentMembersVoted[id] = true
       userReactionCounts[id] = (userReactionCounts[id] || 0) + 1
     })
 
@@ -91,8 +108,13 @@ module.exports = async ({
     `(${validVotes} valid vote${validVotes === 1 ? '' : 's'} counted)`,
   )
 
+  const enoughMembersVoted =
+    Object.keys(currentMembersVoted).length >= minimumMembersMustVote
+
   return {
     userReactions: userReactionsToUse,
-    lastMessage,
+    insufficientVotes: !enoughMembersVoted,
+    voters: Object.keys(currentMembersVoted).length,
+    sentMessage,
   }
 }

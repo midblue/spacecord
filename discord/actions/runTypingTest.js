@@ -7,7 +7,7 @@ module.exports = ({
   msg,
   challengeCount = 5,
   timePerCharacter = 160,
-  lastMessage,
+  sentMessage,
   textOptions,
   embed,
   ship,
@@ -29,7 +29,7 @@ module.exports = ({
       embed.description += `\n\n**You have ${(time / 1000).toFixed(
         0,
       )} seconds.**`
-      lastMessage.edit(embed)
+      sentMessage.edit(embed)
     } else send(msg, `**You have ${(time / 1000).toFixed(0)} seconds.**`)
 
     let challengeTextInOneArray = []

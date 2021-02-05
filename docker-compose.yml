@@ -8,4 +8,4 @@ services:
       - 8080:8080
     volumes:
       - ./:/home/node/app
-    command: "node index.js"
+    command: "npx nodemon index.js"

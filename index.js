@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('events').EventEmitter.prototype._maxListeners = 5000
 
 require('./db/db')
 

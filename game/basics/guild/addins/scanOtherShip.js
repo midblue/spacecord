@@ -11,7 +11,6 @@ module.exports = (guild) => {
     // todo check if in range
 
     let fields = [{ name: 'Name', value: otherGuild.ship.name }],
-      actions = [],
       message = [],
       ok = true
 
@@ -71,20 +70,9 @@ module.exports = (guild) => {
       otherGuild.ship.logEntry(story.scanShip.detected(didSucceed, scanner))
     }
 
-    actions = [
-      {
-        emoji: '⚔️',
-        label: 'Attack!',
-        action({ user, msg }) {
-          console.log('ATTACCCCCKKKKKKK')
-        },
-      },
-    ]
-
     return {
       ok: true,
       fields,
-      actions,
       message,
     }
   }

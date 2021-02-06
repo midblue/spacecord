@@ -4,12 +4,6 @@ const { numberToEmoji, capitalize } = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
 const Discord = require('discord.js')
 const story = require('../../game/basics/story/story')
-const trainingActions = {
-  engineering: require('./trainEngineering').action,
-  mechanics: require('./trainMechanics').action,
-}
-const runGuildCommand = require('../actions/runGuildCommand')
-const getActionsOnOtherShip = require('../../game/basics/guild/addins/getActionsOnOtherGuild')
 
 module.exports = {
   tag: 'nearbyShips',

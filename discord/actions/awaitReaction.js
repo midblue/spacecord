@@ -6,7 +6,7 @@ module.exports = async ({
   msg,
   reactions,
   embed,
-  time = process.env.GENERAL_VOTE_TIME,
+  time = process.env.GENERAL_RESPONSE_TIME,
   commandsLabel,
   listeningType,
   respondeeFilter,

@@ -17,6 +17,15 @@ module.exports = (guild) => {
       },
     })
 
+    actions.push({
+      emoji: '⚔️',
+      label: 'Attack!',
+      action({ user, msg, guild, otherGuild }) {
+        console.log('ATTACCCCCKKKKKKK')
+        // todo
+      },
+    })
+
     return actions
   }
 }

@@ -11,6 +11,12 @@ module.exports = (guild) => {
       value: guild.ship.modelDisplayName,
     })
 
+    const captain = guild.ship.captain
+    fields.push({
+      name: `👩‍✈️ Captain`,
+      value: captain ? `%username%${captain}%` : 'No captain',
+    })
+
     fields.push({
       name: `👵🏽 Age`,
       value:

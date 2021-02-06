@@ -17,7 +17,7 @@ async function spawn({ discordGuild, channelId, context }) {
 
   guild = createDefaultGuild({ discordGuild, channelId })
   liveify(guild, context)
-  db.guild.add({ guildId: discordGuild.id, data: guild.saveableData() })
+  await db.guild.add({ guildId: discordGuild.id, data: guild.saveableData() })
   return guild
 }
 

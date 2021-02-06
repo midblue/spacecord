@@ -37,7 +37,56 @@ module.exports = {
     )
   },
   async action({ msg, settings, game, client }) {
-    log(msg, 'Test')
+    log(msg, 'Help')
+
+    const embed3 = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(`Settings`)
+      .setDescription(`Help and settings for the bot itself.`)
+      .addFields(
+        commands
+          .filter((c) => c.documentation?.category === 'settings')
+          .filter((c) => c !== false)
+          .sort(
+            (a, b) =>
+              (b?.documentation?.priority || 0) -
+              (a?.documentation?.priority || 0),
+          )
+          .map((c) => ({
+            name: `${c?.documentation?.emoji || ''} \`${
+              settings?.prefix || defaultServerSettings.prefix
+            }${c?.documentation?.name || c.tag}\``,
+            value: c.documentation?.value || 'Self-explanatory.',
+            inline: true,
+          })),
+      )
+    send(msg, embed3)
+
+    const embed2 = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(`Captain's Controls`)
+      .setDescription(
+        `Only the ship's captain (or server admins) can do these actions!`,
+      )
+      .addFields(
+        commands
+          .filter((c) => c.captain)
+          .filter((c) => c !== false)
+          .sort(
+            (a, b) =>
+              (b?.documentation?.priority || 0) -
+              (a?.documentation?.priority || 0),
+          )
+          .map((c) => ({
+            name: `${c?.documentation?.emoji || ''} \`${
+              settings?.prefix || defaultServerSettings.prefix
+            }${c?.documentation?.name || c.tag}\``,
+            value: c.documentation?.value || 'Self-explanatory.',
+            inline: true,
+          })),
+      )
+    send(msg, embed2)
+
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`Gameplay`)
@@ -63,31 +112,6 @@ module.exports = {
             inline: true,
           })),
       )
-
     send(msg, embed)
-
-    const embed2 = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
-      .setTitle(`Settings`)
-      .setDescription(`Help and settings for the bot itself.`)
-      .addFields(
-        commands
-          .filter((c) => c.documentation?.category === 'settings')
-          .filter((c) => c !== false)
-          .sort(
-            (a, b) =>
-              (b?.documentation?.priority || 0) -
-              (a?.documentation?.priority || 0),
-          )
-          .map((c) => ({
-            name: `${c?.documentation?.emoji || ''} \`${
-              settings?.prefix || defaultServerSettings.prefix
-            }${c?.documentation?.name || c.tag}\``,
-            value: c.documentation?.value || 'Self-explanatory.',
-            inline: true,
-          })),
-      )
-
-    send(msg, embed2)
   },
 }

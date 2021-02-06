@@ -45,11 +45,9 @@ module.exports = (guild) => {
       channelId: 'asdf',
     })
     for (let key of Object.keys(guildToSave))
-      if (!dummyGuildObject[key] && dummyGuildObject[key] !== 0)
-        delete guildToSave[key]
+      if (dummyGuildObject[key] === undefined) delete guildToSave[key]
     for (let key of Object.keys(guildToSave.ship))
-      if (!dummyGuildObject.ship[key] && dummyGuildObject.ship[key] !== 0)
-        delete guildToSave.ship[key]
+      if (dummyGuildObject.ship[key] === undefined) delete guildToSave.ship[key]
 
     return guildToSave
   }

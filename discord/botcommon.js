@@ -55,19 +55,36 @@ const customParams = [
     },
   },
 ]
-function applyCustomParams(msgOrChannel, text) {
-  return new Promise(async (resolve) => {
-    let newText = text
-    for (let param of customParams) {
-      param.regex.lastIndex = 0
-      let foundInstance = param.regex.exec(newText)
-      while (foundInstance) {
-        const replaceValue = await param.replace(foundInstance, msgOrChannel)
-        newText = newText.replace(foundInstance[0], replaceValue)
-        param.regex.lastIndex = 0
-        foundInstance = param.regex.exec(newText)
-      }
+async function applyCustomParams(msgOrChannel, textOrObject) {
+  if (typeof textOrObject === 'string') return await apply(textOrObject)
+  if (Array.isArray(textOrObject))
+    return await Promise.all(
+      textOrObject.map(async (t) => {
+        return await applyCustomParams(msgOrChannel, t)
+      }),
+    )
+  else if (typeof textOrObject === 'object') {
+    const newObj = {}
+    for (let key of Object.keys(textOrObject)) {
+      newObj[key] = await applyCustomParams(msgOrChannel, textOrObject[key])
     }
-    resolve(newText)
-  })
+    return newObj
+  }
+
+  function apply(text) {
+    return new Promise(async (resolve) => {
+      let newText = text
+      for (let param of customParams) {
+        param.regex.lastIndex = 0
+        let foundInstance = param.regex.exec(newText)
+        while (foundInstance) {
+          const replaceValue = await param.replace(foundInstance, msgOrChannel)
+          newText = newText.replace(foundInstance[0], replaceValue)
+          param.regex.lastIndex = 0
+          foundInstance = param.regex.exec(newText)
+        }
+      }
+      resolve(newText)
+    })
+  }
 }

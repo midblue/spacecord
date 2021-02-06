@@ -1,5 +1,5 @@
 const send = require('../actions/send')
-const { username } = require('../botcommon')
+const { username, applyCustomParams } = require('../botcommon')
 const defaultServerSettings = require('../defaults/defaultServerSettings')
 const db = require('../../db/db')
 
@@ -58,11 +58,24 @@ module.exports = {
 
         const authorCrewMemberObject =
           msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
-        if (!command.public && !authorCrewMemberObject && !msg.author.bot)
-          // bots are ok because of 2ndhand commands from reactions
+        if (!command.public && !authorCrewMemberObject)
           return send(
             msg,
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
+          )
+
+        if (
+          command.captain &&
+          !authorIsAdmin &&
+          ship?.captain &&
+          msg.author.id !== ship.captain
+        )
+          return send(
+            msg,
+            await applyCustomParams(
+              msg,
+              `That command is only available to the ship's captain, %username%${ship.captain}%.`,
+            ),
           )
 
         let requirements

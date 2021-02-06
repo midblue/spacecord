@@ -26,6 +26,10 @@ module.exports = {
       change: (newName) =>
         `Your crew cheers with applause as you unveil the ship's new name: "${newName}".`,
     },
+    captain: {
+      change: (user) =>
+        `Your crew cheers with applause as the new captain %username%${user.id}% steps up to the helm of the ship.`,
+    },
   },
   crew: {
     add: {
@@ -237,7 +241,7 @@ The ship ${ship.name} is on the hunt!`,
     planet: (planet) =>
       `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${
         planet.color
-      } planet located at [${planet.location.join(', ')}]${
+      } planet located at [${planet.location.join(', ')}] ${
         process.env.DISTANCE_UNIT
       }. It has been added to your galaxy map. Congratulations!`,
   },

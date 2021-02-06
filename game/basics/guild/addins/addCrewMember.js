@@ -22,7 +22,10 @@ module.exports = (guild) => {
 
     // success
 
-    if (guild.ship.members.length === 0) newMember.roles.captain = Date.now()
+    if (guild.ship.members.length === 0) {
+      guild.ship.captain = newMember.id
+      guild.saveNewDataToDb()
+    }
     guild.ship.members.push(newMember)
     db.guild.addCrewMember({
       guildId: guild.guildId,

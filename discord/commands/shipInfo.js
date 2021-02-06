@@ -1,5 +1,5 @@
 const send = require('../actions/send')
-const { log } = require('../botcommon')
+const { log, applyCustomParams } = require('../botcommon')
 const Discord = require('discord.js')
 const awaitReaction = require('../actions/awaitReaction')
 
@@ -19,10 +19,11 @@ module.exports = {
     // age, model, upgrades, slots, image, etc
 
     const status = ship.shipInfo()
+    status.fields = await applyCustomParams(msg, status.fields)
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`${ship.name} | Ship Info`)
-      .addFields(status.fields.map((s) => ({ ...s, inline: s.inline ?? true })))
+      .addFields(status.fields.map((s) => ({ inline: true, ...s })))
 
     const sentMessage = (await send(msg, embed))[0]
     await awaitReaction({

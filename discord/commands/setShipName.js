@@ -5,12 +5,11 @@ const Discord = require('discord.js')
 
 module.exports = {
   tag: 'setShipName',
-  admin: true,
+  captain: true,
   documentation: {
     name: `setshipname <ship name>`,
     value: `Sets your ship's name.`,
     emoji: '📛',
-    category: 'settings',
     priority: 80,
   },
   test(content, settings) {

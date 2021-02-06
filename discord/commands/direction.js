@@ -60,14 +60,17 @@ Your ship's engine supports \`${
     })
     const res = ship.redirect(toAggregate)
 
-    if (embed.fields && embed.fields.length) embed.fields.pop()
-    else embed.fields = []
+    if (!embed.fields || !embed.fields.length) embed.fields = []
     embed.fields.push({
       name: 'Vote Complete!',
       value: res.ok
-        ? `Result: Steering to ${res.arrow} \`${res.degrees} degrees\``
+        ? `Result: Steering to ${ship.getDirectionString()}`
         : `Result: Stay the course`,
     })
+    embed.description = embed.description.replace(
+      'Current direction is',
+      'Previous direction was',
+    )
 
     sentMessage.edit(embed)
   },

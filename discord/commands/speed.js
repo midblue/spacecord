@@ -64,6 +64,10 @@ Your ship's engine supports \`${
 
     const res = ship.redetermineSpeed(toAggregate)
 
+    embed.description = embed.description.replace(
+      'Current speed is',
+      'Previous speed was',
+    )
     embed.fields = {
       name: 'Vote Complete!',
       value: res.ok

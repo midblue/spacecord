@@ -16,7 +16,7 @@ fs.readdir('./discord/commands', (err, files) => {
       return
     commands.push(require(`./${file}`))
   })
-  console.log(`Loaded ${commands.length} commands`)
+  // console.log(`Loaded ${commands.length} commands`)
 })
 
 module.exports = {

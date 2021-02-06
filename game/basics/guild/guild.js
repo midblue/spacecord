@@ -1,4 +1,5 @@
 const shipsData = require('../ships')
+const factionsData = require('../factions')
 const equipmentData = require('../equipment/equipment')
 const addins = require('./addins/index')
 const createDefaultGuild = require('./createDefaultGuild')
@@ -32,6 +33,11 @@ function liveify(guild, context) {
   guild.ship = {
     ...shipsData[guild.ship.model],
     ...guild.ship, // this order allows us to have "unique" items/ships
+  }
+  // add base properties to faction
+  guild.ship.faction = {
+    ...factionsData[guild.ship.faction.color],
+    ...guild.ship.faction,
   }
 
   // add base properties to items onboard

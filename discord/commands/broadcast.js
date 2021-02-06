@@ -6,7 +6,7 @@ const Discord = require('discord.js')
 module.exports = {
   tag: 'broadcast',
   documentation: {
-    value: `Send a broadcast to the area`,
+    value: `Send a broadcast to the area.`,
     emoji: '📣',
     priority: 60,
   },
@@ -20,7 +20,7 @@ module.exports = {
     if (!broadcastRes.ok) return send(msg, broadcastRes.message)
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`Start a Broadcast Vote`)
+      .setTitle(`Broadcast`)
       .addFields(broadcastRes.fields.map((s) => ({ inline: true, ...s })))
 
     const sentMessage = (await send(msg, embed))[0]
@@ -30,6 +30,5 @@ module.exports = {
       embed,
       guild,
     })
-    sentMessage.delete()
   },
 }

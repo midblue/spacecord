@@ -1,5 +1,6 @@
 const createDefaultGuild = require('../createDefaultGuild')
 const shipsData = require('../../ships')
+const factionsData = require('../../factions')
 const equipmentData = require('../../equipment/equipment')
 const { ship } = require('../../story/story')
 
@@ -12,6 +13,7 @@ module.exports = (guild) => {
         ship: {
           ...guild.ship,
           members: (guild.ship.members || []).map((m) => m.saveableData()),
+          faction: { ...guild.ship.faction },
         },
       }),
     )
@@ -23,6 +25,11 @@ module.exports = (guild) => {
     // remove base properties from ship
     Object.keys(shipsData[guild.ship.model]).forEach(
       (key) => delete guildToSave.ship[key],
+    )
+
+    // remove base properties from faction
+    Object.keys(factionsData[guild.ship.faction.color]).forEach(
+      (key) => delete guildToSave.ship.faction[key],
     )
 
     // remove base properties from items onboard

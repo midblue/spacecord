@@ -8,7 +8,7 @@ module.exports = function (passedDb) {
     async getAll() {
       try {
         const snapshot = await db.collection('guilds').get()
-        if (snapshot.empty) return
+        if (snapshot.empty) return []
 
         const guilds = []
         snapshot.forEach((doc) => {

@@ -141,11 +141,12 @@ const game = {
     }
   },
 
-  broadcast({ x, y, range, message, excludeIds = [] }) {
+  broadcast({ x, y, range, message, logMessage, excludeIds = [] }) {
     const guildsInRangeToHear = this.scanArea({ x, y, range, excludeIds })
       .guilds
     guildsInRangeToHear.forEach((g) => {
       g.pushToGuild(message)
+      g.ship.logEntry(logMessage)
     })
   },
 }

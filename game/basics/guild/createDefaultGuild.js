@@ -11,7 +11,7 @@ module.exports = function ({ discordGuild, channelId }) {
       flying: true,
     },
     power: 11,
-    faction: Math.floor(Math.random() * 3),
+    faction: { color: 'green' },
     members: [],
     seen: { planets: [] },
     log: [],
@@ -32,9 +32,9 @@ module.exports = function ({ discordGuild, channelId }) {
           repair: 0.6,
         },
       ],
-      transciever: [
+      transceiver: [
         {
-          id: 'transciever1',
+          id: 'transceiver1',
           bought: Date.now(),
           repaired: Date.now(),
           repair: 0.75,

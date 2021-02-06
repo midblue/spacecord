@@ -120,8 +120,6 @@ You see ${
           percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
           '\n' +
           telemetry.powerUse +
-          '/' +
-          guild.ship.maxPower() +
           ' ' +
           process.env.POWER_UNIT +
           ' used',

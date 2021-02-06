@@ -30,6 +30,7 @@ module.exports = async ({
   embed.fields.push({
     name: 'Remaining vote time:',
     value: msToTimeString(time),
+    id: 'remainingTime',
   })
 
   const startTime = Date.now()
@@ -43,10 +44,9 @@ module.exports = async ({
     if (done === true) return clearInterval(embedUpdateInterval)
     remainingTime = startTime + time - Date.now()
     if (remainingTime < 0) remainingTime = 0
-    embed.fields[embed.fields.length - 2] = {
-      name: 'Remaining vote time:',
-      value: msToTimeString(time),
-    }
+    embed.fields[
+      embed.fields.findIndex((f) => f.id === 'remainingTime')
+    ].value = msToTimeString(time)
 
     if (remainingTime <= 0) {
       clearInterval(embedUpdateInterval)
@@ -74,6 +74,12 @@ module.exports = async ({
     respondeeFilter,
   })
   done = true
+
+  embed.fields.splice(
+    embed.fields.findIndex((f) => f.id === 'remainingTime'),
+    1,
+  )
+  sentMessage.edit(embed)
 
   const userReactionsToUse = {}
   const userReactionsAsList = []

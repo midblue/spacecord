@@ -12,6 +12,7 @@ module.exports = async ({
   guild,
 }) => {
   return new Promise(async (resolve) => {
+    if (!reactions || !reactions.length) return resolve([])
     if (embed) {
       embed.setFooter(
         `Listening for ${

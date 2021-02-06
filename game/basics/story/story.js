@@ -67,28 +67,101 @@ module.exports = {
     voteFailed: () =>
       `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     location: {
-      send: (model, range, powerUse, yesPercent) =>
+      send: ({ ship, equipment, powerUse, yesPercent }) =>
         `${Math.round(
           yesPercent * 100,
-        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${model} begins to hum. Your location has been broadcast to any ship within ${range} ${
-          process.env.DISTANCE_UNIT
-        }. This action uses ${powerUse} ${process.env.POWER_UNIT} of power.`,
-      receive: ([x, y]) =>
+        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
+          equipment.modelDisplayName
+        } begins to hum. Your location has been broadcast to any ship within ${
+          equipment.range
+        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          process.env.POWER_UNIT
+        } of power.`,
+      receive: (ship) =>
         `Your ship's antenna picks up a broadcast containing the coordinates [${Math.round(
-          x,
-        )}, ${Math.round(y)}], but with no further information.`,
+          ship.location[0],
+        )}, ${Math.round(ship.location[1])}], but with no further information.`,
     },
     distress: {
-      send: (model, range, powerUse, yesPercent) =>
+      send: ({ ship, equipment, powerUse, yesPercent }) =>
         `${Math.round(
           yesPercent * 100,
-        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${model} begins to hum. A distress signal has been broadcast to any ship within ${range} ${
-          process.env.DISTANCE_UNIT
-        }. This action uses ${powerUse} ${process.env.POWER_UNIT} of power.`,
-      receive: ([x, y]) =>
+        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
+          equipment.modelDisplayName
+        } begins to hum. A distress signal has been broadcast to any ship within ${
+          equipment.range
+        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          process.env.POWER_UNIT
+        } of power.`,
+      receive: (ship) =>
         `Your ship's antenna picks up a distress signal coming from the coordinates [${Math.round(
-          x,
-        )}, ${Math.round(y)}]!`,
+          ship.location[0],
+        )}, ${Math.round(ship.location[1])}]!`,
+    },
+    surrender: {
+      send: ({ ship, equipment, powerUse, yesPercent }) =>
+        `${Math.round(
+          yesPercent * 100,
+        )}% of the available crew members agree, so you command your ship's ${
+          equipment.modelDisplayName
+        } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${
+          equipment.range
+        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          process.env.POWER_UNIT
+        } of power.`,
+      receive: (ship) =>
+        `Your ship's antenna picks up a surrender broadcast from the ship ${ship.name}!`,
+    },
+    factionRally: {
+      send: ({ ship, equipment, powerUse, yesPercent }) =>
+        `${Math.round(
+          yesPercent * 100,
+        )}% of the available crew members agree, so you hit the big ${
+          ship.faction.color
+        } button on your control panel. Your ship's ${
+          equipment.modelDisplayName
+        } vibrates in time with your faction's anthem. A rallying cry for ${
+          ship.faction.emoji
+        }${ship.faction.name} echoes across space to any ship within ${
+          equipment.range
+        } ${process.env.DISTANCE_UNIT}! This action uses ${powerUse} ${
+          process.env.POWER_UNIT
+        } of power.`,
+      receive: (ship) =>
+        `Your ship's antenna picks up a rallying cry for ${ship.faction.emoji}${ship.faction.name} from the ship ${ship.name}. Their anthem echoes through your speakers.`,
+    },
+    attack: {
+      send: ({ ship, equipment, powerUse, yesPercent }) =>
+        `${Math.round(
+          yesPercent * 100,
+        )}% of the available crew members agree, so you hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
+          equipment.modelDisplayName
+        } broadcasts your avarice. An attack signal makes its way to any ship within ${
+          equipment.range
+        } ${process.env.DISTANCE_UNIT}! This action uses ${powerUse} ${
+          process.env.POWER_UNIT
+        } of power.`,
+      receive: (ship) =>
+        `Your ship's antenna goes silent for a moment, and then suddenly a monitor lights up in jarring red with this symbol.
+				
+888888888888888888888888888888888888888888888
+888888888888888888888888888888888888888888888
+888888888888888888P""  ""98888888888888888888
+888888888P"88888P          988888"98888888888
+888888888  "9888            888P"  8888888888
+88888888888bo "9  d8o  o8b  P" od888888888888
+88888888888888bob 98"  "8P dod888888888888888
+88888888888888888    db    888888888888888888
+8888888888888888888      88888888888888888888
+8888888888888888P"9bo  odP"988888888888888888
+8888888888888P" od88888888bo "988888888888888
+88888888888   d88888888888888b   888888888888
+888888888888oo8888888888888888oo8888888888888
+888888888888888888888888888888888888888888888
+
+The ship ${ship.name} is on the hunt!`,
+      receiveLog: (ship) =>
+        `You pick up a declaration of attack from the ship ${ship.name}!`,
     },
   },
   xp: {

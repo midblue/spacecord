@@ -109,20 +109,23 @@ treasure goblins
 horde alliance garbled chat
 
 
-game types
-	anagrams
-	all the words you can make out of these letters
-	type as many 5 letter words that start with L and end with Y that you can in 10 secs
-	country flag emojis
-		countries with space programs
-	country outlines, add the right flag
-	name the space themed tv show or movie
-	Generate images with various numbers of space emojis in them, enough that it’s hard to count quickly
-		And the user has to respond with the number of that emoji in the picture
-		Under a time limit
-		Leveling up makes the average number higher and higher
-		Get xp based on how close you are to the real number
 
-exploration
-	map
-		shows sensor range over time, what you saw, where you went
+
+
+
+
+
+
+
+
+
+
+This week, my server has been getting chased around by a much bigger Green faction ship!
+They keep tracking our movements, and taking potshots at us whenever they can. Luckily, our pilots are pretty great, and they're keeping us mostly safe. Everyone else has been taking night classes in piloting to help us stay that way.
+We took a crew vote and decided we needed to broadcast an SOS, hoping that a ship friendly to our Yellow faction would hear it and come to help. After weeks of playing cat-and-mouse and with our health ever-dwindling, we were on the verge of broadcasting a surrender signal, and letting the pirates have their way with our stores.
+Suddenly, two new ships appeared on our radar. A pair of Yellow faction ships traveling together from a nearby planet swooped down upon the Green ship, instantly bringing down its shields.
+
+
+
+
+

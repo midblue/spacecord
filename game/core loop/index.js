@@ -3,7 +3,7 @@ const db = require('../../db/db')
 
 module.exports = {
   async start() {
-    log('Core', 'STARTING GAME')
+    log('init', 'Starting game')
     this.lastTick = Date.now()
 
     setInterval(async () => {

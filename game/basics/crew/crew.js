@@ -11,6 +11,7 @@ function spawn(user, guild) {
       mechanics: 4,
       linguistics: 0,
     },
+    roles: {},
   }
   liveify(data, guild)
   return data

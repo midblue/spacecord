@@ -68,7 +68,6 @@ module.exports = (guild) => {
             msg,
             ship: guild.ship,
           })
-          console.log(reallyDoIt)
           if (reallyDoIt.insufficientVotes) {
             guild.ship.logEntry(
               `A vote started by %username%${user.id}% to broadcast the ship's location failed with too few votes.`,

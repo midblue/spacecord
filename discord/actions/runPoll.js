@@ -82,45 +82,32 @@ module.exports = async ({
   sentMessage.edit(embed)
 
   const userReactionsToUse = {}
-  const userReactionsAsList = []
   const userReactionCounts = {}
 
   // todo weight by higher level / role / rank
 
-  gatheredReactions.forEach((r) => {
-    const ids = r.users.cache
-      .array()
-      .filter((u) => !u.bot)
-      .map((u) => u.id)
-
-    ids.forEach((id) => {
-      currentMembersVoted[id] = true
-      userReactionCounts[id] = (userReactionCounts[id] || 0) + 1
-    })
-
-    userReactionsAsList.push(
-      ...ids.map((id) => ({ userId: id, emoji: r.emoji.name })),
-    )
+  gatheredReactions.forEach(({ user, emoji }) => {
+    userReactionCounts[user.id] = (userReactionCounts[user.id] || 0) + 1
   })
-  userReactionsAsList.forEach((r) => {
-    userReactionsToUse[r.emoji] = userReactionsToUse[r.emoji] || {}
-    userReactionsToUse[r.emoji].weightedCount =
-      (userReactionsToUse[r.emoji].weightedCount || 0) +
-      1 / userReactionCounts[r.userId] / Object.keys(userReactionCounts).length
+  gatheredReactions.forEach(({ user, emoji }) => {
+    userReactionsToUse[emoji] = userReactionsToUse[emoji] || {}
+    userReactionsToUse[emoji].weightedCount =
+      (userReactionsToUse[emoji].weightedCount || 0) +
+      1 / userReactionCounts[user.id] / Object.keys(userReactionCounts).length
   })
 
-  const validVotes = userReactionsAsList.length
+  const validVotes = gatheredReactions.length
   embed.setFooter(
     `(${validVotes} valid vote${validVotes === 1 ? '' : 's'} counted)`,
   )
 
   const enoughMembersVoted =
-    Object.keys(currentMembersVoted).length >= minimumMembersMustVote
+    Object.keys(userReactionCounts).length >= minimumMembersMustVote
 
   return {
     userReactions: userReactionsToUse,
     insufficientVotes: !enoughMembersVoted,
-    voters: Object.keys(currentMembersVoted).length,
+    voters: Object.keys(userReactionCounts).length,
     sentMessage,
   }
 }

@@ -1,5 +1,6 @@
 const story = require('../../game/basics/story/story')
 const send = require('../actions/send')
+const { client } = require('../bot')
 
 module.exports = async ({
   msg,
@@ -12,7 +13,6 @@ module.exports = async ({
   guild,
 }) => {
   return new Promise(async (resolve) => {
-    if (!reactions || !reactions.length) return resolve([])
     if (embed) {
       embed.setFooter(
         `Listening for ${
@@ -21,6 +21,7 @@ module.exports = async ({
       )
       if (reactions && reactions.length && reactions[0].label && embed)
         embed.fields.push({
+          id: 'commandLabel',
           name: commandsLabel || `Commands`,
           value: reactions
             .map(({ emoji, label }) => `${emoji} - ${label}`)
@@ -32,69 +33,98 @@ module.exports = async ({
     if (reactions && reactions.length)
       for (let r of reactions) msg.react(r.emoji)
 
-    const filter = (userReaction, user) => {
-      if (user.bot) return false
-      if (respondeeFilter && !respondeeFilter(user)) return false
-      if (!reactions || !reactions.length) return true
+    let collectedReactions = []
 
-      const reaction = reactions.find(
-        (r) => r.emoji === userReaction.emoji.name,
-      )
-      if (!reaction) return false
+    // define an event handler that takes raw API data and filters it
 
-      if (reaction.requirements) {
-        const member = guild.ship.members.find((m) => m.id === user.id)
-        if (!member) return false
-        for (let r in reaction.requirements)
-          if ((member?.level?.[r] || 0) < reaction.requirements[r]) {
-            send(
-              msg,
-              story.action.doesNotMeetRequirements(
-                reaction.requirements,
-                member,
-              ),
-            )
-            return false
-          }
+    const eventHandler = async (event) => {
+      // `event.t` is the raw event name
+      if (event.t !== 'MESSAGE_REACTION_ADD') return
+
+      const { d: data } = event
+      const user = await client.users.fetch(data.user_id)
+      if (user.bot) return
+      if (respondeeFilter && !respondeeFilter(user)) return
+      const channel =
+        (await client.channels.fetch(data.channel_id)) ||
+        (await user.createDM())
+      if (channel.id !== msg.channel.id) return
+      const message = await channel.messages.fetch(data.message_id)
+      if (!message || message.id !== msg.id) return
+      const userReactedWithEmoji = data.emoji.id
+        ? `${data.emoji.name}:${data.emoji.id}`
+        : data.emoji.name
+
+      // if there are specific reaction options
+      if (reactions && reactions.length) {
+        const chosenReaction = reactions.find(
+          (r) => r.emoji === userReactedWithEmoji,
+        )
+        if (!chosenReaction) return
+
+        // if there are level requirements
+        if (chosenReaction.requirements) {
+          const member = guild.ship.members.find((m) => m.id === user.id)
+          if (!member) return false
+          for (let r in chosenReaction.requirements)
+            if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
+              send(
+                msg,
+                story.action.doesNotMeetRequirements(
+                  chosenReaction.requirements,
+                  member,
+                ),
+              )
+              return false
+            }
+        }
       }
 
-      return true
-    }
+      // todo remove from list if they remove their reaction
+      // add it to the list if it's not a repeat
+      if (
+        !collectedReactions.find(
+          (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji,
+        )
+      )
+        collectedReactions.push({ user, emoji: userReactedWithEmoji })
 
-    const collector = msg.createReactionCollector(filter, { time })
-
-    let collected = []
-    collector.on('collect', (reaction, user) => {
-      console.log(reaction.emoji.name)
-      collected.push(reaction)
+      // run the action for that emoji if there is one
       if (
         !reactions ||
-        !reactions.find((r) => r.emoji === reaction.emoji.name) ||
-        !reactions.find((r) => r.emoji === reaction.emoji.name).action
+        !reactions.find((r) => r.emoji === userReactedWithEmoji) ||
+        !reactions.find((r) => r.emoji === userReactedWithEmoji).action
       )
         return
+
       msg.author = user
       reactions
-        .find((r) => r.emoji === reaction.emoji.name)
-        .action({ user, embed, msg, reaction, guild })
-    })
+        .find((r) => r.emoji === userReactedWithEmoji)
+        .action({
+          user,
+          embed,
+          msg,
+          emoji: userReactedWithEmoji,
+          guild,
+        })
+    }
 
-    collector.on('end', () => {
-      console.log('end reaction collector')
+    client.on('raw', eventHandler)
+
+    setTimeout(() => {
+      client.off('raw', eventHandler)
       if (embed) {
         delete embed.footer
-        if (
-          reactions &&
-          reactions.length &&
-          reactions[0].label &&
-          embed.fields &&
-          embed.fields.length
-        )
-          embed.fields.pop()
+        if (embed.fields) {
+          const fieldIndex = embed.fields.findIndex(
+            (f) => f.id === 'commandLabel',
+          )
+          if (fieldIndex) embed.fields.splice(fieldIndex, 1)
+        }
         msg.edit(embed)
       }
       msg.reactions.removeAll().catch((e) => {})
-      resolve(collected)
-    })
+      resolve(collectedReactions)
+    }, time)
   })
 }

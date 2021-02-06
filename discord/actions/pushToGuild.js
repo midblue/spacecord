@@ -2,7 +2,9 @@ const send = require('./send')
 const { log } = require('../botcommon')
 const { client } = require('../bot')
 
-module.exports = async ({ guildId, channelId, message }) => {
+module.exports = async ({ guildId, channelId, message, msg }) => {
+  if (msg) return send(msg, message)
+
   const discordGuild = await client.guilds.fetch(guildId)
   if (!discordGuild)
     return log(
@@ -23,5 +25,5 @@ module.exports = async ({ guildId, channelId, message }) => {
       guildId,
       channelId,
     )
-  send(discordChannel, message)
+  send(msg || discordChannel, message)
 }

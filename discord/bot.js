@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 const client = new Discord.Client({
+  restTimeOffset: 0,
   messageCacheMaxSize: 2,
   messageCacheLifetime: 30,
   messageSweepInterval: 60,

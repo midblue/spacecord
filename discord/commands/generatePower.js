@@ -36,7 +36,7 @@ Other crew members can help out, too.`,
       listeningType: 'running emoji',
     })
     const totalReactions = collected
-      .filter((e) =>
+      .filter(({ user, emoji }) =>
         [
           '🏃‍♀️',
           '🏃‍♂️',
@@ -55,16 +55,17 @@ Other crew members can help out, too.`,
           '🎽',
           '👟',
           '🌬️',
-        ].includes(e.emoji.name),
+        ].includes(emoji),
       )
       .reduce((total, c) => total + c.count, 0)
+
     const powerRes = ship.addPower(totalReactions)
     if (powerRes.ok) {
+      sentMessage.edit(embed)
       embed.fields = {
         name: `Time's Up!`,
         value: powerRes.message,
       }
-      sentMessage.edit(embed)
     } else send(msg, powerRes.message)
 
     setTimeout(async () => {

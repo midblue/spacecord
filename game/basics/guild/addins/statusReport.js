@@ -42,9 +42,9 @@ module.exports = (guild) => {
       value:
         percentToTextBars(guild.ship.hp) +
         '\n' +
-        `${Math.ceil(guild.ship.hp * guild.ship.baseHp)}/${guild.ship.baseHp} ${
-          process.env.HEALTH_UNIT
-        }`,
+        `${Math.ceil(
+          guild.ship.hp * guild.ship.maxHp(),
+        )}/${guild.ship.maxHp()} ${process.env.HEALTH_UNIT}`,
     })
 
     fields.push({

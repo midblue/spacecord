@@ -44,6 +44,19 @@ module.exports = {
         `%username%${member.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
   },
+  scanShip: {
+    noScanner: () =>
+      `Since your ship has no scanner equipped, all you can see is the other ship's name, enscribed in block letters along its hull.`,
+    repair: () =>
+      `You start to scan the ship, but your scanner whines to a halt mid-scan. Maybe repairing would help?`,
+    detected: (didSucceed, scanner) =>
+      `Your engineers have managed to detect that a nearby craft has ${
+        didSucceed ? 'scanned' : 'attempted to scan'
+      } you with a ${scanner.modelDisplayName}${
+        didSucceed ? '' : ', but failed to get any information'
+      }.`,
+    ourScanDetected: () => `Your scan was detected by the other ship.`,
+  },
   fuel: {
     insufficient: () =>
       `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_FUEL"`,

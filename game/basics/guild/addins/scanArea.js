@@ -1,3 +1,4 @@
+const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
 const {
   bearingToDegrees,
   bearingToArrow,
@@ -137,12 +138,36 @@ You see ${
         value: `${guild.ship.power + process.env.POWER_UNIT} remaining`,
       })
 
+    // ---------------- actions ------------------
+    let actions
+    const interactableGuilds = guild.context.scanArea({
+      x: guild.ship.location[0],
+      y: guild.ship.location[1],
+      range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+      excludeIds: guild.guildId,
+    }).guilds
+    if (interactableGuilds && interactableGuilds.length)
+      actions = [
+        {
+          emoji: '🛸',
+          async action({ user, msg }) {
+            await runGuildCommand({
+              msg,
+              author: user,
+              commandTag: 'nearbyShips',
+              props: { interactableGuilds },
+            })
+          },
+        },
+      ]
+
     return {
       ok: true,
       message: messages,
       ...telemetryResult,
       data,
       lowPower,
+      actions,
     }
   }
 }

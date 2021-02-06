@@ -30,6 +30,7 @@ module.exports = {
       const match =
         predeterminedCommandTag === command.tag ||
         (!predeterminedCommandTag &&
+          command.test &&
           (await command.test(msg.content, settings)))
 
       if (match) {

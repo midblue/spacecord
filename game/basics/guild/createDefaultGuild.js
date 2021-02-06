@@ -20,33 +20,50 @@ module.exports = function ({ discordGuild, channelId }) {
       engine: [
         {
           id: 'basic1',
-          bought: Date.now(),
           repaired: Date.now(),
           repair: 0.8,
+        },
+      ],
+      armor: [
+        {
+          id: 'steelPlating',
+          repaired: Date.now(),
+          repair: 0.6,
+        },
+      ],
+      weapon: [
+        {
+          id: 'basic1',
+          repaired: Date.now(),
+          repair: 0.7,
         },
       ],
       telemetry: [
         {
           id: 'telemetry1',
-          bought: Date.now(),
           repaired: Date.now(),
-          repair: 0.6,
+          repair: 0.8,
+        },
+      ],
+      scanner: [
+        {
+          id: 'basic1',
+          repaired: Date.now(),
+          repair: 0.5,
         },
       ],
       transceiver: [
         {
           id: 'transceiver1',
-          bought: Date.now(),
           repaired: Date.now(),
-          repair: 0.75,
+          repair: 0.5,
         },
       ],
       battery: [
         {
           id: 'battery1',
-          bought: Date.now(),
           repaired: Date.now(),
-          repair: 1,
+          repair: 0.9,
         },
       ],
     },

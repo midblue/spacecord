@@ -8,6 +8,8 @@ const trainingActions = {
   engineering: require('./trainEngineering').action,
   mechanics: require('./trainMechanics').action,
 }
+const runGuildCommand = require('../actions/runGuildCommand')
+const getActionsOnOtherShip = require('../../game/basics/guild/addins/getActionsOnOtherGuild')
 
 module.exports = {
   tag: 'nearbyShips',
@@ -18,9 +20,10 @@ module.exports = {
     priority: 60,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:nearbyships?|nearby)$`, 'gi').exec(
-      content,
-    )
+    return new RegExp(
+      `^${settings.prefix}(?:nearbyships?|nearby|near)$`,
+      'gi',
+    ).exec(content)
   },
   async action({
     msg,
@@ -45,32 +48,23 @@ module.exports = {
     if (interactableGuilds.length === 0)
       return send(msg, story.interact.noShips())
 
-    const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
-      .setTitle(`Nearby Ships`)
+    interactableGuilds.forEach(async (otherGuild) => {
+      const embed = new Discord.MessageEmbed()
+        .setColor(process.env.APP_COLOR)
+        .setTitle('🛸 ' + otherGuild.ship.name)
+        .setDescription('XX AU away from you at an angle of XX degrees')
 
-    embed.fields.push(
-      interactableGuilds.map((g) => {
-        let valueString = g.ship.members.length
-        return {
-          name: g.ship.name,
-          value: valueString,
-        }
-      }),
-    )
+      const availableActions = guild.ship.getActionsOnOtherGuild(otherGuild)
 
-    const actions = []
-    if (interactableGuilds.length > 1) {
-    }
-
-    const sentMessages = await send(msg, embed)
-    // const sentMessage = sentMessages[sentMessages.length - 1]
-    // await awaitReaction({
-    //   msg: sentMessage,
-    //   reactions: trainableSkillsAsReactionOptions,
-    //   embed,
-    //   guild,
-    //   listeningType: 'training choice',
-    // })
+      const sentMessages = await send(msg, embed)
+      const sentMessage = sentMessages[sentMessages.length - 1]
+      await awaitReaction({
+        msg: sentMessage,
+        reactions: availableActions,
+        actionProps: { otherGuild },
+        embed,
+        guild,
+      })
+    })
   },
 }

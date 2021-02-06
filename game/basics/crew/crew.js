@@ -10,6 +10,7 @@ function spawn(user, guild) {
       engineering: 2,
       mechanics: 4,
       linguistics: 0,
+      munitions: 0,
     },
   }
   liveify(data, guild)

@@ -47,9 +47,6 @@ module.exports = (guild) => {
       actions.push({
         emoji: '🛸',
         label: 'Nearby Ships',
-        requirements: {
-          piloting: 2,
-        },
         async action({ user, msg }) {
           await runGuildCommand({
             msg,

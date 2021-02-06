@@ -12,7 +12,7 @@ module.exports = (guild) => {
         ok: false,
       }
 
-    const amountConsumed = 0.01 * ship.members.length
+    const amountConsumed = 0.001 * ship.members.length
 
     food.amount -= amountConsumed
     const ticksLeftBeforeStarvation = Math.ceil(food.amount / amountConsumed)

@@ -108,7 +108,7 @@ treasure goblins
 
 horde alliance garbled chat
 
-
+only get 1 "action" per tick, but you can queue up actions
 
 
 

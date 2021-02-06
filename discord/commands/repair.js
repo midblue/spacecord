@@ -1,4 +1,3 @@
-const auth = require('registry-auth-token')
 const send = require('../actions/send')
 const { log } = require('../botcommon')
 const Discord = require('discord.js')
@@ -20,7 +19,9 @@ module.exports = {
 
     let allRepairableEquipment = []
     for (let [eqType, eqArr] of Object.entries(ship.equipment))
-      allRepairableEquipment.push(...eqArr.map((e) => ({ ...e, type: eqType })))
+      allRepairableEquipment.push(
+        ...eqArr.map((e, index) => ({ ...e, type: eqType, index })),
+      )
 
     allRepairableEquipment = allRepairableEquipment
       .filter((e) => e.repair < 1)
@@ -29,7 +30,6 @@ module.exports = {
       .map((e, index) => ({
         ...e,
         numberEmoji: numberToEmoji(index + 1),
-        index,
       }))
 
     const equipmentAsReactionOptions = allRepairableEquipment.map((e) => ({
@@ -57,6 +57,9 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`Which equipment would you like to repair?`)
+
+    if (!equipmentAsReactionOptions.length)
+      embed.setTitle(`Repair`).setDescription(`No equipment needs repairing!`)
 
     const sentMessages = await send(msg, embed)
     const sentMessage = sentMessages[sentMessages.length - 1]

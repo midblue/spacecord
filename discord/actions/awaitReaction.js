@@ -11,14 +11,16 @@ module.exports = async ({
   listeningType,
   respondeeFilter,
   guild,
+  actionProps,
 }) => {
   return new Promise(async (resolve) => {
     if (embed) {
-      embed.setFooter(
-        `Listening for ${
-          listeningType ? listeningType : reactions ? 'commands' : 'reactions'
-        }...`,
-      )
+      if ((reactions && reactions.length) || listeningType)
+        embed.setFooter(
+          `Listening for ${
+            listeningType ? listeningType : reactions ? 'commands' : 'reactions'
+          }...`,
+        )
       if (reactions && reactions.length && reactions[0].label && embed)
         embed.fields.push({
           id: 'commandLabel',
@@ -106,6 +108,7 @@ module.exports = async ({
           msg,
           emoji: userReactedWithEmoji,
           guild,
+          ...(actionProps || {}),
         })
     }
 

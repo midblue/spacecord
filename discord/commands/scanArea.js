@@ -39,7 +39,7 @@ module.exports = {
 
     if (scanRes.message) send(msg, scanRes.message)
 
-    const reactions = []
+    const reactions = scanRes.actions || []
 
     if (scanRes.lowPower)
       reactions.push({

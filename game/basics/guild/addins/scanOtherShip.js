@@ -46,18 +46,12 @@ module.exports = (guild) => {
     if (didSucceed) {
       fields = scanRes.result
       fields.push({
-        name: '🔍 Scanner',
+        name: '🔍 Your Scanner',
         value: scanner.modelDisplayName,
       })
       fields.push({
-        name: '⚡️Your Power',
-        value:
-          percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
-          '\n' +
-          scanner.powerUse +
-          ' ' +
-          process.env.POWER_UNIT +
-          ' used',
+        name: '⚡️Ship Power',
+        value: guild.ship.power + ' ' + process.env.POWER_UNIT,
       })
     }
     const enemyTotalEngineeringLevel = otherGuild.ship.members.reduce(

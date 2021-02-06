@@ -1,13 +1,19 @@
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const client = new Discord.Client({
+  cacheGuilds: true,
+  cacheChannels: false,
+  cacheOverwrites: false,
+  cacheRoles: false,
+  cacheEmojis: false,
+  cachePresences: false,
   restTimeOffset: 0,
   messageCacheMaxSize: 2,
   messageCacheLifetime: 30,
   messageSweepInterval: 60,
   disabledEvents: [
-    // 'GUILD_ROLE_CREATE',
-    // 'GUILD_ROLE_DELETE',
-    // 'GUILD_ROLE_UPDATE',
+    'GUILD_ROLE_CREATE',
+    'GUILD_ROLE_DELETE',
+    'GUILD_ROLE_UPDATE',
     'GUILD_BAN_ADD',
     'GUILD_BAN_REMOVE',
     'GUILD_EMOJIS_UPDATE',
@@ -15,6 +21,7 @@ const client = new Discord.Client({
     'CHANNEL_PINS_UPDATE',
     'PRESENCE_UPDATE',
     'TYPING_START',
+    'TYPING_END',
     'VOICE_STATE_UPDATE',
     'VOICE_SERVER_UPDATE',
   ],

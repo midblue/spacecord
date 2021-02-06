@@ -5,6 +5,7 @@ const { client } = require('../bot')
 module.exports = async ({ guildId, channelId, message, msg }) => {
   if (msg) return send(msg, message)
 
+  console.log(guildId, channelId)
   const discordGuild = await client.guilds.fetch(guildId)
   if (!discordGuild)
     return log(
@@ -14,9 +15,7 @@ module.exports = async ({ guildId, channelId, message, msg }) => {
       guildId,
       channelId,
     )
-  const discordChannel = await discordGuild.channels.cache
-    .array()
-    .find((channel) => channel.type === 'text' && channel.id === channelId)
+  const discordChannel = await discordGuild.channels.fetch(channelId)
   if (!discordChannel)
     return log(
       discordGuild,

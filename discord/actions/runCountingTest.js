@@ -30,9 +30,9 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji }) => {
       }
     }
     const regex = new RegExp(targetEmoji, "g");
-    var count = (mojcode_snippet.match(regex) || []).length;
-    mojcode_snippet += "\nDEBUG: COUNT=" + count;
-    const time = Math.floor(count * 0.2 * 1000);
+    var target_emoji_total = (mojcode_snippet.match(regex) || []).length;
+    mojcode_snippet += "\nDEBUG: COUNT=" + target_emoji_total;
+    const time = Math.floor(target_emoji_total * 0.2 * 1000);
 
     embed.description += `\nYou have ${Math.round(
       time / 1000
@@ -55,19 +55,26 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji }) => {
       if (receivedMessage.author.id != msg.author.id) return;
 
       const content = receivedMessage.content;
-      const enteredNumber = parseInt(content);
-      if (isNaN(enteredNumber)) return;
+      const guess = parseInt(content);
+      if (isNaN(guess)) return;
 
-      const score = 10 * (count - Math.abs(count - enteredNumber));
+      const guessError = Math.abs(target_emoji_total - guess);
+      if (guessError / target_emoji_total < 0) {
+        var rewardXp = 0;
+      } else {
+        var rewardXp = 1500 - 145 * guessError ** 2;
+      }
+
+      if (rewardXp < 0) rewardXp = 0;
 
       clearTimeout(noInputTimeout);
 
       receivedMessage.delete();
       collector.stop();
       resolve({
-        score: score,
-        guess: enteredNumber,
-        correctAnswer: count,
+        rewardXp: rewardXp,
+        guess: guess,
+        correctAnswer: target_emoji_total,
       });
     };
 

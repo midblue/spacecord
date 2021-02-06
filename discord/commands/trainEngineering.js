@@ -28,7 +28,7 @@ module.exports = {
 
     const sentMessage = (await send(msg, embed))[0];
 
-    const { score, guess, correctAnswer } = await runCountingTest({
+    const { rewardXp, guess, correctAnswer } = await runCountingTest({
       embed,
       msg,
       sentMessage,
@@ -39,11 +39,11 @@ module.exports = {
 
     // const xp = 0;
 
-    const res = authorCrewMemberObject.addXp("engineering", score);
+    const res = authorCrewMemberObject.addXp("engineering", rewardXp);
 
     embed.setDescription(
-      `**Guessed ${guess} ${targetEmoji} were in the mojcode snippet.
-      There were ${correctAnswer}, so you earned ${score} points!**
+      `**You guessed that ${guess} ${targetEmoji} were in the mojcode snippet.
+      There were ${correctAnswer}, so you earned ${rewardXp} XP!**
       Result: ${await applyCustomParams(msg, res.message)}`
     );
     sentMessage.edit(embed);

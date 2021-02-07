@@ -17,7 +17,7 @@ module.exports = (guild) => {
 
     const currentLocation = [ship.location[0] || 0, ship.location[1] || 0]
     const currentBearing = bearingToRadians(ship.bearing || [0, 1])
-    let distanceToTravel = ship.speed || 0
+    let distanceToTravel = ship.effectiveSpeed() || 0
     if (coordinates) {
       const a = ship.location[0] - coordinates[0],
         b = ship.location[1] - coordinates[1]

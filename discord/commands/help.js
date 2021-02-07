@@ -1,6 +1,6 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const defaultServerSettings = require('../defaults/defaultServerSettings')
 
 // * get all commands from files in this folder

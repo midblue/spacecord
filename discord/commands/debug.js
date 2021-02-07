@@ -1,6 +1,6 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const { guild } = require('../../game/manager')
 // const db = require('../../db/db')
 

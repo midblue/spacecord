@@ -1,7 +1,7 @@
 const send = require('../actions/send')
 const awaitReaction = require('../actions/awaitReaction')
 const { log } = require('../botcommon')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 module.exports = {
   tag: 'broadcast',

@@ -40,7 +40,8 @@ function getShipSpeedFromAggregate(aggregate, guild) {
       (total, current) => (total += current.speed * current.weight),
       0,
     ) / totalWeight
-  const newSpeed = speedNormalized * guild.ship.maxSpeed()
+
+  const newSpeed = speedNormalized
   return {
     voteResult: speedNormalized * 10,
     newSpeed,

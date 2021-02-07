@@ -16,6 +16,7 @@ module.exports = function ({ discordGuild, channelId }) {
     members: [],
     seen: { planets: [] },
     log: [],
+    lastAttack: 0,
     equipment: {
       engine: [
         {

@@ -1,5 +1,5 @@
 const { username, applyCustomParams } = require('../botcommon')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 module.exports = async function (
   msgOrChannel,

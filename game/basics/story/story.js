@@ -227,16 +227,73 @@ The ship ${ship.name} is on the hunt!`,
     insufficientVotes: () =>
       `Not enough crew members voted, and you don't feel comfortable making such an important decision without getting everyone's input. You decide to hold off for now.`,
   },
+  attack: {
+    tooSoon: (untilNext) =>
+      `Your ship's weapons are still recharging! You can attack again in ${untilNext}.`,
+    voteFailed: () =>
+      `The crew decides collectively that attacking isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
+    noWeapon: () => `Your ship has no weapons to attack with!`,
+    brokenWeapons: () =>
+      `All of your weapons are too damaged to attack with! Repair them first!`,
+    votePassed: (yesPercent, otherShip) =>
+      `${Math.round(
+        yesPercent * 100,
+      )}% of the available crew members agree to launch an attack against ${
+        otherShip.name
+      }, so your crew takes their places at their battle stations.`,
+    outOfRange: () =>
+      `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
+    miss: (weapon, wasClose, accuracyMultiplier) =>
+      `The attack from your ${weapon.modelDisplayName} misses${
+        wasClose ? " by a hair's breadth" : ''
+      }! ${
+        accuracyMultiplier > 1
+          ? `Even though our munitions experts were in peak condition, it wasn't enough.`
+          : accuracyMultiplier < 1
+          ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
+          : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
+      }`,
+    hit: (
+      weapon,
+      target,
+      advantageDamageMultiplier,
+      damageToEquipment,
+      damageToArmor,
+      didDisableEquipment,
+      didDisableArmor,
+    ) =>
+      `Your ${weapon.modelDisplayName} hits the enemy's ${
+        target.modelDisplayName
+      }, dealing ${damageToEquipment.toFixed(1)} damage${
+        advantageDamageMultiplier > 1
+          ? `, a critical hit!`
+          : advantageDamageMultiplier < 1
+          ? ` in a glancing blow.`
+          : '.'
+      }${
+        damageToArmor
+          ? ` ${damageToArmor.toFixed(
+              1,
+            )} damage was blocked by the ship's armor, but the armor still took some damage from the attack.`
+          : ''
+      } The ${target.modelDisplayName} was ${
+        didDisableEquipment ? '' : 'damaged but not yet'
+      } disabled by the attack${
+        didDisableArmor
+          ? `, and the enemy's armor has been completely disabled by your assault!`
+          : ''
+      }.`,
+  },
   move: {
     redirect: {
       success: (degrees, arrow, voteCount) =>
         `With ${voteCount} vote${
-          voteCount === '1' ? '' : 's'
+          voteCount === 1 ? '' : 's'
         }, your ship rotates to face ${arrow} ${degrees} degrees.`,
     },
     adjustSpeed: {
       success: (spedUp, newSpeed, speedPercent, voteCount) =>
-        `With ${voteCount} vote${voteCount === '1' ? '' : 's'}, your ship ${
+        `With ${voteCount} vote${voteCount === 1 ? '' : 's'}, your ship ${
           spedUp ? 'speeds up' : 'slows down'
         } to ${newSpeed}${process.env.SPEED_UNIT}, which is ${Math.round(
           speedPercent * 100,

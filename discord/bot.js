@@ -60,6 +60,11 @@ module.exports = {
       if (!msg.guild || !msg.guild.available) return privateMessage(msg)
       return guildMessage({ msg, client, game: gameController })
     })
+
+    client.on('raw', async (event) => {
+      this.rawWatchers.forEach((handler) => handler(event))
+    })
   },
   client,
+  rawWatchers: [],
 }

@@ -2,7 +2,7 @@ const send = require('../actions/send')
 const { log, applyCustomParams } = require('../botcommon')
 const { allSkills } = require('../../game/gamecommon')
 const { capitalize } = require('../../common')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const awaitReaction = require('../actions/awaitReaction')
 const runGuildCommand = require('../actions/runGuildCommand')
 

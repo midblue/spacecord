@@ -1,18 +1,18 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
 
 module.exports = (guild) => {
-  guild.ship.getActionsOnOtherGuild = () => {
+  guild.ship.getActionsOnOtherShip = (otherShip) => {
     const actions = []
 
     actions.push({
       emoji: '🔍',
       label: 'Scan Ship',
-      async action({ user, msg, guild, otherGuild }) {
+      async action({ user, msg, guild }) {
         await runGuildCommand({
           commandTag: 'scanShip',
           author: user,
           msg,
-          props: { otherGuild, guild },
+          props: { otherShip, guild },
         })
       },
     })
@@ -20,9 +20,13 @@ module.exports = (guild) => {
     actions.push({
       emoji: '⚔️',
       label: 'Attack!',
-      action({ user, msg, guild, otherGuild }) {
-        console.log('ATTACCCCCKKKKKKK')
-        // todo
+      async action({ user, msg, guild }) {
+        await runGuildCommand({
+          commandTag: 'attackShip',
+          author: user,
+          msg,
+          props: { otherShip, guild },
+        })
       },
     })
 

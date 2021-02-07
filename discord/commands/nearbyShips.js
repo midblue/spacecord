@@ -1,8 +1,12 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const { numberToEmoji, capitalize } = require('../../common')
+const {
+  numberToEmoji,
+  capitalize,
+  positionAndAngleDifference,
+} = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const story = require('../../game/basics/story/story')
 
 module.exports = {
@@ -43,19 +47,29 @@ module.exports = {
       return send(msg, story.interact.noShips())
 
     interactableGuilds.forEach(async (otherGuild) => {
+      const positionAndAngle = positionAndAngleDifference(
+        ...guild.ship.location,
+        ...otherGuild.ship.location,
+      )
       const embed = new Discord.MessageEmbed()
         .setColor(process.env.APP_COLOR)
         .setTitle('🛸 ' + otherGuild.ship.name)
-        .setDescription('XX AU away from you at an angle of XX degrees')
+        .setDescription(
+          `${positionAndAngle.distance.toFixed(
+            2,
+          )} AU away from you at an angle of ${Math.round(
+            positionAndAngle.angle,
+          )} degrees.`,
+        )
 
-      const availableActions = guild.ship.getActionsOnOtherGuild(otherGuild)
+      const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
 
       const sentMessages = await send(msg, embed)
       const sentMessage = sentMessages[sentMessages.length - 1]
       await awaitReaction({
         msg: sentMessage,
         reactions: availableActions,
-        actionProps: { otherGuild },
+        actionProps: { otherShip: otherGuild.ship },
         embed,
         guild,
       })

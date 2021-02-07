@@ -2,7 +2,7 @@ const send = require('../actions/send')
 const { log, username } = require('../botcommon')
 const { capitalize } = require('../../common')
 const runPoll = require('../actions/runPoll')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 const voteTime = process.env.DEV ? 10 * 1000 : process.env.GENERAL_VOTE_TIME
 

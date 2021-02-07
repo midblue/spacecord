@@ -1,7 +1,7 @@
 module.exports = {
   emoji: '🔫',
   modelDisplayName: 'Mini Zapper',
-  accuracy: 0.8,
+  accuracy: 1.2,
   damage: 2,
   damageType: 'electric',
   size: 'small',

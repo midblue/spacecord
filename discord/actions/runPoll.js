@@ -1,9 +1,10 @@
 const send = require('./send')
 const awaitReaction = require('./awaitReaction')
-const { msToTimeString } = require('../../common')
+const { msToTimeString, capitalize } = require('../../common')
 
 module.exports = async ({
   embed,
+  pollTitle = 'Crew Member Poll',
   time = process.env.GENERAL_VOTE_TIME,
   reactions,
   requirements,
@@ -12,19 +13,32 @@ module.exports = async ({
   respondeeFilter,
   ship,
 }) => {
+  if (!embed)
+    embed = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(pollTitle)
   if (!embed.fields) embed.fields = []
 
   const minimumMembersMustVote = minimumMemberPercent
     ? Math.ceil(ship.members.length * minimumMemberPercent)
     : -1
-  let currentMembersVoted = {}
 
   if (minimumMembersMustVote > 0)
     embed.fields.push({
       name: 'Member requirement',
-      value: `At least ${Math.round(
+      value: `At least \`${Math.round(
         minimumMemberPercent * 100,
-      )}% of the crew (${minimumMembersMustVote} members) must vote for this vote to be valid.`,
+      )}%\` of the crew (\`${minimumMembersMustVote}\` member${
+        minimumMembersMustVote === 1 ? '' : 's'
+      }) must vote for this vote to be valid.`,
+    })
+
+  if (requirements)
+    embed.fields.push({
+      name: 'Level requirements',
+      value: `Voters must have at least ${Object.keys(requirements)
+        .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\``)
+        .join(' and ')} for their vote to be counted.`,
     })
 
   embed.fields.push({

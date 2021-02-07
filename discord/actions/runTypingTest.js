@@ -1,7 +1,7 @@
 const send = require('./send')
 const lunicode = require('Lunicode')
 const Fuse = require('fuse.js')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 module.exports = ({
   msg,

@@ -1,8 +1,9 @@
 const send = require('./send')
 const runPoll = require('./runPoll')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 module.exports = async ({
+  type, // todo use type to make sure we don't have two of the same poll open at once
   question,
   embed,
   time = process.env.GENERAL_VOTE_TIME,
@@ -10,10 +11,11 @@ module.exports = async ({
   minimumMemberPercent,
   msg,
   ship,
+  cleanUp = true,
 }) => {
   if (!embed) embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
 
-  embed.setTitle(question)
+  if (question) embed.setTitle(question)
 
   const reactions = [
     {
@@ -25,7 +27,6 @@ module.exports = async ({
       label: 'No',
     },
   ]
-
   const {
     userReactions,
     sentMessage,
@@ -41,7 +42,11 @@ module.exports = async ({
     ship,
   })
 
-  sentMessage.delete()
+  if (cleanUp) sentMessage.delete()
+  else {
+    sentMessage.reactions.removeAll().catch((e) => {})
+    sentMessage.fields = []
+  }
 
   return {
     result: insufficientVotes
@@ -54,5 +59,6 @@ module.exports = async ({
         (userReactions['✅']?.weightedCount || 0)),
     insufficientVotes,
     voters,
+    sentMessage,
   }
 }

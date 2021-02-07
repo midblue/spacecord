@@ -2,7 +2,7 @@ const send = require('../actions/send')
 const { log } = require('../botcommon')
 const { numberToEmoji, capitalize } = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 const trainingActions = {
   engineering: require('./trainEngineering').action,
   mechanics: require('./trainMechanics').action,

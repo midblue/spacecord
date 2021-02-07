@@ -1,5 +1,5 @@
 module.exports = (guild) => {
-  guild.ship.maxSpeed = () => {
+  guild.ship.effectiveSpeed = () => {
     const rawMaxSpeed = guild.ship.equipment.engine.reduce(
       (total, engine) => engine.maxSpeed + total,
       0,
@@ -9,6 +9,6 @@ module.exports = (guild) => {
       guild.ship.getTotalWeight() / guild.ship.maxWeight
     if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
 
-    return rawMaxSpeed * (1 - percentOfMaxShipWeight)
+    return (guild.ship.speed || 0) * rawMaxSpeed * (1 - percentOfMaxShipWeight)
   }
 }

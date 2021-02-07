@@ -12,6 +12,7 @@ module.exports = (guild) => {
     if (add) equipment.repair += add
     if (newRepairLevel) equipment.repair = newRepairLevel
     if (equipment.repair > 1) equipment.repair = 1
+    equipment.repaired = Date.now()
 
     guild.saveNewDataToDb()
     return {

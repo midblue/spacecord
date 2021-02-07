@@ -45,6 +45,11 @@ module.exports = {
       radius * radius
     )
   },
+  positionAndAngleDifference(x1, y1, x2, y2) {
+    const d = distance(x1, y1, x2, y2)
+    const a = angle(x1, y1, x2, y2)
+    return { distance: d, angle: a }
+  },
   capitalize(string) {
     return (
       string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()
@@ -56,10 +61,12 @@ module.exports = {
   },
   msToTimeString(ms) {
     let seconds = Math.floor((ms % (60 * 1000)) / 1000)
-    if (seconds < 9) seconds = '0' + seconds
+    if (seconds <= 9) seconds = '0' + seconds
     let minutes = Math.floor(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
+  distance,
+  angle,
 }
 
 function bearingToRadians(bearing) {
@@ -88,4 +95,12 @@ function bearingToArrow(bearing) {
   const normalizedAngle = ((bearingToDegrees(bearing) + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)
   return directionArrows[arrayIndex]
+}
+function distance(x1, y1, x2, y2) {
+  const a = x1 - x2
+  const b = y1 - y2
+  return Math.sqrt(a * a + b * b)
+}
+function angle(x1, y1, x2, y2) {
+  return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
 }

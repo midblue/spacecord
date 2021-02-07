@@ -37,14 +37,16 @@ module.exports = (guild) => {
         process.env.DISTANCE_UNIT,
     })
 
+    const currentHp = guild.ship.currentHp(),
+      maxHp = guild.ship.maxHp()
     fields.push({
       name: `🇨🇭 Health`,
       value:
-        percentToTextBars(guild.ship.hp) +
+        percentToTextBars(currentHp / maxHp) +
         '\n' +
-        `${Math.ceil(
-          guild.ship.hp * guild.ship.maxHp(),
-        )}/${guild.ship.maxHp()} ${process.env.HEALTH_UNIT}`,
+        `${Math.round(currentHp)}/${Math.round(maxHp)} ${
+          process.env.HEALTH_UNIT
+        }`,
     })
 
     fields.push({

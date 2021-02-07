@@ -1,6 +1,6 @@
 const story = require('../../game/basics/story/story')
 const send = require('../actions/send')
-const { client } = require('../bot')
+const { client, rawWatchers } = require('../bot')
 
 module.exports = async ({
   msg,
@@ -41,7 +41,10 @@ module.exports = async ({
 
     const eventHandler = async (event) => {
       // `event.t` is the raw event name
-      if (event.t !== 'MESSAGE_REACTION_ADD') return
+      if (
+        !['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(event.t)
+      )
+        return
 
       const { d: data } = event
       const user = await client.users.fetch(data.user_id)
@@ -67,7 +70,7 @@ module.exports = async ({
         // if there are level requirements
         if (chosenReaction.requirements) {
           const member = guild.ship.members.find((m) => m.id === user.id)
-          if (!member) return false
+          if (!member) return
           for (let r in chosenReaction.requirements)
             if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
               send(
@@ -77,22 +80,30 @@ module.exports = async ({
                   member,
                 ),
               )
-              return false
+              return
             }
         }
       }
 
-      // todo remove from list if they remove their reaction
       // add it to the list if it's not a repeat
       if (
         !collectedReactions.find(
           (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji,
-        )
+        ) &&
+        event.t === 'MESSAGE_REACTION_ADD'
       )
         collectedReactions.push({ user, emoji: userReactedWithEmoji })
+      else if (event.t === 'MESSAGE_REACTION_REMOVE')
+        collectedReactions.splice(
+          collectedReactions.indexOf(
+            (r) => r.user.id === user.id && r.emoji === userReactedWithEmoji,
+          ),
+          1,
+        )
 
       // run the action for that emoji if there is one
       if (
+        event.t !== 'MESSAGE_REACTION_ADD' ||
         !reactions ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji) ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji).action
@@ -112,10 +123,10 @@ module.exports = async ({
         })
     }
 
-    client.on('raw', eventHandler)
+    rawWatchers.push(eventHandler)
 
     setTimeout(() => {
-      client.off('raw', eventHandler)
+      rawWatchers.splice(rawWatchers.indexOf(eventHandler), 1)
       if (embed) {
         delete embed.footer
         if (embed.fields) {

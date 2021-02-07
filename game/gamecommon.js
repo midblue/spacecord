@@ -15,5 +15,13 @@ module.exports = {
       emoji: '🔧',
       name: 'mechanics',
     },
+    {
+      emoji: '⚔️',
+      name: 'munitions',
+    },
+    {
+      emoji: '📚',
+      name: 'linguistics',
+    },
   ],
 }

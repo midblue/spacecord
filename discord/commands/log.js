@@ -1,6 +1,6 @@
 const send = require('../actions/send')
 const { log, applyCustomParams } = require('../botcommon')
-const Discord = require('discord.js')
+const Discord = require('discord.js-light')
 
 module.exports = {
   tag: 'log',

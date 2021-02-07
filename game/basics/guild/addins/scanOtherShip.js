@@ -7,10 +7,10 @@ const { entries } = require('../../../../discord/defaults/typingTestOptions')
 const story = require('../../story/story')
 
 module.exports = (guild) => {
-  guild.ship.scanOtherShip = (otherGuild) => {
+  guild.ship.scanOtherShip = (otherShip) => {
     // todo check if in range
 
-    let fields = [{ name: 'Name', value: otherGuild.ship.name }],
+    let fields = [{ name: 'Name', value: otherShip.name }],
       message = [],
       ok = true
 
@@ -38,7 +38,7 @@ module.exports = (guild) => {
         message: story.scanShip.repair(),
       }
 
-    const scanRes = scanner.use(otherGuild.ship)
+    const scanRes = scanner.use(otherShip)
     if (!scanRes.ok) {
       didSucceed = false
       message.push(scanRes.message)
@@ -54,14 +54,14 @@ module.exports = (guild) => {
         value: guild.ship.power + ' ' + process.env.POWER_UNIT,
       })
     }
-    const enemyTotalEngineeringLevel = otherGuild.ship.members.reduce(
+    const enemyTotalEngineeringLevel = otherShip.members.reduce(
       (total, m) => total + (m.level?.engineering || 0),
       0,
     )
     if ((scanner.scanUndetectibility || 0) < enemyTotalEngineeringLevel) {
       message.push(story.scanShip.ourScanDetected())
-      otherGuild.pushToGuild(story.scanShip.detected(didSucceed, scanner))
-      otherGuild.ship.logEntry(story.scanShip.detected(didSucceed, scanner))
+      otherShip.pushToGuild(story.scanShip.detected(didSucceed, scanner))
+      otherShip.logEntry(story.scanShip.detected(didSucceed, scanner))
     }
 
     return {

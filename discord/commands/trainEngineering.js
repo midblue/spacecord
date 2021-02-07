@@ -43,7 +43,7 @@ module.exports = {
       .setColor(process.env.APP_COLOR)
       .setTitle(`${author.nickname} | Engineering Training`)
       .setDescription(
-        `Count the number of ${targetEmoji} in the following mojcode snippet.`
+        `Count the number of \`${targetEmoji}\` in the following mojcode snippet.`
       );
 
     const sentMessage = (await send(msg, embed))[0];
@@ -61,7 +61,7 @@ module.exports = {
     const res = authorCrewMemberObject.addXp("engineering", rewardXp);
 
     embed.setDescription(
-      `**You guessed that ${guess} ${targetEmoji} were in the mojcode snippet.
+      `**You guessed that ${guess} \`${targetEmoji}\` were in the mojcode snippet.
       There were ${correctAnswer}, so you earned ${rewardXp} XP!**
       Result: ${await applyCustomParams(msg, res.message)}`
     );

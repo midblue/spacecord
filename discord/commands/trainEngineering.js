@@ -17,7 +17,27 @@ module.exports = {
   async action({ msg, author, ship, authorCrewMemberObject }) {
     log(msg, "Train Engineering", msg.guild.name);
 
-    const targetEmoji = "🚀";
+    const emojiChoices = [
+      "🚀",
+      "👾",
+      "🔭",
+      "🪐",
+      "☄️",
+      "🛸",
+      "👽",
+      "🛰",
+      "1️⃣",
+      "0️⃣",
+      "💫",
+      "🌌",
+      "🌠",
+      "🤖",
+    ];
+
+    const choiceIndex = Math.floor(Math.random() * emojiChoices.length);
+
+    const targetEmoji = emojiChoices[choiceIndex];
+    emojiChoices.splice(choiceIndex, 1);
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
@@ -33,11 +53,10 @@ module.exports = {
       msg,
       sentMessage,
       targetEmoji,
+      emojiChoices,
     });
 
     if (!guess) return;
-
-    // const xp = 0;
 
     const res = authorCrewMemberObject.addXp("engineering", rewardXp);
 

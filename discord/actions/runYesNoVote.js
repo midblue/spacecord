@@ -1,14 +1,17 @@
 const send = require('./send')
 const runPoll = require('./runPoll')
 const Discord = require('discord.js-light')
+const manager = require('../../game/manager')
+const { usageTag } = require('../../common')
 
 module.exports = async ({
   pollType, // todo use type to make sure we don't have two of the same poll open at once
   question,
+  description,
   embed,
   time = process.env.DEV ? 10000 : process.env.GENERAL_VOTE_TIME,
   requirements,
-  // staminaRequirement,
+  yesStaminaRequirement,
   minimumMemberPercent,
   msg,
   ship,
@@ -17,18 +20,22 @@ module.exports = async ({
   if (!embed) embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
 
   if (question) embed.setTitle(question)
+  if (description) embed.description = description
 
   const reactions = [
     {
       emoji: '✅',
-      label: 'Yes',
+      label:
+        'Yes' +
+        (yesStaminaRequirement ? ' ' + usageTag(0, yesStaminaRequirement) : ''),
     },
     {
       emoji: '❌',
       label: 'No',
     },
   ]
-  const {
+
+  let {
     ok,
     message,
     userReactions,
@@ -41,11 +48,21 @@ module.exports = async ({
     time,
     reactions,
     requirements,
-    // staminaRequirement,
+    staminaRequirements: yesStaminaRequirement
+      ? { '✅': yesStaminaRequirement }
+      : null,
     minimumMemberPercent,
     msg,
     ship,
   })
+
+  if (!ok) {
+    if (sentMessage && cleanUp) sentMessage.delete()
+    return {
+      ok,
+      message,
+    }
+  }
 
   if (cleanUp) sentMessage.delete()
   else {
@@ -53,11 +70,8 @@ module.exports = async ({
     sentMessage.fields = []
   }
 
-  if (!ok)
-    return {
-      ok,
-      message,
-    }
+  const yesVoters = voters.filter((v) => v.votes.includes('✅'))
+  const noVoters = voters.filter((v) => v.votes.includes('❌'))
 
   return {
     ok,
@@ -71,6 +85,9 @@ module.exports = async ({
         (userReactions['✅']?.weightedCount || 0)),
     insufficientVotes,
     voters,
+    yesVoters,
+    noVoters,
     sentMessage,
+    embed,
   }
 }

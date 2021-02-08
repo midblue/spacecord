@@ -73,6 +73,36 @@ module.exports = {
     if (stamina) tag += staminaTag(stamina)
     return tag
   },
+  garble(string, percent = 0) {
+    if (percent > 0.98) percent = 0.98
+    let splitString = string.split(' ')
+    while (Math.random() < percent)
+      arrayMove(
+        splitString,
+        Math.floor(splitString.length * Math.random()),
+        Math.floor(splitString.length * Math.random()),
+      )
+    if (percent > 0.05)
+      splitString = splitString.map((s) => {
+        s = s.split('')
+        while (Math.random() < percent)
+          arrayMove(
+            s,
+            Math.floor(s.length * Math.random()),
+            Math.floor(s.length * Math.random()),
+          )
+        if (percent > 0.2)
+          s = s.map((char) => {
+            if (Math.random() < percent / 2)
+              char = possibleRandomCharacters.charAt(
+                Math.floor(Math.random() * possibleRandomCharacters.length),
+              )
+            return char
+          })
+        return s.join('')
+      })
+    return splitString.join(' ')
+  },
   powerTag,
   staminaTag,
   distance,
@@ -122,3 +152,16 @@ function staminaTag(stamina) {
   if (typeof stamina == 'string') stamina = staminaRequirements[stamina]
   return `\`💪${stamina}\``
 }
+
+function arrayMove(arr, old_index, new_index) {
+  if (new_index >= arr.length) {
+    const k = new_index - arr.length + 1
+    while (k--) {
+      arr.push(undefined)
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0])
+}
+
+const possibleRandomCharacters =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,   '

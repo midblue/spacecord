@@ -1,6 +1,7 @@
 const story = require('../../game/basics/story/story')
 const send = require('../actions/send')
 const { client, rawWatchers } = require('../bot')
+const { username } = require('../botcommon')
 
 module.exports = async ({
   msg,
@@ -111,6 +112,8 @@ module.exports = async ({
         return
 
       msg.author = user
+      if (!msg.author.nickname)
+        msg.author.nickname = await username(msg, msg.author.id)
       reactions
         .find((r) => r.emoji === userReactedWithEmoji)
         .action({

@@ -28,6 +28,7 @@ module.exports = {
     await awaitReaction({
       msg: sentMessage,
       reactions: broadcastRes.actions,
+      commandsLabel: 'Start Broadcast Vote',
       embed,
       guild,
     })

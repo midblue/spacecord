@@ -16,9 +16,6 @@ module.exports = {
   },
 
   async update() {
-    // * so even though this is in a separate file,
-    // * since we spread it into the main game object,
-    // * it has access to game object properties, such as this.guilds.
     this.lastTick = Date.now()
 
     const updates = this.guilds.map(async (guild) => {

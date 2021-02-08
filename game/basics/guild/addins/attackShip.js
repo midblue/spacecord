@@ -2,11 +2,17 @@ const { distance } = require('../../../../common')
 const story = require('../../story/story')
 const Discord = require('discord.js-light')
 
-const advantageAlwaysHasEffectAt = 15,
-  flatCritMultiplierDamageBoost = 0.3
+const advantageRandomChoiceRange = 15,
+  flatCritMultiplierDamageBoost = 0.3,
+  enemyNonVotingAdjustment = 0.8
 
 module.exports = (guild) => {
-  guild.ship.attackShip = (enemyShip, weapon, target) => {
+  guild.ship.attackShip = ({
+    enemyShip,
+    weapon,
+    target,
+    collectiveMunitionsSkill,
+  }) => {
     guild.ship.lastAttack = Date.now()
 
     const outputEmbed = new Discord.MessageEmbed()
@@ -15,27 +21,24 @@ module.exports = (guild) => {
       ...guild.ship.location,
       ...enemyShip.location,
     )
-    const enemyTotalPilotingLevel = enemyShip.members.reduce(
-      (total, m) => total + m.level?.piloting || 0,
-      0,
-    )
-    const ourTotalMunitionsLevel = guild.ship.members.reduce(
-      (total, m) => total + m.level?.munitions || 0,
-      0,
-    )
-    const advantage = ourTotalMunitionsLevel - enemyTotalPilotingLevel
+    const enemyTotalPilotingLevel =
+      enemyShip.members.reduce(
+        (total, m) => total + m.level?.piloting || 0,
+        0,
+      ) * enemyNonVotingAdjustment
+    const advantage = collectiveMunitionsSkill - enemyTotalPilotingLevel
     const randomizedAdvantage = advantage + advantage * (Math.random() - 0.5) // adjusts it from .5 to 1.5 of the advantage
     const adjustedAccuracy = weapon.hitPercent(attackDistance)
     const adjustedDamage = weapon.damage * weapon.repair
 
     // calculate accuracy
     let advantageAccuracyMultiplier = 1
-    if (randomizedAdvantage > advantageAlwaysHasEffectAt * Math.random())
+    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random())
       // crit
       advantageAccuracyMultiplier = Math.min(1 + randomizedAdvantage / 100, 2)
     else if (
       randomizedAdvantage <
-      -1 * advantageAlwaysHasEffectAt * Math.random()
+      -1 * advantageRandomChoiceRange * Math.random()
     )
       // glancing
       advantageAccuracyMultiplier = Math.max(1 - randomizedAdvantage / 100, 0.5)
@@ -90,14 +93,14 @@ module.exports = (guild) => {
 
     // calculate damage,
     let advantageDamageMultiplier = 1
-    if (randomizedAdvantage > advantageAlwaysHasEffectAt * Math.random())
+    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random())
       // crit
       advantageDamageMultiplier =
         Math.min(1 + randomizedAdvantage / 100, 2) +
         flatCritMultiplierDamageBoost
     else if (
       randomizedAdvantage <
-      -1 * advantageAlwaysHasEffectAt * Math.random()
+      -1 * advantageRandomChoiceRange * Math.random()
     )
       // glancing
       advantageDamageMultiplier =

@@ -3,6 +3,7 @@ const awaitReaction = require('./awaitReaction')
 const { msToTimeString, capitalize } = require('../../common')
 const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
 const { guild } = require('../../game/manager')
+const manager = require('../../game/manager')
 
 module.exports = async ({
   pollType,
@@ -11,7 +12,7 @@ module.exports = async ({
   time = process.env.GENERAL_VOTE_TIME,
   reactions,
   requirements,
-  // staminaRequirement,
+  staminaRequirements,
   minimumMemberPercent,
   msg,
   respondeeFilter,
@@ -62,13 +63,6 @@ module.exports = async ({
         .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\``)
         .join(' and ')} for their vote to be counted.`,
     })
-
-  // if (staminaRequirement && staminaRequirements[staminaRequirement])
-  //   embed.fields.push({
-  //     name: 'Stamina to Vote',
-  // 		value: `\`- 💪${staminaRequirements[staminaRequirement]}\``,
-  // 		inline: true
-  //   })
 
   embed.fields.push({
     name: 'Remaining vote time:',
@@ -128,11 +122,23 @@ module.exports = async ({
 
   const userReactionsToUse = {}
   const userReactionCounts = {}
+  const voters = []
 
   // todo weight by higher level / role / rank
 
+  let guildMembers
+  if (staminaRequirements)
+    guildMembers = (await manager.guild(msg.guild.id)).guild?.ship?.members
+
   gatheredReactions.forEach(({ user, emoji }) => {
+    if (staminaRequirements && staminaRequirements[emoji] && guildMembers) {
+      const member = guildMembers.find((m) => m.id === user.id)
+      if (!member.useStamina(staminaRequirements[emoji]).ok) return
+    }
     userReactionCounts[user.id] = (userReactionCounts[user.id] || 0) + 1
+    const foundVoter = voters.find((v) => v.id === user.id)
+    if (foundVoter) foundVoter.votes.push(emoji)
+    else voters.push({ ...user, votes: [emoji] })
   })
   gatheredReactions.forEach(({ user, emoji }) => {
     userReactionsToUse[emoji] = userReactionsToUse[emoji] || {}
@@ -141,19 +147,17 @@ module.exports = async ({
       1 / userReactionCounts[user.id] / Object.keys(userReactionCounts).length
   })
 
-  const validVotes = gatheredReactions.length
   embed.setFooter(
-    `(${validVotes} valid vote${validVotes === 1 ? '' : 's'} counted)`,
+    `(${voters.length} valid member${voters.length === 1 ? '' : 's'} voted)`,
   )
 
-  const enoughMembersVoted =
-    Object.keys(userReactionCounts).length >= minimumMembersMustVote
+  const enoughMembersVoted = voters.length >= minimumMembersMustVote
 
   return {
     ok: true,
     userReactions: userReactionsToUse,
     insufficientVotes: !enoughMembersVoted,
-    voters: Object.keys(userReactionCounts).length,
+    voters,
     sentMessage,
   }
 }

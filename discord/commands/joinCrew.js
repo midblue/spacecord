@@ -7,7 +7,7 @@ module.exports = {
   documentation: {
     name: `join`,
     value: `Become a member of the ship's crew.`,
-    emoji: '💪',
+    emoji: '➕',
     category: 'crew',
     priority: 95,
   },

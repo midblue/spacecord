@@ -23,7 +23,7 @@ module.exports = async ({
 
   const embed = new Discord.MessageEmbed()
     .setColor(process.env.APP_COLOR)
-    .setTitle(emoji + ' ' + title)
+    .setTitle('ℹ️ Help: ' + emoji + ' ' + title)
     .setDescription(description || '')
     .addFields(
       commands.map((c) => ({

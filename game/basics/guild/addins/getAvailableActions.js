@@ -42,13 +42,13 @@ module.exports = (guild) => {
     const interactableGuilds = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+      range: guild.ship.maxActionRadius(),
       excludeIds: guild.guildId,
     }).guilds
     if (interactableGuilds && interactableGuilds.length)
       actions.push({
         emoji: '🛸',
-        label: 'Nearby Ships',
+        label: 'See Nearby Ships',
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
@@ -79,7 +79,7 @@ module.exports = (guild) => {
     if (guild.ship.status.flying) {
       actions.push({
         emoji: '🧭',
-        label: 'Direction Vote ' + usageTag(null, 'poll'),
+        label: 'Start Direction Vote ' + usageTag(null, 'poll'),
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
@@ -90,7 +90,7 @@ module.exports = (guild) => {
       })
       actions.push({
         emoji: '⏩',
-        label: 'Speed Vote ' + usageTag(null, 'poll'),
+        label: 'Start Speed Vote ' + usageTag(null, 'poll'),
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
@@ -100,18 +100,6 @@ module.exports = (guild) => {
         },
       })
     }
-
-    actions.push({
-      emoji: '🧾',
-      label: 'Ship Log',
-      async action({ user, msg }) {
-        await runGuildCommand({
-          msg,
-          author: user,
-          commandTag: 'log',
-        })
-      },
-    })
 
     actions.push({
       emoji: '🏃‍♀️',

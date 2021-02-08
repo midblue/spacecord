@@ -127,6 +127,35 @@ module.exports = {
           return 'set ' + type + ' to ' + newStatus
         },
       },
+      stamina: {
+        description: 'stamina',
+        action: async () => {
+          const { guild, ok } = await client.game.guild(msg.guild.id)
+          if (!ok) return 'no guild with id ' + id
+          const member = guild.ship.members.find((m) => m.id === msg.author.id)
+          if (!member) return 'no member with id ' + msg.author.id
+          member.stamina = 1
+          return 'refilled your stamina'
+        },
+      },
+      setstamina: {
+        description: 'setstamina <user id> <amount>',
+        action: async (str) => {
+          let [unused, id, amount] = /^([^ ]+) ([^ ]*)$/.exec(str)
+          if (id === 'me') id = msg.author.id
+          try {
+            amount = parseFloat(amount)
+          } catch (e) {
+            return 'invalid amount: ' + amount
+          }
+          const member = (
+            await client.game.guild(msg.guild.id)
+          ).guild.ship.members.find((m) => m.id === msg.author.id)
+          if (!member) return 'no member with id ' + msg.author.id
+          member.stamina = amount / member.maxStamina()
+          return 'set stamina to ' + amount
+        },
+      },
     }
 
     let message =

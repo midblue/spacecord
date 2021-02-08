@@ -21,7 +21,7 @@ module.exports = (guild) => {
     if (powerRes.message) messages.push(powerRes.message)
 
     if (!telemetry || !haveEnoughPower || eyesOnly) {
-      let range = process.env.INTERACT_RADIUS
+      let range = guild.ship.interactRadius
       const scanResult = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
@@ -143,7 +143,7 @@ You see ${
     const interactableGuilds = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+      range: guild.ship.maxActionRadius(),
       excludeIds: guild.guildId,
     }).guilds
     if (interactableGuilds && interactableGuilds.length)

@@ -2,6 +2,7 @@ const defaults = {
   type: 'transceiver',
   weight: 50,
   baseHp: 6,
+  maxGarble: 0.8,
 }
 
 // * get all exports from files in this folder

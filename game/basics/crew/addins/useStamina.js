@@ -15,7 +15,9 @@ module.exports = (member) => {
           amount,
         ),
       }
-    member.stamina = amount / member.maxStamina()
+    member.stamina = (member.stamina || 1) - amount / member.maxStamina()
+    if (member.stamina < 0.001) member.stamina = 0
+
     return {
       ok: true,
     }

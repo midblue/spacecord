@@ -55,7 +55,7 @@ module.exports = {
               user: msg.author,
               emoji: '📖',
               title: 'How To Play',
-              commands: [],
+              commands: [], // todo add spawn and join commands here
             })
           },
         },

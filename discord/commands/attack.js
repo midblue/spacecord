@@ -37,7 +37,7 @@ module.exports = {
       interactableGuilds = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
-        range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+        range: guild.ship.interactRadius,
         excludeIds: guild.guildId,
       }).guilds
 

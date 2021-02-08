@@ -32,19 +32,19 @@ module.exports = {
         .slice(0, 5)
         .map(
           (m, index) =>
-            `${trophy[index]} **%username%${m.id}%**\nLevel ${
+            `${trophy[index]} **%username%${m.id}%**: Level ${
               m.level[skill.name]
-            } (${m.xp[skill.name]} xp)`,
+            }`, // (${m.xp[skill.name]} xp)
         )
-        .join('\n\n')
+        .join('\n')
       return {
         name: `${skill.emoji} ${capitalize(skill.name)}`,
         value:
-          '‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n' +
-          (await applyCustomParams(msg, memberRanking)),
+          // '‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n' +
+          await applyCustomParams(msg, memberRanking),
       }
     })
-    rankings = await Promise.all(rankings)
+    rankings = (await Promise.all(rankings)).filter((r) => r.value)
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
@@ -53,20 +53,20 @@ module.exports = {
 
     const sentMessage = (await send(msg, embed))[0]
 
-    const trainableSkillActions = allSkills.map((skill) => {
-      return {
-        emoji: skill.emoji,
-        action() {
-          runGuildCommand({ msg, commandTag: 'train' + capitalize(skill.name) })
-        },
-      }
-    })
-    await awaitReaction({
-      msg: sentMessage,
-      reactions: trainableSkillActions,
-      embed,
-      guild,
-      listeningType: 'training choice',
-    })
+    // const trainableSkillActions = allSkills.map((skill) => {
+    //   return {
+    //     emoji: skill.emoji,
+    //     action() {
+    //       runGuildCommand({ msg, commandTag: 'train' + capitalize(skill.name) })
+    //     },
+    //   }
+    // })
+    // await awaitReaction({
+    //   msg: sentMessage,
+    //   reactions: trainableSkillActions,
+    //   embed,
+    //   guild,
+    //   listeningType: 'training choice',
+    // })
   },
 }

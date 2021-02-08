@@ -9,6 +9,7 @@ const {
 const awaitReaction = require('../actions/awaitReaction')
 const Discord = require('discord.js-light')
 const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
+const runGuildCommand = require('../actions/runGuildCommand')
 const trainingActions = {
   engineering: require('./trainEngineering').action,
   mechanics: require('./trainMechanics').action,
@@ -17,13 +18,13 @@ const trainingActions = {
 module.exports = {
   tag: 'me', // this is also the 'train' command
   documentation: {
-    value: `See your stats and train your character!`,
+    value: `See your stats and take actions.`,
     emoji: '💁‍♂️',
     category: 'crew',
     priority: 70,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:me|train|xp)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:me)$`, 'gi').exec(content)
   },
   async action({
     msg,
@@ -71,12 +72,7 @@ module.exports = {
           value: `\`+ 💪${
             Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
           }\` stamina/ship ${process.env.TIME_UNIT_SINGULAR}
-(Next gain in ${msToTimeString(guild.context.timeUntilNextTick())})`,
-          inline: true,
-        },
-        {
-          name: `🏋️‍♂️ Training Stamina Cost`,
-          value: `\`- 💪${staminaRequirements['train']}\` stamina`,
+(Next day is in ${msToTimeString(guild.context.timeUntilNextTick())})`,
           inline: true,
         },
       ],
@@ -106,24 +102,29 @@ module.exports = {
       name: 'Skills',
       value: trainableSkills
         .map((e) => {
-          return `${e.emoji} **${capitalize(e.name)}**: **Level ${e.level}** (${
-            e.levelProgress
-          }/${e.levelSize}, ${(e.percentToLevel * 100).toFixed(0)}% to level ${
-            e.level + 1
-          })`
+          return `${e.emoji} **${capitalize(e.name)}**: Level ${e.level}`
         })
         .join('\n'),
     }
     embed.fields.push(trainableSkillsField)
 
+    const reactions = [
+      {
+        emoji: '🏋️‍♂️',
+        label: 'Train your skills',
+        action: async () => {
+          runGuildCommand({ msg, commandTag: 'train' })
+        },
+      },
+    ]
+
     const sentMessages = await send(msg, embed)
     const sentMessage = sentMessages[sentMessages.length - 1]
     await awaitReaction({
       msg: sentMessage,
-      reactions: trainableSkillsAsReactionOptions,
+      reactions: reactions,
       embed,
       guild,
-      listeningType: 'training choice',
     })
   },
 }

@@ -21,8 +21,25 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({ msg, settings, author, game, client, ship, requirements }) {
+  async action({
+    msg,
+    settings,
+    author,
+    game,
+    client,
+    guild,
+    ship,
+    requirements,
+  }) {
     log(msg, 'Speed Vote', msg.guild.name)
+
+    // ---------- use stamina
+    const authorCrewMemberObject = guild.ship.members.find(
+      (m) => m.id === msg.author.id,
+    )
+    if (!authorCrewMemberObject) return console.log('no user found in speed')
+    const staminaRes = authorCrewMemberObject.useStamina('poll')
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const effectiveSpeed = ship.effectiveSpeed()
     const maxSpeed = ship.maxSpeed()

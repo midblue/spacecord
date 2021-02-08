@@ -2,6 +2,7 @@ const defaults = {
   type: 'scanner',
   weight: 40,
   baseHp: 10,
+  range: 1.5,
 }
 
 // * get all exports from files in this folder

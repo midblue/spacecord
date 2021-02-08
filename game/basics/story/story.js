@@ -1,4 +1,4 @@
-const { capitalize } = require('../../../common')
+const { capitalize, garble } = require('../../../common')
 
 module.exports = {
   guild: {
@@ -45,9 +45,11 @@ module.exports = {
     },
     stamina: {
       notEnough: (id, current, needed) =>
-        `%username%${id}%, you need 💪 ${Math.round(
+        `%username%${id}%, you need 💪${Math.round(
           needed,
-        )} stamina for that task, and you only have 💪 ${Math.round(current)}.`,
+        )} stamina for that task, and you currently have 💪${Math.round(
+          current,
+        )}.`,
     },
   },
   scanShip: {
@@ -90,53 +92,62 @@ module.exports = {
     voteFailed: () =>
       `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     location: {
-      send: ({ ship, equipment, powerUse, yesPercent }) =>
+      send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
           equipment.modelDisplayName
         } begins to hum. Your location has been broadcast to any ship within ${
-          equipment.range
-        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          Math.round(effectiveRange * 10) / 10
+        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
           process.env.POWER_UNIT
         } of power.`,
-      receive: (ship) =>
-        `Your ship's antenna picks up a broadcast containing the coordinates [${Math.round(
-          ship.location[0],
-        )}, ${Math.round(ship.location[1])}], but with no further information.`,
+      receive: (ship, garbleAmount = 0) =>
+        `Your ship's antenna picks up a broadcast: "${garble(
+          `Our location is [${Math.round(ship.location[0])}, ${Math.round(
+            ship.location[1],
+          )}]`,
+          garbleAmount,
+        )}"`,
     },
     distress: {
-      send: ({ ship, equipment, powerUse, yesPercent }) =>
+      send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
           equipment.modelDisplayName
         } begins to hum. A distress signal has been broadcast to any ship within ${
-          equipment.range
-        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          Math.round(effectiveRange * 10) / 10
+        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
           process.env.POWER_UNIT
         } of power.`,
-      receive: (ship) =>
-        `Your ship's antenna picks up a distress signal coming from the coordinates [${Math.round(
-          ship.location[0],
-        )}, ${Math.round(ship.location[1])}]!`,
+      receive: (ship, garbleAmount = 0) =>
+        `Your ship's antenna picks up a broadcast: "${garble(
+          `We need help! Please rescue us at [${Math.round(
+            ship.location[0],
+          )}, ${Math.round(ship.location[1])}]!`,
+          garbleAmount,
+        )}"`,
     },
     surrender: {
-      send: ({ ship, equipment, powerUse, yesPercent }) =>
+      send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members agree, so you command your ship's ${
           equipment.modelDisplayName
         } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${
-          equipment.range
-        } ${process.env.DISTANCE_UNIT}. This action uses ${powerUse} ${
+          Math.round(effectiveRange * 10) / 10
+        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
           process.env.POWER_UNIT
         } of power.`,
-      receive: (ship) =>
-        `Your ship's antenna picks up a surrender broadcast from the ship ${ship.name}!`,
+      receive: (ship, garbleAmount = 0) =>
+        `Your ship's antenna picks up a broadcast: "${garble(
+          `We, of the ship ${ship.name}, do hereby surrender.`,
+          garbleAmount,
+        )}"`,
     },
     factionRally: {
-      send: ({ ship, equipment, powerUse, yesPercent }) =>
+      send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members agree, so you hit the big ${
@@ -146,45 +157,32 @@ module.exports = {
         } vibrates in time with your faction's anthem. A rallying cry for ${
           ship.faction.emoji
         }${ship.faction.name} echoes across space to any ship within ${
-          equipment.range
-        } ${process.env.DISTANCE_UNIT}! This action uses ${powerUse} ${
+          Math.round(effectiveRange * 10) / 10
+        } ${process.env.DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${
           process.env.POWER_UNIT
         } of power.`,
-      receive: (ship) =>
-        `Your ship's antenna picks up a rallying cry for ${ship.faction.emoji}${ship.faction.name} from the ship ${ship.name}. Their anthem echoes through your speakers.`,
+      receive: (ship, garbleAmount = 0) =>
+        `Your ship's antenna picks up a broadcast: "${garble(
+          `Members of ${ship.faction.name}! ${ship.name} calls out to you!`,
+          garbleAmount,
+        )}"`,
     },
     attack: {
-      send: ({ ship, equipment, powerUse, yesPercent }) =>
+      send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members agree, so you hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
           equipment.modelDisplayName
         } broadcasts your avarice. An attack signal makes its way to any ship within ${
-          equipment.range
-        } ${process.env.DISTANCE_UNIT}! This action uses ${powerUse} ${
+          Math.round(effectiveRange * 10) / 10
+        } ${process.env.DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${
           process.env.POWER_UNIT
         } of power.`,
-      receive: (ship) =>
-        `Your ship's antenna goes silent for a moment, and then suddenly a monitor lights up in jarring red with this symbol.
-				
-888888888888888888888888888888888888888888888
-888888888888888888888888888888888888888888888
-888888888888888888P""  ""98888888888888888888
-888888888P"88888P          988888"98888888888
-888888888  "9888            888P"  8888888888
-88888888888bo "9  d8o  o8b  P" od888888888888
-88888888888888bob 98"  "8P dod888888888888888
-88888888888888888    db    888888888888888888
-8888888888888888888      88888888888888888888
-8888888888888888P"9bo  odP"988888888888888888
-8888888888888P" od88888888bo "988888888888888
-88888888888   d88888888888888b   888888888888
-888888888888oo8888888888888888oo8888888888888
-888888888888888888888888888888888888888888888
-
-The ship ${ship.name} is on the hunt!`,
-      receiveLog: (ship) =>
-        `You pick up a declaration of attack from the ship ${ship.name}!`,
+      receive: (ship, garbleAmount = 0) =>
+        `Your ship's antenna picks up a broadcast: "${garble(
+          `We of ${ship.name} declare an attack! Prepare to die, scum!`,
+          garbleAmount,
+        )}"`,
     },
   },
   xp: {
@@ -231,7 +229,7 @@ The ship ${ship.name} is on the hunt!`,
   },
   vote: {
     insufficientVotes: () =>
-      `Not enough crew members voted, and you don't feel comfortable making such an important decision without getting everyone's input. You decide to hold off for now.`,
+      `Not enough eligible crew members voted, and you don't feel comfortable making such an important decision without getting everyone's input. You decide to hold off for now.`,
   },
   attack: {
     tooSoon: (untilNext) =>
@@ -242,12 +240,14 @@ The ship ${ship.name} is on the hunt!`,
     noShips: () => `There are no ships in range to attack.`,
     brokenWeapons: () =>
       `All of your weapons are too damaged to attack with! Repair them first!`,
-    votePassed: (yesPercent, otherShip) =>
+    tooLowMunitionsSkill: (required, current, weapon) =>
+      `Voters' collective munitions skill (\`${current}\`), is too low to operate the ${weapon.emoji} ${weapon.modelDisplayName} (requires \`${required}\`).`,
+    votePassed: (yesPercent, otherShip, collectiveMunitionsSkill) =>
       `${Math.round(
         yesPercent * 100,
       )}% of the available crew members agree to launch an attack against ${
         otherShip.name
-      }, so your crew takes their places at their battle stations.`,
+      }! The participating crew members take their places at their battle stations with a collective munitions skill of \`${collectiveMunitionsSkill}\`.`,
     outOfRange: () =>
       `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
     miss: (weapon, wasClose, accuracyMultiplier) =>

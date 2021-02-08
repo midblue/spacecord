@@ -40,7 +40,7 @@ module.exports = {
       interactableGuilds = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
-        range: guild.ship.interactRadius || process.env.INTERACT_RADIUS,
+        range: guild.ship.interactRadius,
         excludeIds: guild.guildId,
       }).guilds
 
@@ -54,7 +54,7 @@ module.exports = {
       )
       const embed = new Discord.MessageEmbed()
         .setColor(process.env.APP_COLOR)
-        .setTitle('🛸 ' + otherGuild.ship.name)
+        .setTitle(otherGuild.ship.name)
         .setDescription(
           `${positionAndAngle.distance.toFixed(
             2,

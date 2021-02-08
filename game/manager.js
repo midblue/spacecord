@@ -2,7 +2,7 @@ const { spawn, liveify } = require('./basics/guild/guild')
 const spawnPlanets = require('./basics/planets')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
-const { pointIsInsideCircle } = require('../common')
+const { pointIsInsideCircle, distance } = require('../common')
 const coreLoop = require('./core loop/index')
 const db = require('../db/db')
 
@@ -141,12 +141,24 @@ const game = {
     }
   },
 
-  broadcast({ x, y, range, message, logMessage, excludeIds = [] }) {
+  broadcast({
+    x,
+    y,
+    range,
+    message,
+    excludeIds = [],
+    garbleAmount,
+    messageProps,
+  }) {
     const guildsInRangeToHear = this.scanArea({ x, y, range, excludeIds })
       .guilds
     guildsInRangeToHear.forEach((g) => {
-      g.pushToGuild(message)
-      g.ship.logEntry(logMessage)
+      const d = distance(x, y, ...g.ship.location)
+      const dPercent = d / range
+      const garb = garbleAmount * dPercent
+      const m = message(...messageProps, garb)
+      g.pushToGuild(m)
+      g.ship.logEntry(m)
     })
   },
 }

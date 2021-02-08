@@ -71,6 +71,17 @@ module.exports = (guild) => {
         })
       },
     })
+    actions.push({
+      emoji: '🧾',
+      label: 'Ship Log',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          author: user,
+          commandTag: 'log',
+        })
+      },
+    })
 
     return {
       fields,

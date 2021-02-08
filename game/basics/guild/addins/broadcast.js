@@ -1,7 +1,8 @@
 const story = require('../../story/story')
 const runYesNoVote = require('../../../../discord/actions/runYesNoVote')
 const allTransceivers = require('../../equipment/transceiver/index')
-const { msToTimeString } = require('../../../../common')
+const { msToTimeString, usageTag } = require('../../../../common')
+const staminaRequirements = require('../../crew/staminaRequirements')
 
 module.exports = (guild) => {
   guild.ship.broadcastOptions = () => {
@@ -46,11 +47,85 @@ module.exports = (guild) => {
       ],
     )
 
-    if (timeUntilCanBroadcast === 0) {
-      if ((broadcastEquipment.capabilities || []).includes('location'))
+    const baseBroadcastOptions = [
+      {
+        type: 'location',
+        emoji: '📍',
+        label: `Broadcast your location`,
+        yesNoQuestion: (user) =>
+          `Really broadcast your ship's location? | Vote started by ${user.nickname}`,
+        insufficientLog: (user) =>
+          `A vote started by %username%${user.id}% to broadcast the ship's location failed with too few votes.`,
+        successLog: (user, reallyDoIt) =>
+          `The ship's location was broadcast to anyone in range to hear it. %username%${user.id}% started the vote, and ${reallyDoIt.voters} members voted.`,
+        failureLog: (user, reallyDoIt) =>
+          `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${reallyDoIt.voters} members voted.`,
+      },
+      {
+        type: 'factionRally',
+        emoji: guild.ship.faction.emoji,
+        label: `Broadcast a rallying cry for ${guild.ship.faction.name}`,
+        yesNoQuestion: (user) =>
+          `Really broadcast a rallying cry for ${guild.ship.faction.emoji}${guild.ship.faction.name} to the area? | Vote started by ${user.nickname}`,
+        insufficientLog: (user) =>
+          `A vote started by ${user.nickname} to send a faction rallying cry failed with too few votes.`,
+        successLog: (user, reallyDoIt) =>
+          `The ship sent out a faction rallying cry. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
+        failureLog: (user, reallyDoIt) =>
+          `A vote started by ${user.nickname} to send a faction rallying cry failed. ${reallyDoIt.voters} members voted.`,
+      },
+      {
+        type: 'distress',
+        emoji: '🆘',
+        label: `Broadcast a distress signal`,
+        yesNoQuestion: (user) =>
+          `Really broadcast a distress signal containing your ship's location? | Vote started by ${user.nickname}`,
+        insufficientLog: (user) =>
+          `A vote started by ${user.nickname} to send a distress signal failed with too few votes.`,
+        successLog: (user, reallyDoIt) =>
+          `The ship sent out a distress signal to anyone in range to hear it. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
+        failureLog: (user, reallyDoIt) =>
+          `A vote started by ${user.nickname} to send a distress signal failed. ${reallyDoIt.voters} members voted.`,
+      },
+      {
+        type: 'attack',
+        emoji: '🏴‍☠️',
+        label: `Broadcast an attack signal`,
+        yesNoQuestion: (user) =>
+          `Really broadcast an attack signal to the area? | Vote started by ${user.nickname}`,
+        insufficientLog: (user) =>
+          `A vote started by ${user.nickname} to send an attack signal failed with too few votes.`,
+        successLog: (user, reallyDoIt) =>
+          `The ship sent out an attack signal. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
+        failureLog: (user, reallyDoIt) =>
+          `A vote started by ${user.nickname} to send an attack signal failed. ${reallyDoIt.voters} members voted.`,
+      },
+      {
+        type: 'surrender',
+        emoji: '🏳',
+        label: `Broadcast a surrender signal`,
+        yesNoQuestion: (user) =>
+          `Really broadcast a surrender signal to the area? | Vote started by ${user.nickname}`,
+        insufficientLog: (user) =>
+          `A vote started by ${user.nickname} to send a surrender signal failed with too few votes.`,
+        successLog: (user, reallyDoIt) =>
+          `The ship sent out a surrender signal. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
+        failureLog: (user, reallyDoIt) =>
+          `A vote started by ${user.nickname} to send a surrender signal failed. ${reallyDoIt.voters} members voted.`,
+      },
+    ]
+
+    baseBroadcastOptions.forEach((o) => {
+      if ((broadcastEquipment.capabilities || []).includes(o.type))
         actions.push({
-          emoji: '📍',
-          label: `Broadcast your location (⚡️${broadcastEquipment.powerUse.broadcast} ${process.env.POWER_UNIT})`,
+          emoji: o.emoji,
+          label:
+            o.label +
+            ' ' +
+            usageTag(
+              broadcastEquipment.powerUse,
+              staminaRequirements['broadcast'],
+            ),
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
@@ -62,227 +137,44 @@ module.exports = (guild) => {
                 msg,
               )
 
-            const reallyDoIt = await runYesNoVote({
-              question: `Really broadcast your ship's location? | Vote started by ${user.nickname}`,
-              time: 10 * 1000,
-              minimumMemberPercent: 0.1,
-              msg,
-              ship: guild.ship,
-            })
-            if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(
-                `A vote started by %username%${user.id}% to broadcast the ship's location failed with too few votes.`,
-              )
-              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
-            }
-            if (reallyDoIt.result === true) {
-              guild.ship.logEntry(
-                `The ship's location was broadcast to anyone in range to hear it. %username%${user.id}% started the vote, and ${reallyDoIt.voters} members voted.`,
-              )
-              guild.ship.broadcast({
-                msg,
-                broadcastType: 'location',
-                equipment: broadcastEquipment,
-                yesPercent: reallyDoIt.yesPercent,
-              })
-            } else {
-              guild.ship.logEntry(
-                `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${reallyDoIt.voters} members voted.`,
-              )
-              guild.pushToGuild(story.broadcast.voteFailed(), msg)
-            }
-          },
-        })
-
-      if ((broadcastEquipment.capabilities || []).includes('factionRally'))
-        actions.push({
-          emoji: guild.ship.faction.emoji,
-          label: `Broadcast a rallying cry for ${guild.ship.faction.name} (⚡️${broadcastEquipment.powerUse.broadcast} ${process.env.POWER_UNIT})`,
-          async action({ user, msg }) {
-            if (
-              (guild.lastBroadcast?.time || 0) +
-                broadcastEquipment.repeatUseTimeLimit >
-              Date.now()
+            // ---------- use stamina
+            const authorCrewMemberObject = guild.ship.members.find(
+              (m) => m.id === user.id,
             )
-              return guild.pushToGuild(
-                story.broadcast.tooSoon(broadcastEquipment.modelDisplayName),
-                msg,
-              )
+            if (!authorCrewMemberObject)
+              return console.log('no user found in broadcast')
+            const staminaRes = authorCrewMemberObject.useStamina('broadcast')
+            if (!staminaRes.ok)
+              return guild.pushToGuild(staminaRes.message, msg)
 
             const reallyDoIt = await runYesNoVote({
-              question: `Really broadcast a rallying cry for ${guild.ship.faction.emoji}${guild.ship.faction.name} to the area? | Vote started by ${user.nickname}`,
-              time: 10 * 1000,
-              minimumMemberPercent: 0.1,
+              pollType: 'broadcast',
+              question: o.yesNoQuestion(user),
+              minimumMemberPercent: o.minimumMemberPercent || 0.1,
               msg,
               ship: guild.ship,
             })
+            if (!reallyDoIt.ok)
+              return guild.pushToGuild(reallyDoIt.message, msg)
             if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a faction rallying cry failed with too few votes.`,
-              )
+              guild.ship.logEntry(o.insufficientLog(user))
               return guild.pushToGuild(story.vote.insufficientVotes(), msg)
             }
             if (reallyDoIt.result === true) {
-              guild.ship.logEntry(
-                `The ship sent out a faction rallying cry. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
-              )
+              guild.ship.logEntry(o.successLog(user, reallyDoIt))
               guild.ship.broadcast({
                 msg,
-                broadcastType: 'factionRally',
+                broadcastType: o.type,
                 equipment: broadcastEquipment,
                 yesPercent: reallyDoIt.yesPercent,
               })
             } else {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a faction rallying cry failed. ${reallyDoIt.voters} members voted.`,
-              )
+              guild.ship.logEntry(o.failureLog(user, reallyDoIt))
               guild.pushToGuild(story.broadcast.voteFailed(), msg)
             }
           },
         })
-
-      if ((broadcastEquipment.capabilities || []).includes('distress'))
-        actions.push({
-          emoji: '🆘',
-          label: `Broadcast a distress signal (⚡️${broadcastEquipment.powerUse.broadcast} ${process.env.POWER_UNIT})`,
-          async action({ user, msg }) {
-            if (
-              (guild.lastBroadcast?.time || 0) +
-                broadcastEquipment.repeatUseTimeLimit >
-              Date.now()
-            )
-              return guild.pushToGuild(
-                story.broadcast.tooSoon(broadcastEquipment.modelDisplayName),
-                msg,
-              )
-
-            const reallyDoIt = await runYesNoVote({
-              question: `Really broadcast a distress signal containing your ship's location? | Vote started by ${user.nickname}`,
-              time: 10 * 1000,
-              minimumMemberPercent: 0.1,
-              msg,
-              ship: guild.ship,
-            })
-            if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a distress signal failed with too few votes.`,
-              )
-              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
-            }
-            if (reallyDoIt.result === true) {
-              guild.ship.logEntry(
-                `The ship sent out a distress signal to anyone in range to hear it. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
-              )
-              guild.ship.broadcast({
-                msg,
-                broadcastType: 'distress',
-                equipment: broadcastEquipment,
-                yesPercent: reallyDoIt.yesPercent,
-              })
-            } else {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a distress signal failed. ${reallyDoIt.voters} members voted.`,
-              )
-              guild.pushToGuild(story.broadcast.voteFailed(), msg)
-            }
-          },
-        })
-
-      if ((broadcastEquipment.capabilities || []).includes('attack'))
-        actions.push({
-          emoji: '🏴‍☠️',
-          label: `Broadcast an attack signal (⚡️${broadcastEquipment.powerUse.message} ${process.env.POWER_UNIT})`,
-          async action({ user, msg }) {
-            if (
-              (guild.lastBroadcast?.time || 0) +
-                broadcastEquipment.repeatUseTimeLimit >
-              Date.now()
-            )
-              return guild.pushToGuild(
-                story.broadcast.tooSoon(broadcastEquipment.modelDisplayName),
-                msg,
-              )
-
-            const reallyDoIt = await runYesNoVote({
-              question: `Really broadcast an attack signal to the area? | Vote started by ${user.nickname}`,
-              time: 10 * 1000,
-              minimumMemberPercent: 0.1,
-              msg,
-              ship: guild.ship,
-            })
-            if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send an attack signal failed with too few votes.`,
-              )
-              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
-            }
-            if (reallyDoIt.result === true) {
-              guild.ship.logEntry(
-                `The ship sent out an attack signal. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
-              )
-              guild.ship.broadcast({
-                msg,
-                broadcastType: 'attack',
-                equipment: broadcastEquipment,
-                yesPercent: reallyDoIt.yesPercent,
-                powerUseType: 'message',
-              })
-            } else {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send an attack signal failed. ${reallyDoIt.voters} members voted.`,
-              )
-              guild.pushToGuild(story.broadcast.voteFailed(), msg)
-            }
-          },
-        })
-
-      if ((broadcastEquipment.capabilities || []).includes('surrender'))
-        actions.push({
-          emoji: '🏳',
-          label: `Broadcast a surrender signal (⚡️${broadcastEquipment.powerUse.broadcast} ${process.env.POWER_UNIT})`,
-          async action({ user, msg }) {
-            if (
-              (guild.lastBroadcast?.time || 0) +
-                broadcastEquipment.repeatUseTimeLimit >
-              Date.now()
-            )
-              return guild.pushToGuild(
-                story.broadcast.tooSoon(broadcastEquipment.modelDisplayName),
-                msg,
-              )
-
-            const reallyDoIt = await runYesNoVote({
-              question: `Really broadcast a surrender signal to the area? | Vote started by ${user.nickname}`,
-              time: 10 * 1000,
-              minimumMemberPercent: 0.1,
-              msg,
-              ship: guild.ship,
-            })
-            if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a surrender signal failed with too few votes.`,
-              )
-              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
-            }
-            if (reallyDoIt.result === true) {
-              guild.ship.logEntry(
-                `The ship sent out a surrender signal. ${user.nickname} started the vote, and ${reallyDoIt.voters} members voted.`,
-              )
-              guild.ship.broadcast({
-                msg,
-                broadcastType: 'surrender',
-                equipment: broadcastEquipment,
-                yesPercent: reallyDoIt.yesPercent,
-              })
-            } else {
-              guild.ship.logEntry(
-                `A vote started by ${user.nickname} to send a surrender signal failed. ${reallyDoIt.voters} members voted.`,
-              )
-              guild.pushToGuild(story.broadcast.voteFailed(), msg)
-            }
-          },
-        })
-    }
+    })
 
     return { ok: true, fields, actions, range: broadcastEquipment.range }
   }

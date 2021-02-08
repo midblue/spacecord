@@ -2,6 +2,7 @@ const { log, username } = require('../botcommon')
 const { capitalize } = require('../../common')
 const Discord = require('discord.js-light')
 const runPoll = require('../actions/runPoll')
+const send = require('../actions/send')
 
 const voteTime = process.env.DEV ? 10 * 1000 : process.env.GENERAL_VOTE_TIME
 
@@ -51,7 +52,8 @@ Your ship's engine supports \`${
         }\` choices for voting.`,
       )
 
-    const { userReactions, sentMessage } = await runPoll({
+    const { ok, message, userReactions, sentMessage } = await runPoll({
+      pollType: 'speed',
       embed,
       time: voteTime,
       reactions: availableSpeedLevels,
@@ -59,6 +61,7 @@ Your ship's engine supports \`${
       msg,
       requirements,
     })
+    if (!ok) return send(msg, message)
 
     const toAggregate = Object.keys(userReactions).map((emoji) => {
       const direction = availableSpeedLevels.find((d) => d.emoji === emoji)
@@ -68,12 +71,12 @@ Your ship's engine supports \`${
       }
     })
 
+    const previousSpeed = effectiveSpeed
     const res = ship.redetermineSpeed(toAggregate)
 
-    embed.description = embed.description.replace(
-      'Current speed is',
-      'Previous speed was',
-    )
+    embed.description = `Previous speed was \`${previousSpeed.toFixed(3)} ${
+      process.env.SPEED_UNIT
+    }\``
     embed.fields = {
       name: 'Vote Complete!',
       value: res.ok

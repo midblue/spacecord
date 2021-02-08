@@ -1,3 +1,4 @@
+const staminaRequirements = require('./game/basics/crew/staminaRequirements')
 // const lunicode = require('Lunicode')
 
 module.exports = {
@@ -65,6 +66,15 @@ module.exports = {
     let minutes = Math.floor(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
+  usageTag(power, stamina) {
+    let tag = ''
+    if (power) tag += powerTag(power)
+    if (power && stamina) tag += ' '
+    if (stamina) tag += staminaTag(stamina)
+    return tag
+  },
+  powerTag,
+  staminaTag,
   distance,
   angle,
 }
@@ -103,4 +113,12 @@ function distance(x1, y1, x2, y2) {
 }
 function angle(x1, y1, x2, y2) {
   return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
+}
+
+function powerTag(power) {
+  return `\`⚡️${power}\``
+}
+function staminaTag(stamina) {
+  if (typeof stamina == 'string') stamina = staminaRequirements[stamina]
+  return `\`💪${stamina}\``
 }

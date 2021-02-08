@@ -1,18 +1,40 @@
 const send = require('./send')
 const awaitReaction = require('./awaitReaction')
 const { msToTimeString, capitalize } = require('../../common')
+const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
+const { guild } = require('../../game/manager')
 
 module.exports = async ({
+  pollType,
   embed,
   pollTitle = 'Crew Member Poll',
   time = process.env.GENERAL_VOTE_TIME,
   reactions,
   requirements,
+  // staminaRequirement,
   minimumMemberPercent,
   msg,
   respondeeFilter,
   ship,
 }) => {
+  // make sure there's not another active poll of this type running
+  const thisGuild = ((await guild(msg.guild.id)) || {}).guild
+  if (!thisGuild)
+    return {
+      ok: false,
+      message: `Failed to find guild!`,
+    }
+  if (!thisGuild.activePolls) thisGuild.activePolls = {}
+  if (pollType && thisGuild.activePolls[pollType])
+    return {
+      ok: false,
+      message: `${
+        msg?.user?.nickname ? msg.user.nickname + ', t' : 'T'
+      }here is already a ${pollType} poll active! Wait for it to complete before starting another.`,
+    }
+  thisGuild.activePolls[pollType] = true
+
+  // make default embed if missing
   if (!embed)
     embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
@@ -41,9 +63,17 @@ module.exports = async ({
         .join(' and ')} for their vote to be counted.`,
     })
 
+  // if (staminaRequirement && staminaRequirements[staminaRequirement])
+  //   embed.fields.push({
+  //     name: 'Stamina to Vote',
+  // 		value: `\`- 💪${staminaRequirements[staminaRequirement]}\``,
+  // 		inline: true
+  //   })
+
   embed.fields.push({
     name: 'Remaining vote time:',
     value: msToTimeString(time),
+    inline: true,
     id: 'remainingTime',
   })
 
@@ -88,6 +118,7 @@ module.exports = async ({
     respondeeFilter,
   })
   done = true
+  if (pollType) delete thisGuild.activePolls[pollType]
 
   embed.fields.splice(
     embed.fields.findIndex((f) => f.id === 'remainingTime'),
@@ -119,6 +150,7 @@ module.exports = async ({
     Object.keys(userReactionCounts).length >= minimumMembersMustVote
 
   return {
+    ok: true,
     userReactions: userReactionsToUse,
     insufficientVotes: !enoughMembersVoted,
     voters: Object.keys(userReactionCounts).length,

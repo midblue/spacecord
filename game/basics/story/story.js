@@ -43,6 +43,12 @@ module.exports = {
       success: (member, guild) =>
         `%username%${member.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
+    stamina: {
+      notEnough: (id, current, needed) =>
+        `%username%${id}%, you need 💪 ${Math.round(
+          needed,
+        )} stamina for that task, and you only have 💪 ${Math.round(current)}.`,
+    },
   },
   scanShip: {
     noScanner: () =>
@@ -233,6 +239,7 @@ The ship ${ship.name} is on the hunt!`,
     voteFailed: () =>
       `The crew decides collectively that attacking isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     noWeapon: () => `Your ship has no weapons to attack with!`,
+    noShips: () => `There are no ships in range to attack.`,
     brokenWeapons: () =>
       `All of your weapons are too damaged to attack with! Repair them first!`,
     votePassed: (yesPercent, otherShip) =>
@@ -244,7 +251,7 @@ The ship ${ship.name} is on the hunt!`,
     outOfRange: () =>
       `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
     miss: (weapon, wasClose, accuracyMultiplier) =>
-      `The attack from your ${weapon.modelDisplayName} misses${
+      `The attack from your ${weapon.emoji} ${weapon.modelDisplayName} misses${
         wasClose ? " by a hair's breadth" : ''
       }! ${
         accuracyMultiplier > 1
@@ -253,36 +260,44 @@ The ship ${ship.name} is on the hunt!`,
           ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
           : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
       }`,
-    hit: (
-      weapon,
-      target,
-      advantageDamageMultiplier,
-      damageToEquipment,
-      damageToArmor,
-      didDisableEquipment,
-      didDisableArmor,
-    ) =>
-      `Your ${weapon.modelDisplayName} hits the enemy's ${
-        target.modelDisplayName
-      }, dealing ${damageToEquipment.toFixed(1)} damage${
+    hit: (weapon, advantageDamageMultiplier, totalDamageDealt, destroyedShip) =>
+      `Your ${weapon.emoji} ${
+        weapon.modelDisplayName
+      } hits the enemy, dealing ${
+        Math.round(totalDamageDealt * 10) / 10
+      } damage${
         advantageDamageMultiplier > 1
           ? `, a critical hit!`
           : advantageDamageMultiplier < 1
           ? ` in a glancing blow.`
           : '.'
-      }${
-        damageToArmor
-          ? ` ${damageToArmor.toFixed(
-              1,
-            )} damage was blocked by the ship's armor, but the armor still took some damage from the attack.`
-          : ''
-      } The ${target.modelDisplayName} was ${
-        didDisableEquipment ? '' : 'damaged but not yet'
-      } disabled by the attack${
-        didDisableArmor
-          ? `, and the enemy's armor has been completely disabled by your assault!`
-          : ''
-      }.`,
+      }${destroyedShip ? ` You destroyed their ship!` : ''}`,
+  },
+  defend: {
+    miss: (attacker, weapon, accuracyMultiplier) =>
+      `A ${weapon.emoji} ${
+        weapon.modelDisplayName
+      } attack whizzes past your craft, coming from the ship ${
+        attacker.name
+      }. ${
+        accuracyMultiplier > 1
+          ? `They appear to be expert shots, and you wonder how long you can stay lucky...`
+          : accuracyMultiplier < 1
+          ? `Thanks to the quick action of your pilots, the shot went fairly wide.`
+          : `It looks like a tight battle is unfolding.`
+      }`,
+    hit: (attacker, weapon, advantageDamageMultiplier, totalDamageTaken) =>
+      `The ${weapon.emoji} ${weapon.modelDisplayName} of ${
+        attacker.name
+      } hits your ship for ${Math.round(totalDamageTaken * 10) / 10} damage${
+        advantageDamageMultiplier > 1
+          ? ` in a critical hit!`
+          : advantageDamageMultiplier < 1
+          ? ` in a glancing blow.`
+          : '.'
+      }`,
+    advice: () =>
+      `Repair equipment and train pilots to increase your dodge chance, drop cargo to increase your speed, and train munitions experts to better fight back!`,
   },
   move: {
     redirect: {

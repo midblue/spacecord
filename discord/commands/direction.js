@@ -42,7 +42,8 @@ Your ship's engine supports \`${
         }\` choices for voting.`,
       )
 
-    const { userReactions, sentMessage } = await runPoll({
+    const { ok, message, userReactions, sentMessage } = await runPoll({
+      pollType: 'direction',
       embed,
       time: voteTime,
       reactions: availableDirections,
@@ -50,6 +51,7 @@ Your ship's engine supports \`${
       msg,
       requirements,
     })
+    if (!ok) return send(msg, message)
 
     const toAggregate = Object.keys(userReactions).map((emoji) => {
       const direction = availableDirections.find((d) => d.emoji === emoji)
@@ -58,8 +60,11 @@ Your ship's engine supports \`${
         weight: userReactions[emoji].weightedCount,
       }
     })
+
+    const previousDirection = ship.getDirectionString()
     const res = ship.redirect(toAggregate)
 
+    embed.description = `Previous direction was ${previousDirection}`
     if (!embed.fields || !embed.fields.length) embed.fields = []
     embed.fields.push({
       name: 'Vote Complete!',

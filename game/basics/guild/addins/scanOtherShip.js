@@ -50,7 +50,7 @@ module.exports = (guild) => {
         value: scanner.modelDisplayName,
       })
       fields.push({
-        name: '⚡️Ship Power',
+        name: '⚡️Your Ship Power',
         value: guild.ship.power + ' ' + process.env.POWER_UNIT,
       })
     }

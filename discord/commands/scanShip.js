@@ -11,6 +11,14 @@ module.exports = {
     log(msg, 'Scan Ship', msg.guild.name)
     if (!otherShip) return
 
+    // ---------- use stamina
+    const authorCrewMemberObject = guild.ship.members.find(
+      (m) => m.id === msg.author.id,
+    )
+    if (!authorCrewMemberObject) return console.log('no user found in scanShip')
+    const staminaRes = authorCrewMemberObject.useStamina('scanShip')
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
+
     const res = guild.ship.scanOtherShip(otherShip)
     if (!res.ok) return send(msg, res.message)
 

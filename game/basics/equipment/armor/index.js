@@ -3,6 +3,7 @@ const defaults = {
   weight: 200,
   baseHp: 50,
   damageToArmorMultiplier: 0.5,
+  armorCoverage: 0.5,
 }
 
 // * get all exports from files in this folder

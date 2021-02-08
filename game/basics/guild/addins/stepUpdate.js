@@ -8,6 +8,8 @@ module.exports = (guild) => {
     const eatRes = guild.ship.eat()
     if (!eatRes.ok && eatRes.message) guild.pushToGuild(eatRes.message)
 
+    guild.ship.members.forEach((m) => m.stepUpdate())
+
     await guild.saveNewDataToDb()
   }
 }

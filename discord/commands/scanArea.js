@@ -20,6 +20,14 @@ module.exports = {
   async action({ msg, settings, client, guild, ship }) {
     log(msg, 'Scan Area', msg.guild.name)
 
+    // ---------- use stamina
+    const authorCrewMemberObject = guild.ship.members.find(
+      (m) => m.id === msg.author.id,
+    )
+    if (!authorCrewMemberObject) return console.log('no user found in scanArea')
+    const staminaRes = authorCrewMemberObject.useStamina('scan')
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
+
     const scanRes = await ship.scanArea()
     if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
 

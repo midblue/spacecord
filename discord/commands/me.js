@@ -1,8 +1,14 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const { numberToEmoji, capitalize } = require('../../common')
+const {
+  numberToEmoji,
+  capitalize,
+  percentToTextBars,
+  msToTimeString,
+} = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
 const Discord = require('discord.js-light')
+const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
 const trainingActions = {
   engineering: require('./trainEngineering').action,
   mechanics: require('./trainMechanics').action,
@@ -44,6 +50,32 @@ module.exports = {
         {
           name: `👵🏽 Age`,
           value: userAge.toFixed(2) + ' ' + process.env.TIME_UNIT_LONG,
+          inline: true,
+        },
+        {
+          name: `💪 Stamina`,
+          value:
+            percentToTextBars(authorCrewMemberObject.stamina || 0) +
+            `\n${
+              Math.round(
+                (authorCrewMemberObject.stamina || 0) *
+                  authorCrewMemberObject.maxStamina() *
+                  10,
+              ) / 10
+            }/${Math.round(authorCrewMemberObject.maxStamina() * 10) / 10}`,
+          inline: true,
+        },
+        {
+          name: `🛌 Stamina Gain`,
+          value: `\`+ 💪${
+            Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
+          }\` stamina/ship ${process.env.TIME_UNIT_SINGULAR}
+(Next gain in ${msToTimeString(guild.context.timeUntilNextTick())})`,
+          inline: true,
+        },
+        {
+          name: `🏋️‍♂️ Training Stamina Cost`,
+          value: `\`- 💪${staminaRequirements['train']}\` stamina`,
           inline: true,
         },
       ],

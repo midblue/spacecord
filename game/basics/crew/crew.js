@@ -5,6 +5,7 @@ function spawn(user, guild) {
   const data = {
     id,
     joined: Date.now(),
+    stamina: 1,
     level: {
       piloting: 2,
       engineering: 2,

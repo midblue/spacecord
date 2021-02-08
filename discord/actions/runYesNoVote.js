@@ -3,11 +3,12 @@ const runPoll = require('./runPoll')
 const Discord = require('discord.js-light')
 
 module.exports = async ({
-  type, // todo use type to make sure we don't have two of the same poll open at once
+  pollType, // todo use type to make sure we don't have two of the same poll open at once
   question,
   embed,
-  time = process.env.GENERAL_VOTE_TIME,
+  time = process.env.DEV ? 10000 : process.env.GENERAL_VOTE_TIME,
   requirements,
+  // staminaRequirement,
   minimumMemberPercent,
   msg,
   ship,
@@ -28,15 +29,19 @@ module.exports = async ({
     },
   ]
   const {
+    ok,
+    message,
     userReactions,
     sentMessage,
     insufficientVotes,
     voters,
   } = await runPoll({
+    pollType,
     embed,
     time,
     reactions,
     requirements,
+    // staminaRequirement,
     minimumMemberPercent,
     msg,
     ship,
@@ -48,7 +53,14 @@ module.exports = async ({
     sentMessage.fields = []
   }
 
+  if (!ok)
+    return {
+      ok,
+      message,
+    }
+
   return {
+    ok,
     result: insufficientVotes
       ? false
       : (userReactions['✅']?.weightedCount || 0) >

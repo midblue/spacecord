@@ -35,6 +35,15 @@ module.exports = {
     if (!guild.ship.equipment.weapon.find((w) => w.repair > 0))
       return send(msg, story.attack.brokenWeapons())
 
+    // ---------- use vote caller stamina
+    const authorCrewMemberObject = guild.ship.members.find(
+      (m) => m.id === msg.author.id,
+    )
+    if (!authorCrewMemberObject)
+      return console.log('no user found in attackShip')
+    const staminaRes = authorCrewMemberObject.useStamina('poll')
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
+
     // ---------- vote on the attack
     // const attackVoteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR).setTitle()
     guild.ship.logEntry(
@@ -50,13 +59,16 @@ module.exports = {
         ) * 100,
       )}%\` chance of hitting, but the skill of our munitions experts and their pilots will ultimately have an impact as well.
 Get closer, repair your weapons, and train munitions to have a better shot!`
+
     const {
+      ok,
+      message,
       result,
       yesPercent,
       insufficientVotes,
-      voters,
       sentMessage: voteMessage,
     } = await runYesNoVote({
+      pollType: 'attack',
       embed: voteEmbed,
       question: `Attack ${otherShip.name}? | Vote started by ${msg.author.nickname}`,
       requirements: { munitions: 4 },
@@ -65,6 +77,8 @@ Get closer, repair your weapons, and train munitions to have a better shot!`
       ship: guild.ship,
       cleanUp: false,
     })
+    if (!ok) return send(msg, message)
+
     voteEmbed.fields = []
     if (insufficientVotes) {
       guild.ship.logEntry(story.vote.insufficientVotes())

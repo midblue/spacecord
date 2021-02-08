@@ -1,4 +1,6 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
+const { msToTimeString, usageTag } = require('../../../../common')
+const { power } = require('../../story/story')
 
 module.exports = (guild) => {
   guild.ship.getAvailableActions = () => {
@@ -59,7 +61,9 @@ module.exports = (guild) => {
 
     actions.push({
       emoji: '📡',
-      label: 'Scan Area',
+      label:
+        'Scan Area ' +
+        usageTag(guild.ship.equipment.telemetry[0].powerUse, 'scan'),
       requirements: {
         engineering: 2,
       },
@@ -75,7 +79,7 @@ module.exports = (guild) => {
     if (guild.ship.status.flying) {
       actions.push({
         emoji: '🧭',
-        label: 'Direction Vote',
+        label: 'Direction Vote ' + usageTag(null, 'poll'),
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
@@ -86,7 +90,7 @@ module.exports = (guild) => {
       })
       actions.push({
         emoji: '⏩',
-        label: 'Speed Vote',
+        label: 'Speed Vote ' + usageTag(null, 'poll'),
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
@@ -111,7 +115,7 @@ module.exports = (guild) => {
 
     actions.push({
       emoji: '🏃‍♀️',
-      label: 'Generate Power',
+      label: 'Generate Power ' + usageTag(null, 'generatePower'),
       async action({ user, msg }) {
         await runGuildCommand({
           commandTag: 'generatePower',

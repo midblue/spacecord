@@ -68,7 +68,9 @@ module.exports = async ({
     ]
 
   const commandsAsReactions = commands
-    .filter((c) => c.documentation.name.indexOf('<') === -1)
+    .filter(
+      (c) => !c.documentation.name || c.documentation.name.indexOf('<') === -1,
+    )
     .map((c) => {
       return {
         emoji: c.documentation.emoji,

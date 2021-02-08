@@ -19,6 +19,7 @@ module.exports = {
   documentation: {
     value: `See your stats and train your character!`,
     emoji: '💁‍♂️',
+    category: 'crew',
     priority: 70,
   },
   test(content, settings) {

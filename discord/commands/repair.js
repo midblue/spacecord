@@ -9,6 +9,7 @@ module.exports = {
   documentation: {
     value: `Repair parts of the ship.`,
     emoji: '🛠',
+    category: 'ship',
     priority: 50,
   },
   test(content, settings) {

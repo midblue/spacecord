@@ -8,6 +8,7 @@ module.exports = {
     name: `map`,
     value: `The ship's map of its discoveries.`,
     emoji: '🗺',
+    category: 'ship',
     priority: 40,
   },
   test(content, settings) {

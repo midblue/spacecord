@@ -12,6 +12,7 @@ module.exports = {
   documentation: {
     value: `Starts a vote to set the ship's speed.`,
     emoji: '⏩',
+    category: 'ship',
     priority: 75,
   },
   test(content, settings) {

@@ -8,6 +8,7 @@ module.exports = {
     name: `look`,
     value: `Look out the window.`,
     emoji: '👀',
+    category: 'interaction',
     priority: 0,
   },
   test(content, settings) {

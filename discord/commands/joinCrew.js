@@ -8,6 +8,7 @@ module.exports = {
     name: `join`,
     value: `Become a member of the ship's crew.`,
     emoji: '💪',
+    category: 'crew',
     priority: 95,
   },
   test(content, settings) {

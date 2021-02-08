@@ -9,6 +9,7 @@ module.exports = {
     name: `shipinfo`,
     value: `Ship equipment, age, health, etc.`,
     emoji: '📊',
+    category: 'ship',
     priority: 80,
   },
   test(content, settings) {

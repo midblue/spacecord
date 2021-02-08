@@ -16,5 +16,8 @@ module.exports = (member) => {
         ),
       }
     member.stamina = amount / member.maxStamina()
+    return {
+      ok: true,
+    }
   }
 }

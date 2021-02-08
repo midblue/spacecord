@@ -12,6 +12,7 @@ module.exports = {
   documentation: {
     value: `Starts a vote to steer the ship in any direction.`,
     emoji: '🧭',
+    category: 'ship',
     priority: 75,
   },
   test(content, settings) {

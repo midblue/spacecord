@@ -10,6 +10,7 @@ module.exports = {
     name: `scan`,
     value: `Scan the ship's surroundings.`,
     emoji: '📡',
+    category: 'interaction',
     priority: 85,
   },
   test(content, settings) {

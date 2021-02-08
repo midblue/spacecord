@@ -14,7 +14,8 @@ module.exports = {
   documentation: {
     name: 'attack',
     value: `Choose a nearby ship to attack.`,
-    emoji: '🛸',
+    emoji: '⚔️',
+    category: 'interaction',
     priority: 50,
   },
   test(content, settings) {

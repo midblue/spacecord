@@ -8,6 +8,7 @@ module.exports = {
   documentation: {
     value: `Send a broadcast to the area.`,
     emoji: '📣',
+    category: 'interaction',
     priority: 60,
   },
   test(content, settings) {

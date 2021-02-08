@@ -6,8 +6,9 @@ module.exports = {
   tag: 'log',
   documentation: {
     name: `log`,
-    value: `Consult the ship's log of events`,
+    value: `Consult the ship's log of events.`,
     emoji: '🧾',
+    category: 'ship',
     priority: 50,
   },
   test(content, settings) {

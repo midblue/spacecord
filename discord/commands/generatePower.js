@@ -9,6 +9,7 @@ module.exports = {
   documentation: {
     name: `generatepower`,
     value: `Hop on the treadmill to make some power for the ship!`,
+    category: 'ship',
     emoji: '🏃',
   },
   test(content, settings) {

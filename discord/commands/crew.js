@@ -5,7 +5,8 @@ module.exports = {
   tag: 'crew',
   documentation: {
     value: `Lists the ship's crew, leadership, and top scorers.`,
-    emoji: '👩‍🏭👷🧑‍✈️',
+    emoji: '👨‍👩‍👧‍👦',
+    category: 'crew',
   },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:crew|c)$`, 'gi').exec(content)

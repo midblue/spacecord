@@ -15,6 +15,7 @@ module.exports = {
     name: 'nearbyships',
     value: `Inspect and interact with nearby ships.`,
     emoji: '🛸',
+    category: 'interaction',
     priority: 60,
   },
   test(content, settings) {

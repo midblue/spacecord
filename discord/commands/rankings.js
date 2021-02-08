@@ -12,6 +12,7 @@ module.exports = {
     name: `rankings`,
     value: `Crew member rankings.`,
     emoji: '🏆',
+    category: 'crew',
     priority: 60,
   },
   test(content, settings) {

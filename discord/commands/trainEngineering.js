@@ -7,7 +7,7 @@ const runCountingTest = require('../actions/runCountingTest')
 
 module.exports = {
   tag: 'trainEngineering',
-  documentation: { name: `trainengineering` },
+  documentation: false,
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:trainengineering|engineeringtraining)$`,

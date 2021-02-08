@@ -8,6 +8,7 @@ module.exports = {
   documentation: {
     value: `High-level overview of the ship's status and ship-related actions.`,
     emoji: '🚀',
+    category: 'ship',
     priority: 80,
   },
   test(content, settings) {

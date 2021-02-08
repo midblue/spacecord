@@ -163,7 +163,7 @@ module.exports = {
         } of power.`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
-          `Members of ${ship.faction.name}! ${ship.name} calls out to you!`,
+          `Members of ${ship.faction.name}! The crew of ${ship.name} calls out to you!`,
           garbleAmount,
         )}"`,
     },

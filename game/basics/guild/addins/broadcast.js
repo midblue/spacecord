@@ -9,11 +9,11 @@ module.exports = (guild) => {
     const fields = [],
       actions = []
 
-    const broadcastEquipment = guild.ship.equipment.transceiver[0]
+    const equipment = guild.ship.equipment.transceiver[0]
 
     let timeUntilCanBroadcast =
       (guild.lastBroadcast?.time || 0) +
-      broadcastEquipment.repeatUseTimeLimit -
+      equipment.repeatUseTimeLimit -
       Date.now()
     if (timeUntilCanBroadcast < 0) timeUntilCanBroadcast = 0
 
@@ -21,18 +21,18 @@ module.exports = (guild) => {
       ...[
         {
           name: 'Transceiver',
-          value:
-            broadcastEquipment.emoji +
-            ' ' +
-            broadcastEquipment.modelDisplayName,
+          value: equipment.emoji + ' ' + equipment.modelDisplayName,
         },
         {
           name: '🔧 Repair',
-          value: Math.round(broadcastEquipment.repair * 100) + '%',
+          value: Math.round(equipment.repair * 100) + '%',
         },
         {
-          name: '📶 Range',
-          value: broadcastEquipment.range + ' ' + process.env.DISTANCE_UNIT,
+          name: '📶 Max Range',
+          value:
+            equipment.range * equipment.repair +
+            ' ' +
+            process.env.DISTANCE_UNIT,
         },
 
         {
@@ -119,24 +119,20 @@ module.exports = (guild) => {
     ]
 
     baseBroadcastOptions.forEach((o) => {
-      if ((broadcastEquipment.capabilities || []).includes(o.type))
+      if ((equipment.capabilities || []).includes(o.type))
         actions.push({
           emoji: o.emoji,
           label:
             o.label +
             ' ' +
-            usageTag(
-              broadcastEquipment.powerUse,
-              staminaRequirements['broadcast'],
-            ),
+            usageTag(equipment.powerUse, staminaRequirements['broadcast']),
           async action({ user, msg }) {
             if (
-              (guild.lastBroadcast?.time || 0) +
-                broadcastEquipment.repeatUseTimeLimit >
+              (guild.lastBroadcast?.time || 0) + equipment.repeatUseTimeLimit >
               Date.now()
             )
               return guild.pushToGuild(
-                story.broadcast.tooSoon(broadcastEquipment.modelDisplayName),
+                story.broadcast.tooSoon(equipment.modelDisplayName),
                 msg,
               )
 
@@ -180,13 +176,13 @@ module.exports = (guild) => {
                 o.successLog(user, reallyDoIt.voters.length, collectiveSkill),
               )
               const {
-                skillBiasedRange,
+                biasedRange,
                 garbleAmount,
                 message,
               } = guild.ship.broadcast({
                 msg,
                 broadcastType: o.type,
-                equipment: broadcastEquipment,
+                equipment: equipment,
                 yesPercent: reallyDoIt.yesPercent,
                 collectiveSkill,
               })
@@ -199,9 +195,7 @@ module.exports = (guild) => {
                 {
                   name: 'Effective Range',
                   value:
-                    skillBiasedRange.toFixed(2) +
-                    ' ' +
-                    process.env.DISTANCE_UNIT,
+                    biasedRange.toFixed(2) + ' ' + process.env.DISTANCE_UNIT,
                   inline: true,
                 },
                 {
@@ -224,7 +218,7 @@ module.exports = (guild) => {
         })
     })
 
-    return { ok: true, fields, actions, range: broadcastEquipment.range }
+    return { ok: true, fields, actions, range: equipment.range }
   }
 
   // -------- actual broadcast action ----------
@@ -242,13 +236,14 @@ module.exports = (guild) => {
 
     let skillMod = 0.5
     skillMod += Math.min(1, collectiveSkill / 40) // .5 to 1.5
-    const skillBiasedRange = equipment.range * skillMod
-    const garbleAmount = equipment.maxGarble / (collectiveSkill / 5)
+    const biasedRange = equipment.range * skillMod * equipment.repair
+    const garbleAmount =
+      equipment.maxGarble / (collectiveSkill / 4) + (1 - equipment.repair)
 
     guild.context.broadcast({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: skillBiasedRange,
+      range: biasedRange,
       excludeIds: guild.guildId,
       message: story.broadcast[broadcastType].receive,
       messageProps: [guild.ship],
@@ -262,11 +257,11 @@ module.exports = (guild) => {
       equipment,
       powerUse: equipment.powerUse,
       yesPercent,
-      effectiveRange: skillBiasedRange,
+      effectiveRange: biasedRange,
     })
 
     return {
-      skillBiasedRange,
+      biasedRange,
       garbleAmount,
       message,
     }

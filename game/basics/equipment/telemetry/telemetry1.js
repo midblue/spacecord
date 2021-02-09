@@ -5,7 +5,6 @@ module.exports = {
   emoji: '😜',
   modelDisplayName: 'Emoji Scanner v1',
   baseHp: 15,
-  size: 'small',
   powerUse: 2,
   range: 5,
   needsRepairAt: 0.8,
@@ -26,9 +25,14 @@ module.exports = {
       if (previousRepair !== repair)
         guild.ship.logEntry(story.repair.breakdown(this.modelDisplayName))
       return {
-        map: `**  BROKEN_DOWN  **
-				** PLEASE_REPAIR **
-				**       🤕      **`,
+        map: `
+*******************
+**               **
+**  BROKEN_DOWN  **
+** PLEASE_REPAIR **
+**       🤕      **
+**               **
+*******************`,
         key: [],
         model: this.modelDisplayName,
         repair,
@@ -74,7 +78,7 @@ module.exports = {
 
     let row = []
     row.push('┏')
-    for (let rowIndex = 0; rowIndex < range * 2 + 1; rowIndex++) row.push('━━')
+    for (let rowIndex = 0; rowIndex < range * 4 + 3; rowIndex++) row.push('━')
     row.push('┓')
     grid.push(row)
 
@@ -96,7 +100,7 @@ module.exports = {
 
     row = []
     row.push('┗')
-    for (let rowIndex = 0; rowIndex < range * 2 + 1; rowIndex++) row.push('━━')
+    for (let rowIndex = 0; rowIndex < range * 4 + 3; rowIndex++) row.push('━')
     row.push('┛')
     grid.push(row)
 
@@ -121,6 +125,19 @@ module.exports = {
     }
 
     let map = grid.map((row) => row.join('')).join('\n')
+
+    if (scanResult.guilds.length)
+      map =
+        map +
+        `\n> SHIPS_FOUND=${scanResult.guilds
+          .map((g) => g.ship.name.replace(/ /g, '_').toUpperCase())
+          .join(',')}`
+    if (scanResult.planets.length)
+      map =
+        map +
+        `\n> PLANETS_FOUND=${scanResult.planets
+          .map((p) => p.name.replace(/ /g, '_').toUpperCase())
+          .join(',')}`
 
     let key = [`🚀 Us`]
     key.push(`🌖 Planet`)

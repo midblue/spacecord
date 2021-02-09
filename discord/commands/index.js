@@ -42,10 +42,12 @@ module.exports = {
           )
             return
 
-        const authorIsAdmin =
-          msg.guild &&
-          msg.guild.member(msg.author) &&
-          msg.guild.member(msg.author).permissions.has('BAN_MEMBERS')
+        let authorIsAdmin = false
+        if (msg.guild) {
+          const member = await msg.guild.members.fetch(msg.author.id)
+          if (member) msg.author = member
+          authorIsAdmin = member.permissions.has('BAN_MEMBERS')
+        }
         if (command.admin && !authorIsAdmin)
           return send(msg, `That command is only available to server admins.`)
 

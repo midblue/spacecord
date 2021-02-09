@@ -38,7 +38,7 @@ module.exports = {
       .setDescription(
         '```Telemetry Unit: ' + scanRes.model + '\n' + scanRes.map + '```',
       )
-    if (scanRes.key)
+    if (scanRes.key && scanRes.key.length)
       embed.addFields({
         name: 'Key',
         value: scanRes.key.map((k) => '`' + k + '`').join(', '),

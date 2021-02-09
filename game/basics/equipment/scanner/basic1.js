@@ -4,7 +4,6 @@ module.exports = {
   emoji: '🔍',
   modelDisplayName: 'Telescopic Inspector',
   baseHp: 5,
-  size: 'small',
   powerUse: 2,
   requirements: { engineering: 4 },
   scanUndetectability: 5,

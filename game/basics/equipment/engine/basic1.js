@@ -7,5 +7,4 @@ module.exports = {
   directions: 4,
   powerLevels: 2,
   requirements: { piloting: 2 },
-  size: 'small',
 }

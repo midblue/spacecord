@@ -1,4 +1,4 @@
-const { distance } = require('../../../../common')
+const { distance, percentToTextBars } = require('../../../../common')
 const story = require('../../story/story')
 const Discord = require('discord.js-light')
 

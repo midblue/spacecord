@@ -4,7 +4,7 @@ const ships = {
     interactRadius: 2,
     weight: 100,
     maxWeight: 1000,
-    modelDisplayName: 'Model D',
+    displayName: 'Model D',
   },
 }
 

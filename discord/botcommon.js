@@ -30,8 +30,10 @@ async function getUserInGuildById(msgOrGuild, id) {
 }
 
 async function username(msgOrUserOrChannel, id) {
+  // console.log(msgOrUserOrChannel, id)
   let user
-  if (id) user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
+  if (id && !msgOrUserOrChannel.username)
+    user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
   else if (msgOrUserOrChannel.author) user = msgOrUserOrChannel.author
   else if (msgOrUserOrChannel.username) {
     user = msgOrUserOrChannel

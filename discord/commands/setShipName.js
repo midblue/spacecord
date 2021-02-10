@@ -1,6 +1,6 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const { checkForHateSpeech } = require('../../common')
+const { checkUserInputForBadWords } = require('../../common')
 const Discord = require('discord.js-light')
 
 module.exports = {
@@ -22,8 +22,8 @@ module.exports = {
     log(msg, 'Set Ship Name', msg.channel.name)
     let name = match[1]
     name = name.replace(/(?:^<|>$)/gi, '')
-    const hateSpeechCheck = checkForHateSpeech(name)
-    if (!hateSpeechCheck.ok) return send(msg, hateSpeechCheck.message)
+    const textCheck = checkUserInputForBadWords(name)
+    if (!textCheck.ok) return send(msg, textCheck.message)
     const res = await guild.ship.setName(name)
     return send(msg, res.message)
   },

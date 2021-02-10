@@ -12,7 +12,9 @@ let db = admin.firestore()
 db.settings({ ignoreUndefinedProperties: true })
 
 const guild = require('./guild')(db)
+const caches = require('./caches')(db)
 
 module.exports = {
   guild,
+  caches,
 }

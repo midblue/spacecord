@@ -1,6 +1,6 @@
 module.exports = {
   emoji: '⚙️',
-  modelDisplayName: 'Sparkler 1000',
+  displayName: 'Sparkler 1000',
   baseHp: 20,
   maxSpeed: 0.5,
   fuelUse: 1,

@@ -20,7 +20,7 @@ module.exports = {
           `Your server already has a ship! It's called '${guild.ship.name}'.`,
       },
       first: (guild) =>
-        `You find yourself aboard a discount ${guild.ship.modelDisplayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
+        `You find yourself aboard a discount ${guild.ship.displayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
     },
     name: {
       change: (newName) =>
@@ -60,7 +60,7 @@ module.exports = {
     detected: (didSucceed, scanner) =>
       `Your engineers have managed to detect that a nearby craft has ${
         didSucceed ? 'scanned' : 'attempted to scan'
-      } you with a ${scanner.modelDisplayName}${
+      } you with a ${scanner.displayName}${
         didSucceed ? '' : ', but failed to get any information'
       }.`,
     ourScanDetected: () => `Your scan was detected by the other ship.`,
@@ -96,7 +96,7 @@ module.exports = {
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
-          equipment.modelDisplayName
+          equipment.displayName
         } begins to hum. Your location has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
         } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
@@ -115,7 +115,7 @@ module.exports = {
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
-          equipment.modelDisplayName
+          equipment.displayName
         } begins to hum. A distress signal has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
         } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
@@ -134,7 +134,7 @@ module.exports = {
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members agree, so you command your ship's ${
-          equipment.modelDisplayName
+          equipment.displayName
         } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
         } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
@@ -153,7 +153,7 @@ module.exports = {
         )}% of the available crew members agree, so you hit the big ${
           ship.faction.color
         } button on your control panel. Your ship's ${
-          equipment.modelDisplayName
+          equipment.displayName
         } vibrates in time with your faction's anthem. A rallying cry for ${
           ship.faction.emoji
         }${ship.faction.name} echoes across space to any ship within ${
@@ -172,7 +172,7 @@ module.exports = {
         `${Math.round(
           yesPercent * 100,
         )}% of the available crew members agree, so you hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
-          equipment.modelDisplayName
+          equipment.displayName
         } broadcasts your avarice. An attack signal makes its way to any ship within ${
           Math.round(effectiveRange * 10) / 10
         } ${process.env.DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${
@@ -184,6 +184,16 @@ module.exports = {
           garbleAmount,
         )}"`,
     },
+  },
+  jettison: {
+    votePassed: (yesPercent, cargo, amount) =>
+      `${Math.round(
+        yesPercent * 100,
+      )}% of the available crew members agree, so you hit the trash-can-shaped button on your controls. You watch out of the window as ${amount.toFixed(
+        2,
+      )} ${process.env.WEIGHT_UNIT_PLURAL} of ${
+        cargo.displayName
+      } goes drifting off into space.`,
   },
   xp: {
     add: {
@@ -241,7 +251,7 @@ module.exports = {
     brokenWeapons: () =>
       `All of your weapons are too damaged to attack with! Repair them first!`,
     tooLowMunitionsSkill: (required, current, weapon) =>
-      `Voters' collective munitions skill (\`${current}\`), is too low to operate the ${weapon.emoji} ${weapon.modelDisplayName} (requires \`${required}\`).`,
+      `Voters' collective munitions skill (\`${current}\`), is too low to operate the ${weapon.emoji} ${weapon.displayName} (requires \`${required}\`).`,
     votePassed: (yesPercent, otherShip, collectiveMunitionsSkill) =>
       `${Math.round(
         yesPercent * 100,
@@ -251,7 +261,7 @@ module.exports = {
     outOfRange: () =>
       `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
     miss: (weapon, wasClose, accuracyMultiplier) =>
-      `The attack from your ${weapon.emoji} ${weapon.modelDisplayName} misses${
+      `The attack from your ${weapon.emoji} ${weapon.displayName} misses${
         wasClose ? " by a hair's breadth" : ''
       }! ${
         accuracyMultiplier > 1
@@ -261,9 +271,7 @@ module.exports = {
           : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
       }`,
     hit: (weapon, advantageDamageMultiplier, totalDamageDealt, destroyedShip) =>
-      `Your ${weapon.emoji} ${
-        weapon.modelDisplayName
-      } hits the enemy, dealing ${
+      `Your ${weapon.emoji} ${weapon.displayName} hits the enemy, dealing ${
         Math.round(totalDamageDealt * 10) / 10
       } damage${
         advantageDamageMultiplier > 1
@@ -276,7 +284,7 @@ module.exports = {
   defend: {
     miss: (attacker, weapon, accuracyMultiplier) =>
       `A ${weapon.emoji} ${
-        weapon.modelDisplayName
+        weapon.displayName
       } attack whizzes past your craft, coming from the ship ${
         attacker.name
       }. ${
@@ -287,7 +295,7 @@ module.exports = {
           : `It looks like a tight battle is unfolding.`
       }`,
     hit: (attacker, weapon, advantageDamageMultiplier, totalDamageTaken) =>
-      `The ${weapon.emoji} ${weapon.modelDisplayName} of ${
+      `The ${weapon.emoji} ${weapon.displayName} of ${
         attacker.name
       } hits your ship for ${Math.round(totalDamageTaken * 10) / 10} damage${
         advantageDamageMultiplier > 1

@@ -1,6 +1,27 @@
 const story = require('../../story/story')
 
 module.exports = (guild) => {
+  guild.ship.usePower = (amount, notify = true) => {
+    let message
+    // todo battery durability here and in addPower
+    if (amount <= guild.ship.power) {
+      guild.ship.power -= amount
+      return { ok: true, message }
+    }
+    if (notify) {
+      message = story.power.insufficient(guild, amount)
+      guild.ship.logEntry(story.power.insufficient(guild, amount))
+    }
+    return { ok: false, message }
+  }
+
+  guild.ship.maxPower = () => {
+    return guild.ship.equipment.battery.reduce(
+      (total, battery) => battery.capacity + total,
+      0,
+    )
+  }
+
   guild.ship.addPower = (generateResult) => {
     const currentPower = guild.ship.power
     const maxPower = guild.ship.maxPower()

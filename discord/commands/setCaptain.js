@@ -1,7 +1,5 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const { checkForHateSpeech } = require('../../common')
-const Discord = require('discord.js-light')
 
 module.exports = {
   tag: 'setCaptain',

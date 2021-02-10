@@ -1,5 +1,33 @@
 const staminaRequirements = require('./game/basics/crew/staminaRequirements')
 // const lunicode = require('Lunicode')
+const Filter = require('bad-words'),
+  filter = new Filter()
+const numberEmojis = [
+  '0️⃣',
+  '1️⃣',
+  '2️⃣',
+  '3️⃣',
+  '4️⃣',
+  '5️⃣',
+  '6️⃣',
+  '7️⃣',
+  '8️⃣',
+  '9️⃣',
+  '🔟',
+  '🕚',
+  '🕛',
+  '🕐',
+  '🕑',
+  '🕒',
+  '🕓',
+  '🕔',
+  '🕕',
+  '🕖',
+  '🕗',
+  '🕘',
+  '🕙',
+  '🕚', //23
+]
 
 module.exports = {
   bearingToRadians,
@@ -11,33 +39,10 @@ module.exports = {
     return '`' + bars.join('') + '`'
   },
   numberToEmoji(number) {
-    const emojis = [
-      '0️⃣',
-      '1️⃣',
-      '2️⃣',
-      '3️⃣',
-      '4️⃣',
-      '5️⃣',
-      '6️⃣',
-      '7️⃣',
-      '8️⃣',
-      '9️⃣',
-      '🔟',
-      '🕚',
-      '🕛',
-      '🕐',
-      '🕑',
-      '🕒',
-      '🕓',
-      '🕔',
-      '🕕',
-      '🕖',
-      '🕗',
-      '🕘',
-      '🕙',
-      '🕚', //23
-    ]
-    return emojis[number]
+    return numberEmojis[number]
+  },
+  emojiToNumber(emoji) {
+    return numberEmojis.findIndex((e) => e === emoji)
   },
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
@@ -56,9 +61,14 @@ module.exports = {
       string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()
     )
   },
-  checkForHateSpeech(string) {
-    // todo
-    return { ok: true }
+  checkUserInputForBadWords(string) {
+    const ok = filter.isProfane(string)
+    if (!ok) string = filter.clean(string)
+    return {
+      ok,
+      result: string,
+      message: ok ? 'ok' : `Sorry, you can't use language like that here.`,
+    }
   },
   msToTimeString(ms) {
     let seconds = Math.floor((ms % (60 * 1000)) / 1000)

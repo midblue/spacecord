@@ -9,7 +9,7 @@ module.exports = {
     category: 'crew',
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:crew|c)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:crew)$`, 'gi').exec(content)
   },
   async action({
     msg,

@@ -2,7 +2,7 @@ const { numberToEmoji, percentToTextBars } = require('../../../../common')
 
 module.exports = {
   emoji: '🔍',
-  modelDisplayName: 'Telescopic Inspector',
+  displayName: 'Telescopic Inspector',
   baseHp: 5,
   powerUse: 2,
   requirements: { engineering: 4 },
@@ -17,10 +17,10 @@ module.exports = {
 
     if (repair <= 0) {
       if (previousRepair !== repair)
-        guild.ship.logEntry(story.repair.breakdown(this.modelDisplayName))
+        guild.ship.logEntry(story.repair.breakdown(this.displayName))
       return {
         ok: false,
-        message: story.repair.breakdown(this.modelDisplayName),
+        message: story.repair.breakdown(this.displayName),
       }
     }
 

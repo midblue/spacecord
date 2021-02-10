@@ -1,5 +1,6 @@
 const { spawn, liveify } = require('./basics/guild/guild')
 const spawnPlanets = require('./basics/planets')
+const caches = require('./basics/caches')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
 const { pointIsInsideCircle, distance } = require('../common')
@@ -14,8 +15,13 @@ the core loop, etc.
 
 const game = {
   async init() {
-    ;(await db.guild.getAll()).forEach((g) => this.loadExistingGuild(g))
+    const a = (await db.guild.getAll()).forEach((g) =>
+      this.loadExistingGuild(g),
+    )
     log('init', `Loaded ${this.guilds.length} guilds from db`)
+
+    const b = (await db.caches.getAll()).forEach((c) => this.loadCache(c))
+    log('init', `Loaded ${this.caches.length} caches from db`)
 
     this.planets = await spawnPlanets({ context: this })
     log('init', `Loaded ${this.planets.length} planets`)
@@ -25,6 +31,7 @@ const game = {
 
   // ---------------- Game Properties ----------------
   guilds: [],
+  caches: [],
   planets: [],
   npcs: [],
   startTime: new Date(),
@@ -39,6 +46,11 @@ const game = {
   timeUntilNextTick() {
     const currentTickProgress = Date.now() - this.lastTick
     return process.env.STEP_INTERVAL - currentTickProgress
+  },
+
+  loadCache(cache) {
+    caches.liveify(cache)
+    this.caches.push(cache)
   },
 
   loadExistingGuild(guild) {
@@ -138,6 +150,9 @@ const game = {
       planets: this.planets.filter((p) =>
         pointIsInsideCircle(x, y, ...p.location, range),
       ),
+      caches: this.caches.filter((c) =>
+        pointIsInsideCircle(x, y, ...c.location, range),
+      ),
     }
   },
 
@@ -160,6 +175,22 @@ const game = {
       g.pushToGuild(m)
       g.ship.logEntry(m)
     })
+  },
+
+  spawnCache(cacheData) {
+    const cacheDataToSave = { ...cacheData, created: Date.now() }
+    db.caches.add(cacheDataToSave)
+    this.caches.push(cacheDataToSave)
+  },
+  deleteCache(cacheId) {
+    db.caches.remove(cacheId)
+    this.caches.splice(
+      this.caches.findIndex((c) => c.id === cacheId),
+      1,
+    )
+    return {
+      ok: true,
+    }
   },
 }
 

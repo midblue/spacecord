@@ -12,4 +12,35 @@ module.exports = (guild) => {
 
     await guild.saveNewDataToDb()
   }
+
+  guild.ship.eat = () => {
+    const ship = guild.ship
+    let ok = true,
+      message
+    const food = ship.cargo.find((c) => c.type === 'food')
+    if (!food.amount)
+      return {
+        ok: false,
+      }
+
+    const amountConsumed = 0.001 * ship.members.length
+
+    food.amount -= amountConsumed
+    const ticksLeftBeforeStarvation = Math.ceil(food.amount / amountConsumed)
+
+    if (food.amount <= 0) {
+      food.amount = 0
+      ship.status.starving = true
+      message = story.food.insufficient()
+      ok = false
+    } else if (ticksLeftBeforeStarvation < 20 && Math.random() > 0.9) {
+      message = story.food.low(food.amount, ticksLeftBeforeStarvation)
+    }
+
+    return {
+      ok,
+      amountConsumed,
+      message,
+    }
+  }
 }

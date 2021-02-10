@@ -18,7 +18,7 @@ module.exports = (guild) => {
     return {
       ok: true,
       message: story.repair.equipment.success(
-        equipment.modelDisplayName,
+        equipment.displayName,
         equipment.repair,
       ),
       equipment,

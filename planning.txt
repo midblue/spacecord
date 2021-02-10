@@ -1,3 +1,35 @@
+notify guild and warp to other side of map when they hit an edge
+actual minigames for training and repairing
+remove skills that aren't in use
+planet interaction
+	buying upgrades
+	buying/selling cargo (and fuel)
+	cantina & cantina chatter
+	a way to make money (quests??)
+spawn items floating randomly every once in a while
+something happens when you die
+world automatically expands as servers join so we keep a generally even level of encounter rate
+piloting actually weights input on polls
+better generatepower
+actual list of quotes for the trainmechanics
+take out linguistics
+training deletes the embed once it times out too
+
+
+tractor beam item
+
+
+single-use items
+	teleporters
+	trackers
+implement map
+more other ship interaction options
+	repair
+implement food
+legacy system: keep track of user action count
+
+global leaderboard
+
 MVP
 set bot activity channel/s
 reactions to take actions
@@ -11,7 +43,9 @@ suggest faction
 admirals for factions
 change your faction
 neutral faction
+faction battles
 
+AI faction?
 
 commands
 	status: 1-stop for ship status, needs, sensors
@@ -77,7 +111,7 @@ server member general tasks
 		scan for X Y Z (trackers etc)
 	anyone
 		"gather" (solar, space junk, etc)
-		start vote to kill crewmate
+		start vote to kill crewmate?
 
 when two servers encounter each other, 
 	they can...

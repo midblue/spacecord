@@ -1,6 +1,8 @@
 const { log } = require('../gamecommon')
 const db = require('../../db/db')
 
+const cacheExpirationTime = process.env.STEP_INTERVAL * 500
+
 module.exports = {
   async start() {
     log('init', 'Starting game')
@@ -23,5 +25,18 @@ module.exports = {
     })
     await Promise.all(updates)
     log('update', `Updated all ${this.guilds.length} ships`)
+
+    const cacheCutoff = Date.now() - cacheExpirationTime
+    const deletedCacheCount = 0
+    this.caches.forEach((cache) => {
+      if (cache.created < cacheCutoff) {
+        this.deleteCache(cache.id)
+        deletedCacheCount++
+      }
+    })
+    if (deletedCacheCount)
+      log('update', `Removed ${deletedCacheCount} expired caches`)
+
+    // todo spawn caches randomly with goodies
   },
 }

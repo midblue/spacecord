@@ -4,6 +4,7 @@ const { msToTimeString, capitalize } = require('../../common')
 const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
 const { guild } = require('../../game/manager')
 const manager = require('../../game/manager')
+const Discord = require('discord.js-light')
 
 module.exports = async ({
   pollType,
@@ -84,13 +85,15 @@ module.exports = async ({
     if (remainingTime < 0) remainingTime = 0
     embed.fields[
       embed.fields.findIndex((f) => f.id === 'remainingTime')
-    ].value = msToTimeString(time)
+    ].value = msToTimeString(remainingTime)
 
     if (remainingTime <= 0) {
       clearInterval(embedUpdateInterval)
       done = true
     }
-    sentMessage.edit(embed)
+    try {
+      sentMessage.edit(embed)
+    } catch (e) {}
   }, 5000)
 
   if (!respondeeFilter)
@@ -118,7 +121,9 @@ module.exports = async ({
     embed.fields.findIndex((f) => f.id === 'remainingTime'),
     1,
   )
-  sentMessage.edit(embed)
+  try {
+    sentMessage.edit(embed)
+  } catch (e) {}
 
   const userReactionsToUse = {}
   const userReactionCounts = {}
@@ -153,11 +158,26 @@ module.exports = async ({
 
   const enoughMembersVoted = voters.length >= minimumMembersMustVote
 
+  const winner =
+    enoughMembersVoted &&
+    Object.keys(userReactionsToUse).reduce(
+      (highest, key) => {
+        if (userReactionsToUse[key].weightedCount > highest.weightedCount)
+          return {
+            emoji: key,
+            weightedCount: userReactionsToUse[key].weightedCount,
+          }
+        return highest
+      },
+      { weightedCount: -1 },
+    )?.emoji
   return {
     ok: true,
     userReactions: userReactionsToUse,
     insufficientVotes: !enoughMembersVoted,
     voters,
     sentMessage,
+    embed,
+    winner,
   }
 }

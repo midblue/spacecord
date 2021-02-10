@@ -5,4 +5,5 @@ module.exports = {
   broadcast: 2,
   scan: 2,
   scanShip: 2,
+  cache: 2,
 }

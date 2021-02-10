@@ -5,6 +5,7 @@ const {
   percentToTextBars,
 } = require('../../../../common')
 const story = require('../../story/story')
+const getCache = require('../../../../discord/actions/getCache')
 
 module.exports = (guild) => {
   guild.ship.scanArea = (eyesOnly) => {
@@ -57,7 +58,7 @@ You see ${
       }
     }
 
-    let range = guild.ship.baseScanRange
+    let range = guild.ship.interactRadius
     if (telemetry) range = telemetry.range
     const scanResult = guild.context.scanArea({
       x: guild.ship.location[0],
@@ -139,7 +140,7 @@ You see ${
       })
 
     // ---------------- actions ------------------
-    let actions
+    let actions = []
     const interactableGuilds = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
@@ -147,20 +148,28 @@ You see ${
       excludeIds: guild.guildId,
     }).guilds
     if (interactableGuilds && interactableGuilds.length)
-      actions = [
-        {
-          emoji: '🛸',
-          async action({ user, msg }) {
-            await runGuildCommand({
-              msg,
-              author: user,
-              commandTag: 'nearbyShips',
-              props: { interactableGuilds },
-            })
-          },
+      actions.push({
+        emoji: '🛸',
+        async action({ user, msg }) {
+          await runGuildCommand({
+            msg,
+            author: user,
+            commandTag: 'nearbyShips',
+            props: { interactableGuilds },
+          })
         },
-      ]
-
+      })
+    if (scanResult.caches && scanResult.caches.length)
+      actions.push({
+        emoji: '📦',
+        async action({ user, msg, guild }) {
+          runGuildCommand({
+            commandTag: 'caches',
+            msg,
+            author: user,
+          })
+        },
+      })
     return {
       ok: true,
       message: messages,

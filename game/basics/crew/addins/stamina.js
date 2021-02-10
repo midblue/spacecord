@@ -2,6 +2,21 @@ const story = require('../../story/story')
 const staminaRequirements = require('../staminaRequirements')
 
 module.exports = (member) => {
+  member.maxStamina = () => {
+    return 12
+  }
+
+  member.staminaGainPerTick = () => {
+    return 3
+  }
+
+  member.gainStamina = (presetAmount) => {
+    const gainAmount = Math.round(presetAmount || member.staminaGainPerTick()),
+      gainAmountAsPercent = gainAmount / member.maxStamina()
+    member.stamina = (member.stamina || 0) + gainAmountAsPercent
+    if (member.stamina > 1) member.stamina = 1
+  }
+
   member.useStamina = (amount) => {
     if (typeof amount === 'string') amount = staminaRequirements[amount]
 

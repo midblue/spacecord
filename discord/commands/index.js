@@ -43,13 +43,13 @@ module.exports = {
             return
 
         let authorIsAdmin = false
-        if (msg.guild) {
+        if (msg.guild && command.admin) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
           authorIsAdmin = member.permissions.has('BAN_MEMBERS')
+          if (!authorIsAdmin)
+            return send(msg, `That command is only available to server admins.`)
         }
-        if (command.admin && !authorIsAdmin)
-          return send(msg, `That command is only available to server admins.`)
 
         let ship, guild
         if (!command.noShip) {

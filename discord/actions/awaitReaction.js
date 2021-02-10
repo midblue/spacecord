@@ -30,10 +30,10 @@ module.exports = async ({
             .map(({ emoji, label }) => `${emoji} - ${label}`)
             .join('\n'),
         })
-      msg.edit(embed)
+      if (!msg.deleted) msg.edit(embed)
     }
 
-    if (reactions && reactions.length)
+    if (reactions && reactions.length && !msg.deleted)
       for (let r of reactions) msg.react(r.emoji)
 
     let collectedReactions = []
@@ -138,9 +138,9 @@ module.exports = async ({
           )
           if (fieldIndex) embed.fields.splice(fieldIndex, 1)
         }
-        msg.edit(embed)
+        if (!msg.deleted) msg.edit(embed)
       }
-      msg.reactions.removeAll().catch((e) => {})
+      if (!msg.deleted) msg.reactions.removeAll().catch((e) => {})
       resolve(collectedReactions)
     }, time)
   })

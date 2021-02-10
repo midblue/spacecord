@@ -1,6 +1,6 @@
 module.exports = {
   emoji: '🔋',
-  modelDisplayName: 'Double D Mark II',
+  displayName: 'Double D Mark II',
   baseHp: 15,
   capacity: 20,
 }

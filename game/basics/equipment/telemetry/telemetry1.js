@@ -3,7 +3,7 @@ const { numberToEmoji, percentToTextBars } = require('../../../../common')
 module.exports = {
   // emoji: '📡',
   emoji: '😜',
-  modelDisplayName: 'Emoji Scanner v1',
+  displayName: 'Emoji Scanner v1',
   baseHp: 15,
   powerUse: 2,
   range: 5,
@@ -23,7 +23,7 @@ module.exports = {
 
     if (repair <= 0) {
       if (previousRepair !== repair)
-        guild.ship.logEntry(story.repair.breakdown(this.modelDisplayName))
+        guild.ship.logEntry(story.repair.breakdown(this.displayName))
       return {
         map: `
 *******************
@@ -34,7 +34,7 @@ module.exports = {
 **               **
 *******************`,
         key: [],
-        model: this.modelDisplayName,
+        model: this.displayName,
         repair,
       }
     }
@@ -99,12 +99,29 @@ module.exports = {
     }
 
     row = []
-    row.push('┗')
-    for (let rowIndex = 0; rowIndex < range * 4 + 3; rowIndex++) row.push('━')
-    row.push('┛')
+    row.push('┗┯')
+    for (let rowIndex = 0; rowIndex < range * 4 + 1; rowIndex++) row.push('━')
+    row.push('┯┛')
+    grid.push(row)
+
+    row = []
+    const leftLabel = x - range + process.env.DISTANCE_UNIT
+    const rightLabel = x + range + process.env.DISTANCE_UNIT
+    row.push(
+      leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ' ') + rightLabel,
+    )
     grid.push(row)
 
     grid[range + 1][range + 1] = getChar('🚀')
+
+    for (let cache of scanResult.caches) {
+      const xDiff = cache.location[0] - x
+      const yDiff = cache.location[1] - y
+      const scanCenter = range + 1
+      const cacheXPosition = Math.round(scanCenter + xDiff)
+      const cacheYPosition = Math.round(scanCenter - yDiff)
+      grid[cacheYPosition][cacheXPosition] = getChar('📦')
+    }
 
     for (let otherGuild of scanResult.guilds) {
       const xDiff = otherGuild.ship.location[0] - x
@@ -143,6 +160,7 @@ module.exports = {
     key.push(`🌖 Planet`)
     // if (scanResult.length)
     key.push(`🛸 Spacecraft`)
+    key.push(`📦 Cache`)
 
     if (repair < this.needsRepairAt) {
       key.push(`❌ Not Sure`)
@@ -152,7 +170,7 @@ module.exports = {
     return {
       map,
       key,
-      model: this.modelDisplayName,
+      model: this.displayName,
       repair,
     }
   },

@@ -1,6 +1,6 @@
 module.exports = {
   emoji: '📣',
-  modelDisplayName: 'Yakkler 64',
+  displayName: 'Yakkler 64',
   baseHp: 5,
   powerUse: 3,
   capabilities: ['location', 'distress', 'surrender'],

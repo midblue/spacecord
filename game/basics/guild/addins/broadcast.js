@@ -21,7 +21,7 @@ module.exports = (guild) => {
       ...[
         {
           name: 'Transceiver',
-          value: equipment.emoji + ' ' + equipment.modelDisplayName,
+          value: equipment.emoji + ' ' + equipment.displayName,
         },
         {
           name: '🔧 Repair',
@@ -132,7 +132,7 @@ module.exports = (guild) => {
               Date.now()
             )
               return guild.pushToGuild(
-                story.broadcast.tooSoon(equipment.modelDisplayName),
+                story.broadcast.tooSoon(equipment.displayName),
                 msg,
               )
 
@@ -159,7 +159,7 @@ module.exports = (guild) => {
             if (!reallyDoIt.ok)
               return guild.pushToGuild(reallyDoIt.message, msg)
             if (reallyDoIt.insufficientVotes) {
-              guild.ship.logEntry(o.insufficientLog(user))
+              // guild.ship.logEntry(o.insufficientLog(user))
               return guild.pushToGuild(story.vote.insufficientVotes(), msg)
             }
             if (reallyDoIt.result === true) {
@@ -211,7 +211,7 @@ module.exports = (guild) => {
               reallyDoIt.embed.fields = resultFields
               reallyDoIt.sentMessage.edit(reallyDoIt.embed)
             } else {
-              guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
+              // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
               guild.pushToGuild(story.broadcast.voteFailed(), msg)
             }
           },

@@ -59,6 +59,25 @@ module.exports = (guild) => {
         },
       })
 
+    const interactableOtherThings = guild.context.scanArea({
+      x: guild.ship.location[0],
+      y: guild.ship.location[1],
+      range: guild.ship.interactRadius,
+      excludeIds: guild.guildId,
+    })
+    if (interactableOtherThings.caches && interactableOtherThings.caches.length)
+      actions.push({
+        emoji: '📦',
+        label: 'See Nearby Caches',
+        async action({ user, msg, guild }) {
+          getCache({
+            caches: interactableOtherThings.caches,
+            msg: { ...msg, author: user },
+            guild,
+          })
+        },
+      })
+
     actions.push({
       emoji: '📡',
       label:

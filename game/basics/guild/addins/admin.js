@@ -15,4 +15,22 @@ module.exports = (guild) => {
       message: story.ship.captain.change(foundMember),
     }
   }
+
+  guild.setChannel = async (id) => {
+    guild.channel = id
+    await guild.saveNewDataToDb()
+    return {
+      ok: true,
+      message: 'Guild channel updated.',
+    }
+  }
+
+  guild.ship.setName = async (newName) => {
+    guild.ship.name = newName
+    await guild.saveNewDataToDb()
+    return {
+      ok: true,
+      message: story.ship.name.change(newName),
+    }
+  }
 }

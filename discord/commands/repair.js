@@ -36,7 +36,7 @@ module.exports = {
     const equipmentAsReactionOptions = allRepairableEquipment.map((e) => ({
       emoji: e.numberEmoji,
       label:
-        `${e.emoji} \`${e.modelDisplayName}\` (${capitalize(e.type)}) - ${(
+        `${e.emoji} \`${e.displayName}\` (${capitalize(e.type)}) - ${(
           e.repair * 100
         ).toFixed(0)}% repair` +
         (e.repairRequirements

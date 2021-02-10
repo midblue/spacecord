@@ -1,4 +1,5 @@
 const defaultServerSettings = require('../../../discord/defaults/defaultServerSettings')
+const factions = require('../factions')
 
 module.exports = function ({ discordGuild, channelId }) {
   const ship = {
@@ -12,7 +13,6 @@ module.exports = function ({ discordGuild, channelId }) {
       flying: true,
     },
     power: 11,
-    faction: { color: 'green' },
     members: [],
     seen: { planets: [] },
     log: [],
@@ -87,6 +87,11 @@ module.exports = function ({ discordGuild, channelId }) {
     guildId: discordGuild.id,
     guildName: discordGuild.name,
     channel: channelId,
+    faction: {
+      color: Object.keys(factions)[
+        Math.floor(Object.keys(factions).length * Math.random())
+      ],
+    },
     ship,
     created: Date.now(),
     settings: { ...defaultServerSettings },

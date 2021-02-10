@@ -45,7 +45,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
   const voteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
   if (guild.ship.equipment.weapon.length === 1)
     voteEmbed.description = `Your \`${guild.ship.equipment.weapon[0].emoji} ${
-      guild.ship.equipment.weapon[0].modelDisplayName
+      guild.ship.equipment.weapon[0].displayName
     }\` is estimated to have a \`${Math.round(
       guild.ship.equipment.weapon[0].hitPercent(
         distance(...guild.ship.location, ...otherShip.location),
@@ -53,7 +53,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
     )}%\` base chance of hitting, but the munitions skill of voters in this poll, as well as the enemy's piloting skills, will have a large impact.
 		
 The \`${guild.ship.equipment.weapon[0].emoji} ${
-      guild.ship.equipment.weapon[0].modelDisplayName
+      guild.ship.equipment.weapon[0].displayName
     }\` requires a cumulative voter munitions level of \`${
       guild.ship.equipment.weapon[0].requirements.munitions
     }\`.
@@ -121,9 +121,9 @@ Vote with more collective munitions skill, get closer, and repair your weapons t
     const weaponsAsReactionObjects = guild.ship.equipment.weapon.map(
       (w, index) => ({
         emoji: numberToEmoji(index),
-        label: `${w.emoji} \`${w.modelDisplayName}\` - ${(
-          w.repair * 100
-        ).toFixed(0)}% repair`,
+        label: `${w.emoji} \`${w.displayName}\` - ${(w.repair * 100).toFixed(
+          0,
+        )}% repair`,
       }),
     )
     const { userReactions, sentMessage: pollMessage } = await runPoll({

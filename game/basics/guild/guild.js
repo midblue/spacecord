@@ -1,5 +1,6 @@
 const shipsData = require('../ships')
 const factionsData = require('../factions')
+const cargoData = require('../cargo')
 const equipmentData = require('../equipment/equipment')
 const addins = require('./addins/index')
 const createDefaultGuild = require('./createDefaultGuild')
@@ -35,10 +36,11 @@ function liveify(guild, context) {
     ...guild.ship, // this order allows us to have "unique" items/ships
   }
   // add base properties to faction
-  guild.ship.faction = {
-    ...factionsData[guild.ship.faction.color],
-    ...guild.ship.faction,
-  }
+  if (guild.faction?.color)
+    guild.faction = {
+      ...factionsData[guild.faction.color],
+      ...guild.faction,
+    }
 
   // add base properties to items onboard
   Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
@@ -52,6 +54,12 @@ function liveify(guild, context) {
       })
       .filter((p) => p)
   })
+
+  // add base properties to cargo
+  guild.ship.cargo = guild.ship.cargo.map((c) => ({
+    ...cargoData[c.type],
+    ...c,
+  }))
 
   addins.forEach((addin) => addin(guild))
 

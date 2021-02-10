@@ -2,6 +2,7 @@ const { usageTag, distance } = require('../../../../common')
 const attackShip = require('../../../../discord/actions/attackShip')
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
 const staminaRequirements = require('../../crew/staminaRequirements')
+const story = require('../../story/story')
 
 module.exports = (guild) => {
   guild.ship.maxActionRadius = () => {

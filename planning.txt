@@ -14,10 +14,12 @@ better generatepower
 actual list of quotes for the trainmechanics
 take out linguistics
 training deletes the embed once it times out too
-
+say collective skill even if u miss an attack
+cache button shows up on scan when i cant scan
 
 tractor beam item
 
+small battleship for munitions
 
 single-use items
 	teleporters

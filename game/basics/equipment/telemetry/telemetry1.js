@@ -78,7 +78,7 @@ module.exports = {
 
     let row = []
     row.push('┏')
-    for (let rowIndex = 0; rowIndex < range * 4 + 3; rowIndex++) row.push('━')
+    for (let rowIndex = 0; rowIndex < range * 4 + 4; rowIndex++) row.push('━')
     row.push('┓')
     grid.push(row)
 
@@ -87,10 +87,7 @@ module.exports = {
       for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++)
         row.push(getChar(emptySpace))
 
-      if (rowIndex % 2)
-        row.push(
-          `┠ ${Math.round(range - rowIndex + y)}${process.env.DISTANCE_UNIT}`,
-        )
+      if (rowIndex % 2) row.push(`┠ ${Math.round(range - rowIndex + y)}`)
       else {
         row.push(`┃`)
       }
@@ -100,13 +97,13 @@ module.exports = {
 
     row = []
     row.push('┗┯')
-    for (let rowIndex = 0; rowIndex < range * 4 + 1; rowIndex++) row.push('━')
+    for (let rowIndex = 0; rowIndex < range * 4 + 2; rowIndex++) row.push('━')
     row.push('┯┛')
     grid.push(row)
 
     row = []
-    const leftLabel = x - range + process.env.DISTANCE_UNIT
-    const rightLabel = x + range + process.env.DISTANCE_UNIT
+    const leftLabel = `${Math.round(x - range)}`
+    const rightLabel = `${Math.round(x + range)}`
     row.push(
       leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ' ') + rightLabel,
     )

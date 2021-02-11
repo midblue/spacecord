@@ -50,6 +50,10 @@ module.exports = async ({
         value: 'tbd',
       },
       {
+        name: 'Managing your Character',
+        value: 'tbd (skills, training, stamina)',
+      },
+      {
         name: 'Interacting With Other Ships',
         value: 'tbd',
       },

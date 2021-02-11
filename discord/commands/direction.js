@@ -52,7 +52,7 @@ module.exports = {
           .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
           .join(
             'and ',
-          )}can vote on the ship's bearing. The final direction will be an average of the crew's vote.
+          )}can vote on the ship's bearing. The final direction will be an average of the crew's vote, with votes from users with higher piloting skills carrying more weight.
 
 Current direction is ${ship.getDirectionString()}
 
@@ -69,6 +69,7 @@ Your ship's engine supports \`${
       ship,
       msg,
       requirements,
+      weightByLevelType: 'piloting',
     })
     if (!ok) return send(msg, message)
 

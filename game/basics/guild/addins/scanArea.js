@@ -3,6 +3,7 @@ const {
   bearingToDegrees,
   bearingToArrow,
   percentToTextBars,
+  distance,
 } = require('../../../../common')
 const story = require('../../story/story')
 const getCache = require('../../../../discord/actions/getCache')
@@ -10,9 +11,9 @@ const getCache = require('../../../../discord/actions/getCache')
 module.exports = (guild) => {
   guild.ship.scanArea = (eyesOnly) => {
     const messages = []
-    const telemetry = guild.ship.equipment.telemetry.find((upgrade) =>
-      upgrade.id.startsWith('telemetry'),
-    )
+    const telemetry = (guild.ship.equipment.telemetry || [])[0]
+
+    let range = guild.ship.interactRadius
 
     let haveEnoughPower = true,
       powerRes = { ok: true }
@@ -22,7 +23,6 @@ module.exports = (guild) => {
     if (powerRes.message) messages.push(powerRes.message)
 
     if (!telemetry || !haveEnoughPower || eyesOnly) {
-      let range = guild.ship.interactRadius
       const scanResult = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
@@ -58,7 +58,6 @@ You see ${
       }
     }
 
-    let range = guild.ship.interactRadius
     if (telemetry) range = telemetry.range
     const scanResult = guild.context.scanArea({
       x: guild.ship.location[0],
@@ -159,7 +158,15 @@ You see ${
           })
         },
       })
-    if (scanResult.caches && scanResult.caches.length)
+    if (
+      scanResult.caches &&
+      scanResult.caches.length &&
+      scanResult.caches.filter(
+        (c) =>
+          distance(...c.location, ...guild.ship.location) <=
+          guild.ship.tractorRadius(),
+      ).length
+    )
       actions.push({
         emoji: '📦',
         async action({ user, msg, guild }) {

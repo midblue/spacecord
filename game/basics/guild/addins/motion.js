@@ -3,6 +3,7 @@ const {
   bearingToRadians,
   bearingToDegrees,
   bearingToArrow,
+  distance,
 } = require('../../../../common')
 
 module.exports = (guild) => {
@@ -113,6 +114,12 @@ module.exports = (guild) => {
     return availableDirections
   }
 
+  guild.ship.isOOB = () => {
+    return (
+      distance(0, 0, ...guild.ship.location) > guild.context.gameDiameter() / 2
+    )
+  }
+
   guild.ship.move = (useFuel = true, coordinates) => {
     const ship = guild.ship
 
@@ -126,6 +133,7 @@ module.exports = (guild) => {
       message
 
     const currentLocation = [ship.location[0] || 0, ship.location[1] || 0]
+    const startedOOB = ship.isOOB()
     const currentBearing = bearingToRadians(ship.bearing || [0, 1])
     let distanceToTravel = ship.effectiveSpeed() || 0
     if (coordinates) {
@@ -143,6 +151,12 @@ module.exports = (guild) => {
         currentLocation[1] + distanceToTravel * Math.sin(currentBearing)
       ship.location = [newX, newY]
     }
+
+    const endedOOB = ship.isOOB()
+    if (startedOOB && !endedOOB)
+      message = `Your ship has reentered known space.`
+    if (!startedOOB && endedOOB)
+      message = `Your ship has left the realms of known space. There's nothing but the void to be found out here.`
 
     fuel.amount -= fuelLoss
     if (fuel.amount <= 0) {

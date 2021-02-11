@@ -49,7 +49,7 @@ module.exports = {
       .setColor(process.env.APP_COLOR)
       .setTitle(`Speed Vote Called by ${author.nickname}`)
       .setDescription(
-        `Crew can vote from 0 to 10 on the ship's thrust, with 0 being stopped and 10 being full speed. The final will be an average of the crew's vote multiplied by your engines' cumulative maximum speed, affected by how much weight you're carrying.
+        `Crew can vote from 0 to 10 on the ship's thrust, with 0 being stopped and 10 being full speed. The final will be an average of the crew's vote multiplied by your engines' cumulative maximum speed, affected by how much weight you're carrying. Votes from users with higher piloting skills will have a greater affect the outcome.
 					
 Current speed is \`${effectiveSpeed.toFixed(3)} ${
           process.env.SPEED_UNIT
@@ -78,6 +78,7 @@ Your ship's engine supports \`${
       ship,
       msg,
       requirements,
+      weightByLevelType: 'piloting',
     })
     if (!ok) return send(msg, message)
 

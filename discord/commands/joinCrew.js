@@ -9,7 +9,7 @@ module.exports = {
     value: `Become a member of the ship's crew.`,
     emoji: '➕',
     category: 'crew',
-    priority: 95,
+    priority: 5,
   },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:j|join)$`, 'gi').exec(content)

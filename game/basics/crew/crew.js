@@ -10,7 +10,7 @@ function spawn(user, guild) {
       piloting: 2,
       engineering: 2,
       mechanics: 4,
-      linguistics: 0,
+      // linguistics: 0,
       munitions: 0,
     },
   }

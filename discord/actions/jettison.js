@@ -34,6 +34,7 @@ module.exports = async ({ msg, guild }) => {
     })
   let cargoToJettison
   let amountToJettison = 0
+  let messageToAttach
 
   const detailsEmbed = new Discord.MessageEmbed()
     .setColor(process.env.APP_COLOR)
@@ -49,9 +50,7 @@ module.exports = async ({ msg, guild }) => {
     detailsEmbed.setDescription(
       `And how ${cargoToJettison.type === 'credits' ? 'many' : 'much'} ${
         cargoToJettison.emoji
-      }${
-        cargoToJettison.displayName
-      } would you like to jettison? (This will start a crew vote)`,
+      }${cargoToJettison.displayName} would you like to jettison?`,
     )
     sentMessage.edit(detailsEmbed)
 
@@ -65,7 +64,7 @@ module.exports = async ({ msg, guild }) => {
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1
-          finalJettisonVote(msg)
+          getMessageToAttach(msg)
         },
       })
 
@@ -79,35 +78,35 @@ module.exports = async ({ msg, guild }) => {
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 10
-          finalJettisonVote(msg)
+          getMessageToAttach(msg)
         },
       })
 
     if (amountPossessed > 100)
       amountsAsReactions.push({
         emoji: numberToEmoji(3),
-        label: `1 ${
+        label: `100 ${
           cargoToJettison.type === 'credits'
             ? ''
             : process.env.WEIGHT_UNIT_PLURAL
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 100
-          finalJettisonVote(msg)
+          getMessageToAttach(msg)
         },
       })
 
     if (amountPossessed > 1000)
       amountsAsReactions.push({
         emoji: numberToEmoji(4),
-        label: `1 ${
+        label: `1000 ${
           cargoToJettison.type === 'credits'
             ? ''
             : process.env.WEIGHT_UNIT_PLURAL
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1000
-          finalJettisonVote(msg)
+          getMessageToAttach(msg)
         },
       })
 
@@ -118,14 +117,86 @@ module.exports = async ({ msg, guild }) => {
       } of ${cargoToJettison.type === 'credits' ? 'them' : 'it'}`,
       action: ({ msg, emoji, user }) => {
         amountToJettison = amountPossessed
-        finalJettisonVote(msg)
+        getMessageToAttach(msg)
       },
     })
 
     await awaitReaction({
       msg: sentMessage,
       reactions: amountsAsReactions,
-      time: 30 * 1000,
+      time: 60 * 1000,
+      guild,
+      embed: detailsEmbed,
+    })
+
+    if (!sentMessage.deleted) sentMessage.delete()
+  }
+
+  const getMessageToAttach = async (sentMessage) => {
+    sentMessage.reactions.removeAll().catch((e) => {})
+    detailsEmbed.fields = []
+    detailsEmbed.setDescription(
+      `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`,
+    )
+    sentMessage.edit(detailsEmbed)
+
+    const messageReactions = []
+    messageReactions.push({
+      emoji: '😶',
+      label: `No message`,
+      action: ({ msg, emoji, user }) => {
+        finalJettisonVote(msg)
+      },
+    })
+    messageReactions.push({
+      emoji: '🕊',
+      label: `"${story.jettison.message.peace()}"`,
+      action: ({ msg, emoji, user }) => {
+        messageToAttach = {
+          emoji: '🕊',
+          message: story.jettison.message.peace(),
+        }
+        finalJettisonVote(msg)
+      },
+    })
+    messageReactions.push({
+      emoji: '🎁',
+      label: `"${story.jettison.message.forYou()}"`,
+      action: ({ msg, emoji, user }) => {
+        messageToAttach = {
+          emoji: '🎁',
+          message: story.jettison.message.forYou(),
+        }
+        finalJettisonVote(msg)
+      },
+    })
+    messageReactions.push({
+      emoji: '⚖️',
+      label: `"${story.jettison.message.nowYou()}"`,
+      action: ({ msg, emoji, user }) => {
+        messageToAttach = {
+          emoji: '⚖️',
+          message: story.jettison.message.nowYou(),
+        }
+        finalJettisonVote(msg)
+      },
+    })
+    messageReactions.push({
+      emoji: '🤡',
+      label: `"${story.jettison.message.gotcha()}"`,
+      action: ({ msg, emoji, user }) => {
+        messageToAttach = {
+          emoji: '🤡',
+          message: story.jettison.message.gotcha(),
+        }
+        finalJettisonVote(msg)
+      },
+    })
+
+    await awaitReaction({
+      msg: sentMessage,
+      reactions: messageReactions,
+      time: 60 * 1000,
       guild,
       embed: detailsEmbed,
     })
@@ -145,7 +216,9 @@ module.exports = async ({ msg, guild }) => {
         cargoToJettison.displayName
       }? | Vote started by ${msg.author.nickname}`,
     )
-    detailsEmbed.description = ''
+    detailsEmbed.description = messageToAttach
+      ? `Cache will have the attached message: "${messageToAttach.emoji} ${messageToAttach.message}"`
+      : ''
     detailsEmbed.fields = []
 
     const voteResult = await runYesNoVote({
@@ -179,13 +252,20 @@ module.exports = async ({ msg, guild }) => {
         amountToJettison,
       ),
     )
+
+    detailsEmbed.title = `Jettisoned ${amountToJettison.toFixed(2)} ${
+      cargoToJettison.type === 'credits'
+        ? ''
+        : process.env.WEIGHT_UNIT_PLURAL + ' of'
+    } ${cargoToJettison.emoji}${cargoToJettison.displayName}.`
+
     detailsEmbed.description = story.jettison.votePassed(
       voteResult.yesPercent,
       cargoToJettison,
       amountToJettison,
     )
     voteResult.sentMessage.edit(detailsEmbed)
-    guild.ship.jettison(cargoToJettison, amountToJettison)
+    guild.ship.jettison(cargoToJettison, amountToJettison, messageToAttach)
   }
 
   if (actualCargo.length === 0) return send(msg, `No cargo to jettison!`)
@@ -203,7 +283,7 @@ module.exports = async ({ msg, guild }) => {
     await awaitReaction({
       msg: sentMessage,
       reactions: cargoAsReactions,
-      time: 30 * 1000,
+      time: 60 * 1000,
       guild,
       embed: detailsEmbed,
     })

@@ -1,9 +1,8 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
 const Discord = require('discord.js-light')
-const { guild } = require('../../game/manager')
+const { game } = require('../../game/manager')
 // const db = require('../../db/db')
-
 module.exports = {
   tag: 'debug',
   documentation: false,
@@ -19,6 +18,20 @@ module.exports = {
     log(msg, 'Debug: ' + match[1], msg.guild.name)
 
     const debugCommands = {
+      game: {
+        description: 'game',
+        action: async () => {
+          const data = {
+            gameDiameter: game.gameDiameter(),
+            guilds: game.guilds.length,
+            planets: game.planets.length,
+            caches: game.caches.length,
+            startTime: game.startTime,
+            lastTick: game.lastTick,
+          }
+          return JSON.stringify(data, null, 2)
+        },
+      },
       this: {
         description: 'this',
         action: async () => {
@@ -54,15 +67,15 @@ module.exports = {
         },
       },
       deleteguild: {
-        description: 'deleteguild <id>',
+        description: 'delete <id>',
         action: async (id) => {
           if (id === 'this') id = msg.guild.id
           const res = await client.game.removeGuild(id)
           return res
         },
       },
-      moveship: {
-        description: 'moveship <guild id> <x>,<y>',
+      move: {
+        description: 'move <guild id> <x>,<y>',
         action: async (str) => {
           let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
             str.replace(/\[\]/g, ''),
@@ -80,8 +93,8 @@ module.exports = {
           return 'moved ship.'
         },
       },
-      setpower: {
-        description: 'setpower <id> <power>',
+      power: {
+        description: 'power <id> <power>',
         action: async (str) => {
           let [unused, id, power] = /^([^ ]+) (.*)$/.exec(str)
           if (id === 'this') id = msg.guild.id

@@ -112,14 +112,14 @@ module.exports = {
         },
         {
           emoji: '👩‍✈️',
-          label: `Captain's Commands`,
+          label: `Captain/Admin Commands`,
           action: async () => {
             helpPage({
               msg,
               settings,
               user: msg.author,
               emoji: '👩‍✈️',
-              title: `Captain's Commands`,
+              title: `Captain/Admin Commands`,
               description: `Only the ship's captain (or server admins) can do these actions!`,
               commands: commands.filter((c) => c.captain),
             })

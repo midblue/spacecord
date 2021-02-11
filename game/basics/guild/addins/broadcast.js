@@ -149,7 +149,7 @@ module.exports = (guild) => {
             const reallyDoIt = await runYesNoVote({
               pollType: 'broadcast',
               question: o.yesNoQuestion(user),
-              description: `Broadcasts are amplified and clarified by the quality and repair of the ship's transceiver, as well as the combined  \`linguistics\` and \`engineering\` skills of \`✅ Yes\` voters.`,
+              description: `Broadcasts are amplified and clarified by the quality and repair of the ship's transceiver, as well as the combined \`engineering\` skills of \`✅ Yes\` voters.`, // \`linguistics\` and
               minimumMemberPercent: o.minimumMemberPercent || 0.1,
               yesStaminaRequirement: 1,
               msg,

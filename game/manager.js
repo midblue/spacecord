@@ -30,12 +30,15 @@ const game = {
   },
 
   // ---------------- Game Properties ----------------
+  gameDiameter: () => {
+    return Math.sqrt(this.guilds?.length || 1) * 15
+  },
   guilds: [],
   caches: [],
   planets: [],
   npcs: [],
-  startTime: new Date(),
-  lastTick: new Date(),
+  startTime: Date.now(),
+  lastTick: Date.now(),
 
   // ---------------- Game Loop Functions ----------------
 
@@ -179,7 +182,8 @@ const game = {
 
   spawnCache(cacheData) {
     const cacheDataToSave = { ...cacheData, created: Date.now() }
-    db.caches.add(cacheDataToSave)
+    db.caches.add({ ...cacheData, created: Date.now() })
+    caches.liveify(cacheDataToSave)
     this.caches.push(cacheDataToSave)
   },
   deleteCache(cacheId) {
@@ -204,6 +208,7 @@ from discord types to game types, and vice versa.
 
 */
 module.exports = {
+  game,
   async spawn({ discordGuild, channelId }) {
     const existingGuildInDb = await game.getGuild(discordGuild.id)
     if (existingGuildInDb.ok)

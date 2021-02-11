@@ -194,6 +194,12 @@ module.exports = {
       )} ${process.env.WEIGHT_UNIT_PLURAL} of ${
         cargo.displayName
       } goes drifting off into space.`,
+    message: {
+      peace: () => `A token of peace.`,
+      forYou: () => `Enjoy!`,
+      nowYou: () => `Now it's your turn.`,
+      gotcha: () => `Seeya, suckers!`,
+    },
   },
   xp: {
     add: {
@@ -328,7 +334,7 @@ module.exports = {
       `Looks like there's nothing in your log yet. Explore the galaxy to discover things!`,
   },
   interact: {
-    noShips: () => `There's no ship close enough to interact with.`,
+    nothing: () => `There's nothing close enough to you to interact with.`,
   },
   discovery: {
     planet: (planet) =>

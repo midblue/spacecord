@@ -15,6 +15,7 @@ module.exports = async ({
   requirements,
   staminaRequirements,
   minimumMemberPercent,
+  weightByLevelType,
   msg,
   respondeeFilter,
   ship,
@@ -146,10 +147,17 @@ module.exports = async ({
     else voters.push({ ...user, votes: [emoji] })
   })
   gatheredReactions.forEach(({ user, emoji }) => {
+    let userWeight = 1
+    if (weightByLevelType) {
+      const gameMember = ship.members.find((m) => m.id === user.id)
+      userWeight = gameMember?.level?.[weightByLevelType] || 1
+    }
     userReactionsToUse[emoji] = userReactionsToUse[emoji] || {}
     userReactionsToUse[emoji].weightedCount =
       (userReactionsToUse[emoji].weightedCount || 0) +
-      1 / userReactionCounts[user.id] / Object.keys(userReactionCounts).length
+      userWeight /
+        userReactionCounts[user.id] /
+        Object.keys(userReactionCounts).length
   })
 
   embed.setFooter(

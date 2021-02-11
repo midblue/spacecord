@@ -1,26 +1,15 @@
-notify guild and warp to other side of map when they hit an edge
 actual minigames for training and repairing
-remove skills that aren't in use
+better generatepower
 planet interaction
 	buying upgrades
 	buying/selling cargo (and fuel)
 	cantina & cantina chatter
 	a way to make money (quests??)
-spawn items floating randomly every once in a while
 something happens when you die
-world automatically expands as servers join so we keep a generally even level of encounter rate
-piloting actually weights input on polls
-better generatepower
-actual list of quotes for the trainmechanics
-take out linguistics
-training deletes the embed once it times out too
-say collective skill even if u miss an attack
-cache button shows up on scan when i cant scan
+training stamina cost scales with level
 
 tractor beam item
-
-small battleship for munitions
-
+mini battleship game for munitions
 single-use items
 	teleporters
 	trackers

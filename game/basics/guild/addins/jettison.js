@@ -1,6 +1,6 @@
 const maxLogLength = 50
 module.exports = (guild) => {
-  guild.ship.jettison = (cargo, amount) => {
+  guild.ship.jettison = (cargo, amount, message) => {
     if (cargo.type === 'credits') {
       guild.ship.credits -= amount
       if (guild.ship.credits < 0.0001) guild.ship.credits = 0
@@ -12,6 +12,7 @@ module.exports = (guild) => {
       type: cargo.type,
       amount,
       location: [...guild.ship.location],
+      message,
     })
   }
 }

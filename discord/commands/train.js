@@ -13,6 +13,8 @@ const staminaRequirements = require('../../game/basics/crew/staminaRequirements'
 const trainingActions = {
   engineering: require('./trainEngineering').action,
   mechanics: require('./trainMechanics').action,
+  piloting: require('./trainPiloting').action,
+  munitions: require('./trainMunitions').action,
 }
 
 module.exports = {
@@ -86,5 +88,6 @@ module.exports = {
       guild,
       listeningType: 'training choice',
     })
+    sentMessage.delete()
   },
 }

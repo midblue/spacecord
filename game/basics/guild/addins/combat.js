@@ -11,14 +11,6 @@ module.exports = (guild) => {
     return (guild.ship.lastAttack || 0) < guild.context.lastTick
   }
 
-  guild.ship.attackRadius = () => {
-    const maxWeaponRange = guild.ship.equipment.weapon.reduce(
-      (max, w) => Math.max(max, w.range || 0),
-      0,
-    )
-    return maxWeaponRange
-  }
-
   guild.ship.checkForDeath = () => {
     const dead = guild.ship.currentHp <= 0.00001
     if (dead) guild.pushToGuild(`You're dead!`)
@@ -81,6 +73,11 @@ module.exports = (guild) => {
       {
         name: 'Base Hit %',
         value: Math.round(adjustedAccuracy * 100) + '%',
+        inline: true,
+      },
+      {
+        name: 'Total Munitions Skill',
+        value: collectiveMunitionsSkill,
         inline: true,
       },
     ]

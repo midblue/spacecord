@@ -22,17 +22,17 @@ module.exports = {
     const caches = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: guild.ship.interactRadius,
+      range: guild.ship.tractorRadius(),
       excludeIds: guild.guildId,
     })?.caches
 
     if (!caches || !caches.length)
       return send(
         msg,
-        'No nearby caches found within ' +
-          guild.ship.interactRadius +
+        'No caches found within tractor range (' +
+          guild.ship.tractorRadius() +
           process.env.DISTANCE_UNIT +
-          '.',
+          ').',
       )
 
     caches.forEach(async (cache) => {
@@ -48,6 +48,10 @@ module.exports = {
             cache.emoji +
             cache.displayName,
         )
+      if (cache.message)
+        embed.description = `There's a message attached that says, "${
+          cache.message.emoji + ' ' + cache.message.message
+        }"`
 
       const availableActions = [
         {

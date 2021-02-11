@@ -24,7 +24,9 @@ module.exports = {
     priority: 70,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:me)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:me|stamina|aboutme)$`, 'gi').exec(
+      content,
+    )
   },
   async action({
     msg,

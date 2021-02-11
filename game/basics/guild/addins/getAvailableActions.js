@@ -62,7 +62,7 @@ module.exports = (guild) => {
     const interactableOtherThings = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: guild.ship.interactRadius,
+      range: guild.ship.tractorRadius(),
       excludeIds: guild.guildId,
     })
     if (interactableOtherThings.caches && interactableOtherThings.caches.length)

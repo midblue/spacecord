@@ -36,7 +36,6 @@ Your crewmates can help too, if they want to.`)
 
     const challengeCount = 5
 
-    //  this whole promise is extractable into a common function
     const { hits, sentTextOptions, time } = await runTypingTest({
       challengeCount,
       textOptions,

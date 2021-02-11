@@ -5,10 +5,6 @@ const staminaRequirements = require('../../crew/staminaRequirements')
 const story = require('../../story/story')
 
 module.exports = (guild) => {
-  guild.ship.maxActionRadius = () => {
-    return Math.max(guild.ship.attackRadius(), guild.ship.interactRadius)
-  }
-
   guild.ship.scanOtherShip = (otherShip) => {
     // todo check if in range
 

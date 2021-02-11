@@ -19,9 +19,9 @@ module.exports = {
       emoji: '⚔️',
       name: 'munitions',
     },
-    {
-      emoji: '📚',
-      name: 'linguistics',
-    },
+    // {
+    //   emoji: '📚',
+    //   name: 'linguistics',
+    // },
   ],
 }

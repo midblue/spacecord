@@ -17,7 +17,6 @@ module.exports = {
   },
   async action({ msg, settings, ship, guild }) {
     log(msg, 'Ship Info', msg.guild.name)
-    // age, model, upgrades, slots, image, etc
 
     const status = ship.shipInfo()
     status.fields = await applyCustomParams(msg, status.fields)

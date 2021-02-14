@@ -1,12 +1,11 @@
-const { numberToEmoji, percentToTextBars } = require('../../../../common')
-
 module.exports = {
-  emoji: '🔍',
+  emoji: '🔭',
+  description: `Not so much high-tech as medieval-tech, this is a digital telescope mounted to your ship that can peer at nearby craft. It can't tell much about them, but it's at least reliable for determining the size and faction of other ships. Its one adantage is that it is very hard to detect.`,
   displayName: 'Telescopic Inspector',
   baseHp: 5,
-  powerUse: 2,
+  powerUse: 1,
   requirements: { engineering: 4 },
-  scanUndetectability: 5,
+  scanUndetectability: 50,
   durabilityLostOnUse: 0.01,
   use(otherShip) {
     const previousRepair = this.repair
@@ -32,12 +31,18 @@ module.exports = {
           value: otherShip.name,
         },
         {
-          name: '👨‍👩‍👦‍👦 Faction',
+          name: 'Faction',
           value: otherShip.faction.emoji + ' ' + otherShip.faction.name,
         },
         {
-          name: '🇨🇭 Max Possible HP',
-          value: otherShip.maxHp(),
+          name: '👨‍👩‍👦‍👦 Crew Members',
+          value: otherShip.ship.members.length,
+        },
+        {
+          name: 'Chassis',
+          value:
+            otherShip.ship.equipment.chassis[0].emoji +
+            otherShip.ship.equipment.chassis[0].displayName,
         },
       ],
     }

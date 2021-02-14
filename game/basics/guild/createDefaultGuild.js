@@ -5,19 +5,25 @@ module.exports = function ({ discordGuild, channelId }) {
   const ship = {
     name: getShipName(),
     launched: Date.now(),
-    model: 'shipA',
-    credits: 50,
+    credits: 0,
     captain: false,
-    hp: 1,
     status: {
-      flying: true,
+      dead: false,
+      docked: 'Origin',
     },
-    power: 11,
+    power: 5,
     members: [],
     seen: { planets: [] },
     log: [],
     lastAttack: 0,
     equipment: {
+      chassis: [
+        {
+          id: 'starter',
+          repaired: Date.now(),
+          repair: 0.9,
+        },
+      ],
       engine: [
         {
           id: 'basic1',
@@ -26,18 +32,18 @@ module.exports = function ({ discordGuild, channelId }) {
         },
       ],
       armor: [
-        {
-          id: 'steelPlating',
-          repaired: Date.now(),
-          repair: 0.6,
-        },
+        // {
+        //   id: 'steelPlating',
+        //   repaired: Date.now(),
+        //   repair: 0.6,
+        // },
       ],
       weapon: [
-        {
-          id: 'basic1',
-          repaired: Date.now(),
-          repair: 0.7,
-        },
+        // {
+        //   id: 'basic1',
+        //   repaired: Date.now(),
+        //   repair: 0.7,
+        // },
       ],
       telemetry: [
         {
@@ -73,17 +79,18 @@ module.exports = function ({ discordGuild, channelId }) {
         type: 'fuel',
         amount: 8,
       },
-      {
-        type: 'food',
-        amount: 2,
-      },
+      // {
+      //   type: 'food',
+      //   amount: 2,
+      // },
     ],
-    location: [Math.random() * 4, Math.random() * 4],
+    location: [0, 0],
     bearing: [Math.random() - 0.5, Math.random() - 0.5],
     speed: 0,
   }
 
   const data = {
+    active: true,
     guildId: discordGuild.id,
     guildName: discordGuild.name,
     channel: channelId,
@@ -170,7 +177,6 @@ const names = [
   'CS Hammer',
   'SS Ghunne',
   'Dakota',
-  'Experience',
   'Neptune',
   'Dispatcher',
   'SSE Coyote',
@@ -188,4 +194,5 @@ const names = [
   'STS Ghunne',
   'ISS Utopia',
   'SS The Javelin',
+  'Gravity',
 ]

@@ -1,7 +1,11 @@
 const defaults = {
   type: 'telemetry',
+  description: ``,
   weight: 30,
   baseHp: 10,
+  repairDifficulty: 1,
+  durabilityLostOnUse: 0.02,
+  baseCost: 80,
 }
 
 // * get all exports from files in this folder
@@ -11,6 +15,7 @@ fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
     if (!file.endsWith('.js') || file === 'index.js') return
     addins[file.substring(0, file.length - 3)] = {
+      id: file.substring(0, file.length - 3),
       ...defaults,
       ...require(`./${file}`),
     }

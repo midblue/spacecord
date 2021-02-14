@@ -34,7 +34,6 @@ module.exports = async ({ msg, guild, cache }) => {
       })
   }
   guild.saveNewDataToDb()
-  msg.delete()
   return send(
     msg,
     `Nice! You picked up ` +
@@ -45,10 +44,18 @@ module.exports = async ({ msg, guild, cache }) => {
       ' ' +
       cache.emoji +
       cache.displayName +
+      '. ' +
+      (cache.message
+        ? `\nAs you pull in the cache, you see that there's a message attached! It says, "${
+            cache.message.emoji + ' ' + cache.message.message
+          }"`
+        : '') +
       (cache.type === 'credits'
-        ? '.'
-        : `. Your ship is now carrying ${Math.round(
-            (guild.ship.getTotalWeight() / guild.ship.maxWeight) * 100,
+        ? ''
+        : `\nYour ship is now carrying ${Math.round(
+            (guild.ship.getTotalWeight() /
+              guild.ship.equipment.chassis[0].maxWeight) *
+              100,
           )}% of its maximum capacity.`),
   )
 }

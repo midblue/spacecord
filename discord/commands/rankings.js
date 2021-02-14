@@ -17,7 +17,7 @@ module.exports = {
   },
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:scores?|highscores?|rankings?)$`,
+      `^${settings.prefix}(?:scores?|highscores?|ranki?n?g?s?)$`,
       'gi',
     ).exec(content)
   },

@@ -92,9 +92,7 @@ module.exports = async ({
       clearInterval(embedUpdateInterval)
       done = true
     }
-    try {
-      sentMessage.edit(embed)
-    } catch (e) {}
+    if (!sentMessage.deleted) sentMessage.edit(embed)
   }, 5000)
 
   if (!respondeeFilter)
@@ -122,9 +120,7 @@ module.exports = async ({
     embed.fields.findIndex((f) => f.id === 'remainingTime'),
     1,
   )
-  try {
-    sentMessage.edit(embed)
-  } catch (e) {}
+  if (!sentMessage.deleted) sentMessage.edit(embed)
 
   const userReactionsToUse = {}
   const userReactionCounts = {}

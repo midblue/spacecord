@@ -12,8 +12,13 @@ module.exports = (guild) => {
   }
 
   guild.ship.checkForDeath = () => {
-    const dead = guild.ship.currentHp <= 0.00001
-    if (dead) guild.pushToGuild(`You're dead!`)
+    if (guild.ship.status.dead) return true
+    const dead = guild.ship.currentHp() < 0.0001
+    if (dead) {
+      guild.ship.status.dead = true
+      guild.pushToGuild(story.ship.die(guild.ship))
+      guild.ship.jettisonAll()
+    }
     return dead
   }
 
@@ -23,6 +28,9 @@ module.exports = (guild) => {
     target,
     collectiveMunitionsSkill,
   }) => {
+    if (enemyShip.status.docked)
+      return { ok: false, message: story.attack.docked(enemyShip) }
+
     guild.ship.lastAttack = Date.now()
 
     const outputEmbed = new Discord.MessageEmbed()
@@ -38,7 +46,9 @@ module.exports = (guild) => {
       ) * enemyNonVotingAdjustment
     const advantage = collectiveMunitionsSkill - enemyTotalPilotingLevel
     const randomizedAdvantage = advantage + advantage * (Math.random() - 0.5) // adjusts it from .5 to 1.5 of the advantage
-    const adjustedAccuracy = weapon.hitPercent(attackDistance)
+    const adjustedAccuracy =
+      weapon.hitPercent(attackDistance) *
+      (1 - enemyShip.equipment.chassis[0].agility || 0)
     const adjustedDamage = weapon.damage * weapon.repair
 
     // calculate accuracy
@@ -81,6 +91,10 @@ module.exports = (guild) => {
         inline: true,
       },
     ]
+
+    // durability loss
+    weapon.repair -= weapon.durabilityLostOnUse
+    if (weapon.repair < 0) weapon.repair = 0
 
     // miss
     if (!didHit) {
@@ -276,6 +290,7 @@ module.exports = (guild) => {
 
         target.repair -= damageToEquipmentAsPercent
         if (target.repair <= 0) target.repair = 0
+        if (target.onTakeDamage) target.onTakeDamage(guild)
         damageDealt = (previousEqRepair - target.repair) * target.baseHp
         damageRemaining -= damageDealt
         if (damageRemaining < 0.000001) damageRemaining = 0
@@ -311,22 +326,23 @@ module.exports = (guild) => {
           },
           {
             name: 'Damage Breakdown',
-            value: damageTaken
-              .map(
-                (d) =>
-                  `${d.equipment.emoji} ${
-                    d.equipment.displayName
-                  } ${percentToTextBars(d.equipment.repair)}
+            value:
+              damageTaken
+                .map(
+                  (d) =>
+                    `${d.equipment.emoji} ${
+                      d.equipment.displayName
+                    } ${percentToTextBars(d.equipment.repair)}
  ↳ ${Math.round(d.damage * 10) / 10} damage (${
-                    Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
-                    10
-                  }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
-                    d.negated
-                      ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                      : ''
-                  }${d.wasDisabled ? ` (**Disabled!**)` : ''}`,
-              )
-              .join('\n'),
+                      Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
+                      10
+                    }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
+                      d.negated
+                        ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
+                        : ''
+                    }${d.wasDisabled ? ` (**Disabled!**)` : ''}`,
+                )
+                .join('\n') || 'No damage taken.',
           },
         ],
       )
@@ -342,12 +358,14 @@ module.exports = (guild) => {
         )
     guild.ship.logEntry(outputEmbed.description)
 
-    const reactions = guild.ship.getActionsOnOtherShip(attacker)
+    let reactions
+    if (attacker.name !== 'God')
+      reactions = guild.ship.getActionsOnOtherShip(attacker)
 
     // notify
     guild.pushToGuild(outputEmbed, null, reactions)
 
-    const destroyedShip = ship.checkForDeath()
+    const destroyedShip = guild.ship.checkForDeath()
 
     guild.saveNewDataToDb()
 

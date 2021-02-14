@@ -22,8 +22,11 @@ module.exports = {
     log(msg, 'Set Ship Name', msg.channel.name)
     let name = match[1]
     name = name.replace(/(?:^<|>$)/gi, '')
+    if (name.length < 3) return send(msg, `That name is too short!`)
+    if (name.length < 24) return send(msg, `That name is too long!`)
     const textCheck = checkUserInputForBadWords(name)
     if (!textCheck.ok) return send(msg, textCheck.message)
+    if (name === 'God') return send(msg, `That is a reserved name.`)
     const res = await guild.ship.setName(name)
     return send(msg, res.message)
   },

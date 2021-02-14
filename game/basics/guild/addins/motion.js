@@ -8,13 +8,15 @@ const {
 
 module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
+    if (guild.ship.status.docked) return 0
+
     const rawMaxSpeed = guild.ship.equipment.engine.reduce(
-      (total, engine) => engine.maxSpeed + total,
+      (total, engine) => engine.maxSpeed * engine.repair + total,
       0,
     )
 
     let percentOfMaxShipWeight =
-      guild.ship.getTotalWeight() / guild.ship.maxWeight
+      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
     if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
 
     let effectiveSpeed =
@@ -98,6 +100,12 @@ module.exports = (guild) => {
       4,
     )
 
+    if (bestShipDirections === 3)
+      return [
+        { emoji: '↗️', vector: [1, 1] },
+        { emoji: '↖️', vector: [-1, 1] },
+        { emoji: '⬇️', vector: [0, -1.414] },
+      ]
     availableDirections.push({ emoji: '➡️', vector: [1.414, 0] })
     if (bestShipDirections > 4)
       availableDirections.push({ emoji: '↗️', vector: [1, 1] })
@@ -153,10 +161,8 @@ module.exports = (guild) => {
     }
 
     const endedOOB = ship.isOOB()
-    if (startedOOB && !endedOOB)
-      message = `Your ship has reentered known space.`
-    if (!startedOOB && endedOOB)
-      message = `Your ship has left the realms of known space. There's nothing but the void to be found out here.`
+    if (startedOOB && !endedOOB) message = story.move.oob.reEnter()
+    if (!startedOOB && endedOOB) message = story.move.oob.goOOB()
 
     fuel.amount -= fuelLoss
     if (fuel.amount <= 0) {
@@ -167,6 +173,13 @@ module.exports = (guild) => {
     } else {
       ship.status.stranded = false
     }
+
+    if (!ship.status.stranded)
+      guild.ship.equipment.engine.forEach((engine) => {
+        // durability loss
+        engine.repair -= engine.durabilityLostOnUse * (guild.ship.speed || 0)
+        if (engine.repair < 0) engine.repair = 0
+      })
 
     return {
       ok,
@@ -190,7 +203,7 @@ module.exports = (guild) => {
       (total, c) => total + Math.abs(c.amount || 0),
       0,
     )
-    const totalWeight = guild.ship.weight + equipmentWeight + cargoWeight
+    const totalWeight = (guild.ship.weight || 0) + equipmentWeight + cargoWeight
 
     return totalWeight
   }
@@ -208,7 +221,7 @@ module.exports = (guild) => {
     )
 
     let percentOfMaxShipWeight =
-      guild.ship.getTotalWeight() / guild.ship.maxWeight
+      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
     if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
 
     return rawMaxSpeed * (1 - percentOfMaxShipWeight)

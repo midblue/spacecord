@@ -5,8 +5,8 @@ module.exports = (guild) => {
     const moveRes = guild.ship.move()
     if (moveRes.message) guild.pushToGuild(moveRes.message)
 
-    const eatRes = guild.ship.eat()
-    if (!eatRes.ok && eatRes.message) guild.pushToGuild(eatRes.message)
+    // const eatRes = guild.ship.eat()
+    // if (!eatRes.ok && eatRes.message) guild.pushToGuild(eatRes.message)
 
     guild.ship.members.forEach((m) => m.stepUpdate())
 
@@ -18,7 +18,7 @@ module.exports = (guild) => {
     let ok = true,
       message
     const food = ship.cargo.find((c) => c.type === 'food')
-    if (!food.amount)
+    if (!food || !food.amount)
       return {
         ok: false,
       }

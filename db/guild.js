@@ -7,7 +7,10 @@ module.exports = function (passedDb) {
   return {
     async getAll() {
       try {
-        const snapshot = await db.collection('guilds').get()
+        const snapshot = await db
+          .collection('guilds')
+          .where('active', '==', true)
+          .get()
         if (snapshot.empty) return []
 
         const guilds = []

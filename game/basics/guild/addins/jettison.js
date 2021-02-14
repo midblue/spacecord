@@ -15,4 +15,23 @@ module.exports = (guild) => {
       message,
     })
   }
+
+  guild.ship.jettisonAll = () => {
+    if (guild.ship.credits) {
+      guild.context.spawnCache({
+        type: 'credits',
+        amount: guild.ship.credits,
+        location: [...guild.ship.location],
+      })
+      guild.ship.credits = 0
+    }
+    guild.ship.cargo.forEach((cargo) => {
+      guild.context.spawnCache({
+        type: cargo.type,
+        amount: cargo.amount,
+        location: [...guild.ship.location],
+      })
+    })
+    guild.ship.cargo = []
+  }
 }

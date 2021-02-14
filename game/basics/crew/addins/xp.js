@@ -68,4 +68,8 @@ module.exports = (member) => {
     }
     return data
   }
+
+  member.totalLevel = () => {
+    return Object.values(member.level).reduce((total, curr) => curr + total, 0)
+  }
 }

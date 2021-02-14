@@ -6,4 +6,5 @@ module.exports = {
   scan: 2,
   scanShip: 2,
   cache: 2,
+  land: 3,
 }

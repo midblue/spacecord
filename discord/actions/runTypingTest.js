@@ -38,7 +38,9 @@ module.exports = ({
       const textIndex = Math.floor(Math.random() * textOptions.length)
       const textToSend = textOptions[textIndex]
       textOptions.splice(textIndex, 1)
-      challengeTextInOneArray.push(lunicode.tools.tiny.encode(textToSend))
+      challengeTextInOneArray.push(
+        '→ ' + lunicode.tools.tiny.encode(textToSend),
+      )
       sentTextOptions.push({
         target: textToSend.toLowerCase(),
         bestScore: 0,

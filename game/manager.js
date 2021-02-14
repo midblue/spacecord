@@ -1,5 +1,5 @@
 const { spawn, liveify } = require('./basics/guild/guild')
-const spawnPlanets = require('./basics/planets')
+const spawnPlanets = require('./basics/planet')
 const caches = require('./basics/caches')
 const story = require('./basics/story/story')
 const { log } = require('./gamecommon')
@@ -146,6 +146,7 @@ const game = {
     return {
       guilds: this.guilds.filter((g) => {
         return (
+          !g.ship.status.dead &&
           !excludeIds.includes(g.guildId) &&
           pointIsInsideCircle(x, y, ...g.ship.location, range)
         )
@@ -231,6 +232,36 @@ module.exports = {
   },
   async removeGuild(guildId) {
     return await game.removeGuild(guildId)
+  },
+  verifyActiveGuilds(discordGuilds) {
+    setTimeout(() => {
+      game.guilds.forEach((g) => {
+        if (
+          !discordGuilds.find((discordGuild) => discordGuild.id === g.guildId)
+        ) {
+          this.deactivateGuild(g.guildId)
+          log(
+            'verifyActive',
+            'Deactivating',
+            g.guildId,
+            ': not in server anymore',
+          )
+        }
+      })
+    }, 3000)
+  },
+  async activateGuild(guildId) {
+    const existing = await db.guild.get({ guildId })
+    if (existing) {
+      await db.guild.update({ guildId, updates: { active: true } })
+      existing.active = true
+      game.loadExistingGuild(existing)
+      return true
+    } else return false
+  },
+  async deactivateGuild(guildId) {
+    // intentionally not removing them from the game just so other players can still kill them
+    await db.guild.update({ guildId, updates: { active: false } })
   },
   tick() {
     return game.update()

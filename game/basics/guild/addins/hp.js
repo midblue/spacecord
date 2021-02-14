@@ -3,7 +3,7 @@ module.exports = (guild) => {
     const equipmentHp = Object.keys(guild.ship.equipment).reduce(
       (t, eqType) => {
         const typeHp = guild.ship.equipment[eqType].reduce(
-          (total, eq) => total + (eq.baseHp || 0) * eq.repair,
+          (total, eq) => total + (eq.baseHp || 0) * (eq.repair || 0),
           0,
         )
         return t + typeHp
@@ -19,7 +19,7 @@ module.exports = (guild) => {
       (total, type) =>
         total +
         guild.ship.equipment[type].reduce(
-          (total2, eq) => total2 + eq.baseHp,
+          (total2, eq) => total2 + (eq.baseHp || 0),
           0,
         ),
       0,

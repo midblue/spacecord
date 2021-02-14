@@ -3,14 +3,13 @@ const { numberToEmoji, percentToTextBars } = require('../../../../common')
 module.exports = {
   // emoji: '📡',
   emoji: '😜',
-  displayName: 'Emoji Scanner v1',
+  description: `First designed as a joke, but then seriously adopted for its clarity and readability by even the most knuckleheaded Zoomer crew members, the Emoji Radar has earned a certain unique type of esteem in the galaxy.`,
+  displayName: 'Emoji Radar v1',
   baseHp: 15,
   powerUse: 2,
   range: 5,
   needsRepairAt: 0.8,
   breakdownSeverity: 0.05,
-  durabilityLostOnUse: 0.01,
-  repairDifficulty: 1,
   repairRequirements: { mechanics: 4 },
   requirements: { engineering: 2 },
   use({ scanResult, x, y }) {
@@ -65,7 +64,7 @@ module.exports = {
       emptySpace,
       emptySpace,
       '🛸',
-      '🌖',
+      '🪐',
     ]
 
     const getChar = (base) =>
@@ -135,7 +134,7 @@ module.exports = {
       const scanCenter = range + 1
       const planetXPosition = Math.round(scanCenter + xDiff)
       const planetYPosition = Math.round(scanCenter - yDiff)
-      grid[planetYPosition][planetXPosition] = getChar('🌖')
+      grid[planetYPosition][planetXPosition] = getChar('🪐')
     }
 
     let map = grid.map((row) => row.join('')).join('\n')
@@ -154,7 +153,7 @@ module.exports = {
           .join(',')}`
 
     let key = [`🚀 Us`]
-    key.push(`🌖 Planet`)
+    key.push(`🪐 Planet`)
     // if (scanResult.length)
     key.push(`🛸 Spacecraft`)
     key.push(`📦 Cache`)

@@ -39,41 +39,41 @@ module.exports = (guild) => {
     //   },
     // })
 
-    const interactableGuilds = guild.context.scanArea({
-      x: guild.ship.location[0],
-      y: guild.ship.location[1],
-      range: guild.ship.maxActionRadius(),
-      excludeIds: guild.guildId,
-    }).guilds
-    if (interactableGuilds && interactableGuilds.length)
+    const interactableThings = {
+      guilds: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.maxActionRadius(),
+        excludeIds: guild.guildId,
+      }).guilds,
+      caches: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.tractorRadius(),
+        excludeIds: guild.guildId,
+      }),
+      planets: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.equipment.chassis[0].interactRadius,
+        excludeIds: guild.guildId,
+      }),
+    }
+    if (
+      interactableThings.guilds.length +
+        interactableThings.planets.length +
+        interactableThings.caches.length >
+      0
+    )
       actions.push({
-        emoji: '🛸',
-        label: 'See Nearby Ships',
+        emoji: '👉',
+        label: 'See/Interact With Nearby Objects',
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
             author: user,
-            commandTag: 'nearbyShips',
+            commandTag: 'nearby',
             props: { interactableGuilds },
-          })
-        },
-      })
-
-    const interactableOtherThings = guild.context.scanArea({
-      x: guild.ship.location[0],
-      y: guild.ship.location[1],
-      range: guild.ship.tractorRadius(),
-      excludeIds: guild.guildId,
-    })
-    if (interactableOtherThings.caches && interactableOtherThings.caches.length)
-      actions.push({
-        emoji: '📦',
-        label: 'See Nearby Caches',
-        async action({ user, msg, guild }) {
-          getCache({
-            caches: interactableOtherThings.caches,
-            msg: { ...msg, author: user },
-            guild,
           })
         },
       })
@@ -95,7 +95,7 @@ module.exports = (guild) => {
       },
     })
 
-    if (guild.ship.status.flying) {
+    if (!guild.ship.status.docked) {
       actions.push({
         emoji: '🧭',
         label: 'Start Direction Vote ' + usageTag(null, 'poll'),
@@ -132,6 +132,19 @@ module.exports = (guild) => {
         })
       },
     })
+
+    if (guild.ship.equipment.transceiver?.[0])
+      actions.push({
+        emoji: '📣',
+        label: 'Broadcast',
+        async action({ user, msg }) {
+          await runGuildCommand({
+            commandTag: 'broadcast',
+            author: user,
+            msg,
+          })
+        },
+      })
 
     actions.push({
       emoji: '📊',

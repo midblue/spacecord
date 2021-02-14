@@ -7,7 +7,7 @@ const factions = {
   },
   orange: {
     languages: ['c'],
-    name: 'The Orange Oligarchy',
+    name: 'The Orange Oligarchs',
     emoji: `🆚`,
     color: 'orange',
   },

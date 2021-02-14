@@ -1,13 +1,14 @@
 actual minigames for training and repairing
 better generatepower
 planet interaction
-	buying upgrades
+	selling upgrades
 	buying/selling cargo (and fuel)
 	cantina & cantina chatter
 	a way to make money (quests??)
-something happens when you die
 training stamina cost scales with level
 
+jettison equipment too
+booby trap cache item
 tractor beam item
 mini battleship game for munitions
 single-use items
@@ -18,6 +19,7 @@ more other ship interaction options
 	repair
 implement food
 legacy system: keep track of user action count
+black holes that suck more if u weigh more
 
 global leaderboard
 

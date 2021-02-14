@@ -232,13 +232,11 @@ module.exports = async ({ msg, guild }) => {
     if (!voteResult.ok) return send(msg, voteResult.message)
     detailsEmbed.fields = []
     if (voteResult.insufficientVotes) {
-      guild.ship.logEntry(story.vote.insufficientVotes())
       detailsEmbed.description = story.vote.insufficientVotes()
       voteResult.sentMessage.edit(detailsEmbed)
       return
     }
     if (!voteResult.result) {
-      guild.ship.logEntry(story.attack.voteFailed())
       detailsEmbed.description = story.attack.voteFailed()
       voteResult.sentMessage.edit(detailsEmbed)
       return

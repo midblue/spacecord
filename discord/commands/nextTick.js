@@ -12,9 +12,10 @@ module.exports = {
     priority: 10,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:next|tick|nexttick)$`, 'gi').exec(
-      content,
-    )
+    return new RegExp(
+      `^${settings.prefix}(?:next|tick|nexttick|nextday)$`,
+      'gi',
+    ).exec(content)
   },
   async action({ msg, settings, game }) {
     log(msg, 'Next Tick', msg.guild.name)

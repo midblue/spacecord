@@ -66,7 +66,7 @@ module.exports = {
           return '\n' + res
         },
       },
-      deleteguild: {
+      delete: {
         description: 'delete <id>',
         action: async (id) => {
           if (id === 'this') id = msg.guild.id
@@ -107,6 +107,22 @@ module.exports = {
           }
           guild.ship.power = power
           return 'set power to ' + power
+        },
+      },
+      credits: {
+        description: 'credits <id> <credits>',
+        action: async (str) => {
+          let [unused, id, credits] = /^([^ ]+) (.*)$/.exec(str)
+          if (id === 'this') id = msg.guild.id
+          const { guild } = await client.game.guild(id)
+          if (!guild) return 'no guild found for ' + id
+          try {
+            credits = parseInt(credits)
+          } catch (e) {
+            return 'invalid credits: ' + credits
+          }
+          guild.ship.credits = credits
+          return 'set credits to ' + credits
         },
       },
       cargo: {
@@ -167,6 +183,24 @@ module.exports = {
           if (!member) return 'no member with id ' + msg.author.id
           member.stamina = amount / member.maxStamina()
           return 'set stamina to ' + amount
+        },
+      },
+      kill: {
+        description: 'kill <id>',
+        action: async (str) => {
+          let [unused, id] = /^([^ ]+)$/.exec(str)
+          if (id === 'this') id = msg.guild.id
+          const { guild } = await client.game.guild(id)
+          if (!guild) return 'no guild found for ' + id
+          guild.ship.takeDamage({
+            damage: 99999999,
+            attacker: { name: 'God', location: [0, 0] },
+            weapon: { displayName: 'Banhammer', emoji: '🔨' },
+            attackDistance: 999999,
+            advantageDamageMultiplier: 999999,
+            advantageAccuracyMultiplier: 999999,
+          })
+          return 'killed ' + id
         },
       },
     }

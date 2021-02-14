@@ -13,7 +13,7 @@ module.exports = (guild) => {
     const messages = []
     const telemetry = (guild.ship.equipment.telemetry || [])[0]
 
-    let range = guild.ship.interactRadius
+    let range = guild.ship.equipment.chassis[0].interactRadius
 
     let haveEnoughPower = true,
       powerRes = { ok: true }
@@ -68,13 +68,8 @@ You see ${
 
     for (let planet of scanResult.planets) {
       const seenPlanets = guild.ship.seen.planets
-      if (!seenPlanets.find((p) => p.name === planet.name)) {
-        seenPlanets.push({
-          name: planet.name,
-          color: planet.color,
-          size: planet.size,
-          landed: false,
-        })
+      if (!seenPlanets.find((p) => p === planet.name)) {
+        seenPlanets.push(planet.name)
         guild.ship.logEntry(story.discovery.planet(planet))
         messages.push(story.discovery.planet(planet))
       }
@@ -148,30 +143,34 @@ You see ${
     }).guilds
     if (interactableGuilds && interactableGuilds.length)
       actions.push({
-        emoji: '🛸',
+        emoji: '👉',
         async action({ user, msg }) {
           await runGuildCommand({
             msg,
             author: user,
-            commandTag: 'nearbyShips',
+            commandTag: 'nearby',
             props: { interactableGuilds },
           })
         },
       })
-    if (
-      scanResult.caches &&
-      scanResult.caches.length &&
+    else if (
       scanResult.caches.filter(
         (c) =>
           distance(...c.location, ...guild.ship.location) <=
           guild.ship.tractorRadius(),
-      ).length
+      ).length ||
+      (!guild.ship.status.docked &&
+        scanResult.planets.filter(
+          (c) =>
+            distance(...c.location, ...guild.ship.location) <=
+            guild.ship.equipment.chassis[0].interactRadius,
+        ).length)
     )
       actions.push({
-        emoji: '📦',
+        emoji: '👉',
         async action({ user, msg, guild }) {
           runGuildCommand({
-            commandTag: 'caches',
+            commandTag: 'nearby',
             msg,
             author: user,
           })

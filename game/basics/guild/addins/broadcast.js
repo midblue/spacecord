@@ -65,11 +65,11 @@ module.exports = (guild) => {
           `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${voterCount} members voted.`,
       },
       {
-        type: 'factionRally',
-        emoji: guild.ship.faction.emoji,
-        label: `Rallying cry for ${guild.ship.faction.emoji}${guild.ship.faction.name}`,
+        type: 'faction',
+        emoji: guild.faction.emoji,
+        label: `Rallying cry for ${guild.faction.emoji}${guild.faction.name}`,
         yesNoQuestion: (user) =>
-          `Really broadcast a rallying cry for ${guild.ship.faction.emoji}${guild.ship.faction.name} to the area? | Vote started by ${user.nickname}`,
+          `Really broadcast a rallying cry for ${guild.faction.emoji}${guild.faction.name} to the area? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
           `A vote started by ${user.nickname} to send a faction rallying cry failed with too few votes.`,
         successLog: (user, voterCount) =>
@@ -119,7 +119,10 @@ module.exports = (guild) => {
     ]
 
     baseBroadcastOptions.forEach((o) => {
-      if ((equipment.capabilities || []).includes(o.type))
+      if (
+        (equipment.broadcastCapabilities || []).includes(o.type) &&
+        (o.type !== 'faction' || guild.faction?.color)
+      )
         actions.push({
           emoji: o.emoji,
           label:
@@ -251,6 +254,10 @@ module.exports = (guild) => {
     })
     guild.lastBroadcast = { time: Date.now() }
     guild.saveNewDataToDb()
+
+    // durability loss
+    equipment.repair -= equipment.durabilityLostOnUse
+    if (equipment.repair < 0) equipment.repair = 0
 
     const message = story.broadcast[broadcastType].send({
       ship: guild.ship,

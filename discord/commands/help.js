@@ -147,7 +147,7 @@ module.exports = {
 
     const embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
     embed.title = `ℹ️ ${process.env.GAME_TITLE} | Help`
-    embed.description = `Thanks for playing ${process.env.GAME_TITLE}! Here's info about generally what it is, how you play, and so on!
+    embed.description = `Thanks for playing ${process.env.GAME_TITLE}!\nThis game is a **work in progress**, so don't be surprised when things break, but do let me know in the support server.\nHere's info about generally what it is, how you play, and so on!
 	
 Pick a category below to get info on specific commands or elements of the game.`
 

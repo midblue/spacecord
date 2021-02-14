@@ -78,6 +78,7 @@ module.exports = {
         trainingActions[e.name](trainingActionArguments)
       },
     }))
+    console.log(msg.author)
 
     const sentMessages = await send(msg, embed)
     const sentMessage = sentMessages[sentMessages.length - 1]
@@ -87,6 +88,7 @@ module.exports = {
       embed,
       guild,
       listeningType: 'training choice',
+      respondeeFilter: (user) => user.id === msg.author.id,
     })
     sentMessage.delete()
   },

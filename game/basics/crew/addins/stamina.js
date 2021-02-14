@@ -3,11 +3,11 @@ const staminaRequirements = require('../staminaRequirements')
 
 module.exports = (member) => {
   member.maxStamina = () => {
-    return 12
+    return 3 + Math.round(member.totalLevel() * 0.1)
   }
 
   member.staminaGainPerTick = () => {
-    return 3
+    return 2
   }
 
   member.gainStamina = (presetAmount) => {

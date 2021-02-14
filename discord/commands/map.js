@@ -20,11 +20,7 @@ module.exports = {
   async action({ msg, settings, client, ship }) {
     log(msg, 'Map', msg.guild.name)
     // todo
-    // const res = ship.getMap()
-    // return send(msg, res.message)
-    send(
-      msg,
-      `All you have is a sketch that the captain drew on the back of a napkin. It doesn't look like much of anything, as far as you can tell.`,
-    )
+    const res = ship.getMap()
+    return send(msg, res.message)
   },
 }

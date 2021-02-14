@@ -28,6 +28,7 @@ module.exports = {
       .setColor(process.env.APP_COLOR)
       .setTitle(`${author.nickname} | Mechanics Training`)
       .setDescription(`Type as many sentences as fast as you can within the time limit!
+One line per message.
 You'll gain XP for speed and accuracy.
 Capitalization doesn't matter, but copy-and-pasting won't work.
 Your crewmates can help too, if they want to.`)

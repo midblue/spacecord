@@ -1,4 +1,5 @@
 const staminaRequirements = require('./game/basics/crew/staminaRequirements')
+const powerRequirements = require('./game/basics/guild/powerRequirements')
 // const lunicode = require('Lunicode')
 const Filter = require('bad-words'),
   filter = new Filter()
@@ -76,11 +77,13 @@ module.exports = {
     let minutes = Math.floor(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
-  usageTag(power, stamina) {
+  usageTag(power, stamina, credits) {
     let tag = ''
     if (power) tag += powerTag(power)
-    if (power && stamina) tag += ' '
+    if (power && (stamina || credits)) tag += ' '
     if (stamina) tag += staminaTag(stamina)
+    if ((power || stamina) && credits) tag += ' '
+    if (credits) tag += creditsTag(credits)
     return tag
   },
   garble(string, percent = 0) {
@@ -156,11 +159,15 @@ function angle(x1, y1, x2, y2) {
 }
 
 function powerTag(power) {
+  if (typeof power === 'string') power = powerRequirements[power]
   return `\`⚡️${power}\``
 }
 function staminaTag(stamina) {
-  if (typeof stamina == 'string') stamina = staminaRequirements[stamina]
+  if (typeof stamina === 'string') stamina = staminaRequirements[stamina]
   return `\`💪${stamina}\``
+}
+function creditsTag(credits) {
+  return `\`💳${credits}\``
 }
 
 function arrayMove(arr, old_index, new_index) {

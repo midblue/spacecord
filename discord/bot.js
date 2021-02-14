@@ -29,6 +29,8 @@ const client = new Discord.Client({
 
 const privateMessage = require('./events/privateMessage')
 const guildMessage = require('./events/guildMessage')
+const kickedFromGuild = require('./events/kickedFromGuild')
+const addedToGuild = require('./events/addedToGuild')
 
 client.on('error', (e) => console.log('Discord.js error:', e.message))
 client.on('ready', async () => {
@@ -37,14 +39,15 @@ client.on('ready', async () => {
       (await client.guilds.cache.array()).length
     } guilds`,
   )
-  // client.user.setActivity('t!info', { type: 'LISTENING' })
+  client.user.setActivity('.help', { type: 'LISTENING' })
+  client.game.verifyActiveGuilds(await client.guilds.cache.array())
 })
 
 // added to a server
-// client.on('guildCreate', addedToServer)
+client.on('guildCreate', addedToGuild)
 
 // removed from a server
-// client.on('guildDelete', kickedFromServer)
+client.on('guildDelete', kickedFromGuild)
 
 // other user leaves a guild
 // client.on('guildMemberRemove', otherMemberLeaveServer)

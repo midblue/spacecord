@@ -1,8 +1,12 @@
 const defaults = {
   type: 'scanner',
+  description: ``,
   weight: 40,
   baseHp: 10,
   range: 1.5,
+  repairDifficulty: 1,
+  durabilityLostOnUse: 0.04,
+  baseCost: 30,
 }
 
 // * get all exports from files in this folder
@@ -12,13 +16,12 @@ fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
     if (!file.endsWith('.js') || file === 'index.js') return
     addins[file.substring(0, file.length - 3)] = {
+      id: file.substring(0, file.length - 3),
       ...defaults,
       ...require(`./${file}`),
     }
   })
   // console.log(addins.length, 'addins', addins)
 })
-
-// todo some of these have "auto-notify" when you come in range of a new thing
 
 module.exports = addins

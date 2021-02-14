@@ -56,7 +56,7 @@ module.exports = (guild) => {
       (total, m) => total + (m.level?.engineering || 0),
       0,
     )
-    if ((scanner.scanUndetectibility || 0) < enemyTotalEngineeringLevel) {
+    if ((scanner.scanUndetectability || 0) < enemyTotalEngineeringLevel) {
       message.push(story.scanShip.ourScanDetected())
       otherShip.pushToGuild(story.scanShip.detected(didSucceed, scanner))
       otherShip.logEntry(story.scanShip.detected(didSucceed, scanner))
@@ -94,7 +94,7 @@ module.exports = (guild) => {
         },
       })
 
-    if (dist <= guild.ship.attackRadius())
+    if (!otherShip.status.docked && dist <= guild.ship.attackRadius())
       actions.push({
         emoji: '⚔️',
         label: 'Start Attack Vote ' + usageTag(0, 'poll'),

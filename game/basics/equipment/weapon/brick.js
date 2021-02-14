@@ -1,8 +1,11 @@
 module.exports = {
   emoji: '🧱',
+  description: `Does what it sounds like. Contains its own brick generation kiln.`,
   displayName: 'Brick Lobber',
   accuracy: 0.3,
   damage: 30,
   damageType: 'physical',
-  size: 'large',
+  requirements: {
+    munitions: 3,
+  },
 }

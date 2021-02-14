@@ -18,6 +18,6 @@ module.exports = (guild) => {
   }
 
   guild.ship.tractorRadius = () => {
-    return guild.ship.interactRadius
+    return guild.ship.equipment.chassis[0].interactRadius
   }
 }

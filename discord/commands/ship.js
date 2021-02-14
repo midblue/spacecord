@@ -16,13 +16,13 @@ module.exports = {
       content,
     )
   },
-  async action({ msg, guild, ship }) {
+  async action({ msg, guild }) {
     log(msg, 'Ship', msg.guild.name)
 
-    const status = await ship.statusReport()
+    const status = await guild.ship.statusReport()
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
-      .setTitle(`${ship.name} | Status Report`)
+      .setTitle(`${guild.ship.name} | Status Report`)
       .setDescription(status.headline)
       .addFields(status.fields.map((s) => ({ ...s, inline: true })))
 

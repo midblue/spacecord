@@ -51,12 +51,20 @@ module.exports = {
             return send(msg, `That command is only available to server admins.`)
         }
 
+        let authorIsCaptain = false
         let ship, guild
         if (!command.noShip) {
           let res = await game.guild(msg.guild.id)
-          if (!res.ok) return send(msg, res.message)
+          if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
-          ship = guild.ship
+          ship = guild?.ship
+          if (ship.status.dead && !command.gameAdminsOnly)
+            return send(
+              msg,
+              `Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.`,
+            )
+          const captain = ship && ship.captain
+          if (captain) authorIsCaptain = msg.author.id === captain
         }
 
         const authorCrewMemberObject =
@@ -114,6 +122,7 @@ module.exports = {
           ship,
           guild,
           authorIsAdmin,
+          authorIsCaptain,
           authorCrewMemberObject,
           requirements,
           author,

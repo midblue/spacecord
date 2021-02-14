@@ -1,6 +1,5 @@
 const db = require('../../../../db/db')
 const createDefaultGuild = require('../createDefaultGuild')
-const shipsData = require('../../ships')
 const factionsData = require('../../factions')
 const cargoData = require('../../cargo')
 const equipmentData = require('../../equipment/equipment')
@@ -27,22 +26,17 @@ module.exports = (guild) => {
     delete guildToSave.previousDiff
     delete guildToSave.ship.guild
 
-    // remove base properties from ship
-    Object.keys(shipsData[guild.ship.model]).forEach(
-      (key) => delete guildToSave.ship[key],
-    )
-
     // remove base properties from faction
     if (guild.faction?.color)
-      Object.keys(factionsData[guild.faction.color]).forEach(
-        (key) => delete guildToSave.faction[key],
-      )
+      Object.keys(factionsData[guild.faction.color]).forEach((key) => {
+        if (key !== 'color') delete guildToSave.faction[key]
+      })
 
     // remove base properties from items onboard
     Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
       guildToSave.ship.equipment[equipmentType].forEach((part) => {
         const itemData = equipmentData[equipmentType][part.id]
-        for (let prop in itemData) delete part[prop]
+        for (let prop in itemData) if (prop !== 'id') delete part[prop]
       })
     })
 
@@ -79,7 +73,7 @@ module.exports = (guild) => {
     function traverse(obj, path = '') {
       if (Array.isArray(obj))
         return obj.forEach((o, index) => traverse(o, path + `.[${index}]`))
-      if (typeof obj === 'object')
+      if (typeof obj === 'object' && obj)
         return Object.keys(obj).forEach((o) =>
           traverse(obj[o], path + (path ? '.' : '') + o),
         )

@@ -30,6 +30,18 @@ module.exports = {
       change: (user) =>
         `Your crew cheers with applause as the new captain %username%${user.id}% steps up to the helm of the ship.`,
     },
+    die: (ship) =>
+      `There are screams of horror as ${ship.name} shudders, cracks, and breaks apart in the torrent of the sudden vacuum. Having barely managed to pile aboard as the fatal attack hit, your crew watches sullenly from the window of the escape pod as your ship is mercilessly plundered by your attackers. Captain %username%${ship.captain}% turns to the disheartened crew.\n"At least... At least we survived," is all they can manage to croak out before turning away in shame.\n\n${ship.name}, our home, our legacy, has been destroyed. However, the battered crew lives on! "Maybe we can use some of our knowledge and training to start again, and do things right this time," they think to themselves.\n\nThe ship along with its equipment and cargo are gone, but crew members will maintain most of their skills, with a penalty.\n\nCaptain, whenever you've recovered, use %command%spawn% to rally your crew and start again.`,
+    respawn: (oldShip, newShip) =>
+      `Your escape pod crash landed on ${capitalize(
+        newShip.status.docked,
+      )}. It took some time, but the whole crew worked manual labor in the locals' fields in exchange for enough credits to buy an extremely basic ship.\n\nWith determined expressions on their faces, the crew that once proudly served aboard ${
+        oldShip.name
+      } clamber into their stations aboard their new ship, ${
+        newShip.name
+      }. Weathered hands grasp familiar instruments as the experienced crew find their places in their new home. It's cramped, but everyone is cautiously optimistic that this ship will shepard them through to a fresh start.\n\n%username%${
+        oldShip.captain
+      }% takes their place at the helm as the ship powers up for the first time.\n\nYou look up once again to see the vast sky above you.\nWhat's next, captain? What's next, crew?`,
   },
   crew: {
     add: {
@@ -51,6 +63,10 @@ module.exports = {
           current,
         )}.`,
     },
+  },
+  map: {
+    empty: () =>
+      `Your galaxy map is, sadly, blank. You stare at the empty screen for a moment, then turn away filled with determination to explore.`,
   },
   scanShip: {
     noScanner: () =>
@@ -146,7 +162,7 @@ module.exports = {
           garbleAmount,
         )}"`,
     },
-    factionRally: {
+    faction: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `${Math.round(
           yesPercent * 100,
@@ -232,6 +248,26 @@ module.exports = {
         )
         .join('and')}.`,
   },
+  buy: {
+    notEnoughMoney: () =>
+      `"Damn," you say as you turn your credits onto the counter. "I thought we had enough to pay for this, but I guess we don't..." You shrug and return to shopping.`,
+    equipment: {
+      voteFailed: (part, cost) =>
+        `The crew decides collectively not to buy a ${part.emoji}${part.displayName} for \`💳${cost}\` credits.`,
+      votePassed: (part, cost) =>
+        `You bought a brand new ${part.emoji} ${
+          part.displayName
+        }! It cost you \`💳${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${
+          part.type === 'chassis'
+            ? `all of your equipment in it.`
+            : 'it in its housing.'
+        }`,
+    },
+  },
+  sell: {
+    equipment: (part, credits) =>
+      `You've sold your ${part.emoji}${part.displayName} for \`💳${credits}\` credits.`,
+  },
   repair: {
     equipment: {
       beakdown: (model) => `Your ${model} has broken down.`,
@@ -242,6 +278,12 @@ module.exports = {
           repairLevel * 100,
         )}% efficiency.`,
     },
+  },
+  planet: {
+    otherShipLand: (ship) =>
+      `The ship ${ship.name} has docked on ${ship.status.docked}.`,
+    otherShipLeave: (ship, planet) =>
+      `The ship ${ship.name} has departed from ${planet.name}.`,
   },
   vote: {
     insufficientVotes: () =>
@@ -258,6 +300,10 @@ module.exports = {
       `All of your weapons are too damaged to attack with! Repair them first!`,
     tooLowMunitionsSkill: (required, current, weapon) =>
       `Voters' collective munitions skill (\`${current}\`), is too low to operate the ${weapon.emoji} ${weapon.displayName} (requires \`${required}\`).`,
+    docked: (enemyShip) =>
+      `Just as you train your sights on the enemy, they manage to slip inside the protective field of ${capitalize(
+        enemyShip.status.docked,
+      )}. Your prey has made it to safety... for now.`,
     votePassed: (yesPercent, otherShip, collectiveMunitionsSkill) =>
       `${Math.round(
         yesPercent * 100,
@@ -314,6 +360,11 @@ module.exports = {
       `Repair equipment and train pilots to increase your dodge chance, drop cargo to increase your speed, and train munitions experts to better fight back!`,
   },
   move: {
+    oob: {
+      reEnter: () => `Your ship has reentered known space.`,
+      goOOB: () =>
+        `Your ship has left the realms of known space. There's nothing but the void to be found out here.`,
+    },
     redirect: {
       success: (degrees, arrow, voteCount) =>
         `With ${voteCount} vote${
@@ -328,6 +379,19 @@ module.exports = {
           speedPercent * 100,
         )}% of its maximum power.`,
     },
+  },
+  land: {
+    voteFailed: () => `The crew decides collectively not to land here.`,
+    votePassed: (yesPercent, planet) =>
+      `${Math.round(
+        yesPercent * 100,
+      )}% of the available crew members agree to land on ${planet.name}.`,
+    recharge: () =>
+      `The friendly crew at the dock refills your batteries, on the house.`,
+    depart: (planet) =>
+      `Your crew packs aboard the ship as the engines heat up. Clouds of smoke hide the launchpad as you lift off from ${
+        planet.name
+      } at ${Math.ceil(Math.random() * 23)}:00 sharp.`,
   },
   log: {
     empty: () =>

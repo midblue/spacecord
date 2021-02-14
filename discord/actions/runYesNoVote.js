@@ -57,18 +57,19 @@ module.exports = async ({
   })
 
   if (!ok) {
-    if (sentMessage && cleanUp) sentMessage.delete()
+    if (sentMessage && cleanUp && !sentMessage.deleted) sentMessage.delete()
     return {
       ok,
       message,
     }
   }
 
-  if (cleanUp) sentMessage.delete()
-  else {
-    sentMessage.reactions.removeAll().catch((e) => {})
-    sentMessage.fields = []
-  }
+  if (!sentMessage.deleted)
+    if (cleanUp) sentMessage.delete()
+    else {
+      sentMessage.reactions.removeAll().catch((e) => {})
+      sentMessage.fields = []
+    }
 
   const yesVoters = voters.filter((v) => v.votes.includes('✅'))
   const noVoters = voters.filter((v) => v.votes.includes('❌'))

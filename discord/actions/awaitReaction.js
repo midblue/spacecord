@@ -30,7 +30,7 @@ module.exports = async ({
             .map(({ emoji, label }) => `${emoji} - ${label}`)
             .join('\n'),
         })
-      if (!msg.deleted) msg.edit(embed)
+      if (reactions && reactions.length && !msg.deleted) msg.edit(embed)
     }
 
     if (reactions && reactions.length && !msg.deleted)
@@ -111,6 +111,8 @@ module.exports = async ({
       )
         return
 
+      // console.log(userReactedWithEmoji)
+
       msg.author = user
       if (!msg.author.nickname)
         msg.author.nickname = await username(msg, msg.author.id)
@@ -133,6 +135,7 @@ module.exports = async ({
       if (embed) {
         delete embed.footer
         if (embed.fields) {
+          console.log(JSON.stringify(embed.fields) + '121221313123')
           const fieldIndex = embed.fields.findIndex(
             (f) => f.id === 'commandLabel',
           )

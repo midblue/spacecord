@@ -39,9 +39,6 @@ module.exports = async ({ msg, guild, otherShip }) => {
 
   // ---------- vote on the attack
   // const attackVoteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR).setTitle()
-  guild.ship.logEntry(
-    `${msg.author.nickname} started a vote to attack ${otherShip.name}.`,
-  )
   const voteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
   if (guild.ship.equipment.weapon.length === 1)
     voteEmbed.description = `Your \`${guild.ship.equipment.weapon[0].emoji} ${
@@ -80,17 +77,13 @@ Vote with more collective munitions skill, get closer, and repair your weapons t
   })
   if (!ok) return send(msg, message)
 
-  console.log(yesVoters, insufficientVotes, ok, message)
-
   voteEmbed.fields = []
   if (insufficientVotes) {
-    guild.ship.logEntry(story.vote.insufficientVotes())
     voteEmbed.description = story.vote.insufficientVotes()
     voteMessage.edit(voteEmbed)
     return
   }
   if (!result) {
-    guild.ship.logEntry(story.attack.voteFailed())
     voteEmbed.description = story.attack.voteFailed()
     voteMessage.edit(voteEmbed)
     return

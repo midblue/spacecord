@@ -29,6 +29,8 @@ function liveify(guild, context) {
     name: guild.guildName,
   }
 
+  guild.ship.guild = guild
+
   // add base properties to faction
   if (guild.faction?.color)
     guild.faction = {

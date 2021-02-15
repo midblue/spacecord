@@ -32,17 +32,22 @@ module.exports = {
         },
         {
           name: 'Faction',
-          value: otherShip.faction.emoji + ' ' + otherShip.faction.name,
+          value:
+            otherShip.guild.faction.emoji + ' ' + otherShip.guild.faction.name,
         },
         {
           name: '👨‍👩‍👦‍👦 Crew Members',
-          value: otherShip.ship.members.length,
+          value: otherShip.members.length,
         },
         {
           name: 'Chassis',
           value:
-            otherShip.ship.equipment.chassis[0].emoji +
-            otherShip.ship.equipment.chassis[0].displayName,
+            otherShip.equipment.chassis[0].emoji +
+            otherShip.equipment.chassis[0].displayName,
+        },
+        {
+          name: '🇨🇭 Max HP',
+          value: otherShip.maxHp(),
         },
       ],
     }

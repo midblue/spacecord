@@ -1,10 +1,14 @@
+**MVP**
 actual minigames for training and repairing
 better generatepower
 planet interaction
 	cantina & cantina chatter
 	a way to make money (quests??)
 training stamina cost scales with level
+actually write help guide
 
+**NEXT**
+html based scanner
 jettison equipment too
 booby trap cache item
 tractor beam item
@@ -19,8 +23,11 @@ implement food
 legacy system: keep track of user action count
 black holes that suck more if u weigh more
 see all docked ships on a planet
-
 global leaderboard
+
+
+
+
 
 MVP
 set bot activity channel/s
@@ -152,7 +159,7 @@ We took a crew vote and decided we needed to broadcast an SOS, hoping that a shi
 There was a close call where the enemy took out our engines, and we had to get all hands on deck to repair them before the enemy could take out more of our equipment while we sat still, defenseless.
 After weeks of playing cat-and-mouse and with our health ever-dwindling, we were on the verge of broadcasting a surrender signal and letting the pirates have their way with our stores.
 Suddenly, two new ships appeared on our radar. A pair of Yellow faction ships traveling together from a nearby planet swooped down upon the Green ship, instantly bringing down its shields.
-It used a teleport beacon to escape, but we didn't mind. We were just happy to be alive. 
+It used a teleport beacon to escape, but we didn't mind. We were just happy to be alive. We'll always be watching out for that ship from now on.
 The Yellow ships helped us repair our broken engines, and told us about a planet only a few AU away. We went there all together, with the Yellow ships slowing down to match our limping pace.
 Once we arrived, we discovered that our cargo was valued extremely highly on this planet! We offloaded our cargo and managed to make enough money to upgrade our ship with a slick new laser weapon — Green faction had better wach their backs.
 I couldn't understand exactly what they were saying because they were Gray faction, but I think there's something interesting happening a few dozen AU from here. The crew seems ready, so we load back up and blast off, ready to face whatever comes.

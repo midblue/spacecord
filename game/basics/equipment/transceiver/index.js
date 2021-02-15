@@ -7,6 +7,7 @@ const defaults = {
   repairDifficulty: 1,
   durabilityLostOnUse: 0.1,
   baseCost: 120,
+  rechargeTime: 1, // tick
 }
 
 // * get all exports from files in this folder

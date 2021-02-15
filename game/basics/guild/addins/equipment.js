@@ -35,6 +35,39 @@ module.exports = (guild) => {
     return { soldCredits, soldPart }
   }
 
+  guild.ship.addPart = (part, cost) => {
+    let soldCredits = 0,
+      soldPart
+    if (equipmentTypes[part.type].singleton) {
+      soldPart = guild.ship.equipment[part.type][0]
+      if (soldPart) {
+        soldCredits = Math.round(
+          soldPart.baseCost * 0.5 * (cost / part.baseCost),
+        ) // half price, adjusted to the deal that you're getting now
+        guild.ship.credits += soldCredits
+      }
+    }
+
+    guild.ship.credits -= cost
+
+    part.repair = 1
+    part.repaired = Date.now()
+
+    if (equipmentTypes[part.type].singleton)
+      guild.ship.equipment[part.type] = [part]
+    else {
+      if (!guild.ship.equipment[part.type]) guild.ship.equipment[part.type] = []
+      guild.ship.equipment[part.type].push(part)
+    }
+
+    return { soldCredits, soldPart }
+  }
+
+  guild.ship.removePart = (part, cost) => {
+    guild.ship.credits += cost
+    guild.ship.equipment[part.type].splice((p) => p === part, 1)
+  }
+
   guild.ship.getEquipmentData = (e) => {
     const fields = []
 
@@ -52,16 +85,14 @@ module.exports = (guild) => {
     if (e.weight)
       fields.push({
         name: '🎒 Weight',
-        value: `${Math.round(e.weight * 10) / 10} ${
-          process.env.WEIGHT_UNIT_PLURAL
-        }`,
+        value: `${Math.round(e.weight * 10) / 10} ${process.env.WEIGHT_UNITS}`,
       })
 
     if (e.maxWeight)
       fields.push({
         name: '🎒 Carrying Capacity',
         value: `${Math.round(e.maxWeight * 10) / 10} ${
-          process.env.WEIGHT_UNIT_PLURAL
+          process.env.WEIGHT_UNITS
         }`,
       })
     if (e.agility)
@@ -78,7 +109,7 @@ module.exports = (guild) => {
           ' ' +
           process.env.DISTANCE_UNIT +
           '/' +
-          process.env.TIME_UNIT_SINGULAR,
+          process.env.TIME_UNIT,
       })
 
     if (e.directions)
@@ -146,10 +177,12 @@ module.exports = (guild) => {
         value: e.interactRadius + ' ' + process.env.DISTANCE_UNIT,
       })
 
-    if (e.repeatUseTimeLimit)
+    if (e.rechargeTime !== undefined)
       fields.push({
         name: '⏱ Cooldown',
-        value: msToTimeString(e.repeatUseTimeLimit) + ' (real-time)',
+        value:
+          msToTimeString(e.rechargeTime * process.env.STEP_INTERVAL) +
+          ' (real-time)',
       })
 
     if (e.durabilityLostOnUse)

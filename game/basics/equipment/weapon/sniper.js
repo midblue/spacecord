@@ -1,5 +1,5 @@
 module.exports = {
-  emoji: '💍',
+  emoji: '💎',
   description: `Diamond Focused Laser. Uses refraction to strike targets at great distances, albeit with reduced power. Said to have been first designed as a wedding gift for a rich baron.`,
   displayName: 'DFL',
   accuracy: 3,

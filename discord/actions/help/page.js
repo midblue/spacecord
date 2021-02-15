@@ -58,6 +58,10 @@ module.exports = async ({
         value: 'tbd',
       },
       {
+        name: 'Earning Credits',
+        value: 'tbd',
+      },
+      {
         name: 'Planets',
         value: 'tbd',
       },

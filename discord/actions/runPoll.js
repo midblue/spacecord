@@ -82,7 +82,7 @@ module.exports = async ({
 
   const embedUpdateInterval = setInterval(() => {
     if (done === true) return clearInterval(embedUpdateInterval)
-    remainingTime = startTime + time - Date.now()
+    remainingTime -= Math.abs(startTime - Date.now())
     if (remainingTime < 0) remainingTime = 0
     embed.fields[
       embed.fields.findIndex((f) => f.id === 'remainingTime')

@@ -7,6 +7,7 @@ const awaitReaction = require('../actions/awaitReaction')
 const runGuildCommand = require('../actions/runGuildCommand')
 const equipmentTypes = require('../../game/basics/equipment/equipmentTypes')
 const buyEquipment = require('../actions/buyEquipment')
+const sellEquipment = require('../actions/sellEquipment')
 
 module.exports = {
   tag: 'shipyard',
@@ -20,7 +21,7 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:shipyard)$`, 'gi').exec(content)
   },
-  async action({ msg, guild, settings, game, type, parts = [] }) {
+  async action({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
     log(msg, 'Shipyard', msg.guild.name)
 
     const planet = guild.context.planets.find(
@@ -28,7 +29,45 @@ module.exports = {
     )
     if (!planet) return send(msg, `Your ship isn't docked anywhere!`)
 
-    if (!type) {
+    if (!buyOrSell) {
+      const embed = new Discord.MessageEmbed()
+        .setTitle(`Shipyard`)
+        .setDescription(`Would you like to buy or sell parts?`)
+
+      const availableActions = [
+        {
+          emoji: '💸',
+          label: `Buy`,
+          action: ({ user, msg, guild }) => {
+            runGuildCommand({
+              msg,
+              commandTag: 'shipyard',
+              props: { buyOrSell: 'buy' },
+            })
+          },
+        },
+        {
+          emoji: '💰',
+          label: `Sell`,
+          action: ({ user, msg, guild }) => {
+            runGuildCommand({
+              msg,
+              commandTag: 'shipyard',
+              props: { buyOrSell: 'sell' },
+            })
+          },
+        },
+      ]
+
+      const sentMessage = (await send(msg, embed))[0]
+      await awaitReaction({
+        reactions: availableActions,
+        msg: sentMessage,
+        embed,
+        guild,
+      })
+      if (!sentMessage.deleted) sentMessage.delete()
+    } else if (buyOrSell === 'buy' && !type) {
       let totalParts = 0
       const completeParts = {}
       Object.keys(planet.shipyard).forEach((type) => {
@@ -47,7 +86,6 @@ module.exports = {
         .setDescription(
           `Choose a category to see the parts for sale of that type.`,
         )
-      // todo if totalParts is less than 3 or 4, just show em
 
       const availableActions = []
       Object.keys(completeParts).forEach((type, index) => {
@@ -60,7 +98,7 @@ module.exports = {
             runGuildCommand({
               msg,
               commandTag: 'shipyard',
-              props: { type, parts: completeParts[type] },
+              props: { buyOrSell: 'buy', type, parts: completeParts[type] },
             })
           },
         })
@@ -76,7 +114,7 @@ module.exports = {
       if (!sentMessage.deleted) sentMessage.delete()
     }
     // otherwise, we already know what type to show
-    else {
+    else if (buyOrSell === 'buy') {
       parts.forEach(async (part, index) => {
         const cost = part.baseCost * planet.shipyardPriceMultiplier
         const tooExpensive = cost > guild.ship.credits
@@ -137,6 +175,43 @@ module.exports = {
         })
         if (!sentMessage.deleted) sentMessage.delete()
       })
+    } else if (buyOrSell === 'sell') {
+      let allSellableEquipment = []
+      for (let [eqType, eqArr] of Object.entries(guild.ship.equipment))
+        if (eqType !== 'chassis') allSellableEquipment.push(...eqArr)
+
+      const sellableActions = allSellableEquipment.map((part, index) => {
+        const cost = Math.round(
+          part.baseCost *
+            planet.shipyardPriceMultiplier *
+            part.repair *
+            planet.shipyardSellMultiplier,
+        )
+        return {
+          emoji: numberToEmoji(index + 1),
+          label: `${usageTag(0, 0, cost)} for ${part.emoji} \`${
+            part.displayName
+          }\` (${capitalize(part.type)}) - ${(part.repair * 100).toFixed(
+            0,
+          )}% repair`,
+          action() {
+            sellEquipment({ msg, part, cost, guild })
+          },
+        }
+      })
+
+      const embed = new Discord.MessageEmbed()
+        .setColor(process.env.APP_COLOR)
+        .setTitle(`Which equipment would you like to sell?`)
+
+      const sentMessage = (await send(msg, embed))[0]
+      await awaitReaction({
+        msg: sentMessage,
+        reactions: sellableActions,
+        embed,
+        guild,
+      })
+      sentMessage.delete()
     }
   },
 }

@@ -8,7 +8,26 @@ const advantageRandomChoiceRange = 15,
 
 module.exports = (guild) => {
   guild.ship.canAttack = () => {
-    return (guild.ship.lastAttack || 0) < guild.context.lastTick
+    if (!guild.ship.equipment.weapon.length) return false
+    const canAttackWeapons = guild.ship.equipment.weapon.filter(
+      (w) =>
+        w.repair > 0 &&
+        (w.lastAttack || 0) <
+          Date.now() - (w.rechargeTime || 1) * process.env.STEP_INTERVAL,
+    )
+    if (!canAttackWeapons.length) return false
+    return canAttackWeapons
+  }
+  guild.ship.nextAttackInMs = () => {
+    return Math.max(
+      0,
+      guild.ship.equipment.weapon.reduce(
+        (lowest, w) =>
+          Math.min(lowest, (w.rechargeTime || 1) * process.env.STEP_INTERVAL) -
+          (Date.now() - (w.lastAttack || 0)),
+        0,
+      ),
+    )
   }
 
   guild.ship.checkForDeath = () => {
@@ -31,7 +50,7 @@ module.exports = (guild) => {
     if (enemyShip.status.docked)
       return { ok: false, message: story.attack.docked(enemyShip) }
 
-    guild.ship.lastAttack = Date.now()
+    weapon.lastAttack = Date.now()
 
     const outputEmbed = new Discord.MessageEmbed()
 
@@ -46,9 +65,7 @@ module.exports = (guild) => {
       ) * enemyNonVotingAdjustment
     const advantage = collectiveMunitionsSkill - enemyTotalPilotingLevel
     const randomizedAdvantage = advantage + advantage * (Math.random() - 0.5) // adjusts it from .5 to 1.5 of the advantage
-    const adjustedAccuracy =
-      weapon.hitPercent(attackDistance) *
-      (1 - enemyShip.equipment.chassis[0].agility || 0)
+    const adjustedAccuracy = weapon.hitPercent(attackDistance, enemyShip)
     const adjustedDamage = weapon.damage * weapon.repair
 
     // calculate accuracy

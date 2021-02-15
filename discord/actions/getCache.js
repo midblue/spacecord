@@ -38,9 +38,7 @@ module.exports = async ({ msg, guild, cache }) => {
     msg,
     `Nice! You picked up ` +
       cache.amount.toFixed(2) +
-      (cache.type === 'credits'
-        ? ''
-        : ' ' + process.env.WEIGHT_UNIT_PLURAL + ' of') +
+      (cache.type === 'credits' ? '' : ' ' + process.env.WEIGHT_UNITS + ' of') +
       ' ' +
       cache.emoji +
       cache.displayName +

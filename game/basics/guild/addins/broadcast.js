@@ -13,7 +13,7 @@ module.exports = (guild) => {
 
     let timeUntilCanBroadcast =
       (guild.lastBroadcast?.time || 0) +
-      equipment.repeatUseTimeLimit -
+      equipment.rechargeTime * process.env.STEP_INTERVAL -
       Date.now()
     if (timeUntilCanBroadcast < 0) timeUntilCanBroadcast = 0
 
@@ -131,7 +131,8 @@ module.exports = (guild) => {
             usageTag(equipment.powerUse, staminaRequirements['broadcast']),
           async action({ user, msg }) {
             if (
-              (guild.lastBroadcast?.time || 0) + equipment.repeatUseTimeLimit >
+              (guild.lastBroadcast?.time || 0) +
+                equipment.rechargeTime * process.env.STEP_INTERVAL >
               Date.now()
             )
               return guild.pushToGuild(

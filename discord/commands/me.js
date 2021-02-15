@@ -53,7 +53,7 @@ module.exports = {
       ...[
         {
           name: `👵🏽 Age`,
-          value: userAge.toFixed(2) + ' ' + process.env.TIME_UNIT_LONG,
+          value: userAge.toFixed(2) + ' ' + process.env.TIME_UNIT_LONGS,
           inline: true,
         },
         {
@@ -73,7 +73,7 @@ module.exports = {
           name: `🛌 Stamina Gain`,
           value: `\`+ 💪${
             Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
-          }\` stamina/ship ${process.env.TIME_UNIT_SINGULAR}
+          }\` stamina/ship ${process.env.TIME_UNIT}
 (Next day is in ${msToTimeString(guild.context.timeUntilNextTick())})`,
           inline: true,
         },

@@ -58,9 +58,12 @@ module.exports = {
     return { distance: d, angle: a }
   },
   capitalize(string) {
-    return (
-      string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()
-    )
+    return string
+      .split(' ')
+      .map(
+        (s) => s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase(),
+      )
+      .join(' ')
   },
   checkUserInputForBadWords(string) {
     const ok = filter.isProfane(string)
@@ -72,9 +75,9 @@ module.exports = {
     }
   },
   msToTimeString(ms) {
-    let seconds = Math.floor((ms % (60 * 1000)) / 1000)
+    let seconds = Math.round((ms % (60 * 1000)) / 1000)
     if (seconds <= 9) seconds = '0' + seconds
-    let minutes = Math.floor(ms / 1000 / 60)
+    let minutes = Math.round(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
   usageTag(power, stamina, credits) {
@@ -118,6 +121,7 @@ module.exports = {
   },
   powerTag,
   staminaTag,
+  captainTag: '`👩‍✈️Captain`',
   distance,
   angle,
 }

@@ -1,5 +1,6 @@
 const defaults = () => ({
   shipyardPriceMultiplier: 1,
+  shipyardSellMultiplier: 0.5,
   shipyard: {},
   location: [0, 0],
   color: 'green',

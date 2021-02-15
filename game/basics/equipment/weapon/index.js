@@ -5,11 +5,18 @@ const defaults = {
   weight: 70,
   baseHp: 20,
   durabilityLostOnUse: 0.03,
-  hitPercent(distance) {
-    return this.repair * this.accuracy * (1 - distance / this.range)
+  accuracy: 0.3,
+  hitPercent(distance, enemyShip) {
+    return (
+      this.repair *
+      this.accuracy *
+      (1 - distance / this.range) *
+      (enemyShip ? 1 - enemyShip.equipment.chassis[0].agility : 1)
+    )
   },
   repairDifficulty: 1,
   baseCost: 200,
+  rechargeTime: 1,
 }
 
 // * get all exports from files in this folder

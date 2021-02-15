@@ -3,7 +3,7 @@ module.exports = {
   transceiver: { singleton: true },
   telemetry: { singleton: true },
   scanner: { singleton: true },
-  ship: { singleton: true },
+  chassis: { singleton: true },
   engine: {},
   battery: {},
   armor: {},

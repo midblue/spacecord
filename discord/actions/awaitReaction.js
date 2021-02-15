@@ -135,7 +135,7 @@ module.exports = async ({
       if (embed) {
         delete embed.footer
         if (embed.fields) {
-          console.log(JSON.stringify(embed.fields) + '121221313123')
+          // console.log(JSON.stringify(embed.fields) + '121221313123')
           const fieldIndex = embed.fields.findIndex(
             (f) => f.id === 'commandLabel',
           )

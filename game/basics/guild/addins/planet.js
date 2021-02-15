@@ -1,6 +1,6 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
 const story = require('../../story/story')
-const { capitalize } = require('../../../../common')
+const { capitalize, captainTag } = require('../../../../common')
 
 module.exports = (guild) => {
   guild.ship.land = ({ planet, msg }) => {
@@ -27,17 +27,6 @@ module.exports = (guild) => {
     })
   }
 
-  guild.ship.depart = ({ msg }) => {
-    guild.ship.status.docked = false
-
-    runGuildCommand({
-      msg,
-      commandTag: 'ship',
-      author: msg.author,
-      guild,
-    })
-  }
-
   guild.ship.getPlanetFields = (planet) => {
     const fields = []
     fields.push({
@@ -58,7 +47,10 @@ module.exports = (guild) => {
     const dockedShips = planet.getDockedShips()
     fields.push({
       name: `🛸 Docked Ships`,
-      value: dockedShips.length,
+      value:
+        dockedShips.length < 5
+          ? dockedShips.map((s) => s.ship.name).join(', ')
+          : dockedShips.length,
     })
     fields.push({
       name: `💳 Your Credits`,
@@ -86,12 +78,11 @@ module.exports = (guild) => {
       emoji: '⚖️',
       label: 'Merchant Quarter',
       async action({ user, msg, guild }) {
-        // await runGuildCommand({
-        //   commandTag: 'scanShip',
-        //   author: user,
-        //   msg,
-        //   props: { otherShip, guild },
-        // })
+        await runGuildCommand({
+          commandTag: 'merchant',
+          author: user,
+          msg,
+        })
       },
     })
 
@@ -110,13 +101,17 @@ module.exports = (guild) => {
 
     actions.push({
       emoji: '🛫',
-      label: 'Leave',
+      label: 'Leave ' + captainTag,
       async action({ user, msg, guild, planet }) {
+        if (!user.id === guild.ship.captain)
+          return guild.pushToGuild(
+            `Crewmate %username%${user.id}%, only the captain can issue the order to depart!`,
+          )
         const otherDockedShips = planet
           .getDockedShips()
           .filter((s) => s.guildId !== guild.guildId)
         otherDockedShips.forEach((s) =>
-          s.pushToGuild(story.planet.otherShipLeave(guild.ship)),
+          s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
         )
 
         guild.ship.status.docked = false

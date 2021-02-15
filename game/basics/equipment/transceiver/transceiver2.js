@@ -7,5 +7,4 @@ module.exports = {
   broadcastCapabilities: ['location', 'distress', 'surrender', 'faction'],
   range: 25,
   maxGarble: 0.85,
-  repeatUseTimeLimit: 30 * 60 * 1000, // 30 minutes
 }

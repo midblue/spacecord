@@ -69,10 +69,10 @@ module.exports = (guild) => {
       value:
         fuel.toFixed(1) +
         ' ' +
-        process.env.WEIGHT_UNIT_PLURAL +
+        process.env.WEIGHT_UNITS +
         (guild.ship.speed
           ? `\n(${Math.floor(fuel / guild.ship.fuelUsePerTick())} ${
-              process.env.TIME_UNIT
+              process.env.TIME_UNITS
             } at\ncurrent speed)`
           : ''),
     })
@@ -126,10 +126,10 @@ module.exports = (guild) => {
         (
           (Date.now() - guild.ship.launched) *
           process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
-          process.env.TIME_UNIT_LONG_MULTIPLIER
+          process.env.TIME_UNIT_LONGS_MULTIPLIER
         ).toFixed(2) +
         ' ' +
-        process.env.TIME_UNIT_LONG,
+        process.env.TIME_UNIT_LONGS,
     })
 
     fields.push({
@@ -163,7 +163,7 @@ module.exports = (guild) => {
         '/' +
         Math.round(guild.ship.equipment.chassis[0].maxWeight) +
         ' ' +
-        process.env.WEIGHT_UNIT_PLURAL,
+        process.env.WEIGHT_UNITS,
     })
 
     fields.push({
@@ -173,7 +173,7 @@ module.exports = (guild) => {
         ' ' +
         process.env.DISTANCE_UNIT +
         '/' +
-        process.env.TIME_UNIT_SINGULAR +
+        process.env.TIME_UNIT +
         '\n' +
         '(At current weight)',
     })

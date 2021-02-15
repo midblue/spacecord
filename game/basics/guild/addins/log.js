@@ -33,13 +33,13 @@ module.exports = (guild) => {
         )
         let unit =
           Math.round(timeCount) === 1
-            ? process.env.TIME_UNIT_SINGULAR
-            : process.env.TIME_UNIT
+            ? process.env.TIME_UNIT
+            : process.env.TIME_UNITS
         if (isLong)
           unit =
             Math.round(timeCount) === 1
-              ? process.env.TIME_UNIT_LONG_SINGULAR
-              : process.env.TIME_UNIT_LONG
+              ? process.env.TIME_UNIT_LONG
+              : process.env.TIME_UNIT_LONGS
         return `\`${timeCount} ${unit} ago:\` ${l.text}`
       })
       .join('\n')

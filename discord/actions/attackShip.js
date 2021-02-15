@@ -2,6 +2,7 @@ const send = require('./send')
 const { log } = require('../botcommon')
 const {
   numberToEmoji,
+  emojiToNumber,
   capitalize,
   msToTimeString,
   distance,
@@ -11,23 +12,25 @@ const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
 const runPoll = require('./runPoll')
+const { allSkills } = require('../../game/gamecommon')
 
 module.exports = async ({ msg, guild, otherShip }) => {
   log(msg, 'Attack Ship', msg.guild.name)
   if (!otherShip) return
-
-  // ---------- don't attack twice in one tick
-  if (!guild.ship.canAttack())
-    return send(
-      msg,
-      story.attack.tooSoon(msToTimeString(guild.context.timeUntilNextTick())),
-    )
 
   // ---------- check equipment
   if (!guild.ship.equipment.weapon || guild.ship.equipment.weapon.length === 0)
     return send(msg, story.attack.noWeapon())
   if (!guild.ship.equipment.weapon.find((w) => w.repair > 0))
     return send(msg, story.attack.brokenWeapons())
+
+  // ---------- don't attack without a weapon off cooldown
+  const usableWeapons = guild.ship.canAttack()
+  if (!usableWeapons)
+    return send(
+      msg,
+      story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
+    )
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
@@ -37,25 +40,61 @@ module.exports = async ({ msg, guild, otherShip }) => {
   const staminaRes = authorCrewMemberObject.useStamina('poll')
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
-  // ---------- vote on the attack
-  // const attackVoteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR).setTitle()
-  const voteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
-  if (guild.ship.equipment.weapon.length === 1)
-    voteEmbed.description = `Your \`${guild.ship.equipment.weapon[0].emoji} ${
-      guild.ship.equipment.weapon[0].displayName
-    }\` is estimated to have a \`${Math.round(
-      guild.ship.equipment.weapon[0].hitPercent(
-        distance(...guild.ship.location, ...otherShip.location),
-      ) * 100,
-    )}%\` base chance of hitting, but the munitions skill of voters in this poll, as well as the enemy's piloting skills, will have a large impact.
-		
-The \`${guild.ship.equipment.weapon[0].emoji} ${
-      guild.ship.equipment.weapon[0].displayName
-    }\` requires a cumulative voter munitions level of \`${
-      guild.ship.equipment.weapon[0].requirements.munitions
-    }\`.
+  // ---------- pick a weapon to use
+  let weaponToUse
+  if (usableWeapons.length === 1) weaponToUse = usableWeapons[0]
+  else {
+    // run a poll to see which weapon to use
+    const weaponsAsReactionObjects = usableWeapons.map((w, index) => ({
+      emoji: numberToEmoji(index + 1),
+      label:
+        `${w.emoji} \`${w.displayName}\` - ${(
+          w.hitPercent(
+            distance(...guild.ship.location, ...otherShip.location),
+            otherShip,
+          ) * 100
+        ).toFixed(0)}% base hit chance` +
+        (w.requirements?.munitions
+          ? ` (Cumulative total of \`${
+              allSkills.find((s) => s.name === 'munitions').emoji
+            }${w.requirements.munitions}\` in munitions required from voters)`
+          : ''),
+    }))
+    const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
+      msg,
+      ship: guild.ship,
+      pollTitle: `Which weapon should we attack with?`,
+      reactions: weaponsAsReactionObjects,
+    })
+    if (!pollMessage.deleted) pollMessage.delete()
+    if (!winner) return
+    weaponToUse = usableWeapons[emojiToNumber(winner) - 1]
+  }
 
-Vote with more collective munitions skill, get closer, and repair your weapons to have a better shot!`
+  // ---------- vote on the attack
+  const voteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
+  voteEmbed.description = `Your \`${usableWeapons[0].emoji} ${
+    weaponToUse.displayName
+  }\` is estimated to have a \`${Math.round(
+    weaponToUse.hitPercent(
+      distance(...guild.ship.location, ...otherShip.location),
+      otherShip,
+    ) * 100,
+  )}%\` base chance of hitting, but the munitions skill of voters in this poll, as well as the enemy's piloting skills, will have a large impact.
+		
+${
+  weaponToUse.requirements?.munitions
+    ? `The \`${weaponToUse.emoji} ${
+        weaponToUse.displayName
+      }\` requires a cumulative voter munitions level of \`${
+        allSkills.find((s) => s.name === 'munitions').emoji
+      }${weaponToUse.requirements.munitions}\` to fire.
+
+	`
+    : ''
+}Vote with more collective ${
+    allSkills.find((s) => s.name === 'munitions').emoji
+  }munitions skill, get closer, and repair your weapons to have a better shot!`
 
   const {
     ok,
@@ -68,7 +107,7 @@ Vote with more collective munitions skill, get closer, and repair your weapons t
   } = await runYesNoVote({
     pollType: 'attack',
     embed: voteEmbed,
-    question: `Attack ${otherShip.name}? | Vote started by ${msg.author.nickname}`,
+    question: `Attack ${otherShip.name} with ${weaponToUse.emoji} ${weaponToUse.displayName}? | Vote started by ${msg.author.nickname}`,
     minimumMemberPercent: 0.1,
     yesStaminaRequirement: 1,
     msg,
@@ -104,29 +143,6 @@ Vote with more collective munitions skill, get closer, and repair your weapons t
     collectiveMunitionsSkill,
   )
   voteMessage.edit(voteEmbed)
-
-  // ---------- pick a weapon to use
-  let weaponToUse
-  if (guild.ship.equipment.weapon.length === 1)
-    weaponToUse = guild.ship.equipment.weapon[0]
-  else {
-    // run a poll to see which weapon to use
-    const weaponsAsReactionObjects = guild.ship.equipment.weapon.map(
-      (w, index) => ({
-        emoji: numberToEmoji(index),
-        label: `${w.emoji} \`${w.displayName}\` - ${(w.repair * 100).toFixed(
-          0,
-        )}% repair`,
-      }),
-    )
-    const { userReactions, sentMessage: pollMessage } = await runPoll({
-      pollTitle: `Which weapon should we attack with?`,
-      reactions: weaponsAsReactionObjects,
-    })
-    console.log(userReactions)
-    // todo !
-    weaponToUse = guild.ship.equipment.weapon[0]
-  }
 
   // too much munitions skill required
   if ((weaponToUse.requirements?.munitions || 0) > collectiveMunitionsSkill) {

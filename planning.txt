@@ -1,8 +1,6 @@
 actual minigames for training and repairing
 better generatepower
 planet interaction
-	selling upgrades
-	buying/selling cargo (and fuel)
 	cantina & cantina chatter
 	a way to make money (quests??)
 training stamina cost scales with level
@@ -20,6 +18,7 @@ more other ship interaction options
 implement food
 legacy system: keep track of user action count
 black holes that suck more if u weigh more
+see all docked ships on a planet
 
 global leaderboard
 

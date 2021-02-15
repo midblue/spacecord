@@ -2,7 +2,7 @@ module.exports = {
   baseCost: 1,
   interactRadius: 1,
   agility: 0.9,
-  maxWeight: 400,
+  maxWeight: 350,
   weight: 25,
   emoji: '🐦',
   displayName: 'Hummingbird 001',

@@ -1,4 +1,5 @@
 const { capitalize, garble } = require('../../../common')
+const { allSkills } = require('../../gamecommon')
 
 module.exports = {
   guild: {
@@ -88,7 +89,7 @@ module.exports = {
   food: {
     insufficient: () => `Your ship is out of food!`,
     low: (amount, ticksLeft) =>
-      `Your ship is dangerously low on food! You only have ${amount}${process.env.WEIGHT_UNIT_PLURAL}, which should only last ${ticksLeft} more ${process.env.TIME_UNIT}`,
+      `Your ship is dangerously low on food! You only have ${amount}${process.env.WEIGHT_UNITS}, which should only last ${ticksLeft} more ${process.env.TIME_UNITS}`,
   },
   power: {
     insufficient: (guild, amountNeeded) =>
@@ -207,7 +208,7 @@ module.exports = {
         yesPercent * 100,
       )}% of the available crew members agree, so you hit the trash-can-shaped button on your controls. You watch out of the window as ${amount.toFixed(
         2,
-      )} ${process.env.WEIGHT_UNIT_PLURAL} of ${
+      )} ${process.env.WEIGHT_UNITS} of ${
         cargo.displayName
       } goes drifting off into space.`,
     message: {
@@ -263,10 +264,42 @@ module.exports = {
             : 'it in its housing.'
         }`,
     },
+    cargo: {
+      voteFailed: (cargo, amount, cost) =>
+        `The crew decides collectively not to buy ${amount} ${
+          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
+          process.env.WEIGHT_UNIT
+        }.`,
+      votePassed: (cargo, amount, cost) =>
+        `You bought ${amount} ${
+          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
+          process.env.WEIGHT_UNIT
+        }.`,
+    },
   },
   sell: {
-    equipment: (part, credits) =>
-      `You've sold your ${part.emoji}${part.displayName} for \`💳${credits}\` credits.`,
+    equipment: {
+      voteFailed: (part, cost) =>
+        `The crew decides collectively not to sell your ${part.emoji}${part.displayName} for \`💳${cost}\` credits.`,
+      votePassed: (part, credits) =>
+        `You've sold your ${part.emoji}${part.displayName} for \`💳${credits}\` credits.`,
+    },
+    cargo: {
+      voteFailed: (cargo, amount, cost) =>
+        `The crew decides collectively not to sell ${amount} ${
+          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
+          process.env.WEIGHT_UNIT
+        }.`,
+      votePassed: (cargo, amount, cost) =>
+        `You sold ${amount} ${
+          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
+          process.env.WEIGHT_UNIT
+        }.`,
+    },
   },
   repair: {
     equipment: {
@@ -281,9 +314,9 @@ module.exports = {
   },
   planet: {
     otherShipLand: (ship) =>
-      `The ship ${ship.name} has docked on ${ship.status.docked}.`,
+      `The ship 🛸${ship.name} has docked on 🪐${ship.status.docked}.`,
     otherShipLeave: (ship, planet) =>
-      `The ship ${ship.name} has departed from ${planet.name}.`,
+      `The ship 🛸${ship.name} has departed from 🪐${planet.name}.`,
   },
   vote: {
     insufficientVotes: () =>
@@ -291,7 +324,7 @@ module.exports = {
   },
   attack: {
     tooSoon: (untilNext) =>
-      `Your ship's weapons are still recharging! You can attack again in ${untilNext}.`,
+      `Your ship's weapons are still recharging! Your next weapon recharge is in ${untilNext}.`,
     voteFailed: () =>
       `The crew decides collectively that attacking isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     noWeapon: () => `Your ship has no weapons to attack with!`,
@@ -299,7 +332,13 @@ module.exports = {
     brokenWeapons: () =>
       `All of your weapons are too damaged to attack with! Repair them first!`,
     tooLowMunitionsSkill: (required, current, weapon) =>
-      `Voters' collective munitions skill (\`${current}\`), is too low to operate the ${weapon.emoji} ${weapon.displayName} (requires \`${required}\`).`,
+      `Voters' collective munitions skill (\`${
+        allSkills.find((s) => s.name === 'munitions').emoji
+      }${current}\`), is too low to operate the ${weapon.emoji} ${
+        weapon.displayName
+      } (requires \`${
+        allSkills.find((s) => s.name === 'munitions').emoji
+      }${required}\`).`,
     docked: (enemyShip) =>
       `Just as you train your sights on the enemy, they manage to slip inside the protective field of ${capitalize(
         enemyShip.status.docked,

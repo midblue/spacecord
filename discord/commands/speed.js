@@ -60,10 +60,10 @@ Current speed is \`${effectiveSpeed.toFixed(3)} ${
 				Ship, equipment, and cargo weight totals \`${Math.round(
           ship.getTotalWeight(),
         )} ${
-          process.env.WEIGHT_UNIT_PLURAL
+          process.env.WEIGHT_UNITS
         }\` out of your ship's maximum capacity of \`${Math.round(
           ship.maxWeight,
-        )} ${process.env.WEIGHT_UNIT_PLURAL}\`.
+        )} ${process.env.WEIGHT_UNITS}\`.
 				
 Your ship's engine supports \`${
           availableSpeedLevels.length

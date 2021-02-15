@@ -72,9 +72,7 @@ module.exports = async ({ msg, guild }) => {
       amountsAsReactions.push({
         emoji: numberToEmoji(2),
         label: `10 ${
-          cargoToJettison.type === 'credits'
-            ? ''
-            : process.env.WEIGHT_UNIT_PLURAL
+          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 10
@@ -86,9 +84,7 @@ module.exports = async ({ msg, guild }) => {
       amountsAsReactions.push({
         emoji: numberToEmoji(3),
         label: `100 ${
-          cargoToJettison.type === 'credits'
-            ? ''
-            : process.env.WEIGHT_UNIT_PLURAL
+          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 100
@@ -100,9 +96,7 @@ module.exports = async ({ msg, guild }) => {
       amountsAsReactions.push({
         emoji: numberToEmoji(4),
         label: `1000 ${
-          cargoToJettison.type === 'credits'
-            ? ''
-            : process.env.WEIGHT_UNIT_PLURAL
+          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
         }`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1000
@@ -113,7 +107,7 @@ module.exports = async ({ msg, guild }) => {
     amountsAsReactions.push({
       emoji: '🔥',
       label: `All ${amountPossessed.toFixed(2)} ${
-        process.env.WEIGHT_UNIT_PLURAL
+        process.env.WEIGHT_UNITS
       } of ${cargoToJettison.type === 'credits' ? 'them' : 'it'}`,
       action: ({ msg, emoji, user }) => {
         amountToJettison = amountPossessed
@@ -211,7 +205,7 @@ module.exports = async ({ msg, guild }) => {
       `Jettison ${amountToJettison.toFixed(2)} ${
         cargoToJettison.type === 'credits'
           ? ''
-          : process.env.WEIGHT_UNIT_PLURAL + ' of'
+          : process.env.WEIGHT_UNITS + ' of'
       } ${cargoToJettison.emoji}${
         cargoToJettison.displayName
       }? | Vote started by ${msg.author.nickname}`,
@@ -252,9 +246,7 @@ module.exports = async ({ msg, guild }) => {
     )
 
     detailsEmbed.title = `Jettisoned ${amountToJettison.toFixed(2)} ${
-      cargoToJettison.type === 'credits'
-        ? ''
-        : process.env.WEIGHT_UNIT_PLURAL + ' of'
+      cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS + ' of'
     } ${cargoToJettison.emoji}${cargoToJettison.displayName}.`
 
     detailsEmbed.description = story.jettison.votePassed(

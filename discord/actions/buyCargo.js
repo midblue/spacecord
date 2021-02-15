@@ -6,16 +6,18 @@ const {
   capitalize,
   msToTimeString,
   distance,
+  percentToTextBars,
 } = require('../../common')
 const awaitReaction = require('./awaitReaction')
 const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
 const runPoll = require('./runPoll')
+const cargo = require('../../game/basics/cargo')
 
-module.exports = async ({ msg, type, part, cost, guild, willReplace }) => {
+module.exports = async ({ msg, type, cost, guild, amount }) => {
   msg.guild = msg.channel.guild
-  log(msg, 'Buy Equipment', msg.channel.guild.name)
+  log(msg, 'Buy Cargo', msg.channel.guild.name)
 
   if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
 
@@ -28,21 +30,23 @@ module.exports = async ({ msg, type, part, cost, guild, willReplace }) => {
   const staminaRes = authorCrewMemberObject.useStamina('poll')
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
+  const cargoData = cargo[type]
+
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Buy ${part.emoji} ${part.displayName} for \`💳${cost}\` credits? | Vote started by ${msg.author.nickname}`,
+    `Buy ${amount} ${
+      amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+    } of ${cargoData.emoji} ${
+      cargoData.displayName
+    } for \`💳${cost}\` credits per ${process.env.WEIGHT_UNIT} (\`💳${
+      cost * amount
+    }\` total)? | Vote started by ${msg.author.nickname}`,
   )
-  voteEmbed.description = willReplace
-    ? `Warning: This part will replace your existing ${
-        willReplace.emoji + ' ' || ''
-      } ${willReplace.displayName}, which will be sold for 50% of market price.`
-    : ''
-  voteEmbed.fields = []
 
   const voteResult = await runYesNoVote({
-    pollType: 'buy',
+    pollType: 'trade',
     embed: voteEmbed,
-    minimumMemberPercent: 0.2,
+    minimumMemberPercent: 0.1,
     msg,
     ship: guild.ship,
     cleanUp: false,
@@ -55,7 +59,7 @@ module.exports = async ({ msg, type, part, cost, guild, willReplace }) => {
     return
   }
   if (!voteResult.result) {
-    voteEmbed.description = story.buy.equipment.voteFailed(part, cost)
+    voteEmbed.description = story.buy.cargo.voteFailed(cargo, amount, cost)
     voteResult.sentMessage.edit(voteEmbed)
     return
   }
@@ -63,25 +67,27 @@ module.exports = async ({ msg, type, part, cost, guild, willReplace }) => {
   if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
 
   // vote passed
-  guild.ship.logEntry(story.buy.equipment.votePassed(part, cost))
+  guild.ship.logEntry(story.buy.cargo.votePassed(cargo, amount, cost))
 
-  voteEmbed.title = `Bought ${part.emoji} ${part.displayName} for \`💳${cost}\` credits`
+  voteEmbed.title = `Bought ${amount} ${
+    amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+  } of ${cargoData.emoji} ${cargoData.displayName} for \`💳${
+    cost * amount
+  }\` credits`
 
-  voteEmbed.description = story.buy.equipment.votePassed(part, cost)
+  guild.ship.addCargo(type, amount, cost)
 
-  const { soldCredits, soldPart } = guild.ship.addPart(part, cost)
-  if (soldCredits)
-    voteEmbed.description +=
-      '\n\n' + story.sell.equipment.votePassed(soldPart, soldCredits)
-
-  voteEmbed.description += `\n\nYou have \`💳${Math.round(
-    guild.ship.credits,
-  )}\` credits remaining.`
-
-  voteEmbed.description += `\n\nYour ship is now carrying ${Math.round(
-    (guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight) *
-      100,
-  )}% of its maximum capacity.`
+  voteEmbed.description =
+    `You have \`💳${Math.round(guild.ship.credits)}\` credits remaining.` +
+    '\n\nShip weight is ' +
+    percentToTextBars(
+      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight,
+    ) +
+    Math.round(guild.ship.getTotalWeight()) +
+    '/' +
+    Math.round(guild.ship.equipment.chassis[0].maxWeight) +
+    ' ' +
+    process.env.WEIGHT_UNITS
 
   voteResult.sentMessage.edit(voteEmbed)
 }

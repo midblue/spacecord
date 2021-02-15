@@ -91,7 +91,7 @@ module.exports = {
             cache.amount.toFixed(2) +
             (cache.type === 'credits'
               ? ''
-              : ' ' + process.env.WEIGHT_UNIT_PLURAL + ' of') +
+              : ' ' + process.env.WEIGHT_UNITS + ' of') +
             ' ' +
             cache.emoji +
             cache.displayName,
@@ -110,7 +110,7 @@ module.exports = {
         //       cache.amount.toFixed(2) +
         //       (cache.type === 'credits'
         //         ? ''
-        //         : ' ' + process.env.WEIGHT_UNIT_PLURAL + ' of') +
+        //         : ' ' + process.env.WEIGHT_UNITS + ' of') +
         //       ' ' +
         //       cache.emoji +
         //       cache.displayName,

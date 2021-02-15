@@ -10,7 +10,7 @@ module.exports = (guild) => {
   }
 
   guild.ship.attackRadius = () => {
-    const maxWeaponRange = guild.ship.equipment.weapon.reduce(
+    const maxWeaponRange = (guild.ship.canAttack() || []).reduce(
       (max, w) => Math.max(max, w.range || 0),
       0,
     )

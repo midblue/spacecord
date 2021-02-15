@@ -2,6 +2,7 @@ const send = require('../actions/send')
 const { log } = require('../botcommon')
 const {
   numberToEmoji,
+  msToTimeString,
   capitalize,
   positionAndAngleDifference,
 } = require('../../common')
@@ -19,7 +20,7 @@ module.exports = {
     priority: 50,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:attack?|a)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:att?ack?|a)$`, 'gi').exec(content)
   },
   async action({
     msg,
@@ -32,6 +33,14 @@ module.exports = {
     interactableGuilds,
   }) {
     log(msg, 'Attack', msg.guild.name)
+
+    if (!guild.ship.equipment.weapon?.length)
+      return send(msg, story.attack.noWeapon())
+    if (!guild.ship.canAttack())
+      return send(
+        msg,
+        story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
+      )
 
     if (interactableGuilds === undefined)
       interactableGuilds = guild.context.scanArea({

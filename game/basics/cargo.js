@@ -5,14 +5,19 @@ const cargo = {
     emoji: '💳',
   },
   food: {
-    baseCost: 10,
+    baseCost: 12,
     displayName: 'Food',
     emoji: '🍕',
   },
   fuel: {
-    baseCost: 10,
+    baseCost: 9,
     displayName: 'Fuel',
     emoji: '🛢',
+  },
+  metals: {
+    baseCost: 87,
+    displayName: 'Metals',
+    emoji: '🔧',
   },
 }
 

@@ -15,15 +15,7 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:cargo|c)$`, 'gi').exec(content)
   },
-  async action({
-    msg,
-    settings,
-    game,
-    client,
-    ship,
-    guild,
-    authorCrewMemberObject,
-  }) {
+  async action({ msg, ship, guild }) {
     log(msg, 'Cargo', msg.guild.name)
 
     const actualCargo = ship.cargo.filter((c) => c.amount > 0.0001)
@@ -41,9 +33,9 @@ module.exports = {
     const currentCargoString = actualCargo
       .map(
         (c) =>
-          `${c.emoji} ${c.displayName}: ${c.amount.toFixed(2)} ${
-            c.type === 'credits' ? '' : process.env.WEIGHT_UNIT_PLURAL
-          }`,
+          `${c.emoji} ${c.displayName}: ${
+            c.type === 'credits' ? Math.round(c.amount) : c.amount.toFixed(2)
+          } ${c.type === 'credits' ? '' : process.env.WEIGHT_UNITS}`,
       )
       .join('\n')
 

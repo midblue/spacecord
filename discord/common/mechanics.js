@@ -1,0 +1,138 @@
+const send = require("./send");
+const lunicode = require("Lunicode");
+const Fuse = require("fuse.js");
+const Discord = require("discord.js-light");
+const textOptions = require("../defaults/typingTestOptions");
+
+module.exports = ({ msg, user, guild }) => {
+  return new Promise(async (resolve) => {
+    const embed = new Discord.MessageEmbed()
+      .setColor(process.env.APP_COLOR)
+      .setTitle(`${msg.author.nickname} | Mechanics Training`)
+      .setDescription(`Type as many sentences as fast as you can within the time limit!
+One line per message.
+You'll gain XP for speed and accuracy.
+Capitalization doesn't matter, but copy-and-pasting won't work.
+Your crewmates can help too, if they want to.`);
+
+    const challengeCount = 5;
+    const timePerCharacter = 150;
+
+    const averageCharacters =
+      textOptions.reduce((total, curr) => total + curr.length, 0) /
+      textOptions.length;
+    const gracePeriod = 2000;
+    const time = Math.floor(
+      challengeCount * timePerCharacter * averageCharacters
+    );
+
+    let fuse;
+    const sentTextOptions = [];
+    const messagesToDelete = [];
+
+    embed.description += `\n\n**You have ${(time / 1000).toFixed(
+      0
+    )} seconds.**`;
+
+    let challengeTextInOneArray = [];
+    for (let i = 0; i < challengeCount; i++) {
+      if (!textOptions.length) continue;
+      const textIndex = Math.floor(Math.random() * textOptions.length);
+      const textToSend = textOptions[textIndex];
+      textOptions.splice(textIndex, 1);
+      challengeTextInOneArray.push(
+        "→ " + lunicode.tools.tiny.encode(textToSend)
+      );
+      sentTextOptions.push({
+        target: textToSend.toLowerCase(),
+        bestScore: 0,
+      });
+    }
+
+    embed.description += "\n\n" + challengeTextInOneArray.join("\n");
+    const sentMessage = (await send(msg, embed))[0];
+
+    fuse = new Fuse(sentTextOptions, {
+      includeScore: true,
+      keys: ["target"],
+      threshold: 1, // 1 is anything
+    });
+
+    setTimeout(async () => {
+      messagesToDelete.push((await send(msg, `Time's up!`))[0]);
+    }, time);
+
+    const filter = (receivedMessage) => {
+      const sender = receivedMessage.author;
+      if (sender.bot) return;
+
+      const member = ship.members.find((m) => m.id === sender.id);
+      if (!member) return;
+
+      const content = receivedMessage.content;
+
+      const target = fuse.search(content)[0].item.target;
+      const hitOption = sentTextOptions.find((o) => o.target === target);
+      const score = 1 - fuse.search(content)[0].score;
+      if (hitOption && score > 0.35) {
+        if (hitOption.bestScore < score) {
+          hitOption.bestScore = score;
+          hitOption.bestAttemptText = content;
+        }
+        messagesToDelete.push(receivedMessage);
+        try {
+          receivedMessage.react("👀");
+        } catch (e) {}
+      }
+    };
+
+    const collector = new Discord.MessageCollector(msg.channel, filter, {
+      time: time + gracePeriod,
+    });
+
+    setTimeout(async () => {
+      setTimeout(() => {
+        [...messagesToDelete].forEach((c) => c.delete());
+      }, 500);
+      collector.stop();
+
+      const hits = sentTextOptions.reduce(
+        (total, option) => total + option.bestScore,
+        0
+      );
+
+      const xp = Math.round(hits * 1000);
+
+      const res = user.addXp("mechanics", xp);
+
+      embed.description = `**${challengeCount} challenges in ${(
+        time / 1000
+      ).toFixed(1)} seconds**
+    ${sentTextOptions
+      .map(
+        (o) =>
+          (o.bestScore === 0
+            ? "❌"
+            : o.bestScore > 0.99
+            ? "✅"
+            : o.bestScore > 0.5
+            ? "👍"
+            : "👎") +
+          ` "${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
+            o.bestAttemptText && o.bestScore < 0.99
+              ? ` ("${o.bestAttemptText.toLowerCase()}")`
+              : ""
+          }`
+      )
+      .join("\n")}
+
+Result: ${await applyCustomParams(msg, res.message)}`;
+
+      sentMessage.edit(embed);
+
+      resolve({});
+
+      resolve({ hits, sentTextOptions, time, challengeCount });
+    }, time + gracePeriod);
+  });
+};

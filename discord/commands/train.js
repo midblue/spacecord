@@ -73,9 +73,12 @@ module.exports = {
         `**${capitalize(e.name)}**: **Level ${e.level}** (${e.levelProgress}/${
           e.levelSize
         }, ${(e.percentToLevel * 100).toFixed(0)}% to level ${e.level + 1}) ` +
-        usageTag(0, 'train'),
+        usageTag(0, e.staminaRequired),
       action() {
-        trainingActions[e.name](trainingActionArguments)
+        trainingActions[e.name]({
+          trainingActionArguments,
+          staminaRequired: e.staminaRequired,
+        })
       },
     }))
     console.log(msg.author)

@@ -1,8 +1,24 @@
 const levelNumbers = require('../levels')
 const story = require('../../story/story')
 const db = require('../../../../db/db')
+const { log, allSkills } = require('../../../gamecommon')
 
 module.exports = (member) => {
+  member.getTrainableSkills = async () => {
+    const trainableSkills = [
+      ...allSkills.map((s) => {
+        const memberSkill = member.level[s.name] || 0
+        const staminaRequired = member.staminaRequiredFor(s.name)
+        return { ...s, memberSkill, staminaRequired }
+      }),
+    ]
+    return trainableSkills
+  }
+
+  member.staminaRequiredFor = (skill) => {
+    return Math.ceil(Math.sqrt(member.level[skill] || 1))
+  }
+
   member.addXp = (skill, xpAmount) => {
     const baseline = member.skillLevelDetails(skill) // this resets everything for us, in case the user spawned with levels but no xp
 

@@ -13,14 +13,16 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({ msg, author, ship, authorCrewMemberObject }) {
+  async action({ msg, author, ship, authorCrewMemberObject, staminaRequired }) {
     log(msg, 'Train Mechanics', msg.guild.name)
 
     // ---------- use stamina
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
-    if (!member) return console.log('no user found in trainEng')
+    if (!member) return console.log('no user found in trainMech')
+    if (!staminaRequired)
+      staminaRequired = authorCrewMemberObject.staminaRequiredFor('mechanics')
     const staminaRes = member.useStamina('train')
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 

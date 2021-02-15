@@ -16,6 +16,7 @@ module.exports = (guild) => {
         context: undefined,
         ship: {
           ...guild.ship,
+          guild: undefined,
           members: (guild.ship.members || []).map((m) => m.saveableData()),
           faction: { ...guild.ship.faction },
         },

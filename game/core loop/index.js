@@ -6,6 +6,7 @@ const cacheExpirationTime = process.env.STEP_INTERVAL * 500
 
 module.exports = {
   async start() {
+    return
     log('init', 'Starting game')
     this.lastTick = Date.now()
 

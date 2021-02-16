@@ -7,6 +7,8 @@ module.exports = (guild) => {
     guild.ship.status.docked = planet.name
     guild.ship.location = [...planet.location]
 
+    guild.pushToGuild(story.land.generalPlanet(guild.ship, planet), msg)
+
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
       setTimeout(() => guild.pushToGuild(story.land.recharge(), msg), 1000) // send after landing message

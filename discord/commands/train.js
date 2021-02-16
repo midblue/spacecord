@@ -10,11 +10,11 @@ const {
 const awaitReaction = require('../actions/awaitReaction')
 const Discord = require('discord.js-light')
 const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
-const trainingActions = {
-  engineering: require('./trainEngineering').action,
-  mechanics: require('./trainMechanics').action,
-  piloting: require('./trainPiloting').action,
-  munitions: require('./trainMunitions').action,
+const minigames = {
+  engineering: require('../common/engineeringMinigame'),
+  mechanics: require('../common/mechanicsMinigame'),
+  piloting: require('../common/pilotingMinigame'),
+  munitions: require('../common/munitionsMinigame'),
 }
 
 module.exports = {
@@ -28,36 +28,14 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:train|xp)$`, 'gi').exec(content)
   },
-  async action({
-    msg,
-    settings,
-    game,
-    client,
-    ship,
-    guild,
-    authorCrewMemberObject,
-    author,
-  }) {
+  async action({ msg, guild, authorCrewMemberObject, author }) {
     log(msg, 'Train', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(process.env.APP_COLOR)
       .setTitle(`Train | ${author.nickname}`)
 
-    embed.fields.push(
-      ...[
-        {
-          name: `🏋️‍♂️ Training Stamina Cost`,
-          value: `\`- 💪${staminaRequirements['train']}\` stamina`,
-          inline: true,
-        },
-      ],
-    )
-
-    // skills section
-
     let trainableSkills = await authorCrewMemberObject.getTrainableSkills()
-    const trainingActionArguments = arguments[0]
 
     trainableSkills = trainableSkills
       .slice(0, 10)
@@ -74,23 +52,31 @@ module.exports = {
           e.levelSize
         }, ${(e.percentToLevel * 100).toFixed(0)}% to level ${e.level + 1}) ` +
         usageTag(0, e.staminaRequired),
-      action() {
-        trainingActions[e.name]({
-          trainingActionArguments,
-          staminaRequired: e.staminaRequired,
+
+      action: ({ msg, guild }) => {
+        const member =
+          authorCrewMemberObject ||
+          guild.ship.members.find((m) => m.id === msg.author.id)
+        if (!member) return console.log('no user found in train')
+        const staminaRes = member.useStamina(e.staminaRequired)
+        if (!staminaRes.ok) return send(msg, staminaRes.message)
+
+        minigames[e.name]({
+          msg,
+          user: member,
+          guild,
         })
       },
     }))
-    console.log(msg.author)
 
-    const sentMessages = await send(msg, embed)
-    const sentMessage = sentMessages[sentMessages.length - 1]
+    const sentMessage = (await send(msg, embed))[0]
     await awaitReaction({
       msg: sentMessage,
       reactions: trainableSkillsAsReactionOptions,
       embed,
       guild,
-      listeningType: 'training choice',
+      commandsLabel: `Training Options`,
+      listeningType: 'choice',
       respondeeFilter: (user) => user.id === msg.author.id,
     })
     sentMessage.delete()

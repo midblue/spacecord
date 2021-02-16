@@ -1,13 +1,21 @@
+i can train for someone else lol
+cache not giving me the stuff
+depart should be a vote (and take energy)
+story beat for landing
+
 **MVP**
+reorganize commands on .ship
 actual minigames for training and repairing
 better generatepower
+more equipment
 planet interaction
-	cantina & cantina chatter
+	cantina & cantina chatter (report)
 	a way to make money (quests??)
 training stamina cost scales with level
 actually write help guide
 
 **NEXT**
+mine ore from environment (mining laser as weapon)
 html based scanner
 jettison equipment too
 booby trap cache item
@@ -26,7 +34,8 @@ see all docked ships on a planet
 global leaderboard
 
 
-
+space for equipment vs space for cargo in chasses
+tiers of gas, tiers of minerals
 
 
 MVP

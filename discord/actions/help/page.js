@@ -89,5 +89,9 @@ module.exports = async ({
     })
   const sentMessage = (await send(msg, embed))[0]
   sentMessage.author = user
-  await awaitReaction({ msg: sentMessage, reactions: commandsAsReactions })
+  await awaitReaction({
+    msg: sentMessage,
+    reactions: commandsAsReactions,
+    allowNonMembers: true,
+  })
 }

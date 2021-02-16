@@ -42,6 +42,7 @@ module.exports = async ({ msg, guild, cache }) => {
       ' ' +
       cache.emoji +
       cache.displayName +
+      (cache.shipName ? ` jettisoned by 🛸${cache.shipName}` : '') +
       '. ' +
       (cache.message
         ? `\nAs you pull in the cache, you see that there's a message attached! It says, "${

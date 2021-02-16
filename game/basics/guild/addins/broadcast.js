@@ -157,7 +157,7 @@ module.exports = (guild) => {
               minimumMemberPercent: o.minimumMemberPercent || 0.1,
               yesStaminaRequirement: 1,
               msg,
-              ship: guild.ship,
+              guild,
               cleanUp: false,
             })
             if (!reallyDoIt.ok)

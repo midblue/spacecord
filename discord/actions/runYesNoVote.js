@@ -14,7 +14,7 @@ module.exports = async ({
   yesStaminaRequirement,
   minimumMemberPercent,
   msg,
-  ship,
+  guild,
   cleanUp = true,
 }) => {
   if (!embed) embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
@@ -53,7 +53,7 @@ module.exports = async ({
       : null,
     minimumMemberPercent,
     msg,
-    ship,
+    guild,
   })
 
   if (!ok) {

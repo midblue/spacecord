@@ -1,8 +1,7 @@
 const send = require('./send')
 const awaitReaction = require('./awaitReaction')
 const { msToTimeString, capitalize } = require('../../common')
-const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
-const { guild } = require('../../game/manager')
+const generalStaminaRequirements = require('../../game/basics/crew/staminaRequirements')
 const manager = require('../../game/manager')
 const Discord = require('discord.js-light')
 
@@ -18,10 +17,10 @@ module.exports = async ({
   weightByLevelType,
   msg,
   respondeeFilter,
-  ship,
+  guild,
 }) => {
   // make sure there's not another active poll of this type running
-  const thisGuild = ((await guild(msg.guild.id)) || {}).guild
+  const thisGuild = guild || ((await manager.guild(msg.guild.id)) || {}).guild
   if (!thisGuild)
     return {
       ok: false,
@@ -45,7 +44,7 @@ module.exports = async ({
   if (!embed.fields) embed.fields = []
 
   const minimumMembersMustVote = minimumMemberPercent
-    ? Math.ceil(ship.members.length * minimumMemberPercent)
+    ? Math.ceil(guild.ship.members.length * minimumMemberPercent)
     : -1
 
   if (minimumMembersMustVote > 0)
@@ -97,7 +96,7 @@ module.exports = async ({
 
   if (!respondeeFilter)
     respondeeFilter = (user) => {
-      const member = ship.members.find((m) => m.id === user.id)
+      const member = guild.ship.members.find((m) => m.id === user.id)
       if (!member) return false
       if (requirements)
         for (let r in requirements)
@@ -109,6 +108,7 @@ module.exports = async ({
     msg: sentMessage,
     reactions,
     embed,
+    guild,
     time: time,
     listeningType: 'votes',
     respondeeFilter,
@@ -133,9 +133,13 @@ module.exports = async ({
     guildMembers = (await manager.guild(msg.guild.id)).guild?.ship?.members
 
   gatheredReactions.forEach(({ user, emoji }) => {
-    if (staminaRequirements && staminaRequirements[emoji] && guildMembers) {
+    if (
+      staminaRequirements &&
+      generalStaminaRequirements[emoji] &&
+      guildMembers
+    ) {
       const member = guildMembers.find((m) => m.id === user.id)
-      if (!member.useStamina(staminaRequirements[emoji]).ok) return
+      if (!member.useStamina(generalStaminaRequirements[emoji]).ok) return
     }
     userReactionCounts[user.id] = (userReactionCounts[user.id] || 0) + 1
     const foundVoter = voters.find((v) => v.id === user.id)
@@ -145,7 +149,7 @@ module.exports = async ({
   gatheredReactions.forEach(({ user, emoji }) => {
     let userWeight = 1
     if (weightByLevelType) {
-      const gameMember = ship.members.find((m) => m.id === user.id)
+      const gameMember = guild.ship.members.find((m) => m.id === user.id)
       userWeight = gameMember?.level?.[weightByLevelType] || 1
     }
     userReactionsToUse[emoji] = userReactionsToUse[emoji] || {}

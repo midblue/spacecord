@@ -60,9 +60,9 @@ module.exports = {
       notEnough: (id, current, needed) =>
         `%username%${id}%, you need 💪${Math.round(
           needed,
-        )} stamina for that task, and you currently have 💪${Math.round(
-          current,
-        )}.`,
+        )} stamina for that task, and you currently have 💪${
+          Math.round(current * 10) / 10
+        }.`,
     },
   },
   map: {
@@ -231,7 +231,9 @@ module.exports = {
         levelProgress,
         percentToLevel,
       ) =>
-        `%username%${id}% gains ${xpAmount} experience in \`${skill}\`${
+        `%username%${id}% gains ${xpAmount} experience in \`${
+          allSkills.find((s) => s.name === skill).emoji
+        }${capitalize(skill)}\`${
           didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : '.'
         } You're \`${levelProgress}/${levelSize} (${(
           percentToLevel * 100
@@ -241,11 +243,18 @@ module.exports = {
   action: {
     doesNotMeetRequirements: (requirements, member) =>
       `%username%${member.id}%, you need at least ${Object.keys(requirements)
-        .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
+        .map(
+          (r) =>
+            `level \`${requirements[r]}\` in \`${
+              allSkills.find((s) => s.name === r).emoji
+            }${capitalize(r)}\` `,
+        )
         .join('and ')}to use that. You have${Object.keys(requirements)
         .map(
           (r) =>
-            ` level \`${member?.level?.[r] || 0}\` in \`${capitalize(r)}\` `,
+            ` level \`${member?.level?.[r] || 0}\` in \`${
+              allSkills.find((s) => s.name === r).emoji
+            }${capitalize(r)}\` `,
         )
         .join('and')}.`,
   },
@@ -425,6 +434,14 @@ module.exports = {
       `${Math.round(
         yesPercent * 100,
       )}% of the available crew members agree to land on ${planet.name}.`,
+    generalPlanet: (ship, planet) =>
+      `The landing gear extends as ${ship.name} approaches the ${
+        planet.color
+      } surface of ${
+        planet.name
+      }. You touch down on the launchpad at ${Math.ceil(
+        Math.random() * 23,
+      )}:00, and the crew descends the extended gangplank, ready to stretch their legs amongst the locals at the spaceport.`,
     recharge: () =>
       `The friendly crew at the dock refills your batteries, on the house.`,
     depart: (planet) =>

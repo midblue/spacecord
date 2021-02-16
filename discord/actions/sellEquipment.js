@@ -1,17 +1,8 @@
 const send = require('./send')
 const { log } = require('../botcommon')
-const {
-  numberToEmoji,
-  emojiToNumber,
-  capitalize,
-  msToTimeString,
-  distance,
-} = require('../../common')
-const awaitReaction = require('./awaitReaction')
 const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
-const runPoll = require('./runPoll')
 
 module.exports = async ({ msg, part, cost, guild }) => {
   msg.guild = msg.channel.guild
@@ -38,7 +29,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
     embed: voteEmbed,
     minimumMemberPercent: 0.2,
     msg,
-    ship: guild.ship,
+    guild,
     cleanUp: false,
   })
   if (!voteResult.ok) return send(msg, voteResult.message)

@@ -13,7 +13,9 @@ module.exports = {
     category: 'ship',
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:cargo|c)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:cargo|c|jettison)$`, 'gi').exec(
+      content,
+    )
   },
   async action({ msg, ship, guild }) {
     log(msg, 'Cargo', msg.guild.name)

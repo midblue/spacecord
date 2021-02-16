@@ -1,17 +1,11 @@
 const send = require('./send')
 const { log } = require('../botcommon')
-const {
-  numberToEmoji,
-  emojiToNumber,
-  capitalize,
-  msToTimeString,
-  distance,
-} = require('../../common')
+const { numberToEmoji } = require('../../common')
 const awaitReaction = require('./awaitReaction')
 const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
-const runPoll = require('./runPoll')
+
 const cargoData = require('../../game/basics/cargo')
 
 module.exports = async ({ msg, guild }) => {
@@ -220,7 +214,7 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
       minimumMemberPercent: 0.1,
       msg,
-      ship: guild.ship,
+      guild,
       cleanUp: false,
     })
     if (!voteResult.ok) return send(msg, voteResult.message)
@@ -259,8 +253,10 @@ module.exports = async ({ msg, guild }) => {
   }
 
   if (actualCargo.length === 0) return send(msg, `No cargo to jettison!`)
-  if (actualCargo.length === 1) cargoToJettison = actualCargo[0].type
-  else {
+  if (actualCargo.length === 1) {
+    cargoToJettison = actualCargo[0]
+    getAmountToJettison(sentMessage)
+  } else {
     const cargoAsReactions = actualCargo.map((c, index) => ({
       emoji: `${c.emoji}`,
       label: `${c.displayName}`,

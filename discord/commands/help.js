@@ -230,6 +230,7 @@ Pick a category below to get info on specific commands or elements of the game.`
       reactions,
       commandsLabel: 'Info categories',
       listeningType: 'category selection',
+      allowNonMembers: true,
     })
   },
 }

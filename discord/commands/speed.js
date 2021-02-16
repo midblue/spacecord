@@ -21,16 +21,7 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({
-    msg,
-    settings,
-    author,
-    game,
-    client,
-    guild,
-    ship,
-    requirements,
-  }) {
+  async action({ msg, author, guild, ship, requirements }) {
     log(msg, 'Speed Vote', msg.guild.name)
 
     // ---------- use stamina
@@ -75,7 +66,7 @@ Your ship's engine supports \`${
       embed,
       time: voteTime,
       reactions: availableSpeedLevels,
-      ship,
+      guild,
       msg,
       requirements,
       weightByLevelType: 'piloting',

@@ -3,15 +3,15 @@ const staminaRequirements = require('../staminaRequirements')
 
 module.exports = (member) => {
   member.maxStamina = () => {
-    return 3 + Math.round(member.totalLevel() * 0.1)
+    return 5 + member.totalLevel() * 0.1
   }
 
   member.staminaGainPerTick = () => {
-    return 2
+    return Math.max(2, member.maxStamina() * 0.2)
   }
 
   member.gainStamina = (presetAmount) => {
-    const gainAmount = Math.round(presetAmount || member.staminaGainPerTick()),
+    const gainAmount = presetAmount || member.staminaGainPerTick(),
       gainAmountAsPercent = gainAmount / member.maxStamina()
     member.stamina = (member.stamina || 0) + gainAmountAsPercent
     if (member.stamina > 1) member.stamina = 1

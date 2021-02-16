@@ -13,6 +13,7 @@ module.exports = async ({
   respondeeFilter,
   guild,
   actionProps,
+  allowNonMembers = false,
 }) => {
   return new Promise(async (resolve) => {
     if (embed) {
@@ -57,6 +58,11 @@ module.exports = async ({
       if (channel.id !== msg.channel.id) return
       const message = await channel.messages.fetch(data.message_id)
       if (!message || message.id !== msg.id) return
+
+      // check if they're actually a member of the game
+      const member = (guild?.ship?.members || []).find((m) => m.id === user.id)
+      if (!allowNonMembers && !member) return
+
       const userReactedWithEmoji = data.emoji.id
         ? `${data.emoji.name}:${data.emoji.id}`
         : data.emoji.name
@@ -70,7 +76,6 @@ module.exports = async ({
 
         // if there are level requirements
         if (chosenReaction.requirements) {
-          const member = guild.ship.members.find((m) => m.id === user.id)
           if (!member) return
           for (let r in chosenReaction.requirements)
             if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {

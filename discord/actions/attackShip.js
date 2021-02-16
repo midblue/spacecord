@@ -62,7 +62,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
     }))
     const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
       msg,
-      ship: guild.ship,
+      guild,
       pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects,
     })
@@ -111,7 +111,7 @@ ${
     minimumMemberPercent: 0.1,
     yesStaminaRequirement: 1,
     msg,
-    ship: guild.ship,
+    guild,
     cleanUp: false,
   })
   if (!ok) return send(msg, message)

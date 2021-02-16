@@ -1,17 +1,9 @@
 const send = require('./send')
 const { log } = require('../botcommon')
-const {
-  numberToEmoji,
-  capitalize,
-  msToTimeString,
-  distance,
-  usageTag,
-} = require('../../common')
-const awaitReaction = require('./awaitReaction')
+const { distance, usageTag } = require('../../common')
 const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
-const runPoll = require('./runPoll')
 
 module.exports = async ({ msg, guild, planet }) => {
   log(msg, 'Land', msg.guild.name)
@@ -49,7 +41,7 @@ module.exports = async ({ msg, guild, planet }) => {
     pollType: 'land',
     embed: voteEmbed,
     msg,
-    ship: guild.ship,
+    guild,
     cleanUp: false,
   })
   if (!ok) return send(msg, message)

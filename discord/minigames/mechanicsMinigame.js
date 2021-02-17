@@ -115,7 +115,7 @@ Your crewmates can help out.`)
     // ------- end of game
     setTimeout(async () => {
       setTimeout(() => {
-        ;[...messagesToDelete].forEach((c) => {
+        [...messagesToDelete].forEach((c) => {
           if (!c.deleted) c.delete()
         })
       }, 500)

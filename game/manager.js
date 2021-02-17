@@ -7,11 +7,11 @@ const { pointIsInsideCircle, distance } = require('../common')
 const coreLoop = require('./core loop/index')
 const db = require('../db/db')
 
-/*
----------------- Game Object ----------------
-This object is our "instance" of the game that will handle updates,
-the core loop, etc.
-*/
+//
+// ---------------- Game Object ----------------
+// this object is our "instance" of the game that will handle updates,
+// the core loop, etc.
+//
 
 const game = {
   async init () {
@@ -201,13 +201,13 @@ const game = {
 
 game.init()
 
-/*
----------------- Exports ----------------
-These functions are the bridge between discord and the game —
-they provide an interface to game functions and handle conversions
-from discord types to game types, and vice versa.
-
-*/
+//
+// ---------------- Exports ----------------
+// these functions are the bridge between discord and the game —
+// they provide an interface to game functions and handle conversions
+// from discord types to game types, and vice versa.
+//
+//
 module.exports = {
   game,
   async spawn ({ discordGuild, channelId }) {
@@ -257,7 +257,7 @@ module.exports = {
       existing.active = true
       game.loadExistingGuild(existing)
       return true
-    } else return false
+    } return false
   },
   async deactivateGuild (guildId) {
     // intentionally not removing them from the game just so other players can still kill them

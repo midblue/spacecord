@@ -346,7 +346,7 @@ module.exports = {
       'By the time you got your weapons ready, the other ship had moved out of range! You\'ll have to catch up to attack them.',
     miss: (weapon, wasClose, accuracyMultiplier) =>
       `The attack from your ${weapon.emoji} ${weapon.displayName} misses${
-        wasClose ? " by a hair's breadth" : ''
+        wasClose ? ' by a hair\'s breadth' : ''
       }! ${
         accuracyMultiplier > 1
           ? 'Even though our munitions experts were in peak condition, it wasn\'t enough.'

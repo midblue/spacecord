@@ -138,15 +138,13 @@ module.exports = {
     let map = grid.map((row) => row.join('')).join('\n')
 
     if (scanResult.guilds.length) {
-      map =
-        map +
+      map +=
         `\n> SHIPS_FOUND=${scanResult.guilds
           .map((g) => g.ship.name.replace(/ /g, '_').toUpperCase())
           .join(',')}`
     }
     if (scanResult.planets.length) {
-      map =
-        map +
+      map +=
         `\n> PLANETS_FOUND=${scanResult.planets
           .map((p) => p.name.replace(/ /g, '_').toUpperCase())
           .join(',')}`
@@ -160,7 +158,7 @@ module.exports = {
 
     if (repair < this.needsRepairAt) {
       key.push('❌ Not Sure')
-      map = map + `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
+      map += `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
     }
 
     return {

@@ -49,7 +49,7 @@ module.exports = (guild) => {
       })
       fields.push({
         name: '⚡️Your Ship Power',
-        value: guild.ship.power + ' ' + process.env.POWER_UNIT,
+        value: guild.ship.power + ' ' + POWER_UNIT,
       })
     }
     const enemyTotalEngineeringLevel = otherShip.members.reduce(

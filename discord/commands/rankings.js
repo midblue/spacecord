@@ -47,7 +47,7 @@ module.exports = {
     rankings = (await Promise.all(rankings)).filter((r) => r.value)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`Crew Rankings`)
       .addFields(rankings.map((s) => ({ ...s, inline: s.inline ?? true })))
 

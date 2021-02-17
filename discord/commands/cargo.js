@@ -37,12 +37,12 @@ module.exports = {
         (c) =>
           `${c.emoji} ${c.displayName}: ${
             c.type === 'credits' ? Math.round(c.amount) : c.amount.toFixed(2)
-          } ${c.type === 'credits' ? '' : process.env.WEIGHT_UNITS}`,
+          } ${c.type === 'credits' ? '' : WEIGHT_UNITS}`,
       )
       .join('\n')
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`Cargo | ${ship.name}`)
       .setDescription(currentCargoString)
 

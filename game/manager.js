@@ -48,7 +48,7 @@ const game = {
 
   timeUntilNextTick() {
     const currentTickProgress = Date.now() - this.lastTick
-    return process.env.STEP_INTERVAL - currentTickProgress
+    return STEP_INTERVAL - currentTickProgress
   },
 
   loadCache(cache) {

@@ -33,7 +33,7 @@ module.exports = {
     if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       // .setTitle(scanRes.message)
       .setDescription(
         '```Telemetry Unit: ' + scanRes.model + '\n' + scanRes.map + '```',

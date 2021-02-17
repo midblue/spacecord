@@ -21,7 +21,7 @@ module.exports = {
     log(msg, 'Generate Power', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(exerciseType || 'Treadmill')
       .addFields({
         name: 'Work out to generate power!',

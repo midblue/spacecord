@@ -21,8 +21,8 @@ module.exports = {
 
     const status = await guild.ship.statusReport()
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
-      .setTitle(`${guild.ship.name} | Status Report`)
+      .setColor(APP_COLOR)
+      .setTitle(`🚀 ${guild.ship.name} | Status Report`)
       .setDescription(status.headline)
       .addFields(status.fields.map((s) => ({ ...s, inline: true })))
 

@@ -2,8 +2,10 @@ const story = require('../../story/story')
 
 module.exports = (guild) => {
   guild.stepUpdate = async (amount, notify = true) => {
-    const moveRes = guild.ship.move()
-    if (moveRes.message) guild.pushToGuild(moveRes.message)
+    if (!guild.ship.status.docked) {
+      const moveRes = guild.ship.move()
+      if (moveRes.message) guild.pushToGuild(moveRes.message)
+    }
 
     // const eatRes = guild.ship.eat()
     // if (!eatRes.ok && eatRes.message) guild.pushToGuild(eatRes.message)

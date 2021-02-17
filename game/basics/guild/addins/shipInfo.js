@@ -5,14 +5,186 @@ const {
   percentToTextBars,
   numberToEmoji,
   msToTimeString,
+  usageTag,
 } = require('../../../../common')
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
-const { ship } = require('../../story/story')
 
 module.exports = (guild) => {
+  guild.ship.canInteract = () => {
+    if (guild.ship.status.docked) return false
+    const interactableThings = {
+      guilds: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.maxActionRadius(),
+        excludeIds: guild.guildId,
+      }).guilds,
+      caches: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.tractorRadius(),
+        excludeIds: guild.guildId,
+      }),
+      planets: guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: guild.ship.equipment.chassis[0].interactRadius,
+        excludeIds: guild.guildId,
+      }),
+    }
+    return (
+      interactableThings.guilds.length +
+        interactableThings.planets.length +
+        interactableThings.caches.length >
+      0
+    )
+  }
+
+  guild.ship.getShipActions = () => {
+    const actions = []
+
+    if (guild.ship.canInteract())
+      actions.push({
+        emoji: '👉',
+        label: 'See/Interact With Nearby Objects',
+        async action({ user, msg }) {
+          await runGuildCommand({
+            msg,
+            commandTag: 'nearby',
+          })
+        },
+      })
+
+    actions.push({
+      emoji: '🕹',
+      label: 'Flight Deck',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          commandTag: 'flightDeck',
+        })
+      },
+    })
+
+    actions.push({
+      emoji: '🎛',
+      label: 'Main Deck',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          commandTag: 'mainDeck',
+        })
+      },
+    })
+
+    actions.push({
+      emoji: '👨‍👩‍👧‍👧',
+      label: 'Crew Quarters',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          commandTag: 'crewQuarters',
+        })
+      },
+    })
+
+    actions.push({
+      emoji: '🌐',
+      label: 'Holo Deck',
+      async action({ user, msg }) {
+        await runGuildCommand({
+          msg,
+          commandTag: 'holoDeck',
+        })
+      },
+    })
+
+    // actions.push({
+    //   emoji: '📡',
+    //   label:
+    //     'Scan Area ' +
+    //     usageTag(guild.ship.equipment.telemetry[0].powerUse, 'scan'),
+    //   requirements: {
+    //     engineering: 2,
+    //   },
+    //   async action({ user, msg }) {
+    //     await runGuildCommand({
+    //       msg,
+    //       author: user,
+    //       commandTag: 'scanArea',
+    //     })
+    //   },
+    // })
+
+    // if (!guild.ship.status.docked) {
+    //   actions.push({
+    //     emoji: '🧭',
+    //     label: 'Start Direction Vote ' + usageTag(null, 'poll'),
+    //     async action({ user, msg }) {
+    //       await runGuildCommand({
+    //         msg,
+    //         author: user,
+    //         commandTag: 'direction',
+    //       })
+    //     },
+    //   })
+    //   actions.push({
+    //     emoji: '⏩',
+    //     label: 'Start Speed Vote ' + usageTag(null, 'poll'),
+    //     async action({ user, msg }) {
+    //       await runGuildCommand({
+    //         msg,
+    //         author: user,
+    //         commandTag: 'speed',
+    //       })
+    //     },
+    //   })
+    // }
+
+    // actions.push({
+    //   emoji: '🏃‍♀️',
+    //   label: 'Generate Power ' + usageTag(null, 'generatePower'),
+    //   async action({ user, msg }) {
+    //     await runGuildCommand({
+    //       commandTag: 'generatePower',
+    //       author: user,
+    //       msg,
+    //       props: { exerciseType: 'Treadmill' },
+    //     })
+    //   },
+    // })
+
+    // if (guild.ship.equipment.transceiver?.[0])
+    //   actions.push({
+    //     emoji: '📣',
+    //     label: 'Broadcast',
+    //     async action({ user, msg }) {
+    //       await runGuildCommand({
+    //         commandTag: 'broadcast',
+    //         author: user,
+    //         msg,
+    //       })
+    //     },
+    //   })
+
+    // actions.push({
+    //   emoji: '📊',
+    //   label: 'Ship Info',
+    //   async action({ user, msg }) {
+    //     await runGuildCommand({
+    //       commandTag: 'shipInfo',
+    //       author: user,
+    //       msg,
+    //     })
+    //   },
+    // })
+
+    return actions
+  }
+
   guild.ship.statusReport = async () => {
     const fields = [],
-      actions = await guild.ship.getAvailableActions()
+      actions = await guild.ship.getShipActions()
 
     const fuel = guild.ship.cargo.find((c) => c.type === 'fuel').amount
 
@@ -22,7 +194,7 @@ module.exports = (guild) => {
         value: guild.ship.status.stranded
           ? 'Out of Fuel!'
           : guild.ship.speed
-          ? guild.ship.speed.toFixed(2) + ' ' + process.env.SPEED_UNIT
+          ? guild.ship.speed.toFixed(2) + ' ' + SPEED_UNIT
           : 'Stopped',
       })
 
@@ -49,7 +221,7 @@ module.exports = (guild) => {
       value:
         guild.ship.location.map((l) => l.toFixed(2)).join(', ') +
         ' ' +
-        process.env.DISTANCE_UNIT,
+        DISTANCE_UNIT,
     })
 
     const currentHp = guild.ship.currentHp(),
@@ -59,9 +231,7 @@ module.exports = (guild) => {
       value:
         percentToTextBars(currentHp / maxHp) +
         '\n' +
-        `${Math.round(currentHp)}/${Math.round(maxHp)} ${
-          process.env.HEALTH_UNIT
-        }`,
+        `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`,
     })
 
     fields.push({
@@ -69,11 +239,11 @@ module.exports = (guild) => {
       value:
         fuel.toFixed(1) +
         ' ' +
-        process.env.WEIGHT_UNITS +
+        WEIGHT_UNITS +
         (guild.ship.speed
-          ? `\n(${Math.floor(fuel / guild.ship.fuelUsePerTick())} ${
-              process.env.TIME_UNITS
-            } at\ncurrent speed)`
+          ? `\n(${Math.floor(
+              fuel / guild.ship.fuelUsePerTick(),
+            )} ${TIME_UNITS} at\ncurrent speed)`
           : ''),
     })
 
@@ -85,7 +255,7 @@ module.exports = (guild) => {
         guild.ship.power.toFixed(1) +
         '/' +
         guild.ship.maxPower().toFixed(0) +
-        process.env.POWER_UNIT +
+        POWER_UNIT +
         ` (${Math.round(
           (guild.ship.power / guild.ship.maxPower() || 0) * 100,
         )}%)`,
@@ -97,7 +267,7 @@ module.exports = (guild) => {
     })
 
     return {
-      headline: `All systems normal.`, // todo
+      headline: '', //`All systems normal.`, // todo
       fields,
       actions,
     }
@@ -125,11 +295,11 @@ module.exports = (guild) => {
       value:
         (
           (Date.now() - guild.ship.launched) *
-          process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER *
-          process.env.TIME_UNIT_LONGS_MULTIPLIER
+          REAL_TIME_TO_GAME_TIME_MULTIPLIER *
+          TIME_UNIT_LONGS_MULTIPLIER
         ).toFixed(2) +
         ' ' +
-        process.env.TIME_UNIT_LONGS,
+        TIME_UNIT_LONGS,
     })
 
     fields.push({
@@ -146,9 +316,7 @@ module.exports = (guild) => {
     fields.push({
       name: `👉 Interact Range`,
       value:
-        guild.ship.equipment.chassis[0].interactRadius +
-        ' ' +
-        process.env.DISTANCE_UNIT,
+        guild.ship.equipment.chassis[0].interactRadius + ' ' + DISTANCE_UNIT,
     })
 
     fields.push({
@@ -163,7 +331,7 @@ module.exports = (guild) => {
         '/' +
         Math.round(guild.ship.equipment.chassis[0].maxWeight) +
         ' ' +
-        process.env.WEIGHT_UNITS,
+        WEIGHT_UNITS,
     })
 
     fields.push({
@@ -171,9 +339,9 @@ module.exports = (guild) => {
       value:
         guild.ship.maxSpeed().toFixed(2) +
         ' ' +
-        process.env.DISTANCE_UNIT +
+        DISTANCE_UNIT +
         '/' +
-        process.env.TIME_UNIT +
+        TIME_UNIT +
         '\n' +
         '(At current weight)',
     })

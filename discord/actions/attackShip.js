@@ -16,7 +16,7 @@ const { allSkills } = require('../../game/gamecommon')
 
 module.exports = async ({ msg, guild, otherShip }) => {
   log(msg, 'Attack Ship', msg.guild.name)
-  if (!otherShip) return
+  if (!otherShip || guild.status.docked) return
 
   // ---------- check equipment
   if (!guild.ship.equipment.weapon || guild.ship.equipment.weapon.length === 0)
@@ -72,7 +72,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
   }
 
   // ---------- vote on the attack
-  const voteEmbed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
+  const voteEmbed = new Discord.MessageEmbed().setColor(APP_COLOR)
   voteEmbed.description = `Your \`${usableWeapons[0].emoji} ${
     weaponToUse.displayName
   }\` is estimated to have a \`${Math.round(
@@ -173,7 +173,7 @@ ${
   // ---------- pick a place to attack
   // todo
   // const embed = new Discord.MessageEmbed()
-  //   .setColor(process.env.APP_COLOR)
+  //   .setColor(APP_COLOR)
   //   .setTitle('Visible Targets')
   //   .addFields(res.fields.map((f) => ({ inline: true, ...f })))
 

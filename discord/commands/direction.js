@@ -4,7 +4,7 @@ const { capitalize } = require('../../common')
 const runPoll = require('../actions/runPoll')
 const Discord = require('discord.js-light')
 
-const voteTime = process.env.DEV ? 10 * 1000 : process.env.GENERAL_VOTE_TIME
+const voteTime = process.env.DEV ? 10 * 1000 : GENERAL_VOTE_TIME
 
 module.exports = {
   tag: 'direction',
@@ -36,7 +36,7 @@ module.exports = {
     const availableDirections = ship.getAvailableDirections()
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`Direction Vote Called by ${author.nickname}`)
       .setDescription(
         `Crew with at least ${Object.keys(requirements)

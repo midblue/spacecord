@@ -21,7 +21,7 @@ fs.readdir(__dirname, (err, files) => {
       ...require(`./${file}`),
     }
   })
-  // console.log(addins.length, 'addins', addins)
+  // console.log('addins', addins)
 })
 
 module.exports = addins

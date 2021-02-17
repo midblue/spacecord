@@ -24,11 +24,11 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Sell ${amount} ${
-      amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
-    } of ${cargoData.emoji} ${
+    `Sell ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
+      cargoData.emoji
+    } ${
       cargoData.displayName
-    } for \`💳${cost}\` credits per ${process.env.WEIGHT_UNIT} (\`💳${
+    } for \`💳${cost}\` credits per ${WEIGHT_UNIT} (\`💳${
       cost * amount
     }\` total) ? | Vote started by ${msg.author.nickname}`,
   )
@@ -60,7 +60,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   guild.ship.logEntry(story.sell.cargo.votePassed(cargoData, amount, cost))
 
   voteEmbed.title = `Sold ${amount} ${
-    amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
+    amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
   } of ${cargoData.emoji} ${cargoData.displayName} for \`💳${
     cost * amount
   }\` credits.`
@@ -75,7 +75,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     '/' +
     Math.round(guild.ship.equipment.chassis[0].maxWeight) +
     ' ' +
-    process.env.WEIGHT_UNITS
+    WEIGHT_UNITS
 
   voteResult.sentMessage.edit(voteEmbed)
 }

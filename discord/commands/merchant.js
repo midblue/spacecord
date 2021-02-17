@@ -90,11 +90,13 @@ module.exports = {
 
         availableActions.push({
           emoji: cargo[type].emoji,
-          label: `${cargo[type].displayName} ${usageTag(0, 0, cost)}/${
-            process.env.WEIGHT_UNIT
-          } (You have ${
+          label: `${cargo[type].displayName} ${usageTag(
+            0,
+            0,
+            cost,
+          )}/${WEIGHT_UNIT} (You have ${
             guild.ship.cargo.find((c) => c.type === type)?.amount || 0
-          } ${process.env.WEIGHT_UNITS})`,
+          } ${WEIGHT_UNITS})`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
@@ -120,9 +122,11 @@ module.exports = {
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === 'buy') {
       const embed = new Discord.MessageEmbed().setTitle(
-        `Buy ${cargo[type].displayName} at ${usageTag(0, 0, cost)}/${
-          process.env.WEIGHT_UNIT
-        }`,
+        `Buy ${cargo[type].displayName} at ${usageTag(
+          0,
+          0,
+          cost,
+        )}/${WEIGHT_UNIT}`,
       )
       embed.fields = [
         {
@@ -142,7 +146,7 @@ module.exports = {
             '/' +
             Math.round(guild.ship.equipment.chassis[0].maxWeight) +
             ' ' +
-            process.env.WEIGHT_UNITS,
+            WEIGHT_UNITS,
           inline: true,
         },
       ]
@@ -156,7 +160,7 @@ module.exports = {
       if (canBuy > 1)
         amountsAsReactions.push({
           emoji: numberToEmoji(1),
-          label: `1 ${process.env.WEIGHT_UNIT} ` + usageTag(0, 'poll'),
+          label: `1 ${WEIGHT_UNIT} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -171,7 +175,7 @@ module.exports = {
       if (canBuy > 10)
         amountsAsReactions.push({
           emoji: numberToEmoji(2),
-          label: `10 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `10 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -186,7 +190,7 @@ module.exports = {
       if (canBuy > 50)
         amountsAsReactions.push({
           emoji: numberToEmoji(3),
-          label: `50 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `50 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -201,7 +205,7 @@ module.exports = {
       if (canBuy > 100)
         amountsAsReactions.push({
           emoji: numberToEmoji(4),
-          label: `100 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `100 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -216,7 +220,7 @@ module.exports = {
       if (canBuy > 500)
         amountsAsReactions.push({
           emoji: numberToEmoji(5),
-          label: `500 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `500 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -231,7 +235,7 @@ module.exports = {
       if (canBuy > 1000)
         amountsAsReactions.push({
           emoji: numberToEmoji(6),
-          label: `1000 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `1000 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
               msg,
@@ -247,7 +251,7 @@ module.exports = {
         amountsAsReactions.push({
           emoji: `🔥`,
           label:
-            `As many as possible (${canBuy} ${process.env.WEIGHT_UNITS}) ` +
+            `As many as possible (${canBuy} ${WEIGHT_UNITS}) ` +
             usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             buyCargo({
@@ -289,11 +293,13 @@ module.exports = {
 
         availableActions.push({
           emoji: cargo[type].emoji,
-          label: `${cargo[type].displayName} ${usageTag(0, 0, cost)}/${
-            process.env.WEIGHT_UNIT
-          } (You have ${
+          label: `${cargo[type].displayName} ${usageTag(
+            0,
+            0,
+            cost,
+          )}/${WEIGHT_UNIT} (You have ${
             guild.ship.cargo.find((c) => c.type === type)?.amount || 0
-          } ${process.env.WEIGHT_UNITS})`,
+          } ${WEIGHT_UNITS})`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
@@ -323,9 +329,11 @@ module.exports = {
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === 'sell') {
       const embed = new Discord.MessageEmbed().setTitle(
-        `Sell ${cargo[type].displayName} at ${usageTag(0, 0, cost)}/${
-          process.env.WEIGHT_UNIT
-        }`,
+        `Sell ${cargo[type].displayName} at ${usageTag(
+          0,
+          0,
+          cost,
+        )}/${WEIGHT_UNIT}`,
       )
       embed.fields = [
         {
@@ -345,7 +353,7 @@ module.exports = {
             '/' +
             Math.round(guild.ship.equipment.chassis[0].maxWeight) +
             ' ' +
-            process.env.WEIGHT_UNITS,
+            WEIGHT_UNITS,
           inline: true,
         },
       ]
@@ -361,7 +369,7 @@ module.exports = {
       if (canSell > 1)
         amountsAsReactions.push({
           emoji: numberToEmoji(1),
-          label: `1 ${process.env.WEIGHT_UNIT} ` + usageTag(0, 'poll'),
+          label: `1 ${WEIGHT_UNIT} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -376,7 +384,7 @@ module.exports = {
       if (canSell > 10)
         amountsAsReactions.push({
           emoji: numberToEmoji(2),
-          label: `10 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `10 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -391,7 +399,7 @@ module.exports = {
       if (canSell > 50)
         amountsAsReactions.push({
           emoji: numberToEmoji(3),
-          label: `50 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `50 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -406,7 +414,7 @@ module.exports = {
       if (canSell > 100)
         amountsAsReactions.push({
           emoji: numberToEmoji(4),
-          label: `100 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `100 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -421,7 +429,7 @@ module.exports = {
       if (canSell > 500)
         amountsAsReactions.push({
           emoji: numberToEmoji(5),
-          label: `500 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `500 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -436,7 +444,7 @@ module.exports = {
       if (canSell > 1000)
         amountsAsReactions.push({
           emoji: numberToEmoji(6),
-          label: `1000 ${process.env.WEIGHT_UNITS} ` + usageTag(0, 'poll'),
+          label: `1000 ${WEIGHT_UNITS} ` + usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({
               msg,
@@ -452,7 +460,7 @@ module.exports = {
         amountsAsReactions.push({
           emoji: `🔥`,
           label:
-            `As many as possible (${canSell} ${process.env.WEIGHT_UNITS}) ` +
+            `As many as possible (${canSell} ${WEIGHT_UNITS}) ` +
             usageTag(0, 'poll'),
           action: ({ msg, emoji, user }) => {
             sellCargo({

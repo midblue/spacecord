@@ -7,7 +7,7 @@ module.exports = async ({
   msg,
   reactions,
   embed,
-  time = process.env.GENERAL_RESPONSE_TIME,
+  time = GENERAL_RESPONSE_TIME,
   commandsLabel,
   listeningType,
   respondeeFilter,
@@ -16,6 +16,10 @@ module.exports = async ({
   allowNonMembers = false,
 }) => {
   return new Promise(async (resolve) => {
+    // make sure all other edits have gone through so we don't lose the commands
+    // todo confirm this works
+    await SLEEP(200)
+
     if (embed) {
       if ((reactions && reactions.length) || listeningType)
         embed.setFooter(

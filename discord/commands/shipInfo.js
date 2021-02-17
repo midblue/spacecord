@@ -21,7 +21,7 @@ module.exports = {
     const status = ship.shipInfo()
     status.fields = await applyCustomParams(msg, status.fields)
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`${ship.name} | Ship Info`)
       .addFields(status.fields.map((s) => ({ inline: true, ...s })))
 

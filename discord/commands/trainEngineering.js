@@ -57,7 +57,7 @@ module.exports = {
     emojiChoices.splice(choiceIndex, 1)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`${author.nickname} | Engineering Training`)
       .setDescription(
         `Count the number of \`${targetEmoji}\` in the following mojcode snippet.`,

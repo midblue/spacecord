@@ -77,7 +77,7 @@ module.exports = {
   msToTimeString(ms) {
     let seconds = Math.round((ms % (60 * 1000)) / 1000)
     if (seconds <= 9) seconds = '0' + seconds
-    let minutes = Math.round(ms / 1000 / 60)
+    let minutes = Math.floor(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
   usageTag(power, stamina, credits) {

@@ -9,7 +9,7 @@ module.exports = async ({
   question,
   description,
   embed,
-  time = process.env.DEV ? 10000 : process.env.GENERAL_VOTE_TIME,
+  time = process.env.DEV ? 10000 : GENERAL_VOTE_TIME,
   requirements,
   yesStaminaRequirement,
   minimumMemberPercent,
@@ -17,7 +17,7 @@ module.exports = async ({
   guild,
   cleanUp = true,
 }) => {
-  if (!embed) embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
+  if (!embed) embed = new Discord.MessageEmbed().setColor(APP_COLOR)
 
   if (question) embed.setTitle(question)
   if (description) embed.description = description

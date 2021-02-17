@@ -13,7 +13,7 @@ module.exports = (guild) => {
       (w) =>
         w.repair > 0 &&
         (w.lastAttack || 0) <
-          Date.now() - (w.rechargeTime || 1) * process.env.STEP_INTERVAL,
+          Date.now() - (w.rechargeTime || 1) * STEP_INTERVAL,
     )
     if (!canAttackWeapons.length) return false
     return canAttackWeapons
@@ -23,7 +23,7 @@ module.exports = (guild) => {
       0,
       guild.ship.equipment.weapon.reduce(
         (lowest, w) =>
-          Math.min(lowest, (w.rechargeTime || 1) * process.env.STEP_INTERVAL) -
+          Math.min(lowest, (w.rechargeTime || 1) * STEP_INTERVAL) -
           (Date.now() - (w.lastAttack || 0)),
         0,
       ),
@@ -94,7 +94,7 @@ module.exports = (guild) => {
       },
       {
         name: 'Range',
-        value: attackDistance.toFixed(3) + ' ' + process.env.DISTANCE_UNIT,
+        value: attackDistance.toFixed(3) + ' ' + DISTANCE_UNIT,
         inline: true,
       },
       {
@@ -125,7 +125,7 @@ module.exports = (guild) => {
         advantageAccuracyMultiplier,
       })
 
-      outputEmbed.setColor(process.env.FAILURE_COLOR)
+      outputEmbed.setColor(FAILURE_COLOR)
       outputEmbed.description = story.attack.miss(
         weapon,
         accuracyTarget - finalAccuracy < 0.1,
@@ -169,7 +169,7 @@ module.exports = (guild) => {
       advantageAccuracyMultiplier,
     })
 
-    outputEmbed.setColor(process.env.SUCCESS_COLOR)
+    outputEmbed.setColor(SUCCESS_COLOR)
     outputEmbed.description = story.attack.hit(
       weapon,
       advantageDamageMultiplier,
@@ -216,7 +216,7 @@ module.exports = (guild) => {
     const ship = guild.ship
 
     const outputEmbed = new Discord.MessageEmbed().setColor(
-      miss ? process.env.SUCCESS_COLOR : process.env.FAILURE_COLOR,
+      miss ? SUCCESS_COLOR : FAILURE_COLOR,
     )
     outputEmbed.setTitle(
       miss
@@ -232,7 +232,7 @@ module.exports = (guild) => {
       },
       {
         name: 'Attack Range',
-        value: attackDistance.toFixed(3) + ' ' + process.env.DISTANCE_UNIT,
+        value: attackDistance.toFixed(3) + ' ' + DISTANCE_UNIT,
         inline: true,
       },
     ]
@@ -336,9 +336,7 @@ module.exports = (guild) => {
             value:
               percentToTextBars(currentHp / maxHp) +
               '\n' +
-              `${Math.round(currentHp)}/${Math.round(maxHp)} ${
-                process.env.HEALTH_UNIT
-              }`,
+              `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`,
             inline: true,
           },
           {

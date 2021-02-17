@@ -201,7 +201,7 @@ module.exports = {
       })
 
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle(`Which equipment would you like to sell?`)
 
       const sentMessage = (await send(msg, embed))[0]

@@ -25,7 +25,7 @@ module.exports = {
     const actions = guild.ship.getActionsOnOtherShip(otherShip)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle('Nearby Ship Details')
       .addFields(res.fields.map((f) => ({ inline: true, ...f })))
 

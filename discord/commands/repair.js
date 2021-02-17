@@ -57,7 +57,7 @@ module.exports = {
       }))
 
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle(`Which equipment would you like to repair?`)
 
       if (!equipmentAsReactionOptions.length)

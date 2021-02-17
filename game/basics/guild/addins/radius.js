@@ -1,12 +1,10 @@
-const { usageTag, distance } = require('../../../../common')
-const attackShip = require('../../../../discord/actions/attackShip')
-const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
-const staminaRequirements = require('../../crew/staminaRequirements')
-const story = require('../../story/story')
-
 module.exports = (guild) => {
   guild.ship.maxActionRadius = () => {
-    return Math.max(guild.ship.attackRadius(), guild.ship.tractorRadius())
+    return Math.max(
+      guild.ship.attackRadius(),
+      guild.ship.tractorRadius(),
+      guild.ship.shipScanRadius(),
+    )
   }
 
   guild.ship.attackRadius = () => {
@@ -19,5 +17,9 @@ module.exports = (guild) => {
 
   guild.ship.tractorRadius = () => {
     return guild.ship.equipment.chassis[0].interactRadius
+  }
+
+  guild.ship.shipScanRadius = () => {
+    return guild.ship.equipment.scanner[0]?.range || 0
   }
 }

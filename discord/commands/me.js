@@ -42,18 +42,18 @@ module.exports = {
     // my skills, my options to train things, etc
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`${author.nickname}'s Stats`)
 
     const userAge =
       ((Date.now() - (authorCrewMemberObject.joined || Date.now())) *
-        process.env.REAL_TIME_TO_GAME_TIME_MULTIPLIER) /
-      process.env.TIME_UNIT_SHORTS_PER_LONG
+        REAL_TIME_TO_GAME_TIME_MULTIPLIER) /
+      TIME_UNIT_SHORTS_PER_LONG
     embed.fields.push(
       ...[
         {
           name: `👵🏽 Age`,
-          value: userAge.toFixed(2) + ' ' + process.env.TIME_UNIT_LONGS,
+          value: userAge.toFixed(2) + ' ' + TIME_UNIT_LONGS,
           inline: true,
         },
         {
@@ -73,7 +73,7 @@ module.exports = {
           name: `🛌 Stamina Gain`,
           value: `\`+ 💪${
             Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
-          }\` stamina/ship ${process.env.TIME_UNIT}
+          }\` stamina/ship ${TIME_UNIT}
 (Next day is in ${msToTimeString(guild.context.timeUntilNextTick())})`,
           inline: true,
         },

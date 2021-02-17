@@ -29,10 +29,11 @@ module.exports = {
       'gi',
     ).exec(content)
   },
-  async action({ msg, settings, client, guild, interactableGuilds, filter }) {
-    log(msg, 'Nearby', msg.guild.name)
+  async action({ msg, guild, interactableGuilds, filter }) {
+    log(msg, 'Nearby', filter || 'No Filter')
 
-    if (guild.ship.status.docked) runGuildCommand({ msg, commandTag: 'planet' })
+    if (guild.ship.status.docked)
+      return runGuildCommand({ msg, commandTag: 'planet' })
 
     if (filter && filter !== 'guilds') interactableGuilds = []
     if (interactableGuilds === undefined)
@@ -76,7 +77,7 @@ module.exports = {
 
     if (interactableCaches.length) {
       const cacheEmbed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle('📦 Caches')
 
       const availableActions = []
@@ -89,9 +90,7 @@ module.exports = {
           emoji: numberToEmoji(index + 1),
           label:
             cache.amount.toFixed(2) +
-            (cache.type === 'credits'
-              ? ''
-              : ' ' + process.env.WEIGHT_UNITS + ' of') +
+            (cache.type === 'credits' ? '' : ' ' + WEIGHT_UNITS + ' of') +
             ' ' +
             cache.emoji +
             cache.displayName,
@@ -104,13 +103,13 @@ module.exports = {
           },
         })
         // const embed = new Discord.MessageEmbed()
-        //   .setColor(process.env.APP_COLOR)
+        //   .setColor(APP_COLOR)
         //   .setTitle(
         //     '📦 Cache: ' +
         //       cache.amount.toFixed(2) +
         //       (cache.type === 'credits'
         //         ? ''
-        //         : ' ' + process.env.WEIGHT_UNITS + ' of') +
+        //         : ' ' + WEIGHT_UNITS + ' of') +
         //       ' ' +
         //       cache.emoji +
         //       cache.displayName,
@@ -153,7 +152,7 @@ module.exports = {
         ...planet.location,
       )
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle('🪐 ' + planet.name)
         .setDescription(
           `A ${planet.getSizeDescriptor()} ${
@@ -191,7 +190,7 @@ module.exports = {
         ...otherGuild.ship.location,
       )
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle('🛸 ' + otherGuild.ship.name)
         .setDescription(
           otherGuild.ship.status.docked

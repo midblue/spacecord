@@ -1,20 +1,19 @@
+
+**BUGS**
 i can train for someone else lol
 cache not giving me the stuff
-depart should be a vote (and take energy)
-story beat for landing
 
 **MVP**
-reorganize commands on .ship
 actual minigames for training and repairing
+determine good xp numbers for training
 better generatepower
 more equipment
-planet interaction
-	cantina & cantina chatter (report)
-	a way to make money (quests??)
-training stamina cost scales with level
+more planets
+a way to make money (quests??)
 actually write help guide
 
 **NEXT**
+ship chatter and such flavor text on the different decks
 mine ore from environment (mining laser as weapon)
 html based scanner
 jettison equipment too
@@ -32,6 +31,8 @@ legacy system: keep track of user action count
 black holes that suck more if u weigh more
 see all docked ships on a planet
 global leaderboard
+status report on ship
+cantina & cantina chatter (report)
 
 
 space for equipment vs space for cargo in chasses

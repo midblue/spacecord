@@ -32,7 +32,7 @@ module.exports = {
     log(msg, 'Train', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`Train | ${author.nickname}`)
 
     let trainableSkills = await authorCrewMemberObject.getTrainableSkills()

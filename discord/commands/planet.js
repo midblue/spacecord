@@ -39,7 +39,7 @@ module.exports = {
     const availableActions = guild.ship.getPlanetActions(dockedPlanet)
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle('🪐 ' + dockedPlanet.name)
       .addFields(fields.map((f) => ({ inline: true, ...f })))
 

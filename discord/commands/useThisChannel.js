@@ -3,7 +3,7 @@ const { log } = require('../botcommon')
 
 module.exports = {
   tag: 'useThisChannel',
-  admin: true,
+  captain: true,
   documentation: {
     name: `usethischannel`,
     value: `Sets the bot's channel for push messages.`,

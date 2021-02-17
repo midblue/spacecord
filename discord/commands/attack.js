@@ -51,7 +51,7 @@ module.exports = {
       }).guilds
 
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle('Which ship would you like to attack?')
 
     const actions = []

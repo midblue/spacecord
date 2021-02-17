@@ -1,13 +1,12 @@
 const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
 const story = require('../../story/story')
-const { capitalize, captainTag } = require('../../../../common')
+const { capitalize, captainTag, usageTag } = require('../../../../common')
+const depart = require('../../../../discord/actions/depart')
 
 module.exports = (guild) => {
   guild.ship.land = ({ planet, msg }) => {
     guild.ship.status.docked = planet.name
     guild.ship.location = [...planet.location]
-
-    guild.pushToGuild(story.land.generalPlanet(guild.ship, planet), msg)
 
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
@@ -24,9 +23,28 @@ module.exports = (guild) => {
     runGuildCommand({
       msg,
       commandTag: 'planet',
-      author: msg.author,
       guild,
     })
+    return { ok: true, message: story.land.generalPlanet(guild.ship, planet) }
+  }
+
+  guild.ship.depart = ({ planet, msg }) => {
+    const otherDockedShips = planet
+      .getDockedShips()
+      .filter((s) => s.guildId !== guild.guildId)
+    otherDockedShips.forEach((s) =>
+      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
+    )
+
+    guild.ship.status.docked = false
+
+    runGuildCommand({
+      commandTag: 'ship',
+      msg,
+      props: { guild },
+    })
+
+    return { ok: true, message: story.depart.depart(planet) }
   }
 
   guild.ship.getPlanetFields = (planet) => {
@@ -36,7 +54,7 @@ module.exports = (guild) => {
       value:
         planet.location.map((l) => l.toFixed(2)).join(', ') +
         ' ' +
-        process.env.DISTANCE_UNIT,
+        DISTANCE_UNIT,
     })
     fields.push({
       name: `📏 Size`,
@@ -103,28 +121,9 @@ module.exports = (guild) => {
 
     actions.push({
       emoji: '🛫',
-      label: 'Leave ' + captainTag,
+      label: 'Start Leave Vote ' + usageTag(0, 'poll'),
       async action({ user, msg, guild, planet }) {
-        if (!user.id === guild.ship.captain)
-          return guild.pushToGuild(
-            `Crewmate %username%${user.id}%, only the captain can issue the order to depart!`,
-          )
-        const otherDockedShips = planet
-          .getDockedShips()
-          .filter((s) => s.guildId !== guild.guildId)
-        otherDockedShips.forEach((s) =>
-          s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
-        )
-
-        guild.ship.status.docked = false
-        guild.pushToGuild(story.land.depart(planet), msg)
-
-        await runGuildCommand({
-          commandTag: 'ship',
-          author: user,
-          msg,
-          props: { guild },
-        })
+        depart({ msg, guild, planet })
       },
     })
 

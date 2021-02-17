@@ -4,29 +4,30 @@ const { distance, usageTag } = require('../../common')
 const Discord = require('discord.js-light')
 const runYesNoVote = require('./runYesNoVote')
 const story = require('../../game/basics/story/story')
+const manager = require('../../game/manager')
 
 module.exports = async ({ msg, guild, planet }) => {
-  log(msg, 'Land', msg.guild.name)
+  log(msg, 'Depart', msg.guild.name)
 
-  // ---------- check if in range
-  const inRange =
-    distance(...guild.ship.location, ...planet.location) <=
-    guild.ship.equipment.chassis[0].interactRadius
-  if (!inRange) return send(msg, `That planet isn't in range anymore!`)
+  if (!planet)
+    planet = manager.game.planets.find(
+      (p) => p.name === guild.ship.status.docked,
+    )
+  if (!planet) return
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
   )
-  if (!authorCrewMemberObject) return console.log('no user found in land')
-  const staminaRes = authorCrewMemberObject.useStamina('land')
+  if (!authorCrewMemberObject) return console.log('no user found in depart')
+  const staminaRes = authorCrewMemberObject.useStamina('depart')
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
-  // ---------- vote on landing
+  // ---------- vote on departing
   const voteEmbed = new Discord.MessageEmbed()
     .setColor(APP_COLOR)
     .setTitle(
-      `Land on 🪐${planet.name}? | Vote started by ${msg.author.nickname}`,
+      `Depart from 🪐${planet.name}? | Vote started by ${msg.author.nickname}`,
     )
 
   const {
@@ -37,7 +38,7 @@ module.exports = async ({ msg, guild, planet }) => {
     yesVoters,
     sentMessage: voteMessage,
   } = await runYesNoVote({
-    pollType: 'land',
+    pollType: 'depart',
     embed: voteEmbed,
     msg,
     guild,
@@ -47,19 +48,19 @@ module.exports = async ({ msg, guild, planet }) => {
 
   voteEmbed.fields = []
   if (!result) {
-    guild.ship.logEntry(story.land.voteFailed())
-    voteEmbed.description = story.land.voteFailed()
+    guild.ship.logEntry(story.depart.voteFailed())
+    voteEmbed.description = story.depart.voteFailed()
     voteMessage.edit(voteEmbed)
     return
   }
   // vote passed
 
-  guild.ship.logEntry(story.land.votePassed(yesPercent, planet))
-  voteEmbed.title = `Landed on 🪐${planet.name}`
-  voteEmbed.description = story.land.votePassed(yesPercent, planet)
+  guild.ship.logEntry(story.depart.votePassed(yesPercent, planet))
+  voteEmbed.title = `Departed from 🪐${planet.name}`
+  voteEmbed.description = story.depart.votePassed(yesPercent, planet)
 
-  // land
-  const res = guild.ship.land({ planet, msg })
+  // depart
+  const res = guild.ship.depart({ planet, msg })
   if (res.message) voteEmbed.description += '\n\n' + res.message
 
   voteMessage.edit(voteEmbed)

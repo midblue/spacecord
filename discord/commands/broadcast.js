@@ -20,7 +20,7 @@ module.exports = {
     const broadcastRes = ship.broadcastOptions()
     if (!broadcastRes.ok) return send(msg, broadcastRes.message)
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`Broadcast`)
       .addFields(broadcastRes.fields.map((s) => ({ inline: true, ...s })))
 

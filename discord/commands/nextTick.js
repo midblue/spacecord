@@ -21,6 +21,6 @@ module.exports = {
     log(msg, 'Next Tick', msg.guild.name)
 
     const res = msToTimeString(game.timeUntilNextTick())
-    send(msg, `${res} until the next ${process.env.TIME_UNIT}.`)
+    send(msg, `${res} until the next ${TIME_UNIT}.`)
   },
 }

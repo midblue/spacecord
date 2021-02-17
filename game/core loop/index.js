@@ -2,11 +2,10 @@ const { log } = require('../gamecommon')
 const db = require('../../db/db')
 const cargo = require('../basics/cargo')
 
-const cacheExpirationTime = process.env.STEP_INTERVAL * 500
+const cacheExpirationTime = STEP_INTERVAL * 500
 
 module.exports = {
   async start() {
-    return
     log('init', 'Starting game')
     this.lastTick = Date.now()
 
@@ -16,7 +15,7 @@ module.exports = {
       await this.update()
       log('', '============= END GAME STEP =============')
       console.log('')
-    }, process.env.STEP_INTERVAL)
+    }, STEP_INTERVAL)
   },
 
   async update() {

@@ -85,15 +85,13 @@ module.exports = (guild) => {
     if (e.weight)
       fields.push({
         name: '🎒 Weight',
-        value: `${Math.round(e.weight * 10) / 10} ${process.env.WEIGHT_UNITS}`,
+        value: `${Math.round(e.weight * 10) / 10} ${WEIGHT_UNITS}`,
       })
 
     if (e.maxWeight)
       fields.push({
         name: '🎒 Carrying Capacity',
-        value: `${Math.round(e.maxWeight * 10) / 10} ${
-          process.env.WEIGHT_UNITS
-        }`,
+        value: `${Math.round(e.maxWeight * 10) / 10} ${WEIGHT_UNITS}`,
       })
     if (e.agility)
       fields.push({
@@ -107,9 +105,9 @@ module.exports = (guild) => {
         value:
           (e.maxSpeed * e.repair).toFixed(2) +
           ' ' +
-          process.env.DISTANCE_UNIT +
+          DISTANCE_UNIT +
           '/' +
-          process.env.TIME_UNIT,
+          TIME_UNIT,
       })
 
     if (e.directions)
@@ -132,7 +130,7 @@ module.exports = (guild) => {
     if (e.powerUse)
       fields.push({
         name: '⚡Power Use',
-        value: e.powerUse + ' ' + process.env.POWER_UNIT,
+        value: e.powerUse + ' ' + POWER_UNIT,
       })
 
     if (e.fuelUse)
@@ -156,7 +154,7 @@ module.exports = (guild) => {
       // battery
       fields.push({
         name: '🔋 Capacity',
-        value: e.capacity + ' ' + process.env.POWER_UNIT,
+        value: e.capacity + ' ' + POWER_UNIT,
       })
 
     if (e.damage)
@@ -168,21 +166,19 @@ module.exports = (guild) => {
     if (e.range)
       fields.push({
         name: '📡 Max Range',
-        value: e.range + ' ' + process.env.DISTANCE_UNIT,
+        value: e.range + ' ' + DISTANCE_UNIT,
       })
 
     if (e.interactRadius)
       fields.push({
         name: '👉 Interact Radius',
-        value: e.interactRadius + ' ' + process.env.DISTANCE_UNIT,
+        value: e.interactRadius + ' ' + DISTANCE_UNIT,
       })
 
     if (e.rechargeTime !== undefined)
       fields.push({
         name: '⏱ Cooldown',
-        value:
-          msToTimeString(e.rechargeTime * process.env.STEP_INTERVAL) +
-          ' (real-time)',
+        value: msToTimeString(e.rechargeTime * STEP_INTERVAL) + ' (real-time)',
       })
 
     if (e.durabilityLostOnUse)

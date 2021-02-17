@@ -29,7 +29,7 @@ module.exports = ({ msg, user, guild }) => {
 
     // ------- make game embed
     const embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
+      .setColor(APP_COLOR)
       .setTitle(`${msg.author.nickname} | ${emoji}Mechanics Training`)
       .setDescription(`Type as many sentences as fast as you can within the time limit!
 One line per message.

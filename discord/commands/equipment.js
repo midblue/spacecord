@@ -32,7 +32,7 @@ module.exports = {
 
     if (!equipment) {
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle(`${guild.ship.name} | Equipment`)
         .setDescription(`Which equipment would you like to see details on?`)
 
@@ -47,7 +47,7 @@ module.exports = {
       })
     } else {
       const embed = new Discord.MessageEmbed()
-        .setColor(process.env.APP_COLOR)
+        .setColor(APP_COLOR)
         .setTitle(
           `${equipment.emoji} ${equipment.displayName} (${capitalize(
             equipment.type,

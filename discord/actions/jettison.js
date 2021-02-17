@@ -31,7 +31,7 @@ module.exports = async ({ msg, guild }) => {
   let messageToAttach
 
   const detailsEmbed = new Discord.MessageEmbed()
-    .setColor(process.env.APP_COLOR)
+    .setColor(APP_COLOR)
     .setTitle(`Jettison Vote Details`)
     .setDescription(
       `Which cargo would you like to start a jettison vote about?`,
@@ -53,9 +53,7 @@ module.exports = async ({ msg, guild }) => {
     if (amountPossessed > 1)
       amountsAsReactions.push({
         emoji: numberToEmoji(1),
-        label: `1 ${
-          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNIT
-        }`,
+        label: `1 ${cargoToJettison.type === 'credits' ? '' : WEIGHT_UNIT}`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1
           getMessageToAttach(msg)
@@ -65,9 +63,7 @@ module.exports = async ({ msg, guild }) => {
     if (amountPossessed > 10)
       amountsAsReactions.push({
         emoji: numberToEmoji(2),
-        label: `10 ${
-          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
-        }`,
+        label: `10 ${cargoToJettison.type === 'credits' ? '' : WEIGHT_UNITS}`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 10
           getMessageToAttach(msg)
@@ -77,9 +73,7 @@ module.exports = async ({ msg, guild }) => {
     if (amountPossessed > 100)
       amountsAsReactions.push({
         emoji: numberToEmoji(3),
-        label: `100 ${
-          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
-        }`,
+        label: `100 ${cargoToJettison.type === 'credits' ? '' : WEIGHT_UNITS}`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 100
           getMessageToAttach(msg)
@@ -89,9 +83,7 @@ module.exports = async ({ msg, guild }) => {
     if (amountPossessed > 1000)
       amountsAsReactions.push({
         emoji: numberToEmoji(4),
-        label: `1000 ${
-          cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS
-        }`,
+        label: `1000 ${cargoToJettison.type === 'credits' ? '' : WEIGHT_UNITS}`,
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1000
           getMessageToAttach(msg)
@@ -100,9 +92,9 @@ module.exports = async ({ msg, guild }) => {
 
     amountsAsReactions.push({
       emoji: '🔥',
-      label: `All ${amountPossessed.toFixed(2)} ${
-        process.env.WEIGHT_UNITS
-      } of ${cargoToJettison.type === 'credits' ? 'them' : 'it'}`,
+      label: `All ${amountPossessed.toFixed(2)} ${WEIGHT_UNITS} of ${
+        cargoToJettison.type === 'credits' ? 'them' : 'it'
+      }`,
       action: ({ msg, emoji, user }) => {
         amountToJettison = amountPossessed
         getMessageToAttach(msg)
@@ -197,9 +189,7 @@ module.exports = async ({ msg, guild }) => {
 
     detailsEmbed.setTitle(
       `Jettison ${amountToJettison.toFixed(2)} ${
-        cargoToJettison.type === 'credits'
-          ? ''
-          : process.env.WEIGHT_UNITS + ' of'
+        cargoToJettison.type === 'credits' ? '' : WEIGHT_UNITS + ' of'
       } ${cargoToJettison.emoji}${
         cargoToJettison.displayName
       }? | Vote started by ${msg.author.nickname}`,
@@ -240,7 +230,7 @@ module.exports = async ({ msg, guild }) => {
     )
 
     detailsEmbed.title = `Jettisoned ${amountToJettison.toFixed(2)} ${
-      cargoToJettison.type === 'credits' ? '' : process.env.WEIGHT_UNITS + ' of'
+      cargoToJettison.type === 'credits' ? '' : WEIGHT_UNITS + ' of'
     } ${cargoToJettison.emoji}${cargoToJettison.displayName}.`
 
     detailsEmbed.description = story.jettison.votePassed(

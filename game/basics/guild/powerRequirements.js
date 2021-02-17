@@ -1,3 +1,1 @@
-module.exports = {
-  land: 8,
-}
+module.exports = {}

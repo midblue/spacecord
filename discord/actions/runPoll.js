@@ -9,7 +9,7 @@ module.exports = async ({
   pollType,
   embed,
   pollTitle = 'Crew Member Poll',
-  time = process.env.GENERAL_VOTE_TIME,
+  time = GENERAL_VOTE_TIME,
   reactions,
   requirements,
   staminaRequirements,
@@ -38,9 +38,7 @@ module.exports = async ({
 
   // make default embed if missing
   if (!embed)
-    embed = new Discord.MessageEmbed()
-      .setColor(process.env.APP_COLOR)
-      .setTitle(pollTitle)
+    embed = new Discord.MessageEmbed().setColor(APP_COLOR).setTitle(pollTitle)
   if (!embed.fields) embed.fields = []
 
   const minimumMembersMustVote = minimumMemberPercent

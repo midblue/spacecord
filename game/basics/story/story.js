@@ -89,18 +89,16 @@ module.exports = {
   food: {
     insufficient: () => `Your ship is out of food!`,
     low: (amount, ticksLeft) =>
-      `Your ship is dangerously low on food! You only have ${amount}${process.env.WEIGHT_UNITS}, which should only last ${ticksLeft} more ${process.env.TIME_UNITS}`,
+      `Your ship is dangerously low on food! You only have ${amount}${WEIGHT_UNITS}, which should only last ${ticksLeft} more ${TIME_UNITS}`,
   },
   power: {
     insufficient: (guild, amountNeeded) =>
-      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_POWER <NEED ${amountNeeded}${process.env.POWER_UNIT} | HAVE ${guild.ship.power}${process.env.POWER_UNIT}>"`,
+      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_POWER <NEED ${amountNeeded}${POWER_UNIT} | HAVE ${guild.ship.power}${POWER_UNIT}>"`,
     add: {
       treadmill: (input, toAdd, total, max) =>
-        `With ${input} runners, you generated ${toAdd}${
-          process.env.POWER_UNIT
-        } of power. The ship is now charged to ${total}${
-          process.env.POWER_UNIT
-        }. (${Math.round((total / max) * 100)}%)`,
+        `With ${input} runners, you generated ${toAdd}${POWER_UNIT} of power. The ship is now charged to ${total}${POWER_UNIT}. (${Math.round(
+          (total / max) * 100,
+        )}%)`,
     },
   },
   broadcast: {
@@ -110,15 +108,13 @@ module.exports = {
       `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     location: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `${Math.round(
-          yesPercent * 100,
-        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
+        `You key in a few commands and listen as your ship's ${
           equipment.displayName
         } begins to hum. Your location has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
-        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
-          process.env.POWER_UNIT
-        } of power.`,
+        } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
+          yesPercent * 100,
+        )}% of voters agreed)`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
           `Our location is [${Math.round(ship.location[0])}, ${Math.round(
@@ -129,15 +125,13 @@ module.exports = {
     },
     distress: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `${Math.round(
-          yesPercent * 100,
-        )}% of the available crew members say yes, so you key in a few commands and listen as your ship's ${
+        `You key in a few commands and listen as your ship's ${
           equipment.displayName
         } begins to hum. A distress signal has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
-        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
-          process.env.POWER_UNIT
-        } of power.`,
+        } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
+          yesPercent * 100,
+        )}% of voters agreed)`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
           `We need help! Please rescue us at [${Math.round(
@@ -148,15 +142,13 @@ module.exports = {
     },
     surrender: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `${Math.round(
-          yesPercent * 100,
-        )}% of the available crew members agree, so you command your ship's ${
+        `You command your ship's ${
           equipment.displayName
         } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${
           Math.round(effectiveRange * 10) / 10
-        } ${process.env.DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${
-          process.env.POWER_UNIT
-        } of power.`,
+        } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
+          yesPercent * 100,
+        )}% of voters agreed)`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
           `We, of the ship ${ship.name}, do hereby surrender.`,
@@ -165,9 +157,7 @@ module.exports = {
     },
     faction: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `${Math.round(
-          yesPercent * 100,
-        )}% of the available crew members agree, so you hit the big ${
+        `You hit the big ${
           ship.faction.color
         } button on your control panel. Your ship's ${
           equipment.displayName
@@ -175,9 +165,9 @@ module.exports = {
           ship.faction.emoji
         }${ship.faction.name} echoes across space to any ship within ${
           Math.round(effectiveRange * 10) / 10
-        } ${process.env.DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${
-          process.env.POWER_UNIT
-        } of power.`,
+        } ${DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
+          yesPercent * 100,
+        )}% of voters agreed)`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
           `Members of ${ship.faction.name}! The crew of ${ship.name} calls out to you!`,
@@ -186,15 +176,13 @@ module.exports = {
     },
     attack: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `${Math.round(
-          yesPercent * 100,
-        )}% of the available crew members agree, so you hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
+        `You hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
           equipment.displayName
         } broadcasts your avarice. An attack signal makes its way to any ship within ${
           Math.round(effectiveRange * 10) / 10
-        } ${process.env.DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${
-          process.env.POWER_UNIT
-        } of power.`,
+        } ${DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
+          yesPercent * 100,
+        )}% of voters agreed)`,
       receive: (ship, garbleAmount = 0) =>
         `Your ship's antenna picks up a broadcast: "${garble(
           `We of ${ship.name} declare an attack! Prepare to die, scum!`,
@@ -204,13 +192,13 @@ module.exports = {
   },
   jettison: {
     votePassed: (yesPercent, cargo, amount) =>
-      `${Math.round(
-        yesPercent * 100,
-      )}% of the available crew members agree, so you hit the trash-can-shaped button on your controls. You watch out of the window as ${amount.toFixed(
+      `You hit the trash-can-shaped button on your controls. You watch out of the window as ${amount.toFixed(
         2,
-      )} ${process.env.WEIGHT_UNITS} of ${
+      )} ${WEIGHT_UNITS} of ${
         cargo.displayName
-      } goes drifting off into space.`,
+      } goes drifting off into space. (${Math.round(
+        yesPercent * 100,
+      )}% of voters agreed)`,
     message: {
       peace: () => `A token of peace.`,
       forYou: () => `Enjoy!`,
@@ -276,16 +264,14 @@ module.exports = {
     cargo: {
       voteFailed: (cargo, amount, cost) =>
         `The crew decides collectively not to buy ${amount} ${
-          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
-        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
-          process.env.WEIGHT_UNIT
-        }.`,
+          amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
+        } of ${cargo.emoji}${
+          cargo.displayName
+        } for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
-        `You bought ${amount} ${
-          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
-        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
-          process.env.WEIGHT_UNIT
-        }.`,
+        `You bought ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
+          cargo.emoji
+        }${cargo.displayName} for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
     },
   },
   sell: {
@@ -298,16 +284,14 @@ module.exports = {
     cargo: {
       voteFailed: (cargo, amount, cost) =>
         `The crew decides collectively not to sell ${amount} ${
-          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
-        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
-          process.env.WEIGHT_UNIT
-        }.`,
+          amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
+        } of ${cargo.emoji}${
+          cargo.displayName
+        } for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
-        `You sold ${amount} ${
-          amount === 1 ? process.env.WEIGHT_UNIT : process.env.WEIGHT_UNITS
-        } of ${cargo.emoji}${cargo.displayName} for \`💳${cost}\` credits per ${
-          process.env.WEIGHT_UNIT
-        }.`,
+        `You sold ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
+          cargo.emoji
+        }${cargo.displayName} for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
     },
   },
   repair: {
@@ -415,25 +399,27 @@ module.exports = {
     },
     redirect: {
       success: (degrees, arrow, voteCount) =>
-        `With ${voteCount} vote${
+        `Your ship rotates to face ${arrow} ${degrees} degrees. (${voteCount} vote${
           voteCount === 1 ? '' : 's'
-        }, your ship rotates to face ${arrow} ${degrees} degrees.`,
+        })`,
     },
     adjustSpeed: {
       success: (spedUp, newSpeed, speedPercent, voteCount) =>
-        `With ${voteCount} vote${voteCount === 1 ? '' : 's'}, your ship ${
+        `Tour ship ${
           spedUp ? 'speeds up' : 'slows down'
-        } to ${newSpeed}${process.env.SPEED_UNIT}, which is ${Math.round(
+        } to ${newSpeed}${SPEED_UNIT}, which is ${Math.round(
           speedPercent * 100,
-        )}% of its maximum power.`,
+        )}% of its maximum power. (${voteCount} vote${
+          voteCount === 1 ? '' : 's'
+        })`,
     },
   },
   land: {
     voteFailed: () => `The crew decides collectively not to land here.`,
     votePassed: (yesPercent, planet) =>
-      `${Math.round(
+      `You've landed on ${planet.name}. (${Math.round(
         yesPercent * 100,
-      )}% of the available crew members agree to land on ${planet.name}.`,
+      )}% of voters agreed)`,
     generalPlanet: (ship, planet) =>
       `The landing gear extends as ${ship.name} approaches the ${
         planet.color
@@ -444,6 +430,13 @@ module.exports = {
       )}:00, and the crew descends the extended gangplank, ready to stretch their legs amongst the locals at the spaceport.`,
     recharge: () =>
       `The friendly crew at the dock refills your batteries, on the house.`,
+  },
+  depart: {
+    voteFailed: () => `The crew decides collectively not to depart.`,
+    votePassed: (yesPercent, planet) =>
+      `You've departed from ${planet.name}. (${Math.round(
+        yesPercent * 100,
+      )}% of voters agreed)`,
     depart: (planet) =>
       `Your crew packs aboard the ship as the engines heat up. Clouds of smoke hide the launchpad as you lift off from ${
         planet.name
@@ -460,8 +453,8 @@ module.exports = {
     planet: (planet) =>
       `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${
         planet.color
-      } planet located at [${planet.location.join(', ')}] ${
-        process.env.DISTANCE_UNIT
-      }. It has been added to your galaxy map. Congratulations!`,
+      } planet located at [${planet.location.join(
+        ', ',
+      )}] ${DISTANCE_UNIT}. It has been added to your galaxy map. Congratulations!`,
   },
 }

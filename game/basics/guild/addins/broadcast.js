@@ -13,7 +13,7 @@ module.exports = (guild) => {
 
     let timeUntilCanBroadcast =
       (guild.lastBroadcast?.time || 0) +
-      equipment.rechargeTime * process.env.STEP_INTERVAL -
+      equipment.rechargeTime * STEP_INTERVAL -
       Date.now()
     if (timeUntilCanBroadcast < 0) timeUntilCanBroadcast = 0
 
@@ -29,10 +29,7 @@ module.exports = (guild) => {
         },
         {
           name: '📶 Max Range',
-          value:
-            equipment.range * equipment.repair +
-            ' ' +
-            process.env.DISTANCE_UNIT,
+          value: equipment.range * equipment.repair + ' ' + DISTANCE_UNIT,
         },
 
         {
@@ -45,7 +42,7 @@ module.exports = (guild) => {
 
         {
           name: '⚡️Ship Power',
-          value: guild.ship.power.toFixed(1) + process.env.POWER_UNIT,
+          value: guild.ship.power.toFixed(1) + POWER_UNIT,
         },
       ],
     )
@@ -132,7 +129,7 @@ module.exports = (guild) => {
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
-                equipment.rechargeTime * process.env.STEP_INTERVAL >
+                equipment.rechargeTime * STEP_INTERVAL >
               Date.now()
             )
               return guild.pushToGuild(
@@ -198,8 +195,7 @@ module.exports = (guild) => {
                 },
                 {
                   name: 'Effective Range',
-                  value:
-                    biasedRange.toFixed(2) + ' ' + process.env.DISTANCE_UNIT,
+                  value: biasedRange.toFixed(2) + ' ' + DISTANCE_UNIT,
                   inline: true,
                 },
                 {

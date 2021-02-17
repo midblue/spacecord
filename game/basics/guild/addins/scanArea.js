@@ -39,7 +39,7 @@ module.exports = (guild) => {
       messages.push(
         preMessage +
           ` you look out out the window. 
-You can see for about ${range} ${process.env.DISTANCE_UNIT}.
+You can see for about ${range} ${DISTANCE_UNIT}.
 You see ${
             thingsFoundCount
               ? thingsFoundCount +
@@ -87,7 +87,7 @@ You see ${
         value: guild.ship.status.stranded
           ? 'Out of Fuel!'
           : guild.ship.speed
-          ? guild.ship.speed.toFixed(2) + ' ' + process.env.SPEED_UNIT
+          ? guild.ship.speed.toFixed(2) + ' ' + SPEED_UNIT
           : 'Stopped',
       },
       {
@@ -103,12 +103,11 @@ You see ${
         value:
           `${guild.ship.location[0].toFixed(
             2,
-          )}, ${guild.ship.location[1].toFixed(2)} ` +
-          process.env.DISTANCE_UNIT,
+          )}, ${guild.ship.location[1].toFixed(2)} ` + DISTANCE_UNIT,
       },
       {
         name: '📡 Scan Radius',
-        value: `${telemetry.range} ${process.env.DISTANCE_UNIT}`,
+        value: `${telemetry.range} ${DISTANCE_UNIT}`,
       },
       {
         name: '⚡Power',
@@ -117,7 +116,7 @@ You see ${
           '\n' +
           telemetry.powerUse +
           ' ' +
-          process.env.POWER_UNIT +
+          POWER_UNIT +
           ' used',
       },
       {
@@ -130,7 +129,7 @@ You see ${
     if (lowPower)
       data.push({
         name: `⚠️ Low Power ⚠️`,
-        value: `${guild.ship.power + process.env.POWER_UNIT} remaining`,
+        value: `${guild.ship.power + POWER_UNIT} remaining`,
       })
 
     // ---------------- actions ------------------

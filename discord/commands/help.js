@@ -145,14 +145,14 @@ module.exports = {
       ],
     )
 
-    const embed = new Discord.MessageEmbed().setColor(process.env.APP_COLOR)
-    embed.title = `ℹ️ ${process.env.GAME_TITLE} | Help`
-    embed.description = `Thanks for playing ${process.env.GAME_TITLE}!\nThis game is a **work in progress**, so don't be surprised when things break, but do let me know in the support server.\nHere's info about generally what it is, how you play, and so on!
+    const embed = new Discord.MessageEmbed().setColor(APP_COLOR)
+    embed.title = `ℹ️ ${GAME_TITLE} | Help`
+    embed.description = `Thanks for playing ${GAME_TITLE}!\nThis game is a **work in progress**, so don't be surprised when things break, but do let me know in the support server.\nHere's info about generally what it is, how you play, and so on!
 	
 Pick a category below to get info on specific commands or elements of the game.`
 
     // const embed3 = new Discord.MessageEmbed()
-    //   .setColor(process.env.APP_COLOR)
+    //   .setColor(APP_COLOR)
     //   .setTitle(`Settings`)
     //   .setDescription(`Help and settings for the bot itself.`)
     //   .addFields(
@@ -174,7 +174,7 @@ Pick a category below to get info on specific commands or elements of the game.`
     // send(msg, embed3)
 
     // const embed2 = new Discord.MessageEmbed()
-    //   .setColor(process.env.APP_COLOR)
+    //   .setColor(APP_COLOR)
     //   .setTitle(`Captain's Controls`)
     //   .setDescription(
     //     `Only the ship's captain (or server admins) can do these actions!`,
@@ -198,7 +198,7 @@ Pick a category below to get info on specific commands or elements of the game.`
     // send(msg, embed2)
 
     // const embed = new Discord.MessageEmbed()
-    //   .setColor(process.env.APP_COLOR)
+    //   .setColor(APP_COLOR)
     //   .setTitle(`Gameplay`)
     //   .setDescription(`Controls and commands for playing the game.`)
     //   .addFields(

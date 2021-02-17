@@ -31,7 +31,7 @@ module.exports = async function (
 
     for (let textEl of splitMessage) {
       // const embed = new Discord.MessageEmbed()
-      //   .setColor(process.env.APP_COLOR)
+      //   .setColor(APP_COLOR)
       //   .setDescription(textEl)
       sentMessages.push(
         await (msgOrChannel.channel ? msgOrChannel.channel : msgOrChannel)

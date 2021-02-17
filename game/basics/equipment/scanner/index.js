@@ -1,12 +1,12 @@
 const defaults = {
   type: 'scanner',
-  description: ``,
+  description: '',
   weight: 40,
   baseHp: 10,
   range: 1.5,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.04,
-  baseCost: 30,
+  baseCost: 30
 }
 
 // * get all exports from files in this folder
@@ -18,7 +18,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`),
+      ...require(`./${file}`)
     }
   })
   // console.log('addins', addins)

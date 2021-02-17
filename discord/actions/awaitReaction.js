@@ -16,7 +16,7 @@ module.exports = async ({
   actionProps,
   allowNonMembers = false,
   removeUserReactions = true,
-  endOnReaction = false,
+  endOnReaction = false
 }) => {
   return new Promise(async (resolve) => {
     // make sure all other edits have gone through so we don't lose the commands
@@ -26,27 +26,28 @@ module.exports = async ({
     let ended = false
 
     if (embed) {
-      if ((reactions && reactions.length) || listeningType)
+      if ((reactions && reactions.length) || listeningType) {
         embed.setFooter(
           `Listening for ${
-            listeningType ? listeningType : reactions ? 'commands' : 'reactions'
-          }...`,
+            listeningType || (reactions ? 'commands' : 'reactions')
+          }...`
         )
-      if (reactions && reactions.length && reactions[0].label && embed)
+      }
+      if (reactions && reactions.length && reactions[0].label && embed) {
         embed.fields.push({
           id: 'commandLabel',
-          name: commandsLabel || `Commands`,
+          name: commandsLabel || 'Commands',
           value: reactions
             .map(({ emoji, label }) => `${emoji} - ${label}`)
-            .join('\n'),
+            .join('\n')
         })
+      }
       if (reactions && reactions.length && !msg.deleted) msg.edit(embed)
     }
 
-    if (reactions && reactions.length && !msg.deleted)
-      for (let r of reactions) msg.react(r.emoji)
+    if (reactions && reactions.length && !msg.deleted) { for (const r of reactions) msg.react(r.emoji) }
 
-    let collectedReactions = []
+    const collectedReactions = []
 
     // ending function
     const end = () => {
@@ -58,7 +59,7 @@ module.exports = async ({
         if (embed.fields) {
           // console.log(JSON.stringify(embed.fields) + '121221313123')
           const fieldIndex = embed.fields.findIndex(
-            (f) => f.id === 'commandLabel',
+            (f) => f.id === 'commandLabel'
           )
           if (fieldIndex) embed.fields.splice(fieldIndex, 1)
         }
@@ -73,8 +74,7 @@ module.exports = async ({
       // `event.t` is the raw event name
       if (
         !['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(event.t)
-      )
-        return
+      ) { return }
 
       const { d: data } = event
       const user = await client.users.fetch(data.user_id)
@@ -103,42 +103,42 @@ module.exports = async ({
       // if there are specific reaction options
       if (reactions && reactions.length) {
         const chosenReaction = reactions.find(
-          (r) => r.emoji === userReactedWithEmoji,
+          (r) => r.emoji === userReactedWithEmoji
         )
         if (!chosenReaction) return
 
         // if there are level requirements
         if (chosenReaction.requirements) {
           if (!member) return
-          for (let r in chosenReaction.requirements)
+          for (const r in chosenReaction.requirements) {
             if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
               send(
                 msg,
                 story.action.doesNotMeetRequirements(
                   chosenReaction.requirements,
-                  member,
-                ),
+                  member
+                )
               )
               return
             }
+          }
         }
       }
 
       // add it to the list if it's not a repeat
       if (
         !collectedReactions.find(
-          (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji,
+          (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji
         ) &&
         event.t === 'MESSAGE_REACTION_ADD'
-      )
-        collectedReactions.push({ user, emoji: userReactedWithEmoji })
-      else if (event.t === 'MESSAGE_REACTION_REMOVE')
+      ) { collectedReactions.push({ user, emoji: userReactedWithEmoji }) } else if (event.t === 'MESSAGE_REACTION_REMOVE') {
         collectedReactions.splice(
           collectedReactions.indexOf(
-            (r) => r.user.id === user.id && r.emoji === userReactedWithEmoji,
+            (r) => r.user.id === user.id && r.emoji === userReactedWithEmoji
           ),
-          1,
+          1
         )
+      }
 
       // run the action for that emoji if there is one
       if (
@@ -146,14 +146,12 @@ module.exports = async ({
         !reactions ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji) ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji).action
-      )
-        return
+      ) { return }
 
       // console.log(userReactedWithEmoji)
 
       msg.author = user
-      if (!msg.author.nickname)
-        msg.author.nickname = await username(msg, msg.author.id)
+      if (!msg.author.nickname) { msg.author.nickname = await username(msg, msg.author.id) }
       reactions
         .find((r) => r.emoji === userReactedWithEmoji)
         .action({
@@ -162,7 +160,7 @@ module.exports = async ({
           msg,
           emoji: userReactedWithEmoji,
           guild,
-          ...(actionProps || {}),
+          ...(actionProps || {})
         })
 
       if (endOnReaction) end()

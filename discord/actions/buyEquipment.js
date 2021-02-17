@@ -12,16 +12,15 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id,
+    (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject)
-    return console.log('no user found in buyEquipment')
+  if (!authorCrewMemberObject) { return console.log('no user found in buyEquipment') }
   const staminaRes = authorCrewMemberObject.useStamina('poll')
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Buy ${part.emoji} ${part.displayName} for \`💳${cost}\` credits? | Vote started by ${msg.author.nickname}`,
+    `Buy ${part.emoji} ${part.displayName} for \`💳${cost}\` credits? | Vote started by ${msg.author.nickname}`
   )
   voteEmbed.description = willReplace
     ? `Warning: This part will replace your existing ${
@@ -36,7 +35,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
     minimumMemberPercent: 0.2,
     msg,
     guild,
-    cleanUp: false,
+    cleanUp: false
   })
   if (!voteResult.ok) return send(msg, voteResult.message)
   voteEmbed.fields = []
@@ -61,17 +60,18 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   voteEmbed.description = story.buy.equipment.votePassed(part, cost)
 
   const { soldCredits, soldPart } = guild.ship.addPart(part, cost)
-  if (soldCredits)
+  if (soldCredits) {
     voteEmbed.description +=
       '\n\n' + story.sell.equipment.votePassed(soldPart, soldCredits)
+  }
 
   voteEmbed.description += `\n\nYou have \`💳${Math.round(
-    guild.ship.credits,
+    guild.ship.credits
   )}\` credits remaining.`
 
   voteEmbed.description += `\n\nYour ship is now carrying ${Math.round(
     (guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight) *
-      100,
+      100
   )}% of its maximum capacity.`
 
   voteResult.sentMessage.edit(voteEmbed)

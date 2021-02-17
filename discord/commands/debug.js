@@ -8,13 +8,13 @@ module.exports = {
   documentation: false,
   gameAdminsOnly: true,
   public: true,
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}d(?: ([^ ]*))?(?: (.*))?$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({ msg, match, settings, client, ship }) {
+  async action ({ msg, match, settings, client, ship }) {
     log(msg, 'Debug: ' + match[1], msg.guild.name)
 
     const debugCommands = {
@@ -27,10 +27,10 @@ module.exports = {
             planets: game.planets.length,
             caches: game.caches.length,
             startTime: game.startTime,
-            lastTick: game.lastTick,
+            lastTick: game.lastTick
           }
           return JSON.stringify(data, null, 2)
-        },
+        }
       },
       this: {
         description: 'this',
@@ -38,14 +38,14 @@ module.exports = {
           const { guild, ok } = await client.game.guild(msg.guild.id)
           if (!ok) return 'no guild with id ' + id
           return JSON.stringify(guild.saveableData(), null, 2)
-        },
+        }
       },
       tick: {
         description: 'tick',
         action: async () => {
           client.game.tick()
           return 'ticked'
-        },
+        }
       },
       guild: {
         description: 'guild <id>',
@@ -54,7 +54,7 @@ module.exports = {
           const { guild, ok } = await client.game.guild(id)
           if (!ok) return 'no guild with id ' + id
           return JSON.stringify(guild.saveableData(), null, 2)
-        },
+        }
       },
       guilds: {
         description: 'guilds',
@@ -64,7 +64,7 @@ module.exports = {
             .sort((a, b) => b - a)
             .join('\n')
           return '\n' + res
-        },
+        }
       },
       delete: {
         description: 'delete <id>',
@@ -72,13 +72,13 @@ module.exports = {
           if (id === 'this') id = msg.guild.id
           const res = await client.game.removeGuild(id)
           return res
-        },
+        }
       },
       move: {
         description: 'move <guild id> <x>,<y>',
         action: async (str) => {
           let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
-            str.replace(/\[\]/g, ''),
+            str.replace(/\[\]/g, '')
           )
           if (id === 'this') id = msg.guild.id
           const { guild } = await client.game.guild(id)
@@ -91,7 +91,7 @@ module.exports = {
           }
           await guild.ship.move(false, [x, y])
           return 'moved ship.'
-        },
+        }
       },
       power: {
         description: 'power <id> <power>',
@@ -107,7 +107,7 @@ module.exports = {
           }
           guild.ship.power = power
           return 'set power to ' + power
-        },
+        }
       },
       credits: {
         description: 'credits <id> <credits>',
@@ -123,7 +123,7 @@ module.exports = {
           }
           guild.ship.credits = credits
           return 'set credits to ' + credits
-        },
+        }
       },
       cargo: {
         description: 'cargo <id> <type> <amount>',
@@ -141,7 +141,7 @@ module.exports = {
           if (existingCargo) existingCargo.amount = amount
           else guild.ship.cargo.push({ type, amount })
           return 'set ' + type + ' amount to ' + amount
-        },
+        }
       },
       togglestatus: {
         description: 'togglestatus <id> <statustype>',
@@ -151,10 +151,10 @@ module.exports = {
           const { guild } = await client.game.guild(id)
           if (!guild) return 'no guild found for ' + id
           const currStatus = guild.ship.status
-          const newStatus = !currStatus[type] ? true : false
+          const newStatus = !currStatus[type]
           currStatus[type] = newStatus
           return 'set ' + type + ' to ' + newStatus
-        },
+        }
       },
       stamina: {
         description: 'stamina',
@@ -165,7 +165,7 @@ module.exports = {
           if (!member) return 'no member with id ' + msg.author.id
           member.stamina = 1
           return 'refilled your stamina'
-        },
+        }
       },
       setstamina: {
         description: 'setstamina <user id> <amount>',
@@ -183,7 +183,7 @@ module.exports = {
           if (!member) return 'no member with id ' + msg.author.id
           member.stamina = amount / member.maxStamina()
           return 'set stamina to ' + amount
-        },
+        }
       },
       kill: {
         description: 'kill <id>',
@@ -198,11 +198,11 @@ module.exports = {
             weapon: { displayName: 'Banhammer', emoji: '🔨' },
             attackDistance: 999999,
             advantageDamageMultiplier: 999999,
-            advantageAccuracyMultiplier: 999999,
+            advantageAccuracyMultiplier: 999999
           })
           return 'killed ' + id
-        },
-      },
+        }
+      }
     }
 
     let message =
@@ -223,5 +223,5 @@ module.exports = {
       }
     }
     return send(msg, 'Debug: ' + message)
-  },
+  }
 }

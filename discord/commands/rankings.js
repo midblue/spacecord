@@ -9,19 +9,19 @@ const runGuildCommand = require('../actions/runGuildCommand')
 module.exports = {
   tag: 'rankings',
   documentation: {
-    name: `rankings`,
-    value: `Crew member rankings.`,
+    name: 'rankings',
+    value: 'Crew member rankings.',
     emoji: '🏆',
     category: 'crew',
-    priority: 60,
+    priority: 60
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:scores?|highscores?|ranki?n?g?s?)$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({ msg, settings, ship, guild }) {
+  async action ({ msg, settings, ship, guild }) {
     log(msg, 'Rankings', msg.guild.name)
 
     const trophy = ['🥇', '🥈', '🥉', '🎖', '🎖']
@@ -34,21 +34,21 @@ module.exports = {
           (m, index) =>
             `${trophy[index]} **%username%${m.id}%**: Level ${
               m.level[skill.name]
-            }`, // (${m.xp[skill.name]} xp)
+            }` // (${m.xp[skill.name]} xp)
         )
         .join('\n')
       return {
         name: `${skill.emoji} ${capitalize(skill.name)}`,
         value:
           // '‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n' +
-          await applyCustomParams(msg, memberRanking),
+          await applyCustomParams(msg, memberRanking)
       }
     })
     rankings = (await Promise.all(rankings)).filter((r) => r.value)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle(`Crew Rankings`)
+      .setTitle('Crew Rankings')
       .addFields(rankings.map((s) => ({ ...s, inline: s.inline ?? true })))
 
     const sentMessage = (await send(msg, embed))[0]
@@ -68,5 +68,5 @@ module.exports = {
     //   guild,
     //   listeningType: 'training choice',
     // })
-  },
+  }
 }

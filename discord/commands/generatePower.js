@@ -7,17 +7,17 @@ const runGuildCommand = require('../actions/runGuildCommand')
 module.exports = {
   tag: 'generatePower',
   documentation: {
-    name: `generatepower`,
-    value: `Hop on the treadmill to make some power for the ship!`,
+    name: 'generatepower',
+    value: 'Hop on the treadmill to make some power for the ship!',
     category: 'ship',
-    emoji: '🏃',
+    emoji: '🏃'
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:generatepower)$`, 'gi').exec(
-      content,
+      content
     )
   },
-  async action({ msg, settings, exerciseType, ship, guild }) {
+  async action ({ msg, settings, exerciseType, ship, guild }) {
     log(msg, 'Generate Power', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
@@ -26,7 +26,7 @@ module.exports = {
       .addFields({
         name: 'Work out to generate power!',
         value: `React to this message with running emoji (🏃‍♀️💨👟) as many times as you can within 10 seconds!
-Other crew members can help out, too.`,
+Other crew members can help out, too.`
       })
 
     const sentMessage = (await send(msg, embed))[0]
@@ -34,7 +34,7 @@ Other crew members can help out, too.`,
       msg: sentMessage,
       embed,
       time: 10000,
-      listeningType: 'running emoji',
+      listeningType: 'running emoji'
     })
     const totalReactions = collected
       .filter(({ user, emoji }) =>
@@ -55,8 +55,8 @@ Other crew members can help out, too.`,
           '💨',
           '🎽',
           '👟',
-          '🌬️',
-        ].includes(emoji),
+          '🌬️'
+        ].includes(emoji)
       )
       .reduce((total, c) => total + c.count, 0)
 
@@ -64,8 +64,8 @@ Other crew members can help out, too.`,
     if (powerRes.ok) {
       sentMessage.edit(embed)
       embed.fields = {
-        name: `Time's Up!`,
-        value: powerRes.message,
+        name: 'Time\'s Up!',
+        value: powerRes.message
       }
     } else send(msg, powerRes.message)
 
@@ -73,17 +73,17 @@ Other crew members can help out, too.`,
       const reactionOptions = [
         {
           emoji: '🏃‍♀️',
-          action() {
+          action () {
             runGuildCommand({ msg, commandTag: 'generatePower' })
-          },
-        },
+          }
+        }
       ]
       await awaitReaction({
         msg: sentMessage,
         reactions: reactionOptions,
         embed,
-        guild,
+        guild
       })
     }, 500)
-  },
+  }
 }

@@ -3,14 +3,14 @@ module.exports = (guild) => {
     return Math.max(
       guild.ship.attackRadius(),
       guild.ship.tractorRadius(),
-      guild.ship.shipScanRadius(),
+      guild.ship.shipScanRadius()
     )
   }
 
   guild.ship.attackRadius = () => {
     const maxWeaponRange = (guild.ship.canAttack() || []).reduce(
       (max, w) => Math.max(max, w.range || 0),
-      0,
+      0
     )
     return maxWeaponRange
   }

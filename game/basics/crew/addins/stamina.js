@@ -11,8 +11,8 @@ module.exports = (member) => {
   }
 
   member.gainStamina = (presetAmount) => {
-    const gainAmount = presetAmount || member.staminaGainPerTick(),
-      gainAmountAsPercent = gainAmount / member.maxStamina()
+    const gainAmount = presetAmount || member.staminaGainPerTick()
+    const gainAmountAsPercent = gainAmount / member.maxStamina()
     member.stamina = (member.stamina || 0) + gainAmountAsPercent
     if (member.stamina > 1) member.stamina = 1
   }
@@ -21,20 +21,21 @@ module.exports = (member) => {
     if (typeof amount === 'string') amount = staminaRequirements[amount]
 
     const currentMemberStamina = member.stamina * member.maxStamina()
-    if (amount > currentMemberStamina)
+    if (amount > currentMemberStamina) {
       return {
         ok: false,
         message: story.crew.stamina.notEnough(
           member.id,
           currentMemberStamina,
-          amount,
-        ),
+          amount
+        )
       }
+    }
     member.stamina = (member.stamina || 1) - amount / member.maxStamina()
     if (member.stamina < 0.001) member.stamina = 0
 
     return {
-      ok: true,
+      ok: true
     }
   }
 }

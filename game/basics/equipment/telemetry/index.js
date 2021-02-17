@@ -1,11 +1,11 @@
 const defaults = {
   type: 'telemetry',
-  description: ``,
+  description: '',
   weight: 30,
   baseHp: 10,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.02,
-  baseCost: 80,
+  baseCost: 80
 }
 
 // * get all exports from files in this folder
@@ -17,7 +17,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`),
+      ...require(`./${file}`)
     }
   })
   // console.log(addins.length, 'addins', addins)

@@ -3,7 +3,7 @@ const {
   bearingToRadians,
   bearingToDegrees,
   bearingToArrow,
-  distance,
+  distance
 } = require('../../../../common')
 
 module.exports = (guild) => {
@@ -12,7 +12,7 @@ module.exports = (guild) => {
 
     const rawMaxSpeed = guild.ship.equipment.engine.reduce(
       (total, engine) => engine.maxSpeed * engine.repair + total,
-      0,
+      0
     )
 
     let percentOfMaxShipWeight =
@@ -33,10 +33,11 @@ module.exports = (guild) => {
   }
 
   guild.ship.redetermineSpeed = (aggregate = []) => {
-    if (!aggregate.length)
+    if (!aggregate.length) {
       return {
-        ok: false,
+        ok: false
       }
+    }
     const { voteResult, newSpeed } = getShipSpeedFromAggregate(aggregate, guild)
     const previousSpeed = guild.ship.speed
     if (previousSpeed !== newSpeed) {
@@ -46,8 +47,8 @@ module.exports = (guild) => {
           newSpeed > previousSpeed,
           newSpeed,
           voteResult / 10,
-          aggregate.length,
-        ),
+          aggregate.length
+        )
       )
       guild.saveNewDataToDb()
     }
@@ -55,7 +56,7 @@ module.exports = (guild) => {
       ok: true,
       newSpeed,
       previousSpeed,
-      voteResult,
+      voteResult
     }
   }
 
@@ -64,30 +65,20 @@ module.exports = (guild) => {
 
     const bestShipSpeedLevels = guild.ship.equipment.engine.reduce(
       (max, engine) => Math.max(max, engine.powerLevels || 0),
-      2,
+      2
     )
 
     availableSpeedLevels.push({ emoji: '🔟', speed: 1 })
-    if (bestShipSpeedLevels > 1)
-      availableSpeedLevels.push({ emoji: '0️⃣', speed: 0 })
-    if (bestShipSpeedLevels > 2)
-      availableSpeedLevels.push({ emoji: '5️⃣', speed: 0.5 })
-    if (bestShipSpeedLevels > 3)
-      availableSpeedLevels.push({ emoji: '7️⃣', speed: 0.7 })
-    if (bestShipSpeedLevels > 4)
-      availableSpeedLevels.push({ emoji: '2️⃣', speed: 0.2 })
-    if (bestShipSpeedLevels > 5)
-      availableSpeedLevels.push({ emoji: '1️⃣', speed: 0.1 })
-    if (bestShipSpeedLevels > 6)
-      availableSpeedLevels.push({ emoji: '9️⃣', speed: 0.9 })
-    if (bestShipSpeedLevels > 7)
-      availableSpeedLevels.push({ emoji: '4️⃣', speed: 0.4 })
-    if (bestShipSpeedLevels > 8)
-      availableSpeedLevels.push({ emoji: '8️⃣', speed: 0.8 })
-    if (bestShipSpeedLevels > 9)
-      availableSpeedLevels.push({ emoji: '3️⃣', speed: 0.3 })
-    if (bestShipSpeedLevels > 10)
-      availableSpeedLevels.push({ emoji: '6️⃣', speed: 0.6 })
+    if (bestShipSpeedLevels > 1) { availableSpeedLevels.push({ emoji: '0️⃣', speed: 0 }) }
+    if (bestShipSpeedLevels > 2) { availableSpeedLevels.push({ emoji: '5️⃣', speed: 0.5 }) }
+    if (bestShipSpeedLevels > 3) { availableSpeedLevels.push({ emoji: '7️⃣', speed: 0.7 }) }
+    if (bestShipSpeedLevels > 4) { availableSpeedLevels.push({ emoji: '2️⃣', speed: 0.2 }) }
+    if (bestShipSpeedLevels > 5) { availableSpeedLevels.push({ emoji: '1️⃣', speed: 0.1 }) }
+    if (bestShipSpeedLevels > 6) { availableSpeedLevels.push({ emoji: '9️⃣', speed: 0.9 }) }
+    if (bestShipSpeedLevels > 7) { availableSpeedLevels.push({ emoji: '4️⃣', speed: 0.4 }) }
+    if (bestShipSpeedLevels > 8) { availableSpeedLevels.push({ emoji: '8️⃣', speed: 0.8 }) }
+    if (bestShipSpeedLevels > 9) { availableSpeedLevels.push({ emoji: '3️⃣', speed: 0.3 }) }
+    if (bestShipSpeedLevels > 10) { availableSpeedLevels.push({ emoji: '6️⃣', speed: 0.6 }) }
 
     return availableSpeedLevels
   }
@@ -97,27 +88,24 @@ module.exports = (guild) => {
 
     const bestShipDirections = guild.ship.equipment.engine.reduce(
       (max, engine) => Math.max(max, engine.directions || 0),
-      4,
+      4
     )
 
-    if (bestShipDirections === 3)
+    if (bestShipDirections === 3) {
       return [
         { emoji: '↗️', vector: [1, 1] },
         { emoji: '↖️', vector: [-1, 1] },
-        { emoji: '⬇️', vector: [0, -1.414] },
+        { emoji: '⬇️', vector: [0, -1.414] }
       ]
+    }
     availableDirections.push({ emoji: '➡️', vector: [1.414, 0] })
-    if (bestShipDirections > 4)
-      availableDirections.push({ emoji: '↗️', vector: [1, 1] })
+    if (bestShipDirections > 4) { availableDirections.push({ emoji: '↗️', vector: [1, 1] }) }
     availableDirections.push({ emoji: '⬆️', vector: [0, 1.414] })
-    if (bestShipDirections > 5)
-      availableDirections.push({ emoji: '↖️', vector: [-1, 1] })
+    if (bestShipDirections > 5) { availableDirections.push({ emoji: '↖️', vector: [-1, 1] }) }
     availableDirections.push({ emoji: '⬅️', vector: [-1.414, 0] })
-    if (bestShipDirections > 6)
-      availableDirections.push({ emoji: '↙️', vector: [-1, -1] })
+    if (bestShipDirections > 6) { availableDirections.push({ emoji: '↙️', vector: [-1, -1] }) }
     availableDirections.push({ emoji: '⬇️', vector: [0, -1.414] })
-    if (bestShipDirections > 7)
-      availableDirections.push({ emoji: '↘️', vector: [1, -1] })
+    if (bestShipDirections > 7) { availableDirections.push({ emoji: '↘️', vector: [1, -1] }) }
 
     return availableDirections
   }
@@ -132,21 +120,22 @@ module.exports = (guild) => {
     const ship = guild.ship
 
     const fuel = ship.cargo.find((c) => c.type === 'fuel')
-    if (!fuel.amount && useFuel)
+    if (!fuel.amount && useFuel) {
       return {
-        ok: false,
+        ok: false
       }
+    }
 
-    let ok = true,
-      message
+    let ok = true
+    let message
 
     const currentLocation = [ship.location[0] || 0, ship.location[1] || 0]
     const startedOOB = ship.isOOB()
     const currentBearing = bearingToRadians(ship.bearing || [0, 1])
     let distanceToTravel = ship.effectiveSpeed() || 0
     if (coordinates) {
-      const a = ship.location[0] - coordinates[0],
-        b = ship.location[1] - coordinates[1]
+      const a = ship.location[0] - coordinates[0]
+      const b = ship.location[1] - coordinates[1]
       distanceToTravel = Math.sqrt(a * a + b * b)
     }
     const fuelLoss = useFuel ? ship.fuelUsePerTick() : 0
@@ -174,17 +163,18 @@ module.exports = (guild) => {
       ship.status.stranded = false
     }
 
-    if (!ship.status.stranded)
+    if (!ship.status.stranded) {
       guild.ship.equipment.engine.forEach((engine) => {
-        // durability loss
+      // durability loss
         engine.repair -= engine.durabilityLostOnUse * (guild.ship.speed || 0)
         if (engine.repair < 0) engine.repair = 0
       })
+    }
 
     return {
       ok,
       distanceTraveled: distanceToTravel,
-      message,
+      message
     }
   }
 
@@ -193,15 +183,15 @@ module.exports = (guild) => {
       (t, eqType) => {
         const typeWeight = guild.ship.equipment[eqType].reduce(
           (total, eq) => total + (eq.weight || 0),
-          0,
+          0
         )
         return t + typeWeight
       },
-      0,
+      0
     )
     const cargoWeight = guild.ship.cargo.reduce(
       (total, c) => total + Math.abs(c.amount || 0),
-      0,
+      0
     )
     const totalWeight = (guild.ship.weight || 0) + equipmentWeight + cargoWeight
 
@@ -217,7 +207,7 @@ module.exports = (guild) => {
   guild.ship.maxSpeed = () => {
     const rawMaxSpeed = guild.ship.equipment.engine.reduce(
       (total, engine) => engine.maxSpeed + total,
-      0,
+      0
     )
 
     let percentOfMaxShipWeight =
@@ -228,10 +218,11 @@ module.exports = (guild) => {
   }
 
   guild.ship.redirect = (aggregate = []) => {
-    if (!aggregate.length)
+    if (!aggregate.length) {
       return {
-        ok: false,
+        ok: false
       }
+    }
     const directionVector = getShipDirectionFromAggregate(aggregate)
     // const previousBearing = guild.ship.bearing
     guild.ship.bearing = directionVector
@@ -239,50 +230,50 @@ module.exports = (guild) => {
     const arrow = bearingToArrow(directionVector)
     const degrees = bearingToDegrees(directionVector)
     guild.ship.logEntry(
-      story.move.redirect.success(degrees, arrow, aggregate.length),
+      story.move.redirect.success(degrees, arrow, aggregate.length)
     )
     return {
       ok: true,
       arrow,
-      degrees,
+      degrees
     }
   }
 }
 
-function getShipSpeedFromAggregate(aggregate) {
+function getShipSpeedFromAggregate (aggregate) {
   // aggregate is in form [{speed: 0..1, weight: 0..1}]
   const totalWeight = aggregate.reduce(
     (total, current) => (total += current.weight),
-    0,
+    0
   )
   const speedNormalized =
     aggregate.reduce(
       (total, current) => (total += current.speed * current.weight),
-      0,
+      0
     ) / totalWeight
 
   const newSpeed = speedNormalized
   return {
     voteResult: speedNormalized * 10,
-    newSpeed,
+    newSpeed
   }
 }
 
-function getShipDirectionFromAggregate(aggregate) {
+function getShipDirectionFromAggregate (aggregate) {
   // aggregate is in form [{vector: [x, y], weight: 0..1}]
   const totalWeight = aggregate.reduce(
     (total, current) => (total += current.weight),
-    0,
+    0
   )
   const xVector =
     aggregate.reduce(
       (total, current) => (total += current.vector[0] * current.weight),
-      0,
+      0
     ) / totalWeight
   const yVector =
     aggregate.reduce(
       (total, current) => (total += current.vector[1] * current.weight),
-      0,
+      0
     ) / totalWeight
   return [xVector, yVector]
 }

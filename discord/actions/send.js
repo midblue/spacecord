@@ -4,7 +4,7 @@ const Discord = require('discord.js-light')
 module.exports = async function (
   msgOrChannel,
   messages = '',
-  surroundingCharacters = '```',
+  surroundingCharacters = '```'
 ) {
   const sentMessages = []
   if (!Array.isArray(messages)) messages = [messages]
@@ -23,13 +23,13 @@ module.exports = async function (
         splitMessage.push(
           surroundingCharactersToUse +
             remainingText.substring(0, 1990) +
-            surroundingCharactersToUse,
+            surroundingCharactersToUse
         )
         remainingText = remainingText.substring(1990)
       }
     }
 
-    for (let textEl of splitMessage) {
+    for (const textEl of splitMessage) {
       // const embed = new Discord.MessageEmbed()
       //   .setColor(APP_COLOR)
       //   .setDescription(textEl)
@@ -38,7 +38,7 @@ module.exports = async function (
           .send(textEl)
           .catch((err) => {
             console.error('Failed to send!', err.message)
-          }),
+          })
       )
     }
   }

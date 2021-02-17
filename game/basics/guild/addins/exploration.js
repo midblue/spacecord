@@ -8,7 +8,7 @@ module.exports = (guild) => {
       mapString = 'Planets discovered so far:\n'
       ;(guild.ship.seen?.planets || []).forEach((planetName) => {
         const planetData = guild.context.planets.find(
-          (p) => p.name === planetName,
+          (p) => p.name === planetName
         )
         mapString += `${planetData.name} - [${planetData.location}]\n`
       })

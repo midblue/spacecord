@@ -6,8 +6,8 @@ const staminaRequirements = require('../../crew/staminaRequirements')
 
 module.exports = (guild) => {
   guild.ship.broadcastOptions = () => {
-    const fields = [],
-      actions = []
+    const fields = []
+    const actions = []
 
     const equipment = guild.ship.equipment.transceiver[0]
 
@@ -21,15 +21,15 @@ module.exports = (guild) => {
       ...[
         {
           name: 'Transceiver',
-          value: equipment.emoji + ' ' + equipment.displayName,
+          value: equipment.emoji + ' ' + equipment.displayName
         },
         {
           name: '🔧 Repair',
-          value: Math.round(equipment.repair * 100) + '%',
+          value: Math.round(equipment.repair * 100) + '%'
         },
         {
           name: '📶 Max Range',
-          value: equipment.range * equipment.repair + ' ' + DISTANCE_UNIT,
+          value: equipment.range * equipment.repair + ' ' + DISTANCE_UNIT
         },
 
         {
@@ -37,21 +37,21 @@ module.exports = (guild) => {
           value:
             timeUntilCanBroadcast > 0
               ? `Recharged in ${msToTimeString(timeUntilCanBroadcast)}`
-              : 'Charged and ready!',
+              : 'Charged and ready!'
         },
 
         {
           name: '⚡️Ship Power',
-          value: guild.ship.power.toFixed(1) + POWER_UNIT,
-        },
-      ],
+          value: guild.ship.power.toFixed(1) + POWER_UNIT
+        }
+      ]
     )
 
     const baseBroadcastOptions = [
       {
         type: 'location',
         emoji: '📍',
-        label: `Your Location`,
+        label: 'Your Location',
         yesNoQuestion: (user) =>
           `Really broadcast your ship's location? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -59,7 +59,7 @@ module.exports = (guild) => {
         successLog: (user, voterCount) =>
           `The ship's location was broadcast to anyone in range to hear it. %username%${user.id}% started the vote, and ${voterCount} members voted.`,
         failureLog: (user, voterCount) =>
-          `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${voterCount} members voted.`,
+          `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${voterCount} members voted.`
       },
       {
         type: 'faction',
@@ -72,12 +72,12 @@ module.exports = (guild) => {
         successLog: (user, voterCount) =>
           `The ship sent out a faction rallying cry. ${user.nickname} started the vote, and ${voterCount} members voted.`,
         failureLog: (user, voterCount) =>
-          `A vote started by ${user.nickname} to send a faction rallying cry failed. ${voterCount} members voted.`,
+          `A vote started by ${user.nickname} to send a faction rallying cry failed. ${voterCount} members voted.`
       },
       {
         type: 'distress',
         emoji: '🆘',
-        label: `Distress Signal`,
+        label: 'Distress Signal',
         yesNoQuestion: (user) =>
           `Really broadcast a distress signal containing your ship's location? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -85,12 +85,12 @@ module.exports = (guild) => {
         successLog: (user, voterCount) =>
           `The ship sent out a distress signal to anyone in range to hear it. ${user.nickname} started the vote, and ${voterCount} members voted.`,
         failureLog: (user, voterCount) =>
-          `A vote started by ${user.nickname} to send a distress signal failed. ${voterCount} members voted.`,
+          `A vote started by ${user.nickname} to send a distress signal failed. ${voterCount} members voted.`
       },
       {
         type: 'attack',
         emoji: '🏴‍☠️',
-        label: `Declare Attack`,
+        label: 'Declare Attack',
         yesNoQuestion: (user) =>
           `Really broadcast an attack signal to the area? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -98,12 +98,12 @@ module.exports = (guild) => {
         successLog: (user, voterCount) =>
           `The ship sent out an attack signal. ${user.nickname} started the vote, and ${voterCount} members voted.`,
         failureLog: (user, voterCount) =>
-          `A vote started by ${user.nickname} to send an attack signal failed. ${voterCount} members voted.`,
+          `A vote started by ${user.nickname} to send an attack signal failed. ${voterCount} members voted.`
       },
       {
         type: 'surrender',
         emoji: '🏳',
-        label: `Surrender Signal`,
+        label: 'Surrender Signal',
         yesNoQuestion: (user) =>
           `Really broadcast a surrender signal to the area? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -111,56 +111,54 @@ module.exports = (guild) => {
         successLog: (user, voterCount) =>
           `The ship sent out a surrender signal. ${user.nickname} started the vote, and ${voterCount} members voted.`,
         failureLog: (user, voterCount) =>
-          `A vote started by ${user.nickname} to send a surrender signal failed. ${voterCount} members voted.`,
-      },
+          `A vote started by ${user.nickname} to send a surrender signal failed. ${voterCount} members voted.`
+      }
     ]
 
     baseBroadcastOptions.forEach((o) => {
       if (
         (equipment.broadcastCapabilities || []).includes(o.type) &&
         (o.type !== 'faction' || guild.faction?.color)
-      )
+      ) {
         actions.push({
           emoji: o.emoji,
           label:
             o.label +
             ' ' +
-            usageTag(equipment.powerUse, staminaRequirements['broadcast']),
-          async action({ user, msg }) {
+            usageTag(equipment.powerUse, staminaRequirements.broadcast),
+          async action ({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
                 equipment.rechargeTime * STEP_INTERVAL >
               Date.now()
-            )
+            ) {
               return guild.pushToGuild(
                 story.broadcast.tooSoon(equipment.displayName),
-                msg,
+                msg
               )
+            }
 
             // ---------- use stamina
             const authorCrewMemberObject = guild.ship.members.find(
-              (m) => m.id === user.id,
+              (m) => m.id === user.id
             )
-            if (!authorCrewMemberObject)
-              return console.log('no user found in broadcast')
+            if (!authorCrewMemberObject) { return console.log('no user found in broadcast') }
             const staminaRes = authorCrewMemberObject.useStamina('broadcast')
-            if (!staminaRes.ok)
-              return guild.pushToGuild(staminaRes.message, msg)
+            if (!staminaRes.ok) { return guild.pushToGuild(staminaRes.message, msg) }
 
             const reallyDoIt = await runYesNoVote({
               pollType: 'broadcast',
               question: o.yesNoQuestion(user),
-              description: `Broadcasts are amplified and clarified by the quality and repair of the ship's transceiver, as well as the combined \`engineering\` skills of \`✅ Yes\` voters.`, // \`linguistics\` and
+              description: 'Broadcasts are amplified and clarified by the quality and repair of the ship\'s transceiver, as well as the combined `engineering` skills of `✅ Yes` voters.', // \`linguistics\` and
               minimumMemberPercent: o.minimumMemberPercent || 0.1,
               yesStaminaRequirement: 1,
               msg,
               guild,
-              cleanUp: false,
+              cleanUp: false
             })
-            if (!reallyDoIt.ok)
-              return guild.pushToGuild(reallyDoIt.message, msg)
+            if (!reallyDoIt.ok) { return guild.pushToGuild(reallyDoIt.message, msg) }
             if (reallyDoIt.insufficientVotes) {
-              // guild.ship.logEntry(o.insufficientLog(user))
+            // guild.ship.logEntry(o.insufficientLog(user))
               return guild.pushToGuild(story.vote.insufficientVotes(), msg)
             }
             if (reallyDoIt.result === true) {
@@ -171,51 +169,52 @@ module.exports = (guild) => {
                     ?.linguistics || 0) +
                     (guild.ship.members.find((m) => m.id === u.id)?.level
                       ?.engineering || 0)),
-                0,
+                0
               )
               guild.ship.logEntry(
-                o.successLog(user, reallyDoIt.voters.length, collectiveSkill),
+                o.successLog(user, reallyDoIt.voters.length, collectiveSkill)
               )
               const {
                 biasedRange,
                 garbleAmount,
-                message,
+                message
               } = guild.ship.broadcast({
                 msg,
                 broadcastType: o.type,
                 equipment: equipment,
                 yesPercent: reallyDoIt.yesPercent,
-                collectiveSkill,
+                collectiveSkill
               })
               const resultFields = [
                 {
                   name: 'Total Skill',
                   value: collectiveSkill,
-                  inline: true,
+                  inline: true
                 },
                 {
                   name: 'Effective Range',
                   value: biasedRange.toFixed(2) + ' ' + DISTANCE_UNIT,
-                  inline: true,
+                  inline: true
                 },
                 {
                   name: 'Message Garbling',
                   value: `Between 0 and \`${Math.round(
-                    garbleAmount * 100,
+                    garbleAmount * 100
                   )}%\`\n(depending on range)`,
-                  inline: true,
-                },
+                  inline: true
+                }
               ]
-              reallyDoIt.embed.title = `Broadcast Results`
+              reallyDoIt.embed.title = 'Broadcast Results'
               reallyDoIt.embed.description = message
               reallyDoIt.embed.fields = resultFields
               reallyDoIt.sentMessage.edit(reallyDoIt.embed)
             } else {
-              // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
+            // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
               guild.pushToGuild(story.broadcast.voteFailed(), msg)
             }
-          },
+          }
         })
+      }
     })
 
     return { ok: true, fields, actions, range: equipment.range }
@@ -229,7 +228,7 @@ module.exports = (guild) => {
     powerUseType = 'broadcast',
     equipment,
     yesPercent,
-    collectiveSkill,
+    collectiveSkill
   }) => {
     const powerRes = guild.ship.usePower(equipment.powerUse)
     if (!powerRes.ok) return guild.pushToGuild(powerRes.message, msg)
@@ -247,7 +246,7 @@ module.exports = (guild) => {
       excludeIds: guild.guildId,
       message: story.broadcast[broadcastType].receive,
       messageProps: [guild.ship],
-      garbleAmount: garbleAmount,
+      garbleAmount: garbleAmount
     })
     guild.lastBroadcast = { time: Date.now() }
     guild.saveNewDataToDb()
@@ -261,13 +260,13 @@ module.exports = (guild) => {
       equipment,
       powerUse: equipment.powerUse,
       yesPercent,
-      effectiveRange: biasedRange,
+      effectiveRange: biasedRange
     })
 
     return {
       biasedRange,
       garbleAmount,
-      message,
+      message
     }
   }
 }

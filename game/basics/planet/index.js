@@ -4,7 +4,7 @@ const defaults = () => ({
   shipyard: {},
   location: [0, 0],
   color: 'green',
-  size: 1,
+  size: 1
 })
 
 // * get all exports from files in this folder
@@ -16,12 +16,12 @@ fs.readdir(__dirname, (err, files) => {
     planets.push({
       ...defaults(),
       ...require(`./${file}`),
-      name: file.substring(0, file.length - 3),
+      name: file.substring(0, file.length - 3)
     })
   })
 })
 
-async function spawnAll({ context }) {
+async function spawnAll ({ context }) {
   livePlanets = planets.map((planet) => {
     liveify(planet, context)
     return planet
@@ -29,7 +29,7 @@ async function spawnAll({ context }) {
   return livePlanets
 }
 
-function liveify(planet, context) {
+function liveify (planet, context) {
   planet.context = context
 
   planet.getSizeDescriptor = function () {
@@ -40,7 +40,7 @@ function liveify(planet, context) {
 
   planet.getDockedShips = function () {
     return this.context.guilds.filter(
-      (g) => g.ship?.status?.docked === this.name,
+      (g) => g.ship?.status?.docked === this.name
     )
   }
 }

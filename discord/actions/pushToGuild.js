@@ -10,23 +10,25 @@ module.exports = async ({ guildId, channelId, message, msg, reactions }) => {
   else {
     // console.log(guildId, channelId)
     const discordGuild = await client.guilds.fetch(guildId)
-    if (!discordGuild)
+    if (!discordGuild) {
       return log(
         discordGuild,
         'pushToGuild',
         'Failed to find guild',
         guildId,
-        channelId,
+        channelId
       )
+    }
     const discordChannel = await discordGuild.channels.fetch(channelId)
-    if (!discordChannel)
+    if (!discordChannel) {
       return log(
         discordGuild,
         'pushToGuild',
         'Failed to find channel:',
         guildId,
-        channelId,
+        channelId
       )
+    }
     msg = discordChannel
     sentMessage = (await send(msg, message))[0]
   }
@@ -37,7 +39,7 @@ module.exports = async ({ guildId, channelId, message, msg, reactions }) => {
       msg: sentMessage,
       reactions,
       embed: message,
-      guild: gameGuildRes.guild,
+      guild: gameGuildRes.guild
     })
   }
 }

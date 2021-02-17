@@ -12,8 +12,7 @@ fs.readdir('./discord/commands', (err, files) => {
       !file.endsWith('.js') ||
       file === 'index.js' ||
       (!process.env.DEV && file.startsWith('debug'))
-    )
-      return
+    ) { return }
     commands.push(require(`./${file}`))
   })
   // console.log(`Loaded ${commands.length} commands`)
@@ -23,9 +22,9 @@ module.exports = {
   test: async ({ msg, client, predeterminedCommandTag, props }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
     const game = client.game
-    let author = msg.author
+    const author = msg.author
 
-    for (let command of commands) {
+    for (const command of commands) {
       // * run test to see if command triggers
       const match =
         predeterminedCommandTag === command.tag ||
@@ -34,70 +33,71 @@ module.exports = {
           (await command.test(msg.content, settings)))
 
       if (match) {
-        if (command.gameAdminsOnly)
+        if (command.gameAdminsOnly) {
           if (
             !['244651135984467968', '395634705120100367'].includes(
-              msg.author.id,
+              msg.author.id
             )
-          )
-            return
+          ) { return }
+        }
 
         let authorIsAdmin = false
         if (msg.guild && command.admin) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
           authorIsAdmin = member.permissions.has('BAN_MEMBERS')
-          if (!authorIsAdmin)
-            return send(msg, `That command is only available to server admins.`)
+          if (!authorIsAdmin) { return send(msg, 'That command is only available to server admins.') }
         }
 
         let authorIsCaptain = false
         let ship, guild
         if (!command.noShip) {
-          let res = await game.guild(msg.guild.id)
+          const res = await game.guild(msg.guild.id)
           if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
-          if (ship.status.dead && !command.gameAdminsOnly)
+          if (ship.status.dead && !command.gameAdminsOnly) {
             return send(
               msg,
-              `Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.`,
+              'Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.'
             )
+          }
           const captain = ship && ship.captain
           if (captain) authorIsCaptain = msg.author.id === captain
         }
 
         const authorCrewMemberObject =
           msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
-        if (!command.public && !authorCrewMemberObject)
+        if (!command.public && !authorCrewMemberObject) {
           return send(
             msg,
-            `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
+            `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`
           )
+        }
 
         if (
           command.captain &&
           !authorIsAdmin &&
           ship?.captain &&
           msg.author.id !== ship.captain
-        )
+        ) {
           return send(
             msg,
             await applyCustomParams(
               msg,
-              `That command is only available to the ship's captain, %username%${ship.captain}%.`,
-            ),
+              `That command is only available to the ship's captain, %username%${ship.captain}%.`
+            )
           )
+        }
 
         let requirements
         if (command.equipmentType) {
           const requirementsResponse = ship.getRequirements(
             command.equipmentType,
             settings,
-            authorCrewMemberObject,
+            authorCrewMemberObject
           )
-          if (!requirementsResponse.ok)
-            return send(msg, requirementsResponse.message)
+          if (!requirementsResponse.ok) { return send(msg, requirementsResponse.message) }
           requirements = requirementsResponse.requirements
         }
 
@@ -108,7 +108,7 @@ module.exports = {
           guild.guildName = msg.guild.name
           db.guild.update({
             guildId: msg.guild.id,
-            updates: { guildName: msg.guild.name },
+            updates: { guildName: msg.guild.name }
           })
         }
 
@@ -128,10 +128,10 @@ module.exports = {
           author,
           client,
           game,
-          ...props,
+          ...props
         })
       }
     }
   },
-  commands,
+  commands
 }

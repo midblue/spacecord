@@ -8,17 +8,17 @@ const repair = require('./repair')
 module.exports = {
   tag: 'equipment',
   documentation: {
-    value: `Stats on the ship's equipment.`,
+    value: 'Stats on the ship\'s equipment.',
     emoji: '🔩',
-    category: 'ship',
+    category: 'ship'
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:equip|equipment|gear|items)$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({
+  async action ({
     msg,
     settings,
     game,
@@ -26,7 +26,7 @@ module.exports = {
     ship,
     guild,
     authorCrewMemberObject,
-    equipment,
+    equipment
   }) {
     log(msg, 'Equipment', msg.guild.name)
 
@@ -34,7 +34,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(`${guild.ship.name} | Equipment`)
-        .setDescription(`Which equipment would you like to see details on?`)
+        .setDescription('Which equipment would you like to see details on?')
 
       const equipmentActions = guild.ship.equipmentInfo().actions
 
@@ -43,19 +43,19 @@ module.exports = {
         msg: sentMessage,
         reactions: equipmentActions,
         embed,
-        guild,
+        guild
       })
     } else {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(
           `${equipment.emoji} ${equipment.displayName} (${capitalize(
-            equipment.type,
-          )})`,
+            equipment.type
+          )})`
         )
         .setDescription(
-          (equipment.repair === 0 ? `**🚨 BROKEN DOWN 🚨**\n` : '') +
-            (equipment.description || ''),
+          (equipment.repair === 0 ? '**🚨 BROKEN DOWN 🚨**\n' : '') +
+            (equipment.description || '')
         )
 
       const fields = guild.ship.getEquipmentData(equipment)
@@ -66,8 +66,8 @@ module.exports = {
           emoji: '🔧',
           action: ({ user, msg }) => {
             repair.action({ msg, settings, guild, ship, equipment })
-          },
-        },
+          }
+        }
       ]
 
       const sentMessage = (await send(msg, embed))[0]
@@ -75,8 +75,8 @@ module.exports = {
         msg: sentMessage,
         reactions: availableActions,
         embed,
-        guild,
+        guild
       })
     }
-  },
+  }
 }

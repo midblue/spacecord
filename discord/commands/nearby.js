@@ -4,7 +4,7 @@ const {
   numberToEmoji,
   capitalize,
   positionAndAngleDifference,
-  usageTag,
+  usageTag
 } = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
 const runGuildCommand = require('../actions/runGuildCommand')
@@ -18,53 +18,53 @@ module.exports = {
   tag: 'nearby',
   documentation: {
     name: 'nearby',
-    value: `Inspect and interact with nearby ships, planets, etc.`,
+    value: 'Inspect and interact with nearby ships, planets, etc.',
     emoji: '👉',
     category: 'interaction',
-    priority: 80,
+    priority: 80
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:nearbyships?|nearby|near)$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({ msg, guild, interactableGuilds, filter }) {
+  async action ({ msg, guild, interactableGuilds, filter }) {
     log(msg, 'Nearby', filter || 'No Filter')
 
-    if (guild.ship.status.docked)
-      return runGuildCommand({ msg, commandTag: 'planet' })
+    if (guild.ship.status.docked) { return runGuildCommand({ msg, commandTag: 'planet' }) }
 
     if (filter && filter !== 'guilds') interactableGuilds = []
-    if (interactableGuilds === undefined)
+    if (interactableGuilds === undefined) {
       interactableGuilds =
         !filter || filter === 'guilds'
           ? guild.context.scanArea({
-              x: guild.ship.location[0],
-              y: guild.ship.location[1],
-              range: guild.ship.attackRadius(),
-              excludeIds: guild.guildId,
-            }).guilds
+            x: guild.ship.location[0],
+            y: guild.ship.location[1],
+            range: guild.ship.attackRadius(),
+            excludeIds: guild.guildId
+          }).guilds
           : []
+    }
 
     const interactableCaches =
       !filter || filter === 'caches'
         ? guild.context.scanArea({
-            x: guild.ship.location[0],
-            y: guild.ship.location[1],
-            range: guild.ship.tractorRadius(),
-            excludeIds: guild.guildId,
-          }).caches
+          x: guild.ship.location[0],
+          y: guild.ship.location[1],
+          range: guild.ship.tractorRadius(),
+          excludeIds: guild.guildId
+        }).caches
         : []
 
     const interactablePlanets =
       !filter || filter === 'planets'
         ? guild.context.scanArea({
-            x: guild.ship.location[0],
-            y: guild.ship.location[1],
-            range: guild.ship.equipment.chassis[0].interactRadius,
-            excludeIds: guild.guildId,
-          }).planets
+          x: guild.ship.location[0],
+          y: guild.ship.location[1],
+          range: guild.ship.equipment.chassis[0].interactRadius,
+          excludeIds: guild.guildId
+        }).planets
         : []
 
     if (
@@ -72,8 +72,7 @@ module.exports = {
         interactableCaches.length +
         interactablePlanets.length ===
       0
-    )
-      return send(msg, story.interact.nothing())
+    ) { return send(msg, story.interact.nothing()) }
 
     if (interactableCaches.length) {
       const cacheEmbed = new Discord.MessageEmbed()
@@ -98,9 +97,9 @@ module.exports = {
             getCache({
               cache,
               msg,
-              guild,
+              guild
             })
-          },
+          }
         })
         // const embed = new Discord.MessageEmbed()
         //   .setColor(APP_COLOR)
@@ -142,14 +141,14 @@ module.exports = {
         msg: sentMessage,
         reactions: availableActions,
         embed: cacheEmbed,
-        guild,
+        guild
       })
     }
 
     interactablePlanets.forEach(async (planet) => {
       const positionAndAngle = positionAndAngleDifference(
         ...guild.ship.location,
-        ...planet.location,
+        ...planet.location
       )
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
@@ -158,10 +157,10 @@ module.exports = {
           `A ${planet.getSizeDescriptor()} ${
             planet.color
           } planet ${positionAndAngle.distance.toFixed(
-            2,
+            2
           )} AU away from you at an angle of ${Math.round(
-            positionAndAngle.angle,
-          )} degrees.`,
+            positionAndAngle.angle
+          )} degrees.`
         )
 
       const availableActions = [
@@ -170,8 +169,8 @@ module.exports = {
           label: 'Vote to land on ' + planet.name + ' ' + usageTag(0, 'land'),
           action: ({ user, msg }) => {
             land({ msg, user, planet, guild })
-          },
-        },
+          }
+        }
       ]
 
       const sentMessages = await send(msg, embed)
@@ -180,14 +179,14 @@ module.exports = {
         msg: sentMessage,
         reactions: availableActions,
         embed,
-        guild,
+        guild
       })
     })
 
     interactableGuilds.forEach(async (otherGuild) => {
       const positionAndAngle = positionAndAngleDifference(
         ...guild.ship.location,
-        ...otherGuild.ship.location,
+        ...otherGuild.ship.location
       )
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
@@ -196,10 +195,10 @@ module.exports = {
           otherGuild.ship.status.docked
             ? `Docked on ${otherGuild.ship.status.docked}.`
             : `${positionAndAngle.distance.toFixed(
-                2,
+                2
               )} AU away from you at an angle of ${Math.round(
-                positionAndAngle.angle,
-              )} degrees.`,
+                positionAndAngle.angle
+              )} degrees.`
         )
 
       const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
@@ -211,8 +210,8 @@ module.exports = {
         reactions: availableActions,
         actionProps: { otherShip: otherGuild.ship },
         embed,
-        guild,
+        guild
       })
     })
-  },
+  }
 }

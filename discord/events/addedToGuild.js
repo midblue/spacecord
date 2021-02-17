@@ -7,6 +7,6 @@ module.exports = async (guild) => {
     { guild },
     readd ? 'Re-added to guild' : 'Added to guild',
     guild.name,
-    guild.id,
+    guild.id
   )
 }

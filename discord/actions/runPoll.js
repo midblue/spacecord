@@ -17,57 +17,60 @@ module.exports = async ({
   weightByLevelType,
   msg,
   respondeeFilter,
-  guild,
+  guild
 }) => {
   // make sure there's not another active poll of this type running
   const thisGuild = guild || ((await manager.guild(msg.guild.id)) || {}).guild
-  if (!thisGuild)
+  if (!thisGuild) {
     return {
       ok: false,
-      message: `Failed to find guild!`,
+      message: 'Failed to find guild!'
     }
+  }
   if (!thisGuild.activePolls) thisGuild.activePolls = {}
-  if (pollType && thisGuild.activePolls[pollType])
+  if (pollType && thisGuild.activePolls[pollType]) {
     return {
       ok: false,
       message: `${
         msg?.user?.nickname ? msg.user.nickname + ', t' : 'T'
-      }here is already a ${pollType} poll active! Wait for it to complete before starting another.`,
+      }here is already a ${pollType} poll active! Wait for it to complete before starting another.`
     }
+  }
   thisGuild.activePolls[pollType] = true
 
   // make default embed if missing
-  if (!embed)
-    embed = new Discord.MessageEmbed().setColor(APP_COLOR).setTitle(pollTitle)
+  if (!embed) { embed = new Discord.MessageEmbed().setColor(APP_COLOR).setTitle(pollTitle) }
   if (!embed.fields) embed.fields = []
 
   const minimumMembersMustVote = minimumMemberPercent
     ? Math.ceil(guild.ship.members.length * minimumMemberPercent)
     : -1
 
-  if (minimumMembersMustVote > 0)
+  if (minimumMembersMustVote > 0) {
     embed.fields.push({
       name: 'Member requirement',
       value: `At least \`${Math.round(
-        minimumMemberPercent * 100,
+        minimumMemberPercent * 100
       )}%\` of the crew (\`${minimumMembersMustVote}\` member${
         minimumMembersMustVote === 1 ? '' : 's'
-      }) must vote for this vote to be valid.`,
+      }) must vote for this vote to be valid.`
     })
+  }
 
-  if (requirements)
+  if (requirements) {
     embed.fields.push({
       name: 'Level requirements',
       value: `Voters must have at least ${Object.keys(requirements)
         .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\``)
-        .join(' and ')} for their vote to be counted.`,
+        .join(' and ')} for their vote to be counted.`
     })
+  }
 
   embed.fields.push({
     name: 'Remaining vote time:',
     value: msToTimeString(time),
     inline: true,
-    id: 'remainingTime',
+    id: 'remainingTime'
   })
 
   const startTime = Date.now()
@@ -92,15 +95,16 @@ module.exports = async ({
     if (!sentMessage.deleted) sentMessage.edit(embed)
   }, 5000)
 
-  if (!respondeeFilter)
+  if (!respondeeFilter) {
     respondeeFilter = (user) => {
       const member = guild.ship.members.find((m) => m.id === user.id)
       if (!member) return false
-      if (requirements)
-        for (let r in requirements)
-          if ((member?.level?.[r] || 0) < requirements[r]) return false
+      if (requirements) {
+        for (const r in requirements) { if ((member?.level?.[r] || 0) < requirements[r]) return false }
+      }
       return true
     }
+  }
 
   const gatheredReactions = await awaitReaction({
     msg: sentMessage,
@@ -110,14 +114,14 @@ module.exports = async ({
     time: time,
     listeningType: 'votes',
     respondeeFilter,
-    removeUserReactions: false,
+    removeUserReactions: false
   })
   done = true
   if (pollType) delete thisGuild.activePolls[pollType]
 
   embed.fields.splice(
     embed.fields.findIndex((f) => f.id === 'remainingTime'),
-    1,
+    1
   )
   if (!sentMessage.deleted) sentMessage.edit(embed)
 
@@ -128,8 +132,7 @@ module.exports = async ({
   // todo weight by higher level / role / rank
 
   let guildMembers
-  if (staminaRequirements)
-    guildMembers = (await manager.guild(msg.guild.id)).guild?.ship?.members
+  if (staminaRequirements) { guildMembers = (await manager.guild(msg.guild.id)).guild?.ship?.members }
 
   gatheredReactions.forEach(({ user, emoji }) => {
     if (
@@ -160,7 +163,7 @@ module.exports = async ({
   })
 
   embed.setFooter(
-    `(${voters.length} valid member${voters.length === 1 ? '' : 's'} voted)`,
+    `(${voters.length} valid member${voters.length === 1 ? '' : 's'} voted)`
   )
 
   const enoughMembersVoted = voters.length >= minimumMembersMustVote
@@ -169,14 +172,15 @@ module.exports = async ({
     enoughMembersVoted &&
     Object.keys(userReactionsToUse).reduce(
       (highest, key) => {
-        if (userReactionsToUse[key].weightedCount > highest.weightedCount)
+        if (userReactionsToUse[key].weightedCount > highest.weightedCount) {
           return {
             emoji: key,
-            weightedCount: userReactionsToUse[key].weightedCount,
+            weightedCount: userReactionsToUse[key].weightedCount
           }
+        }
         return highest
       },
-      { weightedCount: -1 },
+      { weightedCount: -1 }
     )?.emoji
   return {
     ok: true,
@@ -185,6 +189,6 @@ module.exports = async ({
     voters,
     sentMessage,
     embed,
-    winner,
+    winner
   }
 }

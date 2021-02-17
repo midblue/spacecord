@@ -10,7 +10,7 @@ module.exports = (member) => {
         const memberSkill = member.level[s.name] || 0
         const staminaRequired = member.staminaRequiredFor(s.name)
         return { ...s, memberSkill, staminaRequired }
-      }),
+      })
     ]
     return trainableSkills
   }
@@ -31,7 +31,7 @@ module.exports = (member) => {
 
     db.guild.updateCrewMembers({
       guildId: member.guild.guildId,
-      members: member.guild.saveableMembers(),
+      members: member.guild.saveableMembers()
     })
 
     return {
@@ -44,8 +44,8 @@ module.exports = (member) => {
         startLevel !== result.level,
         result.levelSize,
         result.levelProgress,
-        result.percentToLevel,
-      ),
+        result.percentToLevel
+      )
     }
   }
 
@@ -80,7 +80,7 @@ module.exports = (member) => {
       toNextLevel,
       levelProgress,
       percentToLevel,
-      overallPercentToLevel,
+      overallPercentToLevel
     }
     return data
   }

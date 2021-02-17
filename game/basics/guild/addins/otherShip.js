@@ -8,33 +8,36 @@ module.exports = (guild) => {
   guild.ship.scanOtherShip = (otherShip) => {
     // todo check if in range
 
-    let fields = [{ name: 'Name', value: otherShip.name }],
-      message = [],
-      ok = true
+    let fields = [{ name: 'Name', value: otherShip.name }]
+    const message = []
+    const ok = true
 
     const scanner = guild.ship.equipment.scanner?.[0]
-    if (!scanner)
+    if (!scanner) {
       return {
         fields,
         ok: false,
-        message: story.scanShip.noScanner(),
+        message: story.scanShip.noScanner()
       }
+    }
 
     const powerRes = guild.ship.usePower(scanner.powerUse)
-    if (!powerRes.ok && powerRes.message)
+    if (!powerRes.ok && powerRes.message) {
       return {
         fields,
         ok: false,
-        message: powerRes.message,
+        message: powerRes.message
       }
+    }
 
     let didSucceed = scanner.repair > Math.random()
-    if (!didSucceed)
+    if (!didSucceed) {
       return {
         fields,
         ok: false,
-        message: story.scanShip.repair(),
+        message: story.scanShip.repair()
       }
+    }
 
     const scanRes = scanner.use(otherShip)
     if (!scanRes.ok) {
@@ -45,16 +48,16 @@ module.exports = (guild) => {
       fields = scanRes.result
       fields.push({
         name: '🔍 Your Scanner',
-        value: scanner.displayName,
+        value: scanner.displayName
       })
       fields.push({
         name: '⚡️Your Ship Power',
-        value: guild.ship.power + ' ' + POWER_UNIT,
+        value: guild.ship.power + ' ' + POWER_UNIT
       })
     }
     const enemyTotalEngineeringLevel = otherShip.members.reduce(
       (total, m) => total + (m.level?.engineering || 0),
-      0,
+      0
     )
     if ((scanner.scanUndetectability || 0) < enemyTotalEngineeringLevel) {
       message.push(story.scanShip.ourScanDetected())
@@ -65,7 +68,7 @@ module.exports = (guild) => {
     return {
       ok: true,
       fields,
-      message,
+      message
     }
   }
 
@@ -78,30 +81,32 @@ module.exports = (guild) => {
       guild.ship.equipment.scanner &&
       guild.ship.equipment.scanner[0] &&
       dist <= guild.ship.equipment.scanner[0].range
-    )
+    ) {
       actions.push({
         emoji: '🔍',
         label:
           'Scan Ship ' +
           usageTag(guild.ship.equipment.scanner[0].powerUse, 'scanShip'),
-        async action({ user, msg, guild }) {
+        async action ({ user, msg, guild }) {
           await runGuildCommand({
             commandTag: 'scanShip',
             author: user,
             msg,
-            props: { otherShip, guild },
+            props: { otherShip, guild }
           })
-        },
+        }
       })
+    }
 
-    if (!otherShip.status.docked && dist <= guild.ship.attackRadius())
+    if (!otherShip.status.docked && dist <= guild.ship.attackRadius()) {
       actions.push({
         emoji: '⚔️',
         label: 'Start Attack Vote ' + usageTag(0, 'poll'),
-        async action({ msg, guild }) {
+        async action ({ msg, guild }) {
           attackShip({ msg, guild, otherShip })
-        },
+        }
       })
+    }
 
     return actions
   }

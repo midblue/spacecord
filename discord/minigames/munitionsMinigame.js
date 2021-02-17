@@ -17,7 +17,7 @@ module.exports = ({ msg, user, guild }) => {
     const boardWidth = Math.max(
       4,
       Math.round(userLevel / 4),
-      targetSizes.reduce((t, c) => Math.max(t, c), 0),
+      targetSizes.reduce((t, c) => Math.max(t, c), 0)
     )
     const shots =
       targetSizes.reduce((t, c) => t + c, 0) +
@@ -25,11 +25,11 @@ module.exports = ({ msg, user, guild }) => {
     let remainingShots = shots
     const time = shots * 15 * 1000
     let remainingTime = time
-    let targetX = Math.floor((boardWidth - 1) / 2),
-      targetY = Math.floor((boardWidth - 1) / 2)
+    let targetX = Math.floor((boardWidth - 1) / 2)
+    let targetY = Math.floor((boardWidth - 1) / 2)
 
     // -------- build the board
-    let board = []
+    const board = []
     for (let i = 0; i < boardWidth; i++) {
       board.push([])
       for (let j = 0; j < boardWidth; j++) board[i].push('◼️')
@@ -40,16 +40,14 @@ module.exports = ({ msg, user, guild }) => {
         if (horiz) {
           const startX = Math.floor(Math.random() * (boardWidth - targetSize))
           const startY = Math.floor(Math.random() * boardWidth)
-          for (let i = startX; i < startX + targetSize; i++)
-            if (board[startY][i] !== '◼️') return false
+          for (let i = startX; i < startX + targetSize; i++) { if (board[startY][i] !== '◼️') return false }
           for (let i = startX; i < startX + targetSize; i++) {
             board[startY][i] = '🚢'
           }
         } else {
           const startX = Math.floor(Math.random() * boardWidth)
           const startY = Math.floor(Math.random() * (boardWidth - targetSize))
-          for (let i = startY; i < startY + targetSize; i++)
-            if (board[i][startX] !== '◼️') return false
+          for (let i = startY; i < startY + targetSize; i++) { if (board[i][startX] !== '◼️') return false }
           for (let i = startY; i < startY + targetSize; i++) {
             board[i][startX] = '🚢'
           }
@@ -64,14 +62,14 @@ module.exports = ({ msg, user, guild }) => {
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`${emoji} Munitions Training | ${msg.author.nickname}`)
-    embed.description = `it's battleship ya dummy`
+    embed.description = 'it\'s battleship ya dummy'
     embed.fields = [
-      { name: `🧨 Shots`, value: shots, inline: true },
+      { name: '🧨 Shots', value: shots, inline: true },
       {
-        name: `⏱ Time`,
+        name: '⏱ Time',
         value: msToTimeString(remainingTime),
-        inline: true,
-      },
+        inline: true
+      }
     ]
 
     // ------- wait for them to say I'm Ready
@@ -81,20 +79,20 @@ module.exports = ({ msg, user, guild }) => {
     embed.fields = [
       {
         name: 'Key',
-        value: `📍Current Target, 💢Hit, ✖️Miss, 👍Current(Hit), 👎Current(Miss)`,
+        value: '📍Current Target, 💢Hit, ✖️Miss, 👍Current(Hit), 👎Current(Miss)'
       },
       {
-        name: `🧨 Shots Remaining`,
+        name: '🧨 Shots Remaining',
         value: remainingShots,
         id: 'remainingShots',
-        inline: true,
+        inline: true
       },
       {
-        name: `⏱ Time Remaining`,
+        name: '⏱ Time Remaining',
         value: msToTimeString(remainingTime),
         id: 'remainingTime',
-        inline: true,
-      },
+        inline: true
+      }
     ]
     await sentMessage.edit(embed)
 
@@ -121,15 +119,15 @@ module.exports = ({ msg, user, guild }) => {
         .map((row, index) =>
           index === targetY
             ? row.map((x, i) =>
-                i === targetX
-                  ? x === '💢'
-                    ? '👍'
-                    : x === '✖️'
+              i === targetX
+                ? x === '💢'
+                  ? '👍'
+                  : x === '✖️'
                     ? '👎'
                     : '📍'
-                  : x,
-              )
-            : row,
+                : x
+            )
+            : row
         )
         .map((row) => row.reduce((total, c) => total + c, ''))
         .join('\n')
@@ -160,7 +158,7 @@ module.exports = ({ msg, user, guild }) => {
           targetX--
           if (targetX < 0) targetX = 0
           updateBoardView()
-        },
+        }
       },
       {
         emoji: '▶️',
@@ -168,7 +166,7 @@ module.exports = ({ msg, user, guild }) => {
           targetX++
           if (targetX >= boardWidth) targetX = boardWidth
           updateBoardView()
-        },
+        }
       },
       {
         emoji: '🔼',
@@ -176,7 +174,7 @@ module.exports = ({ msg, user, guild }) => {
           targetY--
           if (targetY < 0) targetY = 0
           updateBoardView()
-        },
+        }
       },
       {
         emoji: '🔽',
@@ -184,14 +182,14 @@ module.exports = ({ msg, user, guild }) => {
           targetY++
           if (targetY >= boardWidth) targetY = boardWidth
           updateBoardView()
-        },
+        }
       },
       {
         emoji: '🧨',
         action: () => {
           takeShot()
-        },
-      },
+        }
+      }
     ]
     awaitReaction({
       msg: sentMessage,
@@ -199,7 +197,7 @@ module.exports = ({ msg, user, guild }) => {
       respondeeFilter: (u) => u.id === user.id,
       embed,
       guild,
-      time,
+      time
     })
 
     // ------- end game

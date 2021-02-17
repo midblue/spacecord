@@ -1,7 +1,7 @@
 const defaultServerSettings = require('./defaults/defaultServerSettings')
 
 module.exports = {
-  async log(msg, identifier, context, type = 'command') {
+  async log (msg, identifier, context, type = 'command') {
     console.log(
       `${
         msg.guild
@@ -10,17 +10,17 @@ module.exports = {
           : 'Private Message'
       }`.padEnd(30, ' ') +
         ` | ${identifier}` +
-        (context ? `: ${context}` : ``) +
-        ` (${await username(msg)}) `,
+        (context ? `: ${context}` : '') +
+        ` (${await username(msg)}) `
     )
   },
   username,
   getUserInGuildById,
-  applyCustomParams,
+  applyCustomParams
 }
 
-async function getUserInGuildById(msgOrGuild, id) {
-  let guild = msgOrGuild.guild ? msgOrGuild.guild : msgOrGuild
+async function getUserInGuildById (msgOrGuild, id) {
+  const guild = msgOrGuild.guild ? msgOrGuild.guild : msgOrGuild
   try {
     const userInGuild = await guild.members.fetch({ user: id })
     return userInGuild
@@ -29,12 +29,10 @@ async function getUserInGuildById(msgOrGuild, id) {
   }
 }
 
-async function username(msgOrUserOrChannel, id) {
+async function username (msgOrUserOrChannel, id) {
   // console.log(msgOrUserOrChannel, id)
   let user
-  if (id && !msgOrUserOrChannel.username)
-    user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
-  else if (msgOrUserOrChannel.author) user = msgOrUserOrChannel.author
+  if (id && !msgOrUserOrChannel.username) { user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {} } else if (msgOrUserOrChannel.author) user = msgOrUserOrChannel.author
   else if (msgOrUserOrChannel.username) {
     user = msgOrUserOrChannel
   }
@@ -45,38 +43,38 @@ async function username(msgOrUserOrChannel, id) {
 const customParams = [
   {
     regex: /%username%(\d+)%/,
-    async replace([unused, userId], msgOrChannel) {
+    async replace ([unused, userId], msgOrChannel) {
       return await username(msgOrChannel, userId)
-    },
+    }
   },
   {
     regex: /%command%(.+)%/,
-    async replace([unused, command], msgOrChannel) {
+    async replace ([unused, command], msgOrChannel) {
       // todo get server command prefix here (once we implement that)
       return defaultServerSettings.prefix + command
-    },
-  },
+    }
+  }
 ]
-async function applyCustomParams(msgOrChannel, textOrObject) {
+async function applyCustomParams (msgOrChannel, textOrObject) {
   if (typeof textOrObject === 'string') return await apply(textOrObject)
-  if (Array.isArray(textOrObject))
+  if (Array.isArray(textOrObject)) {
     return await Promise.all(
       textOrObject.map(async (t) => {
         return await applyCustomParams(msgOrChannel, t)
-      }),
+      })
     )
-  else if (typeof textOrObject === 'object') {
+  } else if (typeof textOrObject === 'object') {
     const newObj = {}
-    for (let key of Object.keys(textOrObject)) {
+    for (const key of Object.keys(textOrObject)) {
       newObj[key] = await applyCustomParams(msgOrChannel, textOrObject[key])
     }
     return newObj
   }
 
-  function apply(text) {
+  function apply (text) {
     return new Promise(async (resolve) => {
       let newText = text
-      for (let param of customParams) {
+      for (const param of customParams) {
         param.regex.lastIndex = 0
         let foundInstance = param.regex.exec(newText)
         while (foundInstance) {

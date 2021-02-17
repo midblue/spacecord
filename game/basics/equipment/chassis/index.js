@@ -7,7 +7,7 @@ const defaults = {
   repairDifficulty: 1,
   agility: 0.5,
   maxWeight: 1000,
-  emoji: '🚀',
+  emoji: '🚀'
 }
 
 // * get all exports from files in this folder
@@ -19,7 +19,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`),
+      ...require(`./${file}`)
     }
   })
   // console.log(addins.length, 'addins', addins)

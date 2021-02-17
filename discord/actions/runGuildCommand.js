@@ -8,7 +8,7 @@ module.exports = async ({
   commandTag,
   author,
   props,
-  msg,
+  msg
 }) => {
   let fakeMsg
   if (!msg) {
@@ -23,6 +23,6 @@ module.exports = async ({
     msg: msg || fakeMsg,
     client,
     predeterminedCommandTag: commandTag,
-    props,
+    props
   })
 }

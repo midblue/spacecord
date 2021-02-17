@@ -21,7 +21,7 @@ module.exports = ({ msg, user, guild }) => {
       textOptions.length
     const gracePeriod = 2000
     const time = Math.floor(
-      challengeCount * timePerCharacter * averageCharacters,
+      challengeCount * timePerCharacter * averageCharacters
     )
 
     let fuse
@@ -46,18 +46,18 @@ Your crewmates can help out.`)
     await readyCheck({ msg: sentMessage, embed, user })
 
     // ------- get challenge text to use
-    let challengeTextInOneArray = []
+    const challengeTextInOneArray = []
     for (let i = 0; i < challengeCount; i++) {
       if (!textOptions.length) continue
       const textIndex = Math.floor(Math.random() * textOptions.length)
       const textToSend = textOptions[textIndex]
       textOptions.splice(textIndex, 1)
       challengeTextInOneArray.push(
-        '→ ' + lunicode.tools.tiny.encode(textToSend),
+        '→ ' + lunicode.tools.tiny.encode(textToSend)
       )
       sentTextOptions.push({
         target: textToSend.toLowerCase(),
-        bestScore: 0,
+        bestScore: 0
       })
     }
 
@@ -71,7 +71,7 @@ Your crewmates can help out.`)
       includeScore: true,
       keys: ['target'],
       threshold: 1, // 1 is anything
-      minMatchCharLength: 8,
+      minMatchCharLength: 8
     })
 
     // ------- define message collect action
@@ -104,12 +104,12 @@ Your crewmates can help out.`)
       msg.channel,
       onMessageCollect,
       {
-        time: time + gracePeriod,
-      },
+        time: time + gracePeriod
+      }
     )
 
     setTimeout(async () => {
-      messagesToDelete.push((await send(msg, `Time's up!`))[0])
+      messagesToDelete.push((await send(msg, 'Time\'s up!'))[0])
     }, time)
 
     // ------- end of game
@@ -123,7 +123,7 @@ Your crewmates can help out.`)
 
       const hits = sentTextOptions.reduce(
         (total, option) => total + option.bestScore,
-        0,
+        0
       )
 
       // ------- calculate and add XP
@@ -148,7 +148,7 @@ Your crewmates can help out.`)
             o.bestAttemptText && o.bestScore < 0.99
               ? ` ("${o.bestAttemptText.toLowerCase()}")`
               : ''
-          }`,
+          }`
       )
       .join('\n')}
 

@@ -7,5 +7,5 @@ module.exports = {
   emoji: '🚂',
   displayName: 'Hauler',
   description:
-    'What it lacks in nimbleness it makes up for in capacity. A favorite for interstellar traders, but also a favorite target for pirates.',
+    'What it lacks in nimbleness it makes up for in capacity. A favorite for interstellar traders, but also a favorite target for pirates.'
 }

@@ -7,5 +7,5 @@ module.exports = {
   engine: {},
   battery: {},
   armor: {},
-  ship: { singleton: true },
+  ship: { singleton: true }
 }

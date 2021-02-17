@@ -2,23 +2,23 @@ const cargo = {
   credits: {
     baseCost: 1,
     displayName: 'Credits',
-    emoji: '💳',
+    emoji: '💳'
   },
   food: {
     baseCost: 12,
     displayName: 'Food',
-    emoji: '🍕',
+    emoji: '🍕'
   },
   fuel: {
     baseCost: 9,
     displayName: 'Fuel',
-    emoji: '🛢',
+    emoji: '🛢'
   },
   metals: {
     baseCost: 87,
     displayName: 'Metals',
-    emoji: '🔧',
-  },
+    emoji: '🔧'
+  }
 }
 
 module.exports = cargo

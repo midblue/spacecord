@@ -13,50 +13,50 @@ module.exports = {
   tag: 'shipyard',
   documentation: {
     name: 'shipyard',
-    value: `Buy and sell equipment for your ship.`,
+    value: 'Buy and sell equipment for your ship.',
     emoji: '🛠',
     category: 'planet',
-    priority: 30,
+    priority: 30
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:shipyard)$`, 'gi').exec(content)
   },
-  async action({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
+  async action ({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
     log(msg, 'Shipyard', msg.guild.name)
 
     const planet = guild.context.planets.find(
-      (p) => p.name === guild.ship.status.docked,
+      (p) => p.name === guild.ship.status.docked
     )
-    if (!planet) return send(msg, `Your ship isn't docked anywhere!`)
+    if (!planet) return send(msg, 'Your ship isn\'t docked anywhere!')
 
     if (!buyOrSell) {
       const embed = new Discord.MessageEmbed()
-        .setTitle(`Shipyard`)
-        .setDescription(`Would you like to buy or sell parts?`)
+        .setTitle('Shipyard')
+        .setDescription('Would you like to buy or sell parts?')
 
       const availableActions = [
         {
           emoji: '💸',
-          label: `Buy`,
+          label: 'Buy',
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
               commandTag: 'shipyard',
-              props: { buyOrSell: 'buy' },
+              props: { buyOrSell: 'buy' }
             })
-          },
+          }
         },
         {
           emoji: '💰',
-          label: `Sell`,
+          label: 'Sell',
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
               commandTag: 'shipyard',
-              props: { buyOrSell: 'sell' },
+              props: { buyOrSell: 'sell' }
             })
-          },
-        },
+          }
+        }
       ]
 
       const sentMessage = (await send(msg, embed))[0]
@@ -64,7 +64,7 @@ module.exports = {
         reactions: availableActions,
         msg: sentMessage,
         embed,
-        guild,
+        guild
       })
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === 'buy' && !type) {
@@ -72,7 +72,7 @@ module.exports = {
       const completeParts = {}
       Object.keys(planet.shipyard).forEach((type) => {
         planet.shipyard[type].forEach((part) => {
-          let foundPart = equipment[type][part]
+          const foundPart = equipment[type][part]
           if (foundPart) {
             if (!Array.isArray(completeParts[type])) completeParts[type] = []
             completeParts[type].push({ ...foundPart, type })
@@ -82,9 +82,9 @@ module.exports = {
       })
 
       const embed = new Discord.MessageEmbed()
-        .setTitle(`Parts for Sale`)
+        .setTitle('Parts for Sale')
         .setDescription(
-          `Choose a category to see the parts for sale of that type.`,
+          'Choose a category to see the parts for sale of that type.'
         )
 
       const availableActions = []
@@ -98,9 +98,9 @@ module.exports = {
             runGuildCommand({
               msg,
               commandTag: 'shipyard',
-              props: { buyOrSell: 'buy', type, parts: completeParts[type] },
+              props: { buyOrSell: 'buy', type, parts: completeParts[type] }
             })
-          },
+          }
         })
       })
 
@@ -109,7 +109,7 @@ module.exports = {
         reactions: availableActions,
         msg: sentMessage,
         embed,
-        guild,
+        guild
       })
       if (!sentMessage.deleted) sentMessage.delete()
     }
@@ -119,17 +119,19 @@ module.exports = {
         const cost = part.baseCost * planet.shipyardPriceMultiplier
         const tooExpensive = cost > guild.ship.credits
         let alreadyOwned = false
-        if (equipmentTypes[type].singleton)
-          if (guild.ship.equipment?.[type].find((p) => p.id === part.id))
+        if (equipmentTypes[type].singleton) {
+          if (guild.ship.equipment?.[type].find((p) => p.id === part.id)) {
             alreadyOwned = guild.ship.equipment?.[type].find(
-              (p) => p.id === part.id,
+              (p) => p.id === part.id
             )
+          }
+        }
 
         const embed = new Discord.MessageEmbed()
           .setTitle(
             `${part.emoji} ${part.displayName} (${capitalize(
-              type,
-            )}) \`💳${cost} Credits\``,
+              type
+            )}) \`💳${cost} Credits\``
           )
           .setDescription(
             `${alreadyOwned ? '_(Already Owned)_\n' : ''}` +
@@ -140,14 +142,14 @@ module.exports = {
                     }\` more)_\n`
                   : ''
               }` +
-              part.description,
+              part.description
           )
 
         const fields = guild.ship.getEquipmentData(part)
         embed.fields = fields.map((f) => ({ inline: true, ...f }))
 
         const availableActions = []
-        if (!tooExpensive)
+        if (!tooExpensive) {
           availableActions.push({
             emoji: '💰',
             label:
@@ -161,57 +163,57 @@ module.exports = {
                 cost,
                 msg: { ...msg, author: user },
                 guild,
-                willReplace: alreadyOwned,
+                willReplace: alreadyOwned
               })
-            },
+            }
           })
+        }
 
         const sentMessage = (await send(msg, embed))[0]
         await awaitReaction({
           reactions: availableActions,
           msg: sentMessage,
           embed,
-          guild,
+          guild
         })
         if (!sentMessage.deleted) sentMessage.delete()
       })
     } else if (buyOrSell === 'sell') {
-      let allSellableEquipment = []
-      for (let [eqType, eqArr] of Object.entries(guild.ship.equipment))
-        if (eqType !== 'chassis') allSellableEquipment.push(...eqArr)
+      const allSellableEquipment = []
+      for (const [eqType, eqArr] of Object.entries(guild.ship.equipment)) { if (eqType !== 'chassis') allSellableEquipment.push(...eqArr) }
 
       const sellableActions = allSellableEquipment.map((part, index) => {
         const cost = Math.round(
           part.baseCost *
             planet.shipyardPriceMultiplier *
             part.repair *
-            planet.shipyardSellMultiplier,
+            planet.shipyardSellMultiplier
         )
         return {
           emoji: numberToEmoji(index + 1),
           label: `${usageTag(0, 0, cost)} for ${part.emoji} \`${
             part.displayName
           }\` (${capitalize(part.type)}) - ${(part.repair * 100).toFixed(
-            0,
+            0
           )}% repair`,
-          action() {
+          action () {
             sellEquipment({ msg, part, cost, guild })
-          },
+          }
         }
       })
 
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle(`Which equipment would you like to sell?`)
+        .setTitle('Which equipment would you like to sell?')
 
       const sentMessage = (await send(msg, embed))[0]
       await awaitReaction({
         msg: sentMessage,
         reactions: sellableActions,
         embed,
-        guild,
+        guild
       })
       sentMessage.delete()
     }
-  },
+  }
 }

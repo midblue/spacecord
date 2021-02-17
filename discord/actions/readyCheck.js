@@ -1,7 +1,7 @@
 const awaitReaction = require('./awaitReaction')
 
 module.exports = async ({ msg, embed, user }) => {
-  embed.footer = `Hit the \`🏁\` button to start!`
+  embed.footer = 'Hit the `🏁` button to start!'
 
   const respondeeFilter = (u) => u.id === user.id
   const reactions = [{ emoji: '🏁', action: () => {} }]
@@ -10,10 +10,10 @@ module.exports = async ({ msg, embed, user }) => {
     msg,
     reactions,
     embed,
-    listeningType: `🏁 to start`,
+    listeningType: '🏁 to start',
     respondeeFilter,
     endOnReaction: true,
-    allowNonMembers: true,
+    allowNonMembers: true
   })
   if (!gatheredReactions.length) return false
 

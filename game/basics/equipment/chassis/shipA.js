@@ -7,5 +7,5 @@ module.exports = {
   emoji: '🚙',
   displayName: 'Model D',
   description:
-    'A small starter chassis with a good balance of agility, cargo space, and cost.',
+    'A small starter chassis with a good balance of agility, cargo space, and cost.'
 }

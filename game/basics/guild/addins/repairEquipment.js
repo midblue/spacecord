@@ -3,11 +3,12 @@ const story = require('../../story/story')
 module.exports = (guild) => {
   guild.ship.repairEquipment = ({ type, index, add, newRepairLevel }) => {
     const equipment = guild.ship.equipment[type][index]
-    if (!equipment)
+    if (!equipment) {
       return {
         ok: false,
-        message: story.repair.equipment.notFound(),
+        message: story.repair.equipment.notFound()
       }
+    }
 
     if (add) equipment.repair += add
     if (newRepairLevel) equipment.repair = newRepairLevel
@@ -19,9 +20,9 @@ module.exports = (guild) => {
       ok: true,
       message: story.repair.equipment.success(
         equipment.displayName,
-        equipment.repair,
+        equipment.repair
       ),
-      equipment,
+      equipment
     }
   }
 }

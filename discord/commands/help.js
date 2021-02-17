@@ -14,32 +14,31 @@ fs.readdir('./discord/commands', (err, files) => {
       !file.endsWith('.js') ||
       file === 'index.js' ||
       file.startsWith('debug')
-    )
-      return
+    ) { return }
     commands.push(require(`./${file}`))
     commands = commands.filter((c) => c && c.documentation)
   })
 })
 
-//{ name: '\u200B', value: '\u200B' },
+// { name: '\u200B', value: '\u200B' },
 
 module.exports = {
   tag: 'help',
   public: true,
   noShip: true,
   documentation: {
-    name: `help`,
-    value: `Shows this message.`,
+    name: 'help',
+    value: 'Shows this message.',
     emoji: 'ℹ️',
     category: 'settings',
-    priority: 100,
+    priority: 100
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:help|h|info|i)$`, 'gi').exec(
-      content,
+      content
     )
   },
-  async action({ msg, settings, game, client }) {
+  async action ({ msg, settings, game, client }) {
     log(msg, 'Help')
 
     const reactions = []
@@ -47,7 +46,7 @@ module.exports = {
       ...[
         {
           emoji: '📖',
-          label: `How To Play`,
+          label: 'How To Play',
           action: async () => {
             helpPage({
               msg,
@@ -55,79 +54,79 @@ module.exports = {
               user: msg.author,
               emoji: '📖',
               title: 'How To Play',
-              commands: [], // todo add spawn and join commands here
+              commands: [] // todo add spawn and join commands here
             })
-          },
+          }
         },
         {
           emoji: '🚀',
-          label: `Ship Controls and Status`,
+          label: 'Ship Controls and Status',
           action: async () => {
             helpPage({
               msg,
               settings,
               user: msg.author,
               emoji: '🚀',
-              title: `Ship Controls and Status`,
-              description: `View and control the ship's status and movement.`,
+              title: 'Ship Controls and Status',
+              description: 'View and control the ship\'s status and movement.',
               commands: commands.filter(
-                (c) => c.documentation.category === 'ship',
-              ),
+                (c) => c.documentation.category === 'ship'
+              )
             })
-          },
+          }
         },
         {
           emoji: '👋',
-          label: `Interaction Commands`,
+          label: 'Interaction Commands',
           action: async () => {
             helpPage({
               msg,
               settings,
               user: msg.author,
               emoji: '👋',
-              title: `Interaction Commands`,
-              description: `Interact with the world and other ships around you.`,
+              title: 'Interaction Commands',
+              description: 'Interact with the world and other ships around you.',
               commands: commands.filter(
-                (c) => c.documentation.category === 'interaction',
-              ),
+                (c) => c.documentation.category === 'interaction'
+              )
             })
-          },
+          }
         },
         {
           emoji: '👨‍👩‍👧‍👦',
-          label: `Crew Commands`,
+          label: 'Crew Commands',
           action: async () => {
             helpPage({
               msg,
               settings,
               user: msg.author,
               emoji: '👨‍👩‍👧‍👦',
-              title: `Crew Commands`,
-              description: `View and upgrade your character, and see the whole crew.`,
+              title: 'Crew Commands',
+              description: 'View and upgrade your character, and see the whole crew.',
               commands: commands.filter(
-                (c) => c.documentation.category === 'crew',
-              ),
+                (c) => c.documentation.category === 'crew'
+              )
             })
-          },
+          }
         },
         {
           emoji: '👩‍✈️',
-          label: `Captain/Admin Commands`,
+          label: 'Captain/Admin Commands',
           action: async () => {
             helpPage({
               msg,
               settings,
               user: msg.author,
               emoji: '👩‍✈️',
-              title: `Captain/Admin Commands`,
-              description: `Only the ship's captain (or server admins) can do these actions!`,
-              commands: commands.filter((c) => c.captain),
+              title: 'Captain/Admin Commands',
+              description: 'Only the ship\'s captain (or server admins) can do these actions!',
+              commands: commands.filter((c) => c.captain)
             })
-          },
+          }
         },
         {
           emoji: '⚙️',
-          label: `Bot Commands`,
+          label: 'Bot Commands',
           action: async () => {
             helpPage({
               msg,
@@ -137,12 +136,12 @@ module.exports = {
               title: 'Bot Commands',
               description: 'Help and settings for the bot itself.',
               commands: commands.filter(
-                (c) => c.documentation.category === 'settings',
-              ),
+                (c) => c.documentation.category === 'settings'
+              )
             })
-          },
-        },
-      ],
+          }
+        }
+      ]
     )
 
     const embed = new Discord.MessageEmbed().setColor(APP_COLOR)
@@ -230,7 +229,7 @@ Pick a category below to get info on specific commands or elements of the game.`
       reactions,
       commandsLabel: 'Info categories',
       listeningType: 'category selection',
-      allowNonMembers: true,
+      allowNonMembers: true
     })
-  },
+  }
 }

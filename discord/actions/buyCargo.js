@@ -14,10 +14,9 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id,
+    (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject)
-    return console.log('no user found in buyEquipment')
+  if (!authorCrewMemberObject) { return console.log('no user found in buyEquipment') }
   const staminaRes = authorCrewMemberObject.useStamina('poll')
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
@@ -31,7 +30,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
       cargoData.displayName
     } for \`💳${cost}\` credits per ${WEIGHT_UNIT} (\`💳${
       cost * amount
-    }\` total)? | Vote started by ${msg.author.nickname}`,
+    }\` total)? | Vote started by ${msg.author.nickname}`
   )
 
   const voteResult = await runYesNoVote({
@@ -40,7 +39,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     minimumMemberPercent: 0.1,
     msg,
     guild,
-    cleanUp: false,
+    cleanUp: false
   })
   if (!voteResult.ok) return send(msg, voteResult.message)
   voteEmbed.fields = []
@@ -72,7 +71,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     `You have \`💳${Math.round(guild.ship.credits)}\` credits remaining.` +
     '\n\nShip weight is ' +
     percentToTextBars(
-      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight,
+      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
     ) +
     Math.round(guild.ship.getTotalWeight()) +
     '/' +

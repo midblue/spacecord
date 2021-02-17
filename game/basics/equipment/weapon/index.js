@@ -1,12 +1,12 @@
 const defaults = {
   type: 'weapon',
-  description: ``,
+  description: '',
   range: 2,
   weight: 70,
   baseHp: 20,
   durabilityLostOnUse: 0.03,
   accuracy: 0.3,
-  hitPercent(distance, enemyShip) {
+  hitPercent (distance, enemyShip) {
     return (
       this.repair *
       this.accuracy *
@@ -16,7 +16,7 @@ const defaults = {
   },
   repairDifficulty: 1,
   baseCost: 200,
-  rechargeTime: 1,
+  rechargeTime: 1
 }
 
 // * get all exports from files in this folder
@@ -28,7 +28,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`),
+      ...require(`./${file}`)
     }
   })
   // console.log(addins.length, 'addins', addins)

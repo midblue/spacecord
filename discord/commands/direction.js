@@ -10,26 +10,25 @@ module.exports = {
   tag: 'direction',
   equipmentType: 'telemetry',
   documentation: {
-    value: `Starts a vote to steer the ship in any direction.`,
+    value: 'Starts a vote to steer the ship in any direction.',
     emoji: '🧭',
     category: 'ship',
-    priority: 75,
+    priority: 75
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:dir|direction|steer|turn|rotate)$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({ msg, author, guild, ship, requirements }) {
+  async action ({ msg, author, guild, ship, requirements }) {
     log(msg, 'Direction Vote', msg.guild.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(
-      (m) => m.id === msg.author.id,
+      (m) => m.id === msg.author.id
     )
-    if (!authorCrewMemberObject)
-      return console.log('no user found in direction')
+    if (!authorCrewMemberObject) { return console.log('no user found in direction') }
     const staminaRes = authorCrewMemberObject.useStamina('poll')
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
@@ -42,14 +41,14 @@ module.exports = {
         `Crew with at least ${Object.keys(requirements)
           .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
           .join(
-            'and ',
+            'and '
           )}can vote on the ship's bearing. The final direction will be an average of the crew's vote, with votes from users with higher piloting skills carrying more weight.
 
 Current direction is ${ship.getDirectionString()}
 
 Your ship's engine supports \`${
           availableDirections.length
-        }\` choices for voting.`,
+        }\` choices for voting.`
       )
 
     const { ok, message, userReactions, sentMessage } = await runPoll({
@@ -60,7 +59,7 @@ Your ship's engine supports \`${
       guild,
       msg,
       requirements,
-      weightByLevelType: 'piloting',
+      weightByLevelType: 'piloting'
     })
     if (!ok) return send(msg, message)
 
@@ -68,7 +67,7 @@ Your ship's engine supports \`${
       const direction = availableDirections.find((d) => d.emoji === emoji)
       return {
         vector: direction.vector,
-        weight: userReactions[emoji].weightedCount,
+        weight: userReactions[emoji].weightedCount
       }
     })
 
@@ -81,13 +80,13 @@ Your ship's engine supports \`${
       name: 'Vote Complete!',
       value: res.ok
         ? `Result: Steering to ${ship.getDirectionString()}`
-        : `Result: Stay the course`,
+        : 'Result: Stay the course'
     })
     embed.description = embed.description.replace(
       'Current direction is',
-      'Previous direction was',
+      'Previous direction was'
     )
 
     sentMessage.edit(embed)
-  },
+  }
 }

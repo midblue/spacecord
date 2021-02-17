@@ -9,12 +9,12 @@ module.exports = async ({ msg, guild, cache }) => {
 
   if (!guild.context.caches.find((c) => c.id === cache.id)) {
     if (!msg.deleted) msg.delete()
-    return send(msg, `Ouch! That cache has already been snagged!`)
+    return send(msg, 'Ouch! That cache has already been snagged!')
   }
 
   // ---------- use cache getter stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id,
+    (m) => m.id === msg.author.id
   )
   if (!authorCrewMemberObject) return console.log('no user found in getCache')
   const staminaRes = authorCrewMemberObject.useStamina('cache')
@@ -26,17 +26,18 @@ module.exports = async ({ msg, guild, cache }) => {
   else {
     const existingStock = guild.ship.cargo.find((c) => c.type === cache.type)
     if (existingStock) existingStock.amount += cache.amount
-    else
+    else {
       guild.ship.cargo.push({
         type: cargo.type,
         amount: cargo.amount,
-        ...cargo[cargo.type],
+        ...cargo[cargo.type]
       })
+    }
   }
   guild.saveNewDataToDb()
   return send(
     msg,
-    `Nice! You picked up ` +
+    'Nice! You picked up ' +
       cache.amount.toFixed(2) +
       (cache.type === 'credits' ? '' : ' ' + WEIGHT_UNITS + ' of') +
       ' ' +
@@ -54,7 +55,7 @@ module.exports = async ({ msg, guild, cache }) => {
         : `\nYour ship is now carrying ${Math.round(
             (guild.ship.getTotalWeight() /
               guild.ship.equipment.chassis[0].maxWeight) *
-              100,
-          )}% of its maximum capacity.`),
+              100
+          )}% of its maximum capacity.`)
   )
 }

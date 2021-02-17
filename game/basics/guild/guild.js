@@ -6,7 +6,7 @@ const createDefaultGuild = require('./createDefaultGuild')
 const db = require('../../../db/db')
 const memberLiveify = require('../crew/crew').liveify
 
-async function spawn({ discordGuild, channelId, context }) {
+async function spawn ({ discordGuild, channelId, context }) {
   let guild
   guild = await db.guild.get({ guildId: discordGuild.id })
   if (guild) {
@@ -21,22 +21,23 @@ async function spawn({ discordGuild, channelId, context }) {
   return guild
 }
 
-function liveify(guild, context) {
+function liveify (guild, context) {
   guild.context = context
 
   guild.ship.server = {
     id: guild.guildId,
-    name: guild.guildName,
+    name: guild.guildName
   }
 
   guild.ship.guild = guild
 
   // add base properties to faction
-  if (guild.faction?.color)
+  if (guild.faction?.color) {
     guild.faction = {
       ...factionsData[guild.faction.color],
-      ...guild.faction,
+      ...guild.faction
     }
+  }
 
   // add base properties to items onboard
   Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
@@ -45,7 +46,7 @@ function liveify(guild, context) {
         const itemData = equipmentData[equipmentType][part.id]
         return {
           ...itemData,
-          ...part,
+          ...part
         }
       })
       .filter((p) => p)
@@ -54,7 +55,7 @@ function liveify(guild, context) {
   // add base properties to cargo
   guild.ship.cargo = guild.ship.cargo.map((c) => ({
     ...cargoData[c.type],
-    ...c,
+    ...c
   }))
 
   addins.forEach((addin) => addin(guild))
@@ -64,5 +65,5 @@ function liveify(guild, context) {
 
 module.exports = {
   spawn,
-  liveify,
+  liveify
 }

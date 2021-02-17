@@ -10,23 +10,23 @@ module.exports = {
   tag: 'speed',
   equipmentType: 'engine',
   documentation: {
-    value: `Starts a vote to set the ship's speed.`,
+    value: 'Starts a vote to set the ship\'s speed.',
     emoji: '⏩',
     category: 'ship',
-    priority: 75,
+    priority: 75
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:speed|speedup|slowdown|accelerate|decelerate|accel|decel|thrust|go|move|forward)$`,
-      'gi',
+      'gi'
     ).exec(content)
   },
-  async action({ msg, author, guild, ship, requirements }) {
+  async action ({ msg, author, guild, ship, requirements }) {
     log(msg, 'Speed Vote', msg.guild.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(
-      (m) => m.id === msg.author.id,
+      (m) => m.id === msg.author.id
     )
     if (!authorCrewMemberObject) return console.log('no user found in speed')
     const staminaRes = authorCrewMemberObject.useStamina('poll')
@@ -48,14 +48,14 @@ Current speed is \`${effectiveSpeed.toFixed(3)} ${SPEED_UNIT}\`, which is \`${(
         ).toFixed(0)}%\` of your ship's current maximum.
 				
 				Ship, equipment, and cargo weight totals \`${Math.round(
-          ship.getTotalWeight(),
+          ship.getTotalWeight()
         )} ${WEIGHT_UNITS}\` out of your ship's maximum capacity of \`${Math.round(
-          ship.maxWeight,
+          ship.maxWeight
         )} ${WEIGHT_UNITS}\`.
 				
 Your ship's engine supports \`${
           availableSpeedLevels.length
-        }\` choices for voting.`,
+        }\` choices for voting.`
       )
 
     const { ok, message, userReactions, sentMessage } = await runPoll({
@@ -66,7 +66,7 @@ Your ship's engine supports \`${
       guild,
       msg,
       requirements,
-      weightByLevelType: 'piloting',
+      weightByLevelType: 'piloting'
     })
     if (!ok) return send(msg, message)
 
@@ -74,7 +74,7 @@ Your ship's engine supports \`${
       const direction = availableSpeedLevels.find((d) => d.emoji === emoji)
       return {
         speed: direction.speed,
-        weight: userReactions[emoji].weightedCount,
+        weight: userReactions[emoji].weightedCount
       }
     })
 
@@ -82,7 +82,7 @@ Your ship's engine supports \`${
     const res = ship.redetermineSpeed(toAggregate)
 
     embed.description = `Previous speed was \`${previousSpeed.toFixed(
-      3,
+      3
     )} ${SPEED_UNIT}\``
     embed.fields = {
       name: 'Vote Complete!',
@@ -93,16 +93,16 @@ Your ship's engine supports \`${
 Final speed is \`${ship
             .effectiveSpeed()
             .toFixed(
-              3,
+              3
             )} ${SPEED_UNIT}\` out of a maximum of \`${maxSpeed.toFixed(
-            3,
+            3
           )} ${SPEED_UNIT}\`.`
-        : `Result: Maintain speed` +
+        : 'Result: Maintain speed' +
           (ship.status.stranded
-            ? `\n\nHowever, your ship is out of fuel, so it won't be going at any speed.`
-            : ''),
+            ? '\n\nHowever, your ship is out of fuel, so it won\'t be going at any speed.'
+            : '')
     }
 
     sentMessage.edit(embed)
-  },
+  }
 }

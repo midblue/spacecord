@@ -12,7 +12,7 @@ module.exports = (guild) => {
       amount,
       location: [...guild.ship.location],
       message,
-      shipName: guild.ship.name,
+      shipName: guild.ship.name
     })
   }
 
@@ -21,7 +21,7 @@ module.exports = (guild) => {
       guild.context.spawnCache({
         type: 'credits',
         amount: guild.ship.credits,
-        location: [...guild.ship.location],
+        location: [...guild.ship.location]
       })
       guild.ship.credits = 0
     }
@@ -29,7 +29,7 @@ module.exports = (guild) => {
       guild.context.spawnCache({
         type: cargo.type,
         amount: cargo.amount,
-        location: [...guild.ship.location],
+        location: [...guild.ship.location]
       })
     })
     guild.ship.cargo = []

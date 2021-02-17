@@ -8,5 +8,5 @@ module.exports = {
   fuelUse: 1,
   directions: 3,
   powerLevels: 2,
-  requirements: { piloting: 4 },
+  requirements: { piloting: 4 }
 }

@@ -17,13 +17,13 @@ module.exports = (guild) => {
       .getDockedShips()
       .filter((s) => s.guildId !== guild.guildId)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLand(guild.ship)),
+      s.pushToGuild(story.planet.otherShipLand(guild.ship))
     )
 
     runGuildCommand({
       msg,
       commandTag: 'planet',
-      guild,
+      guild
     })
     return { ok: true, message: story.land.generalPlanet(guild.ship, planet) }
   }
@@ -33,7 +33,7 @@ module.exports = (guild) => {
       .getDockedShips()
       .filter((s) => s.guildId !== guild.guildId)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
+      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet))
     )
 
     guild.ship.status.docked = false
@@ -41,7 +41,7 @@ module.exports = (guild) => {
     runGuildCommand({
       commandTag: 'ship',
       msg,
-      props: { guild },
+      props: { guild }
     })
 
     return { ok: true, message: story.depart.depart(planet) }
@@ -50,31 +50,31 @@ module.exports = (guild) => {
   guild.ship.getPlanetFields = (planet) => {
     const fields = []
     fields.push({
-      name: `📍 Location`,
+      name: '📍 Location',
       value:
         planet.location.map((l) => l.toFixed(2)).join(', ') +
         ' ' +
-        DISTANCE_UNIT,
+        DISTANCE_UNIT
     })
     fields.push({
-      name: `📏 Size`,
-      value: capitalize(planet.getSizeDescriptor()),
+      name: '📏 Size',
+      value: capitalize(planet.getSizeDescriptor())
     })
     fields.push({
-      name: `🎨 Color`,
-      value: capitalize(planet.color),
+      name: '🎨 Color',
+      value: capitalize(planet.color)
     })
     const dockedShips = planet.getDockedShips()
     fields.push({
-      name: `🛸 Docked Ships`,
+      name: '🛸 Docked Ships',
       value:
         dockedShips.length < 5
           ? dockedShips.map((s) => s.ship.name).join(', ')
-          : dockedShips.length,
+          : dockedShips.length
     })
     fields.push({
-      name: `💳 Your Credits`,
-      value: Math.round(guild.ship.credits),
+      name: '💳 Your Credits',
+      value: Math.round(guild.ship.credits)
     })
     return fields
   }
@@ -85,25 +85,25 @@ module.exports = (guild) => {
     actions.push({
       emoji: '🛠',
       label: 'Shipyard',
-      async action({ user, msg, guild }) {
+      async action ({ user, msg, guild }) {
         await runGuildCommand({
           commandTag: 'shipyard',
           author: user,
-          msg,
+          msg
         })
-      },
+      }
     })
 
     actions.push({
       emoji: '⚖️',
       label: 'Merchant Quarter',
-      async action({ user, msg, guild }) {
+      async action ({ user, msg, guild }) {
         await runGuildCommand({
           commandTag: 'merchant',
           author: user,
-          msg,
+          msg
         })
-      },
+      }
     })
 
     // actions.push({
@@ -122,9 +122,9 @@ module.exports = (guild) => {
     actions.push({
       emoji: '🛫',
       label: 'Start Leave Vote ' + usageTag(0, 'poll'),
-      async action({ user, msg, guild, planet }) {
+      async action ({ user, msg, guild, planet }) {
         depart({ msg, guild, planet })
-      },
+      }
     })
 
     return actions

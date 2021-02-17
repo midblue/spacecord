@@ -7,13 +7,13 @@ const Discord = require('discord.js-light')
 module.exports = {
   tag: 'scanShip',
   documentation: false,
-  async action({ msg, guild, otherShip }) {
+  async action ({ msg, guild, otherShip }) {
     log(msg, 'Scan Ship', msg.guild.name)
     if (!otherShip) return
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(
-      (m) => m.id === msg.author.id,
+      (m) => m.id === msg.author.id
     )
     if (!authorCrewMemberObject) return console.log('no user found in scanShip')
     const staminaRes = authorCrewMemberObject.useStamina('scanShip')
@@ -35,7 +35,7 @@ module.exports = {
       msg: sentMessage,
       reactions: actions,
       embed,
-      guild,
+      guild
     })
-  },
+  }
 }

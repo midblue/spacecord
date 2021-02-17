@@ -9,19 +9,19 @@ const depart = require('../actions/depart')
 module.exports = {
   tag: 'holoDeck',
   documentation: false,
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:holodeck|holo)$`, 'gi').exec(
-      content,
+      content
     )
   },
-  async action({ msg, guild }) {
+  async action ({ msg, guild }) {
     log(msg, 'Holo Deck', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle(`🕹 Holo Deck`)
+      .setTitle('🕹 Holo Deck')
 
-    embed.description = `The dazzling array of the map projection in the center of the room provides a centerpiece around which the crew's cartogaphers and technicians operate the ship's various sensors and beacons.`
+    embed.description = 'The dazzling array of the map projection in the center of the room provides a centerpiece around which the crew\'s cartogaphers and technicians operate the ship\'s various sensors and beacons.'
 
     const reactions = []
     const scannableShips =
@@ -30,20 +30,21 @@ module.exports = {
         x: guild.ship.location[0],
         y: guild.ship.location[1],
         range: guild.ship.shipScanRadius(),
-        excludeIds: guild.guildId,
+        excludeIds: guild.guildId
       }).guilds
-    if (scannableShips)
+    if (scannableShips) {
       reactions.push({
         emoji: '🔭',
-        label: `Scan a Nearby Ship`,
+        label: 'Scan a Nearby Ship',
         action: ({ msg, guild }) => {
           runGuildCommand({
             msg,
             commandTag: 'nearby',
-            props: { filter: 'guilds' },
+            props: { filter: 'guilds' }
           })
-        },
+        }
       })
+    }
 
     reactions.push(
       ...[
@@ -53,34 +54,34 @@ module.exports = {
             'Scan Area ' +
             usageTag(guild.ship.equipment.telemetry[0].powerUse, 'scan'),
           requirements: guild.ship.equipment.telemetry[0].requirements,
-          async action({ msg }) {
+          async action ({ msg }) {
             await runGuildCommand({
               msg,
-              commandTag: 'scanArea',
+              commandTag: 'scanArea'
             })
-          },
+          }
         },
         {
           emoji: '📣',
           label: 'Broadcast',
-          async action({ msg }) {
+          async action ({ msg }) {
             await runGuildCommand({
               commandTag: 'broadcast',
-              msg,
+              msg
             })
-          },
+          }
         },
         {
           emoji: '🗺',
           label: 'Map',
-          async action({ msg }) {
+          async action ({ msg }) {
             await runGuildCommand({
               commandTag: 'map',
-              msg,
+              msg
             })
-          },
-        },
-      ],
+          }
+        }
+      ]
     )
 
     const sentMessage = (await send(msg, embed))[0]
@@ -89,9 +90,9 @@ module.exports = {
       reactions,
       embed,
       guild,
-      commandsLabel: `Holo Commands`,
-      respondeeFilter: (user) => user.id === msg.author.id,
+      commandsLabel: 'Holo Commands',
+      respondeeFilter: (user) => user.id === msg.author.id
     })
     sentMessage.delete()
-  },
+  }
 }

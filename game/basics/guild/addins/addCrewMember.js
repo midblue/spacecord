@@ -10,13 +10,13 @@ module.exports = (guild) => {
     if (guild.ship.members.find((m) => m.id === newMember.id)) {
       log(
         'addCrew',
-        `Attempted to add a member that already exists.`,
+        'Attempted to add a member that already exists.',
         newMember.id,
-        guild.id,
+        guild.id
       )
       return {
         ok: false,
-        message: story.crew.add.fail.existing(newMember.id),
+        message: story.crew.add.fail.existing(newMember.id)
       }
     }
 
@@ -29,17 +29,18 @@ module.exports = (guild) => {
     guild.ship.members.push(newMember)
     db.guild.addCrewMember({
       guildId: guild.guildId,
-      member: newMember.saveableData(),
+      member: newMember.saveableData()
     })
     log('addCrew', 'Added new member to guild', newMember.id, guild.guildName)
-    if (guild.ship.members.length === 1)
+    if (guild.ship.members.length === 1) {
       return {
         ok: true,
         message: [
           story.crew.add.first(newMember, guild),
-          story.prompts.startGame(),
-        ],
+          story.prompts.startGame()
+        ]
       }
+    }
     return { ok: true, message: story.crew.add.success(newMember, guild) }
   }
 }

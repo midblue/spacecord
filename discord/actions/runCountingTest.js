@@ -6,9 +6,9 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
     const SNIPPET_WIDTH = 5
     const SNIPPET_HEIGHT = 5
 
-    var mojcodeSnippet = ''
+    let mojcodeSnippet = ''
 
-    function randomNumber(min, max) {
+    function randomNumber (min, max) {
       return Math.random() * (max - min) + min
     }
 
@@ -22,7 +22,7 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
         if (Math.random() < targetChance) {
           mojcodeSnippet += targetEmoji
         } else {
-          var choiceIndex = Math.floor(Math.random() * emojiChoices.length)
+          const choiceIndex = Math.floor(Math.random() * emojiChoices.length)
           mojcodeSnippet += emojiChoices[choiceIndex]
         }
       }
@@ -31,12 +31,12 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
       }
     }
     const regex = new RegExp(targetEmoji, 'g')
-    var targetEmojiTotal = (mojcodeSnippet.match(regex) || []).length
+    const targetEmojiTotal = (mojcodeSnippet.match(regex) || []).length
     mojcodeSnippet += '\nDEBUG: COUNT=' + targetEmojiTotal
     const time = Math.floor(targetEmojiTotal * 0.2 * 1000)
 
     embed.description += `\nYou have ${Math.round(
-      time / 1000,
+      time / 1000
     )} seconds to study the mojcode.`
     sentMessage.edit(embed)
 
@@ -71,7 +71,7 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
       resolve({
         rewardXp: rewardXp,
         guess: guess,
-        correctAnswer: targetEmojiTotal,
+        correctAnswer: targetEmojiTotal
       })
     }
 

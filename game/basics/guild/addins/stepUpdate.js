@@ -17,13 +17,14 @@ module.exports = (guild) => {
 
   guild.ship.eat = () => {
     const ship = guild.ship
-    let ok = true,
-      message
+    let ok = true
+    let message
     const food = ship.cargo.find((c) => c.type === 'food')
-    if (!food || !food.amount)
+    if (!food || !food.amount) {
       return {
-        ok: false,
+        ok: false
       }
+    }
 
     const amountConsumed = 0.001 * ship.members.length
 
@@ -42,7 +43,7 @@ module.exports = (guild) => {
     return {
       ok,
       amountConsumed,
-      message,
+      message
     }
   }
 }

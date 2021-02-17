@@ -6,16 +6,16 @@ const awaitReaction = require('../actions/awaitReaction')
 module.exports = {
   tag: 'shipInfo',
   documentation: {
-    name: `shipinfo`,
-    value: `Ship equipment, age, health, etc.`,
+    name: 'shipinfo',
+    value: 'Ship equipment, age, health, etc.',
     emoji: '📊',
     category: 'ship',
-    priority: 80,
+    priority: 80
   },
-  test(content, settings) {
+  test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:shipinfo|si)$`, 'gi').exec(content)
   },
-  async action({ msg, settings, ship, guild }) {
+  async action ({ msg, settings, ship, guild }) {
     log(msg, 'Ship Info', msg.guild.name)
 
     const status = ship.shipInfo()
@@ -30,7 +30,7 @@ module.exports = {
       msg: sentMessage,
       reactions: status.actions,
       embed,
-      guild,
+      guild
     })
-  },
+  }
 }

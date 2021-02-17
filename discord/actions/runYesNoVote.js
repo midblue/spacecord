@@ -15,7 +15,7 @@ module.exports = async ({
   minimumMemberPercent,
   msg,
   guild,
-  cleanUp = true,
+  cleanUp = true
 }) => {
   if (!embed) embed = new Discord.MessageEmbed().setColor(APP_COLOR)
 
@@ -27,21 +27,21 @@ module.exports = async ({
       emoji: '✅',
       label:
         'Yes' +
-        (yesStaminaRequirement ? ' ' + usageTag(0, yesStaminaRequirement) : ''),
+        (yesStaminaRequirement ? ' ' + usageTag(0, yesStaminaRequirement) : '')
     },
     {
       emoji: '❌',
-      label: 'No',
-    },
+      label: 'No'
+    }
   ]
 
-  let {
+  const {
     ok,
     message,
     userReactions,
     sentMessage,
     insufficientVotes,
-    voters,
+    voters
   } = await runPoll({
     pollType,
     embed,
@@ -53,23 +53,24 @@ module.exports = async ({
       : null,
     minimumMemberPercent,
     msg,
-    guild,
+    guild
   })
 
   if (!ok) {
     if (sentMessage && cleanUp && !sentMessage.deleted) sentMessage.delete()
     return {
       ok,
-      message,
+      message
     }
   }
 
-  if (!sentMessage.deleted)
+  if (!sentMessage.deleted) {
     if (cleanUp) sentMessage.delete()
     else {
       sentMessage.reactions.removeAll().catch((e) => {})
       sentMessage.fields = []
     }
+  }
 
   const yesVoters = voters.filter((v) => v.votes.includes('✅'))
   const noVoters = voters.filter((v) => v.votes.includes('❌'))
@@ -89,6 +90,6 @@ module.exports = async ({
     yesVoters,
     noVoters,
     sentMessage,
-    embed,
+    embed
   }
 }

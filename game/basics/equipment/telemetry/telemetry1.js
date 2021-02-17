@@ -3,7 +3,7 @@ const { numberToEmoji, percentToTextBars } = require('../../../../common')
 module.exports = {
   // emoji: '📡',
   emoji: '😜',
-  description: `First designed as a joke, but then seriously adopted for its clarity and readability by even the most knuckleheaded Zoomer crew members, the Emoji Radar has earned a certain unique type of esteem in the galaxy.`,
+  description: 'First designed as a joke, but then seriously adopted for its clarity and readability by even the most knuckleheaded Zoomer crew members, the Emoji Radar has earned a certain unique type of esteem in the galaxy.',
   displayName: 'Emoji Radar v1',
   baseHp: 15,
   powerUse: 2,
@@ -12,17 +12,16 @@ module.exports = {
   breakdownSeverity: 0.05,
   repairRequirements: { mechanics: 4 },
   requirements: { engineering: 2 },
-  use({ scanResult, x, y }) {
+  use ({ scanResult, x, y }) {
     const previousRepair = this.repair
     this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
     if (this.repair < 0) this.repair = 0
 
-    const repair = this.repair,
-      range = this.range
+    const repair = this.repair
+    const range = this.range
 
     if (repair <= 0) {
-      if (previousRepair !== repair)
-        guild.ship.logEntry(story.repair.breakdown(this.displayName))
+      if (previousRepair !== repair) { guild.ship.logEntry(story.repair.breakdown(this.displayName)) }
       return {
         map: `
 *******************
@@ -34,7 +33,7 @@ module.exports = {
 *******************`,
         key: [],
         model: this.displayName,
-        repair,
+        repair
       }
     }
 
@@ -64,7 +63,7 @@ module.exports = {
       emptySpace,
       emptySpace,
       '🛸',
-      '🪐',
+      '🪐'
     ]
 
     const getChar = (base) =>
@@ -73,7 +72,7 @@ module.exports = {
         ? base
         : deadCharacters[Math.floor(Math.random() * deadCharacters.length)]
 
-    let grid = []
+    const grid = []
 
     let row = []
     row.push('┏')
@@ -82,13 +81,12 @@ module.exports = {
     grid.push(row)
 
     for (let rowIndex = 0; rowIndex < range * 2 + 1; rowIndex++) {
-      let row = ['┃']
-      for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++)
-        row.push(getChar(emptySpace))
+      const row = ['┃']
+      for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++) { row.push(getChar(emptySpace)) }
 
       if (rowIndex % 2) row.push(`┠ ${Math.round(range - rowIndex + y)}`)
       else {
-        row.push(`┃`)
+        row.push('┃')
       }
 
       grid.push(row)
@@ -104,13 +102,13 @@ module.exports = {
     const leftLabel = `${Math.round(x - range)}`
     const rightLabel = `${Math.round(x + range)}`
     row.push(
-      leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ' ') + rightLabel,
+      leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ' ') + rightLabel
     )
     grid.push(row)
 
     grid[range + 1][range + 1] = getChar('🚀')
 
-    for (let cache of scanResult.caches) {
+    for (const cache of scanResult.caches) {
       const xDiff = cache.location[0] - x
       const yDiff = cache.location[1] - y
       const scanCenter = range + 1
@@ -119,7 +117,7 @@ module.exports = {
       grid[cacheYPosition][cacheXPosition] = getChar('📦')
     }
 
-    for (let otherGuild of scanResult.guilds) {
+    for (const otherGuild of scanResult.guilds) {
       const xDiff = otherGuild.ship.location[0] - x
       const yDiff = otherGuild.ship.location[1] - y
       const scanCenter = range + 1
@@ -128,7 +126,7 @@ module.exports = {
       grid[otherGuildYPosition][otherGuildXPosition] = getChar('🛸')
     }
 
-    for (let planet of scanResult.planets) {
+    for (const planet of scanResult.planets) {
       const xDiff = planet.location[0] - x
       const yDiff = planet.location[1] - y
       const scanCenter = range + 1
@@ -139,27 +137,29 @@ module.exports = {
 
     let map = grid.map((row) => row.join('')).join('\n')
 
-    if (scanResult.guilds.length)
+    if (scanResult.guilds.length) {
       map =
         map +
         `\n> SHIPS_FOUND=${scanResult.guilds
           .map((g) => g.ship.name.replace(/ /g, '_').toUpperCase())
           .join(',')}`
-    if (scanResult.planets.length)
+    }
+    if (scanResult.planets.length) {
       map =
         map +
         `\n> PLANETS_FOUND=${scanResult.planets
           .map((p) => p.name.replace(/ /g, '_').toUpperCase())
           .join(',')}`
+    }
 
-    let key = [`🚀 Us`]
-    key.push(`🪐 Planet`)
+    const key = ['🚀 Us']
+    key.push('🪐 Planet')
     // if (scanResult.length)
-    key.push(`🛸 Spacecraft`)
-    key.push(`📦 Cache`)
+    key.push('🛸 Spacecraft')
+    key.push('📦 Cache')
 
     if (repair < this.needsRepairAt) {
-      key.push(`❌ Not Sure`)
+      key.push('❌ Not Sure')
       map = map + `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
     }
 
@@ -167,7 +167,7 @@ module.exports = {
       map,
       key,
       model: this.displayName,
-      repair,
+      repair
     }
-  },
+  }
 }

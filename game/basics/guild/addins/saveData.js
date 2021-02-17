@@ -82,7 +82,7 @@ module.exports = (guild) => {
       try {
         path.split(`.`).forEach((pEl) => {
           try {
-            const int = parseInt(pEl.replace(/[\[\]]/g, ``))
+            const int = parseInt(pEl.replace(/[[\]]/g, ``))
             if (isNaN(int)) {
               propertyToCheck = propertyToCheck[pEl]
             } else {

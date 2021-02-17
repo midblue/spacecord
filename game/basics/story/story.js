@@ -351,8 +351,8 @@ module.exports = {
         accuracyMultiplier > 1
           ? `Even though our munitions experts were in peak condition, it wasn't enough.`
           : accuracyMultiplier < 1
-          ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
-          : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
+            ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
+            : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
       }`,
     hit: (weapon, advantageDamageMultiplier, totalDamageDealt, destroyedShip) =>
       `Your ${weapon.emoji} ${weapon.displayName} hits the enemy, dealing ${
@@ -361,8 +361,8 @@ module.exports = {
         advantageDamageMultiplier > 1
           ? `, a critical hit!`
           : advantageDamageMultiplier < 1
-          ? ` in a glancing blow.`
-          : `.`
+            ? ` in a glancing blow.`
+            : `.`
       }${destroyedShip ? ` You destroyed their ship!` : ``}`
   },
   defend: {
@@ -375,8 +375,8 @@ module.exports = {
         accuracyMultiplier > 1
           ? `They appear to be expert shots, and you wonder how long you can stay lucky...`
           : accuracyMultiplier < 1
-          ? `Thanks to the quick action of your pilots, the shot went fairly wide.`
-          : `It looks like a tight battle is unfolding.`
+            ? `Thanks to the quick action of your pilots, the shot went fairly wide.`
+            : `It looks like a tight battle is unfolding.`
       }`,
     hit: (attacker, weapon, advantageDamageMultiplier, totalDamageTaken) =>
       `The ${weapon.emoji} ${weapon.displayName} of ${
@@ -385,8 +385,8 @@ module.exports = {
         advantageDamageMultiplier > 1
           ? ` in a critical hit!`
           : advantageDamageMultiplier < 1
-          ? ` in a glancing blow.`
-          : `.`
+            ? ` in a glancing blow.`
+            : `.`
       }`,
     advice: () =>
       `Repair equipment and train pilots to increase your dodge chance, drop cargo to increase your speed, and train munitions experts to better fight back!`

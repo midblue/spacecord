@@ -47,8 +47,8 @@ module.exports = {
 Current direction is ${ship.getDirectionString()}
 
 Your ship's engine supports \`${
-          availableDirections.length
-        }\` choices for voting.`
+  availableDirections.length
+}\` choices for voting.`
       )
 
     const { ok, message, userReactions, sentMessage } = await runPoll({

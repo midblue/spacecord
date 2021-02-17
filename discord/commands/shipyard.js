@@ -138,8 +138,8 @@ module.exports = {
               `${
                 tooExpensive
                   ? `_(Insufficient Credits! You need \`💳${
-                      cost - guild.ship.credits
-                    }\` more)_\n`
+                    cost - guild.ship.credits
+                  }\` more)_\n`
                   : ``
               }` +
               part.description
@@ -157,7 +157,6 @@ module.exports = {
               usageTag(0, `poll`),
             action: ({ user, msg, guild }) => {
               buyEquipment({
-                msg,
                 type,
                 part,
                 cost,

@@ -135,22 +135,22 @@ Your crewmates can help out.`)
         time / 1000
       ).toFixed(1)} seconds**
     ${sentTextOptions
-      .map(
-        (o) =>
-          (o.bestScore === 0
-            ? `❌`
-            : o.bestScore > 0.99
+    .map(
+      (o) =>
+        (o.bestScore === 0
+          ? `❌`
+          : o.bestScore > 0.99
             ? `✅`
             : o.bestScore > 0.5
-            ? `👍`
-            : `👎`) +
+              ? `👍`
+              : `👎`) +
           ` "${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
             o.bestAttemptText && o.bestScore < 0.99
               ? ` ("${o.bestAttemptText.toLowerCase()}")`
               : ``
           }`
-      )
-      .join(`\n`)}
+    )
+    .join(`\n`)}
 
 Result: ${await applyCustomParams(msg, res.message)}`
 

@@ -43,8 +43,8 @@ module.exports = {
           ).toFixed(0)}% repair` +
           (e.repairRequirements
             ? ` (Requires ${Object.entries(e.repairRequirements || {})
-                .map(([type, num]) => `\`${num}\` in \`${type}\``)
-                .join(` and `)})`
+              .map(([type, num]) => `\`${num}\` in \`${type}\``)
+              .join(` and `)})`
             : ``),
         requirements: e.repairRequirements,
         action () {

@@ -30,7 +30,7 @@ module.exports = {
 
     // expire old caches
     const cacheCutoff = Date.now() - cacheExpirationTime
-    const deletedCacheCount = 0
+    let deletedCacheCount = 0
     this.caches.forEach((cache) => {
       if (
         cache.created < cacheCutoff &&

@@ -247,7 +247,8 @@ module.exports = (guild) => {
       // deal damage to armor
       let unbrokenArmor = ship.equipment.armor.filter((a) => a.repair)
       let randomUnbrokenArmor =
-        unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
+			unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
+      const newUnbrokenFilter = (a) => a !== randomUnbrokenArmor
       while (damageRemaining && randomUnbrokenArmor) {
         if (
           Math.random() <
@@ -281,7 +282,7 @@ module.exports = (guild) => {
         }
 
         // reset for next time
-        unbrokenArmor = unbrokenArmor.filter((a) => a !== randomUnbrokenArmor)
+        unbrokenArmor = unbrokenArmor.filter(newUnbrokenFilter)
         randomUnbrokenArmor =
           unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
       }
@@ -350,13 +351,13 @@ module.exports = (guild) => {
                       d.equipment.displayName
                     } ${percentToTextBars(d.equipment.repair)}
  ↳ ${Math.round(d.damage * 10) / 10} damage (${
-                      Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
+  Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
                       10
-                    }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
-                      d.negated
-                        ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                        : ``
-                    }${d.wasDisabled ? ` (**Disabled!**)` : ``}`
+}/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
+  d.negated
+    ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
+    : ``
+}${d.wasDisabled ? ` (**Disabled!**)` : ``}`
                 )
                 .join(`\n`) || `No damage taken.`
           }

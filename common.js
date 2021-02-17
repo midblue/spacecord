@@ -179,14 +179,14 @@ function creditsTag (credits) {
   return `\`💳${credits}\``
 }
 
-function arrayMove (arr, old_index, new_index) {
-  if (new_index >= arr.length) {
-    const k = new_index - arr.length + 1
+function arrayMove (arr, oldIndex, newIndex) {
+  if (newIndex >= arr.length) {
+    let k = newIndex - arr.length + 1
     while (k--) {
       arr.push(undefined)
     }
   }
-  arr.splice(new_index, 0, arr.splice(old_index, 1)[0])
+  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0])
 }
 
 const possibleRandomCharacters =

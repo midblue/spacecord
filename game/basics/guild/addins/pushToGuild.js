@@ -1,7 +1,8 @@
 const pushToGuild = require(`../../../../discord/actions/pushToGuild`)
 
+
 module.exports = (guild) => {
-  guild.pushToGuild = guild.ship.pushToGuild = async (
+  const p2g = async (
     message,
     discordMsgOject,
     reactions
@@ -14,4 +15,8 @@ module.exports = (guild) => {
       reactions
     })
   }
+
+  guild.pushToGuild = p2g
+
+  guild.ship.pushToGuild = p2g
 }

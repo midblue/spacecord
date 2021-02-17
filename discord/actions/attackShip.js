@@ -55,8 +55,8 @@ module.exports = async ({ msg, guild, otherShip }) => {
         ).toFixed(0)}% base hit chance` +
         (w.requirements?.munitions
           ? ` (Cumulative total of \`${
-              allSkills.find((s) => s.name === `munitions`).emoji
-            }${w.requirements.munitions}\` in munitions required from voters)`
+            allSkills.find((s) => s.name === `munitions`).emoji
+          }${w.requirements.munitions}\` in munitions required from voters)`
           : ``)
     }))
     const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
@@ -84,16 +84,16 @@ module.exports = async ({ msg, guild, otherShip }) => {
 ${
   weaponToUse.requirements?.munitions
     ? `The \`${weaponToUse.emoji} ${
-        weaponToUse.displayName
-      }\` requires a cumulative voter munitions level of \`${
-        allSkills.find((s) => s.name === `munitions`).emoji
-      }${weaponToUse.requirements.munitions}\` to fire.
+      weaponToUse.displayName
+    }\` requires a cumulative voter munitions level of \`${
+      allSkills.find((s) => s.name === `munitions`).emoji
+    }${weaponToUse.requirements.munitions}\` to fire.
 
 	`
     : ``
 }Vote with more collective ${
-    allSkills.find((s) => s.name === `munitions`).emoji
-  }munitions skill, get closer, and repair your weapons to have a better shot!`
+  allSkills.find((s) => s.name === `munitions`).emoji
+}munitions skill, get closer, and repair your weapons to have a better shot!`
 
   const {
     ok,

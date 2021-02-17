@@ -40,13 +40,13 @@ module.exports = (guild) => {
           ` you look out out the window. 
 You can see for about ${range} ${DISTANCE_UNIT}.
 You see ${
-            thingsFoundCount
-              ? thingsFoundCount +
+  thingsFoundCount
+    ? thingsFoundCount +
                 ` unidentifiable thing${
                   thingsFoundCount === 1 ? `` : `s`
                 } out there in the dark.`
-              : `nothing but the inky void of space.`
-          }` +
+    : `nothing but the inky void of space.`
+}` +
           (haveEnoughPower || eyesOnly
             ? ``
             : `\nMaybe you should think about generating some power.`)

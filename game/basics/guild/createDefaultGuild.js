@@ -31,13 +31,12 @@ module.exports = function ({ discordGuild, channelId }) {
           repair: 0.8
         }
       ],
-      armor: [
-        // {
-        //   id: 'steelPlating',
-        //   repaired: Date.now(),
-        //   repair: 0.6,
-        // },
-      ],
+      armor: [],
+      // {
+      //   id: 'steelPlating',
+      //   repaired: Date.now(),
+      //   repair: 0.6,
+      // },
       weapon: [
         {
           id: `starter`,

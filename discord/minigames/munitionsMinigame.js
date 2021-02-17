@@ -124,14 +124,14 @@ module.exports = ({ msg, user, guild }) => {
         .map((row, index) =>
           index === targetY
             ? row.map((x, i) =>
-                i === targetX
-                  ? x === `💢`
-                    ? `👍`
-                    : x === `✖️`
+              i === targetX
+                ? x === `💢`
+                  ? `👍`
+                  : x === `✖️`
                     ? `👎`
                     : `📍`
-                  : x,
-              )
+                : x,
+            )
             : row,
         )
         .map((row) => row.reduce((total, c) => total + c, ``))

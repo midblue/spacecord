@@ -243,8 +243,8 @@ module.exports = (guild) => {
         WEIGHT_UNITS +
         (guild.ship.speed
           ? `\n(${Math.floor(
-              fuel / guild.ship.fuelUsePerTick()
-            )} ${TIME_UNITS} at\ncurrent speed)`
+            fuel / guild.ship.fuelUsePerTick()
+          )} ${TIME_UNITS} at\ncurrent speed)`
           : ``)
     })
 

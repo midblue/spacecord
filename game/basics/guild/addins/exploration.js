@@ -6,7 +6,7 @@ module.exports = (guild) => {
     if (!(guild.ship.seen?.planets || []).length) mapString = story.map.empty()
     else {
       mapString = `Planets discovered so far:\n`;
-(guild.ship.seen?.planets || []).forEach((planetName) => {
+      (guild.ship.seen?.planets || []).forEach((planetName) => {
         const planetData = guild.context.planets.find(
           (p) => p.name === planetName
         )

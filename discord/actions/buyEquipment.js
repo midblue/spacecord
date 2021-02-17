@@ -24,8 +24,8 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   )
   voteEmbed.description = willReplace
     ? `Warning: This part will replace your existing ${
-        willReplace.emoji + ` ` || ``
-      } ${willReplace.displayName}, which will be sold for 50% of market price.`
+      willReplace.emoji + ` ` || ``
+    } ${willReplace.displayName}, which will be sold for 50% of market price.`
     : ``
   voteEmbed.fields = []
 

@@ -195,10 +195,10 @@ module.exports = {
           otherGuild.ship.status.docked
             ? `Docked on ${otherGuild.ship.status.docked}.`
             : `${positionAndAngle.distance.toFixed(
-                2
-              )} AU away from you at an angle of ${Math.round(
-                positionAndAngle.angle
-              )} degrees.`
+              2
+            )} AU away from you at an angle of ${Math.round(
+              positionAndAngle.angle
+            )} degrees.`
         )
 
       const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)

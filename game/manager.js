@@ -1,11 +1,11 @@
-const { spawn, liveify } = require('./basics/guild/guild')
-const spawnPlanets = require('./basics/planet')
-const caches = require('./basics/caches')
-const story = require('./basics/story/story')
-const { log } = require('./gamecommon')
-const { pointIsInsideCircle, distance } = require('../common')
-const coreLoop = require('./core loop/index')
-const db = require('../db/db')
+const { spawn, liveify } = require(`./basics/guild/guild`)
+const spawnPlanets = require(`./basics/planet`)
+const caches = require(`./basics/caches`)
+const story = require(`./basics/story/story`)
+const { log } = require(`./gamecommon`)
+const { pointIsInsideCircle, distance } = require(`../common`)
+const coreLoop = require(`./core loop/index`)
+const db = require(`../db/db`)
 
 //
 // ---------------- Game Object ----------------
@@ -18,13 +18,13 @@ const game = {
     const a = (await db.guild.getAll()).forEach((g) =>
       this.loadExistingGuild(g)
     )
-    log('init', `Loaded ${this.guilds.length} guilds from db`)
+    log(`init`, `Loaded ${this.guilds.length} guilds from db`)
 
     const b = (await db.caches.getAll()).forEach((c) => this.loadCache(c))
-    log('init', `Loaded ${this.caches.length} caches from db`)
+    log(`init`, `Loaded ${this.caches.length} caches from db`)
 
     this.planets = await spawnPlanets({ context: this })
-    log('init', `Loaded ${this.planets.length} planets`)
+    log(`init`, `Loaded ${this.planets.length} planets`)
 
     this.start()
   },
@@ -68,16 +68,16 @@ const game = {
 
   addGuild (newGuild) {
     if (!newGuild) {
-      log('addGuild', 'Attempted to add nonexistent guild')
-      return { ok: false, message: 'Attempted to add nonexistent guild' }
+      log(`addGuild`, `Attempted to add nonexistent guild`)
+      return { ok: false, message: `Attempted to add nonexistent guild` }
     }
     const existingGuildInGame = this.guilds.find(
       (g) => g.guildId === newGuild.guildId
     )
     if (existingGuildInGame) {
       log(
-        'addGuild',
-        'Attempted to spawn a guild that already exists in the game'
+        `addGuild`,
+        `Attempted to spawn a guild that already exists in the game`
       )
       return {
         ok: false,
@@ -88,7 +88,7 @@ const game = {
 
     // success
     this.guilds.push(newGuild)
-    log('addGuild', 'Added guild to game', newGuild.guildName)
+    log(`addGuild`, `Added guild to game`, newGuild.guildName)
     return {
       ok: true,
       message: story.ship.get.first(newGuild),
@@ -98,7 +98,7 @@ const game = {
 
   async removeGuild (guildId) {
     if (!guildId) {
-      return { ok: false, message: 'missing id' }
+      return { ok: false, message: `missing id` }
     }
     const existingGuildInGame = this.guilds.findIndex(
       (g) => g.guildId === guildId
@@ -106,7 +106,7 @@ const game = {
     if (existingGuildInGame === -1) {
       return {
         ok: false,
-        message: 'no such guild'
+        message: `no such guild`
       }
     }
     // success
@@ -114,7 +114,7 @@ const game = {
     await db.guild.remove(guildId)
     return {
       ok: true,
-      message: 'deleted guild'
+      message: `deleted guild`
     }
   },
 
@@ -129,7 +129,7 @@ const game = {
     }
 
     if (!thisGuild) {
-      log('guildStatus', 'Attempted to get a guild that does not exist', id)
+      log(`guildStatus`, `Attempted to get a guild that does not exist`, id)
       return {
         ok: false,
         message: story.guild.get.fail.noGuild()
@@ -221,7 +221,7 @@ module.exports = {
     }
 
     const newGuild = await spawn({ discordGuild, channelId, context: game })
-    if (!newGuild) { return { ok: false, message: 'This guild has been banned from the game.' } }
+    if (!newGuild) { return { ok: false, message: `This guild has been banned from the game.` } }
     return game.addGuild(newGuild)
   },
   async guild (guildId) {
@@ -241,10 +241,10 @@ module.exports = {
         ) {
           this.deactivateGuild(g.guildId)
           log(
-            'verifyActive',
-            'Deactivating',
+            `verifyActive`,
+            `Deactivating`,
             g.guildId,
-            ': not in server anymore'
+            `: not in server anymore`
           )
         }
       })

@@ -1,4 +1,4 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 
 module.exports = (guild) => {
   guild.ship.repairEquipment = ({ type, index, add, newRepairLevel }) => {

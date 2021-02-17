@@ -1,10 +1,10 @@
-const factionsData = require('../factions')
-const cargoData = require('../cargo')
-const equipmentData = require('../equipment/equipment')
-const addins = require('./addins/index')
-const createDefaultGuild = require('./createDefaultGuild')
-const db = require('../../../db/db')
-const memberLiveify = require('../crew/crew').liveify
+const factionsData = require(`../factions`)
+const cargoData = require(`../cargo`)
+const equipmentData = require(`../equipment/equipment`)
+const addins = require(`./addins/index`)
+const createDefaultGuild = require(`./createDefaultGuild`)
+const db = require(`../../../db/db`)
+const memberLiveify = require(`../crew/crew`).liveify
 
 async function spawn ({ discordGuild, channelId, context }) {
   let guild

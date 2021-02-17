@@ -1,25 +1,25 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const { distance, usageTag } = require('../../common')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const { distance, usageTag } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
 
 module.exports = async ({ msg, guild, planet }) => {
-  log(msg, 'Land', msg.guild.name)
+  log(msg, `Land`, msg.guild.name)
 
   // ---------- check if in range
   const inRange =
     distance(...guild.ship.location, ...planet.location) <=
     guild.ship.equipment.chassis[0].interactRadius
-  if (!inRange) return send(msg, 'That planet isn\'t in range anymore!')
+  if (!inRange) return send(msg, `That planet isn't in range anymore!`)
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) return console.log('no user found in land')
-  const staminaRes = authorCrewMemberObject.useStamina('land')
+  if (!authorCrewMemberObject) return console.log(`no user found in land`)
+  const staminaRes = authorCrewMemberObject.useStamina(`land`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   // ---------- vote on landing
@@ -37,7 +37,7 @@ module.exports = async ({ msg, guild, planet }) => {
     yesVoters,
     sentMessage: voteMessage
   } = await runYesNoVote({
-    pollType: 'land',
+    pollType: `land`,
     embed: voteEmbed,
     msg,
     guild,
@@ -60,7 +60,7 @@ module.exports = async ({ msg, guild, planet }) => {
 
   // land
   const res = guild.ship.land({ planet, msg })
-  if (res.message) voteEmbed.description += '\n\n' + res.message
+  if (res.message) voteEmbed.description += `\n\n` + res.message
 
   voteMessage.edit(voteEmbed)
 }

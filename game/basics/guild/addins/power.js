@@ -1,9 +1,9 @@
-const story = require('../../story/story')
-const powerRequirements = require('../powerRequirements')
+const story = require(`../../story/story`)
+const powerRequirements = require(`../powerRequirements`)
 
 module.exports = (guild) => {
   guild.ship.usePower = (amount, notify = true) => {
-    if (typeof amount === 'string') amount = powerRequirements[amount]
+    if (typeof amount === `string`) amount = powerRequirements[amount]
     let message
     // todo battery durability here and in addPower
     if (amount <= guild.ship.power) {

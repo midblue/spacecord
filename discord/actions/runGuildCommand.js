@@ -1,6 +1,6 @@
-const client = require('../bot').client
-const { log } = require('../botcommon')
-const { test } = require('../commands/index')
+const client = require(`../bot`).client
+const { log } = require(`../botcommon`)
+const { test } = require(`../commands/index`)
 
 module.exports = async ({
   guildId,
@@ -15,7 +15,7 @@ module.exports = async ({
     const discordGuild = await client.guilds.fetch(guildId)
     const discordChannel = await discordGuild.channels.cache
       .array()
-      .find((channel) => channel.type === 'text' && channel.id === channelId)
+      .find((channel) => channel.type === `text` && channel.id === channelId)
     fakeMsg = { guild: discordGuild, channel: discordChannel, author }
   }
 

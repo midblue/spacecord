@@ -1,8 +1,8 @@
-const story = require('../../game/basics/story/story')
-const send = require('../actions/send')
-const { client, rawWatchers } = require('../bot')
-const { username } = require('../botcommon')
-const Discord = require('discord.js-light')
+const story = require(`../../game/basics/story/story`)
+const send = require(`../actions/send`)
+const { client, rawWatchers } = require(`../bot`)
+const { username } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
 
 module.exports = async ({
   msg,
@@ -29,17 +29,17 @@ module.exports = async ({
       if ((reactions && reactions.length) || listeningType) {
         embed.setFooter(
           `Listening for ${
-            listeningType || (reactions ? 'commands' : 'reactions')
+            listeningType || (reactions ? `commands` : `reactions`)
           }...`
         )
       }
       if (reactions && reactions.length && reactions[0].label && embed) {
         embed.fields.push({
-          id: 'commandLabel',
-          name: commandsLabel || 'Commands',
+          id: `commandLabel`,
+          name: commandsLabel || `Commands`,
           value: reactions
             .map(({ emoji, label }) => `${emoji} - ${label}`)
-            .join('\n')
+            .join(`\n`)
         })
       }
       if (reactions && reactions.length && !msg.deleted) msg.edit(embed)
@@ -59,7 +59,7 @@ module.exports = async ({
         if (embed.fields) {
           // console.log(JSON.stringify(embed.fields) + '121221313123')
           const fieldIndex = embed.fields.findIndex(
-            (f) => f.id === 'commandLabel'
+            (f) => f.id === `commandLabel`
           )
           if (fieldIndex) embed.fields.splice(fieldIndex, 1)
         }
@@ -73,7 +73,7 @@ module.exports = async ({
     const eventHandler = async (event) => {
       // `event.t` is the raw event name
       if (
-        !['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(event.t)
+        ![`MESSAGE_REACTION_ADD`, `MESSAGE_REACTION_REMOVE`].includes(event.t)
       ) { return }
 
       const { d: data } = event
@@ -130,8 +130,8 @@ module.exports = async ({
         !collectedReactions.find(
           (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji
         ) &&
-        event.t === 'MESSAGE_REACTION_ADD'
-      ) { collectedReactions.push({ user, emoji: userReactedWithEmoji }) } else if (event.t === 'MESSAGE_REACTION_REMOVE') {
+        event.t === `MESSAGE_REACTION_ADD`
+      ) { collectedReactions.push({ user, emoji: userReactedWithEmoji }) } else if (event.t === `MESSAGE_REACTION_REMOVE`) {
         collectedReactions.splice(
           collectedReactions.indexOf(
             (r) => r.user.id === user.id && r.emoji === userReactedWithEmoji
@@ -142,7 +142,7 @@ module.exports = async ({
 
       // run the action for that emoji if there is one
       if (
-        event.t !== 'MESSAGE_REACTION_ADD' ||
+        event.t !== `MESSAGE_REACTION_ADD` ||
         !reactions ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji) ||
         !reactions.find((r) => r.emoji === userReactedWithEmoji).action

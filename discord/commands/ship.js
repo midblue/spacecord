@@ -1,23 +1,23 @@
-const send = require('../actions/send')
-const awaitReaction = require('../actions/awaitReaction')
-const { log } = require('../botcommon')
-const Discord = require('discord.js-light')
+const send = require(`../actions/send`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const { log } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
 
 module.exports = {
-  tag: 'ship',
+  tag: `ship`,
   documentation: {
-    value: 'High-level overview of the ship\'s status and ship-related actions.',
-    emoji: '🚀',
-    category: 'ship',
+    value: `High-level overview of the ship's status and ship-related actions.`,
+    emoji: `🚀`,
+    category: `ship`,
     priority: 80
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:s|ship|status)$`, 'gi').exec(
+    return new RegExp(`^${settings.prefix}(?:s|ship|status)$`, `gi`).exec(
       content
     )
   },
   async action ({ msg, guild }) {
-    log(msg, 'Ship', msg.guild.name)
+    log(msg, `Ship`, msg.guild.name)
 
     const status = await guild.ship.statusReport()
     const embed = new Discord.MessageEmbed()

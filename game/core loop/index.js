@@ -1,20 +1,20 @@
-const { log } = require('../gamecommon')
-const db = require('../../db/db')
-const cargo = require('../basics/cargo')
+const { log } = require(`../gamecommon`)
+const db = require(`../../db/db`)
+const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = STEP_INTERVAL * 500
 
 module.exports = {
   async start () {
-    log('init', 'Starting game')
+    log(`init`, `Starting game`)
     this.lastTick = Date.now()
 
     setInterval(async () => {
-      console.log('')
-      log('', '============= NEW GAME STEP =============')
+      console.log(``)
+      log(``, `============= NEW GAME STEP =============`)
       await this.update()
-      log('', '============= END GAME STEP =============')
-      console.log('')
+      log(``, `============= END GAME STEP =============`)
+      console.log(``)
     }, STEP_INTERVAL)
   },
 
@@ -26,7 +26,7 @@ module.exports = {
       await guild.stepUpdate()
     })
     await Promise.all(updates)
-    log('update', `Updated all ${this.guilds.length} ships`)
+    log(`update`, `Updated all ${this.guilds.length} ships`)
 
     // expire old caches
     const cacheCutoff = Date.now() - cacheExpirationTime
@@ -40,7 +40,7 @@ module.exports = {
         deletedCacheCount++
       }
     })
-    if (deletedCacheCount) { log('update', `Removed ${deletedCacheCount} expired caches`) }
+    if (deletedCacheCount) { log(`update`, `Removed ${deletedCacheCount} expired caches`) }
 
     // spawn caches randomly
     if (this.caches.length <= this.gameDiameter() / 2 && Math.random() > 0.9) {

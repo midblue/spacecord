@@ -1,6 +1,6 @@
 const defaults = {
-  type: 'armor',
-  description: '',
+  type: `armor`,
+  description: ``,
   weight: 150,
   baseHp: 50,
   damageToArmorMultiplier: 0.5,
@@ -10,11 +10,11 @@ const defaults = {
 }
 
 // * get all exports from files in this folder
-const fs = require('fs')
+const fs = require(`fs`)
 const addins = {}
 fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith('.js') || file === 'index.js') return
+    if (!file.endsWith(`.js`) || file === `index.js`) return
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,

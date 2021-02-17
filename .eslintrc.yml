@@ -31,7 +31,7 @@ rules:
     - error
     - never
   class-methods-use-this: error
-  comma-dangle: error
+  comma-dangle: 'off'
   comma-spacing:
     - error
     - after: true
@@ -75,7 +75,7 @@ rules:
   id-length: 'off'
   id-match: error
   implicit-arrow-linebreak: 'off'
-  indent: 'off'
+  indent: ["error", 2]
   init-declarations: 'off'
   jsx-quotes: error
   key-spacing: error
@@ -108,6 +108,7 @@ rules:
   newline-per-chained-call: 'off'
   no-alert: error
   no-array-constructor: error
+  no-async-promise-executor: 'off'
   no-await-in-loop: 'off'
   no-bitwise: error
   no-caller: error
@@ -200,7 +201,7 @@ rules:
   no-useless-constructor: error
   no-useless-rename: error
   no-useless-return: error
-  no-var: 'off'
+  no-var: error
   no-void: error
   no-warning-comments: 'off'
   no-whitespace-before-property: error
@@ -237,7 +238,7 @@ rules:
   quote-props: 'off'
   quotes:
     - error
-    - single
+    - backtick
   radix:
     - error
     - as-needed

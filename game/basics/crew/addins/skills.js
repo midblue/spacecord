@@ -1,7 +1,7 @@
-const levelNumbers = require('../levels')
-const story = require('../../story/story')
-const db = require('../../../../db/db')
-const { log, allSkills } = require('../../../gamecommon')
+const levelNumbers = require(`../levels`)
+const story = require(`../../story/story`)
+const db = require(`../../../../db/db`)
+const { log, allSkills } = require(`../../../gamecommon`)
 
 module.exports = (member) => {
   member.getTrainableSkills = async () => {

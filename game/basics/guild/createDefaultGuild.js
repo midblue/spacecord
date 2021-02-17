@@ -1,5 +1,5 @@
-const defaultServerSettings = require('../../../discord/defaults/defaultServerSettings')
-const factions = require('../factions')
+const defaultServerSettings = require(`../../../discord/defaults/defaultServerSettings`)
+const factions = require(`../factions`)
 
 module.exports = function ({ discordGuild, channelId }) {
   const ship = {
@@ -9,7 +9,7 @@ module.exports = function ({ discordGuild, channelId }) {
     captain: false,
     status: {
       dead: false,
-      docked: 'Origin'
+      docked: `Origin`
     },
     power: 5,
     members: [],
@@ -19,14 +19,14 @@ module.exports = function ({ discordGuild, channelId }) {
     equipment: {
       chassis: [
         {
-          id: 'starter',
+          id: `starter`,
           repaired: Date.now(),
           repair: 0.9
         }
       ],
       engine: [
         {
-          id: 'basic1',
+          id: `basic1`,
           repaired: Date.now(),
           repair: 0.8
         }
@@ -40,35 +40,35 @@ module.exports = function ({ discordGuild, channelId }) {
       ],
       weapon: [
         {
-          id: 'starter',
+          id: `starter`,
           repaired: Date.now(),
           repair: 0.7
         }
       ],
       telemetry: [
         {
-          id: 'telemetry1',
+          id: `telemetry1`,
           repaired: Date.now(),
           repair: 0.8
         }
       ],
       scanner: [
         {
-          id: 'basic1',
+          id: `basic1`,
           repaired: Date.now(),
           repair: 0.5
         }
       ],
       transceiver: [
         {
-          id: 'transceiver1',
+          id: `transceiver1`,
           repaired: Date.now(),
           repair: 0.5
         }
       ],
       battery: [
         {
-          id: 'battery1',
+          id: `battery1`,
           repaired: Date.now(),
           repair: 0.9
         }
@@ -76,7 +76,7 @@ module.exports = function ({ discordGuild, channelId }) {
     },
     cargo: [
       {
-        type: 'fuel',
+        type: `fuel`,
         amount: 8
       }
       // {
@@ -111,88 +111,88 @@ function getShipName () {
 }
 
 const names = [
-  'Rampart',
-  'Interceptor',
-  'Carthage',
-  'Cain',
-  'The Spectator',
-  'ISS Despot',
-  'SC Nemesis',
-  'CS Shade',
-  'BS Herminia',
-  'BC Vanguard',
-  'The Promise',
-  'Scythe',
-  'Harlegand',
-  'Zion',
-  'STS Little Rascal',
-  'HMS Ravager',
-  'Carbonaria',
-  'SS Infinitum',
-  'LWSS Lucky',
-  'Spectator',
-  'Phalanx',
-  'Destiny',
-  'LWSS The Trident',
-  'Priestess',
-  'HMS Providence',
-  'HWSS Carnage',
-  'HMS Romulus',
-  'Nemesis',
-  'Zenith',
-  'Basilisk',
-  'Euphoria',
-  'CS Trailblazer',
-  'SC Saratoga',
-  'STS Myrmidon',
-  'Deonida',
-  'SC Inferno',
-  'The Liberator',
-  'The Trident',
-  'Inquisitor',
-  'Shear Razor',
-  'Providence',
-  'BC Perilous',
-  'STS Wyvern',
-  'CS Thunderbolt',
-  'LWSS Messenger',
-  'CS Neurotoxin',
-  'Insurgent',
-  'Neurotoxin',
-  'Tranquility',
-  'Harlequin',
-  'Normandy',
-  'Lullaby',
-  'SSE Empress',
-  'Leo',
-  'ISS The Inquisitor',
-  'SS Churchill',
-  'Seleucia',
-  'Deinonychus',
-  'Legacy',
-  'Conqueror',
-  'LWSS Thanatos',
-  'HMS Ashaton',
-  'SC Albatross',
-  'CS Hammer',
-  'SS Ghunne',
-  'Dakota',
-  'Neptune',
-  'Dispatcher',
-  'SSE Coyote',
-  'CS Remorseless',
-  'BS Tortoise',
-  'ISS Actium',
-  'HMS Invader',
-  'Zion',
-  'The Inquisitor',
-  'Opal Star',
-  'Escorial',
-  'Calypso',
-  'Actium',
-  'LWSS Navigator',
-  'STS Ghunne',
-  'ISS Utopia',
-  'SS The Javelin',
-  'Gravity'
+  `Rampart`,
+  `Interceptor`,
+  `Carthage`,
+  `Cain`,
+  `The Spectator`,
+  `ISS Despot`,
+  `SC Nemesis`,
+  `CS Shade`,
+  `BS Herminia`,
+  `BC Vanguard`,
+  `The Promise`,
+  `Scythe`,
+  `Harlegand`,
+  `Zion`,
+  `STS Little Rascal`,
+  `HMS Ravager`,
+  `Carbonaria`,
+  `SS Infinitum`,
+  `LWSS Lucky`,
+  `Spectator`,
+  `Phalanx`,
+  `Destiny`,
+  `LWSS The Trident`,
+  `Priestess`,
+  `HMS Providence`,
+  `HWSS Carnage`,
+  `HMS Romulus`,
+  `Nemesis`,
+  `Zenith`,
+  `Basilisk`,
+  `Euphoria`,
+  `CS Trailblazer`,
+  `SC Saratoga`,
+  `STS Myrmidon`,
+  `Deonida`,
+  `SC Inferno`,
+  `The Liberator`,
+  `The Trident`,
+  `Inquisitor`,
+  `Shear Razor`,
+  `Providence`,
+  `BC Perilous`,
+  `STS Wyvern`,
+  `CS Thunderbolt`,
+  `LWSS Messenger`,
+  `CS Neurotoxin`,
+  `Insurgent`,
+  `Neurotoxin`,
+  `Tranquility`,
+  `Harlequin`,
+  `Normandy`,
+  `Lullaby`,
+  `SSE Empress`,
+  `Leo`,
+  `ISS The Inquisitor`,
+  `SS Churchill`,
+  `Seleucia`,
+  `Deinonychus`,
+  `Legacy`,
+  `Conqueror`,
+  `LWSS Thanatos`,
+  `HMS Ashaton`,
+  `SC Albatross`,
+  `CS Hammer`,
+  `SS Ghunne`,
+  `Dakota`,
+  `Neptune`,
+  `Dispatcher`,
+  `SSE Coyote`,
+  `CS Remorseless`,
+  `BS Tortoise`,
+  `ISS Actium`,
+  `HMS Invader`,
+  `Zion`,
+  `The Inquisitor`,
+  `Opal Star`,
+  `Escorial`,
+  `Calypso`,
+  `Actium`,
+  `LWSS Navigator`,
+  `STS Ghunne`,
+  `ISS Utopia`,
+  `SS The Javelin`,
+  `Gravity`
 ]

@@ -1,6 +1,6 @@
 module.exports = (guild) => {
   guild.ship.jettison = (cargo, amount, message) => {
-    if (cargo.type === 'credits') {
+    if (cargo.type === `credits`) {
       guild.ship.credits -= amount
       if (guild.ship.credits < 0.0001) guild.ship.credits = 0
     } else {
@@ -19,7 +19,7 @@ module.exports = (guild) => {
   guild.ship.jettisonAll = () => {
     if (guild.ship.credits) {
       guild.context.spawnCache({
-        type: 'credits',
+        type: `credits`,
         amount: guild.ship.credits,
         location: [...guild.ship.location]
       })

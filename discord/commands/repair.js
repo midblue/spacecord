@@ -1,22 +1,22 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
-const Discord = require('discord.js-light')
-const { numberToEmoji, capitalize } = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const { numberToEmoji, capitalize } = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
-  tag: 'repair',
+  tag: `repair`,
   documentation: {
-    value: 'Repair parts of the ship.',
-    emoji: '🛠',
-    category: 'ship',
+    value: `Repair parts of the ship.`,
+    emoji: `🛠`,
+    category: `ship`,
     priority: 50
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:repair|fix)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:repair|fix)$`, `gi`).exec(content)
   },
   async action ({ msg, settings, guild, ship, equipment }) {
-    log(msg, 'Repair', msg.guild.name)
+    log(msg, `Repair`, msg.guild.name)
 
     if (!equipment) {
       let allRepairableEquipment = []
@@ -44,8 +44,8 @@ module.exports = {
           (e.repairRequirements
             ? ` (Requires ${Object.entries(e.repairRequirements || {})
                 .map(([type, num]) => `\`${num}\` in \`${type}\``)
-                .join(' and ')})`
-            : ''),
+                .join(` and `)})`
+            : ``),
         requirements: e.repairRequirements,
         action () {
           const res = guild.ship.repairEquipment({
@@ -59,9 +59,9 @@ module.exports = {
 
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle('Which equipment would you like to repair?')
+        .setTitle(`Which equipment would you like to repair?`)
 
-      if (!equipmentAsReactionOptions.length) { embed.setTitle('Repair').setDescription('No equipment needs repairing!') }
+      if (!equipmentAsReactionOptions.length) { embed.setTitle(`Repair`).setDescription(`No equipment needs repairing!`) }
 
       const sentMessages = await send(msg, embed)
       const sentMessage = sentMessages[sentMessages.length - 1]

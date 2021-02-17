@@ -1,8 +1,8 @@
-const story = require('../../story/story')
-const runYesNoVote = require('../../../../discord/actions/runYesNoVote')
-const allTransceivers = require('../../equipment/transceiver/index')
-const { msToTimeString, usageTag } = require('../../../../common')
-const staminaRequirements = require('../../crew/staminaRequirements')
+const story = require(`../../story/story`)
+const runYesNoVote = require(`../../../../discord/actions/runYesNoVote`)
+const allTransceivers = require(`../../equipment/transceiver/index`)
+const { msToTimeString, usageTag } = require(`../../../../common`)
+const staminaRequirements = require(`../../crew/staminaRequirements`)
 
 module.exports = (guild) => {
   guild.ship.broadcastOptions = () => {
@@ -20,28 +20,28 @@ module.exports = (guild) => {
     fields.push(
       ...[
         {
-          name: 'Transceiver',
-          value: equipment.emoji + ' ' + equipment.displayName
+          name: `Transceiver`,
+          value: equipment.emoji + ` ` + equipment.displayName
         },
         {
-          name: '🔧 Repair',
-          value: Math.round(equipment.repair * 100) + '%'
+          name: `🔧 Repair`,
+          value: Math.round(equipment.repair * 100) + `%`
         },
         {
-          name: '📶 Max Range',
-          value: equipment.range * equipment.repair + ' ' + DISTANCE_UNIT
+          name: `📶 Max Range`,
+          value: equipment.range * equipment.repair + ` ` + DISTANCE_UNIT
         },
 
         {
-          name: '🔋 Transceiver Status',
+          name: `🔋 Transceiver Status`,
           value:
             timeUntilCanBroadcast > 0
               ? `Recharged in ${msToTimeString(timeUntilCanBroadcast)}`
-              : 'Charged and ready!'
+              : `Charged and ready!`
         },
 
         {
-          name: '⚡️Ship Power',
+          name: `⚡️Ship Power`,
           value: guild.ship.power.toFixed(1) + POWER_UNIT
         }
       ]
@@ -49,9 +49,9 @@ module.exports = (guild) => {
 
     const baseBroadcastOptions = [
       {
-        type: 'location',
-        emoji: '📍',
-        label: 'Your Location',
+        type: `location`,
+        emoji: `📍`,
+        label: `Your Location`,
         yesNoQuestion: (user) =>
           `Really broadcast your ship's location? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -62,7 +62,7 @@ module.exports = (guild) => {
           `A vote started by %username%${user.id}% to broadcast the ship's location failed. ${voterCount} members voted.`
       },
       {
-        type: 'faction',
+        type: `faction`,
         emoji: guild.faction.emoji,
         label: `Rallying cry for ${guild.faction.emoji}${guild.faction.name}`,
         yesNoQuestion: (user) =>
@@ -75,9 +75,9 @@ module.exports = (guild) => {
           `A vote started by ${user.nickname} to send a faction rallying cry failed. ${voterCount} members voted.`
       },
       {
-        type: 'distress',
-        emoji: '🆘',
-        label: 'Distress Signal',
+        type: `distress`,
+        emoji: `🆘`,
+        label: `Distress Signal`,
         yesNoQuestion: (user) =>
           `Really broadcast a distress signal containing your ship's location? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -88,9 +88,9 @@ module.exports = (guild) => {
           `A vote started by ${user.nickname} to send a distress signal failed. ${voterCount} members voted.`
       },
       {
-        type: 'attack',
-        emoji: '🏴‍☠️',
-        label: 'Declare Attack',
+        type: `attack`,
+        emoji: `🏴‍☠️`,
+        label: `Declare Attack`,
         yesNoQuestion: (user) =>
           `Really broadcast an attack signal to the area? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -101,9 +101,9 @@ module.exports = (guild) => {
           `A vote started by ${user.nickname} to send an attack signal failed. ${voterCount} members voted.`
       },
       {
-        type: 'surrender',
-        emoji: '🏳',
-        label: 'Surrender Signal',
+        type: `surrender`,
+        emoji: `🏳`,
+        label: `Surrender Signal`,
         yesNoQuestion: (user) =>
           `Really broadcast a surrender signal to the area? | Vote started by ${user.nickname}`,
         insufficientLog: (user) =>
@@ -118,13 +118,13 @@ module.exports = (guild) => {
     baseBroadcastOptions.forEach((o) => {
       if (
         (equipment.broadcastCapabilities || []).includes(o.type) &&
-        (o.type !== 'faction' || guild.faction?.color)
+        (o.type !== `faction` || guild.faction?.color)
       ) {
         actions.push({
           emoji: o.emoji,
           label:
             o.label +
-            ' ' +
+            ` ` +
             usageTag(equipment.powerUse, staminaRequirements.broadcast),
           async action ({ user, msg }) {
             if (
@@ -142,14 +142,14 @@ module.exports = (guild) => {
             const authorCrewMemberObject = guild.ship.members.find(
               (m) => m.id === user.id
             )
-            if (!authorCrewMemberObject) { return console.log('no user found in broadcast') }
-            const staminaRes = authorCrewMemberObject.useStamina('broadcast')
+            if (!authorCrewMemberObject) { return console.log(`no user found in broadcast`) }
+            const staminaRes = authorCrewMemberObject.useStamina(`broadcast`)
             if (!staminaRes.ok) { return guild.pushToGuild(staminaRes.message, msg) }
 
             const reallyDoIt = await runYesNoVote({
-              pollType: 'broadcast',
+              pollType: `broadcast`,
               question: o.yesNoQuestion(user),
-              description: 'Broadcasts are amplified and clarified by the quality and repair of the ship\'s transceiver, as well as the combined `engineering` skills of `✅ Yes` voters.', // \`linguistics\` and
+              description: `Broadcasts are amplified and clarified by the quality and repair of the ship's transceiver, as well as the combined \`engineering\` skills of \`✅ Yes\` voters.`, // \`linguistics\` and
               minimumMemberPercent: o.minimumMemberPercent || 0.1,
               yesStaminaRequirement: 1,
               msg,
@@ -187,24 +187,24 @@ module.exports = (guild) => {
               })
               const resultFields = [
                 {
-                  name: 'Total Skill',
+                  name: `Total Skill`,
                   value: collectiveSkill,
                   inline: true
                 },
                 {
-                  name: 'Effective Range',
-                  value: biasedRange.toFixed(2) + ' ' + DISTANCE_UNIT,
+                  name: `Effective Range`,
+                  value: biasedRange.toFixed(2) + ` ` + DISTANCE_UNIT,
                   inline: true
                 },
                 {
-                  name: 'Message Garbling',
+                  name: `Message Garbling`,
                   value: `Between 0 and \`${Math.round(
                     garbleAmount * 100
                   )}%\`\n(depending on range)`,
                   inline: true
                 }
               ]
-              reallyDoIt.embed.title = 'Broadcast Results'
+              reallyDoIt.embed.title = `Broadcast Results`
               reallyDoIt.embed.description = message
               reallyDoIt.embed.fields = resultFields
               reallyDoIt.sentMessage.edit(reallyDoIt.embed)
@@ -225,7 +225,7 @@ module.exports = (guild) => {
   guild.ship.broadcast = ({
     msg,
     broadcastType,
-    powerUseType = 'broadcast',
+    powerUseType = `broadcast`,
     equipment,
     yesPercent,
     collectiveSkill

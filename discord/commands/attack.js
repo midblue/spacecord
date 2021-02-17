@@ -1,26 +1,26 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
 const {
   numberToEmoji,
   msToTimeString,
   capitalize,
   positionAndAngleDifference
-} = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
-const Discord = require('discord.js-light')
-const story = require('../../game/basics/story/story')
+} = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const Discord = require(`discord.js-light`)
+const story = require(`../../game/basics/story/story`)
 
 module.exports = {
-  tag: 'attack',
+  tag: `attack`,
   documentation: {
-    name: 'attack',
-    value: 'Choose a nearby ship to attack.',
-    emoji: '⚔️',
-    category: 'interaction',
+    name: `attack`,
+    value: `Choose a nearby ship to attack.`,
+    emoji: `⚔️`,
+    category: `interaction`,
     priority: 50
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:att?ack?|a)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:att?ack?|a)$`, `gi`).exec(content)
   },
   async action ({
     msg,
@@ -32,7 +32,7 @@ module.exports = {
     author,
     interactableGuilds
   }) {
-    log(msg, 'Attack', msg.guild.name)
+    log(msg, `Attack`, msg.guild.name)
 
     if (!guild.ship.equipment.weapon?.length) { return send(msg, story.attack.noWeapon()) }
     if (!guild.ship.canAttack()) {
@@ -53,7 +53,7 @@ module.exports = {
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle('Which ship would you like to attack?')
+      .setTitle(`Which ship would you like to attack?`)
 
     const actions = []
 
@@ -63,7 +63,7 @@ module.exports = {
         ...otherGuild.ship.location
       )
       const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
-      const attackAction = availableActions.find((a) => a.emoji === '⚔️')
+      const attackAction = availableActions.find((a) => a.emoji === `⚔️`)
       if (!attackAction) return
       actions.push({
         emoji: numberToEmoji(index + 1),

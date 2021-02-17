@@ -1,8 +1,8 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const { client } = require('../bot')
-const awaitReaction = require('./awaitReaction')
-const { guild } = require('../../game/manager')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const { client } = require(`../bot`)
+const awaitReaction = require(`./awaitReaction`)
+const { guild } = require(`../../game/manager`)
 
 module.exports = async ({ guildId, channelId, message, msg, reactions }) => {
   let sentMessage
@@ -13,8 +13,8 @@ module.exports = async ({ guildId, channelId, message, msg, reactions }) => {
     if (!discordGuild) {
       return log(
         discordGuild,
-        'pushToGuild',
-        'Failed to find guild',
+        `pushToGuild`,
+        `Failed to find guild`,
         guildId,
         channelId
       )
@@ -23,8 +23,8 @@ module.exports = async ({ guildId, channelId, message, msg, reactions }) => {
     if (!discordChannel) {
       return log(
         discordGuild,
-        'pushToGuild',
-        'Failed to find channel:',
+        `pushToGuild`,
+        `Failed to find channel:`,
         guildId,
         channelId
       )

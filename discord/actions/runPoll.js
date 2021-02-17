@@ -1,14 +1,14 @@
-const send = require('./send')
-const awaitReaction = require('./awaitReaction')
-const { msToTimeString, capitalize } = require('../../common')
-const generalStaminaRequirements = require('../../game/basics/crew/staminaRequirements')
-const manager = require('../../game/manager')
-const Discord = require('discord.js-light')
+const send = require(`./send`)
+const awaitReaction = require(`./awaitReaction`)
+const { msToTimeString, capitalize } = require(`../../common`)
+const generalStaminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
+const manager = require(`../../game/manager`)
+const Discord = require(`discord.js-light`)
 
 module.exports = async ({
   pollType,
   embed,
-  pollTitle = 'Crew Member Poll',
+  pollTitle = `Crew Member Poll`,
   time = GENERAL_VOTE_TIME,
   reactions,
   requirements,
@@ -24,7 +24,7 @@ module.exports = async ({
   if (!thisGuild) {
     return {
       ok: false,
-      message: 'Failed to find guild!'
+      message: `Failed to find guild!`
     }
   }
   if (!thisGuild.activePolls) thisGuild.activePolls = {}
@@ -32,7 +32,7 @@ module.exports = async ({
     return {
       ok: false,
       message: `${
-        msg?.user?.nickname ? msg.user.nickname + ', t' : 'T'
+        msg?.user?.nickname ? msg.user.nickname + `, t` : `T`
       }here is already a ${pollType} poll active! Wait for it to complete before starting another.`
     }
   }
@@ -48,29 +48,29 @@ module.exports = async ({
 
   if (minimumMembersMustVote > 0) {
     embed.fields.push({
-      name: 'Member requirement',
+      name: `Member requirement`,
       value: `At least \`${Math.round(
         minimumMemberPercent * 100
       )}%\` of the crew (\`${minimumMembersMustVote}\` member${
-        minimumMembersMustVote === 1 ? '' : 's'
+        minimumMembersMustVote === 1 ? `` : `s`
       }) must vote for this vote to be valid.`
     })
   }
 
   if (requirements) {
     embed.fields.push({
-      name: 'Level requirements',
+      name: `Level requirements`,
       value: `Voters must have at least ${Object.keys(requirements)
         .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\``)
-        .join(' and ')} for their vote to be counted.`
+        .join(` and `)} for their vote to be counted.`
     })
   }
 
   embed.fields.push({
-    name: 'Remaining vote time:',
+    name: `Remaining vote time:`,
     value: msToTimeString(time),
     inline: true,
-    id: 'remainingTime'
+    id: `remainingTime`
   })
 
   const startTime = Date.now()
@@ -85,7 +85,7 @@ module.exports = async ({
     remainingTime -= Math.abs(startTime - Date.now())
     if (remainingTime < 0) remainingTime = 0
     embed.fields[
-      embed.fields.findIndex((f) => f.id === 'remainingTime')
+      embed.fields.findIndex((f) => f.id === `remainingTime`)
     ].value = msToTimeString(remainingTime)
 
     if (remainingTime <= 0) {
@@ -112,7 +112,7 @@ module.exports = async ({
     embed,
     guild,
     time: time,
-    listeningType: 'votes',
+    listeningType: `votes`,
     respondeeFilter,
     removeUserReactions: false
   })
@@ -120,7 +120,7 @@ module.exports = async ({
   if (pollType) delete thisGuild.activePolls[pollType]
 
   embed.fields.splice(
-    embed.fields.findIndex((f) => f.id === 'remainingTime'),
+    embed.fields.findIndex((f) => f.id === `remainingTime`),
     1
   )
   if (!sentMessage.deleted) sentMessage.edit(embed)
@@ -163,7 +163,7 @@ module.exports = async ({
   })
 
   embed.setFooter(
-    `(${voters.length} valid member${voters.length === 1 ? '' : 's'} voted)`
+    `(${voters.length} valid member${voters.length === 1 ? `` : `s`} voted)`
   )
 
   const enoughMembersVoted = voters.length >= minimumMembersMustVote

@@ -1,15 +1,15 @@
-const send = require('../actions/send')
-const lunicode = require('Lunicode')
-const Fuse = require('fuse.js')
-const Discord = require('discord.js-light')
-const textOptions = require('../defaults/typingTestOptions')
-const { applyCustomParams } = require('../botcommon')
-const { allSkills } = require('../../game/gamecommon')
-const readyCheck = require('../actions/readyCheck')
+const send = require(`../actions/send`)
+const lunicode = require(`Lunicode`)
+const Fuse = require(`fuse.js`)
+const Discord = require(`discord.js-light`)
+const textOptions = require(`../defaults/typingTestOptions`)
+const { applyCustomParams } = require(`../botcommon`)
+const { allSkills } = require(`../../game/gamecommon`)
+const readyCheck = require(`../actions/readyCheck`)
 
 module.exports = ({ msg, user, guild }) => {
   return new Promise(async (resolve) => {
-    const emoji = allSkills.find((s) => s.name === 'mechanics').emoji
+    const emoji = allSkills.find((s) => s.name === `mechanics`).emoji
 
     // ------- generate general game variables
     const userLevel = user.level.mechanics || 0
@@ -53,7 +53,7 @@ Your crewmates can help out.`)
       const textToSend = textOptions[textIndex]
       textOptions.splice(textIndex, 1)
       challengeTextInOneArray.push(
-        '→ ' + lunicode.tools.tiny.encode(textToSend)
+        `→ ` + lunicode.tools.tiny.encode(textToSend)
       )
       sentTextOptions.push({
         target: textToSend.toLowerCase(),
@@ -62,14 +62,14 @@ Your crewmates can help out.`)
     }
 
     embed.description +=
-      '\n\n**↓↓↓ Type these sentences! ↓↓↓**\n' +
-      challengeTextInOneArray.join('\n')
+      `\n\n**↓↓↓ Type these sentences! ↓↓↓**\n` +
+      challengeTextInOneArray.join(`\n`)
     await sentMessage.edit(embed)
 
     // ------- define fuzzy search
     fuse = new Fuse(sentTextOptions, {
       includeScore: true,
-      keys: ['target'],
+      keys: [`target`],
       threshold: 1, // 1 is anything
       minMatchCharLength: 8
     })
@@ -94,7 +94,7 @@ Your crewmates can help out.`)
         }
         messagesToDelete.push(receivedMessage)
         try {
-          receivedMessage.react('👀')
+          receivedMessage.react(`👀`)
         } catch (e) {}
       }
     }
@@ -109,7 +109,7 @@ Your crewmates can help out.`)
     )
 
     setTimeout(async () => {
-      messagesToDelete.push((await send(msg, 'Time\'s up!'))[0])
+      messagesToDelete.push((await send(msg, `Time's up!`))[0])
     }, time)
 
     // ------- end of game
@@ -128,7 +128,7 @@ Your crewmates can help out.`)
 
       // ------- calculate and add XP
       const xp = Math.round(hits * 1000)
-      const res = user.addXp('mechanics', xp)
+      const res = user.addXp(`mechanics`, xp)
 
       // ------- update embed with results
       embed.description = `**${challengeCount} challenges in ${(
@@ -138,19 +138,19 @@ Your crewmates can help out.`)
       .map(
         (o) =>
           (o.bestScore === 0
-            ? '❌'
+            ? `❌`
             : o.bestScore > 0.99
-            ? '✅'
+            ? `✅`
             : o.bestScore > 0.5
-            ? '👍'
-            : '👎') +
+            ? `👍`
+            : `👎`) +
           ` "${o.target.toLowerCase()}" - ${(o.bestScore * 100).toFixed(0)}%${
             o.bestAttemptText && o.bestScore < 0.99
               ? ` ("${o.bestAttemptText.toLowerCase()}")`
-              : ''
+              : ``
           }`
       )
-      .join('\n')}
+      .join(`\n`)}
 
 Result: ${await applyCustomParams(msg, res.message)}`
 

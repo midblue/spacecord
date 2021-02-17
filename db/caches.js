@@ -5,7 +5,7 @@ module.exports = function (passedDb) {
   return {
     async getAll () {
       try {
-        const snapshot = await db.collection('caches').get()
+        const snapshot = await db.collection(`caches`).get()
         if (snapshot.empty) return []
 
         const caches = []
@@ -20,8 +20,8 @@ module.exports = function (passedDb) {
 
     async add (data) {
       try {
-        await db.collection('caches').add(data)
-        console.log('Added cache to database.')
+        await db.collection(`caches`).add(data)
+        console.log(`Added cache to database.`)
       } catch (e) {
         errorHandler(e)
       }

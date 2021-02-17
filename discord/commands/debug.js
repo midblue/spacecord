@@ -1,25 +1,25 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
-const Discord = require('discord.js-light')
-const { game } = require('../../game/manager')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const { game } = require(`../../game/manager`)
 // const db = require('../../db/db')
 module.exports = {
-  tag: 'debug',
+  tag: `debug`,
   documentation: false,
   gameAdminsOnly: true,
   public: true,
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}d(?: ([^ ]*))?(?: (.*))?$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({ msg, match, settings, client, ship }) {
-    log(msg, 'Debug: ' + match[1], msg.guild.name)
+    log(msg, `Debug: ` + match[1], msg.guild.name)
 
     const debugCommands = {
       game: {
-        description: 'game',
+        description: `game`,
         action: async () => {
           const data = {
             gameDiameter: game.gameDiameter(),
@@ -33,183 +33,183 @@ module.exports = {
         }
       },
       this: {
-        description: 'this',
+        description: `this`,
         action: async () => {
           const { guild, ok } = await client.game.guild(msg.guild.id)
-          if (!ok) return 'no guild with id ' + id
+          if (!ok) return `no guild with id ` + id
           return JSON.stringify(guild.saveableData(), null, 2)
         }
       },
       tick: {
-        description: 'tick',
+        description: `tick`,
         action: async () => {
           client.game.tick()
-          return 'ticked'
+          return `ticked`
         }
       },
       guild: {
-        description: 'guild <id>',
+        description: `guild <id>`,
         action: async (id) => {
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild, ok } = await client.game.guild(id)
-          if (!ok) return 'no guild with id ' + id
+          if (!ok) return `no guild with id ` + id
           return JSON.stringify(guild.saveableData(), null, 2)
         }
       },
       guilds: {
-        description: 'guilds',
+        description: `guilds`,
         action: async () => {
           const res = (await client.game.guilds())
-            .map((g) => g.guildName + ': ' + g.guildId)
+            .map((g) => g.guildName + `: ` + g.guildId)
             .sort((a, b) => b - a)
-            .join('\n')
-          return '\n' + res
+            .join(`\n`)
+          return `\n` + res
         }
       },
       delete: {
-        description: 'delete <id>',
+        description: `delete <id>`,
         action: async (id) => {
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const res = await client.game.removeGuild(id)
           return res
         }
       },
       move: {
-        description: 'move <guild id> <x>,<y>',
+        description: `move <guild id> <x>,<y>`,
         action: async (str) => {
           let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
-            str.replace(/\[\]/g, '')
+            str.replace(/\[\]/g, ``)
           )
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           try {
             x = parseFloat(x)
             y = parseFloat(y)
           } catch (e) {
-            return 'invalid coords: ' + x + ' ' + y
+            return `invalid coords: ` + x + ` ` + y
           }
           await guild.ship.move(false, [x, y])
-          return 'moved ship.'
+          return `moved ship.`
         }
       },
       power: {
-        description: 'power <id> <power>',
+        description: `power <id> <power>`,
         action: async (str) => {
           let [unused, id, power] = /^([^ ]+) (.*)$/.exec(str)
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           try {
             power = parseFloat(power)
           } catch (e) {
-            return 'invalid power: ' + power
+            return `invalid power: ` + power
           }
           guild.ship.power = power
-          return 'set power to ' + power
+          return `set power to ` + power
         }
       },
       credits: {
-        description: 'credits <id> <credits>',
+        description: `credits <id> <credits>`,
         action: async (str) => {
           let [unused, id, credits] = /^([^ ]+) (.*)$/.exec(str)
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           try {
             credits = parseInt(credits)
           } catch (e) {
-            return 'invalid credits: ' + credits
+            return `invalid credits: ` + credits
           }
           guild.ship.credits = credits
-          return 'set credits to ' + credits
+          return `set credits to ` + credits
         }
       },
       cargo: {
-        description: 'cargo <id> <type> <amount>',
+        description: `cargo <id> <type> <amount>`,
         action: async (str) => {
           let [unused, id, type, amount] = /^([^ ]+) ([^ ]*) ([^ ]*)$/.exec(str)
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           try {
             amount = parseFloat(amount)
           } catch (e) {
-            return 'invalid amount: ' + amount
+            return `invalid amount: ` + amount
           }
           const existingCargo = guild.ship.cargo.find((c) => c.type === type)
           if (existingCargo) existingCargo.amount = amount
           else guild.ship.cargo.push({ type, amount })
-          return 'set ' + type + ' amount to ' + amount
+          return `set ` + type + ` amount to ` + amount
         }
       },
       togglestatus: {
-        description: 'togglestatus <id> <statustype>',
+        description: `togglestatus <id> <statustype>`,
         action: async (str) => {
           let [unused, id, type] = /^([^ ]+) ([^ ]*)$/.exec(str)
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           const currStatus = guild.ship.status
           const newStatus = !currStatus[type]
           currStatus[type] = newStatus
-          return 'set ' + type + ' to ' + newStatus
+          return `set ` + type + ` to ` + newStatus
         }
       },
       stamina: {
-        description: 'stamina',
+        description: `stamina`,
         action: async () => {
           const { guild, ok } = await client.game.guild(msg.guild.id)
-          if (!ok) return 'no guild with id ' + id
+          if (!ok) return `no guild with id ` + id
           const member = guild.ship.members.find((m) => m.id === msg.author.id)
-          if (!member) return 'no member with id ' + msg.author.id
+          if (!member) return `no member with id ` + msg.author.id
           member.stamina = 1
-          return 'refilled your stamina'
+          return `refilled your stamina`
         }
       },
       setstamina: {
-        description: 'setstamina <user id> <amount>',
+        description: `setstamina <user id> <amount>`,
         action: async (str) => {
           let [unused, id, amount] = /^([^ ]+) ([^ ]*)$/.exec(str)
-          if (id === 'me') id = msg.author.id
+          if (id === `me`) id = msg.author.id
           try {
             amount = parseFloat(amount)
           } catch (e) {
-            return 'invalid amount: ' + amount
+            return `invalid amount: ` + amount
           }
           const member = (
             await client.game.guild(msg.guild.id)
           ).guild.ship.members.find((m) => m.id === msg.author.id)
-          if (!member) return 'no member with id ' + msg.author.id
+          if (!member) return `no member with id ` + msg.author.id
           member.stamina = amount / member.maxStamina()
-          return 'set stamina to ' + amount
+          return `set stamina to ` + amount
         }
       },
       kill: {
-        description: 'kill <id>',
+        description: `kill <id>`,
         action: async (str) => {
           let [unused, id] = /^([^ ]+)$/.exec(str)
-          if (id === 'this') id = msg.guild.id
+          if (id === `this`) id = msg.guild.id
           const { guild } = await client.game.guild(id)
-          if (!guild) return 'no guild found for ' + id
+          if (!guild) return `no guild found for ` + id
           guild.ship.takeDamage({
             damage: 99999999,
-            attacker: { name: 'God', location: [0, 0] },
-            weapon: { displayName: 'Banhammer', emoji: '🔨' },
+            attacker: { name: `God`, location: [0, 0] },
+            weapon: { displayName: `Banhammer`, emoji: `🔨` },
             attackDistance: 999999,
             advantageDamageMultiplier: 999999,
             advantageAccuracyMultiplier: 999999
           })
-          return 'killed ' + id
+          return `killed ` + id
         }
       }
     }
 
     let message =
-      'Available commands:\n' +
+      `Available commands:\n` +
       Object.values(debugCommands)
-        .map((c) => settings.prefix + 'd ' + c.description)
-        .join('\n')
+        .map((c) => settings.prefix + `d ` + c.description)
+        .join(`\n`)
 
     if (match[1]) {
       const debugCommand = match[1]
@@ -218,10 +218,10 @@ module.exports = {
           message = await debugCommands[debugCommand].action(match[2])
           if (message.message) message = message.message
         } catch (e) {
-          console.log('debug error:', e)
+          console.log(`debug error:`, e)
         }
       }
     }
-    return send(msg, 'Debug: ' + message)
+    return send(msg, `Debug: ` + message)
   }
 }

@@ -1,12 +1,12 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
 
 module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   msg.guild = msg.channel.guild
-  log(msg, 'Buy Equipment', msg.channel.guild.name)
+  log(msg, `Buy Equipment`, msg.channel.guild.name)
 
   if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
 
@@ -14,8 +14,8 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) { return console.log('no user found in buyEquipment') }
-  const staminaRes = authorCrewMemberObject.useStamina('poll')
+  if (!authorCrewMemberObject) { return console.log(`no user found in buyEquipment`) }
+  const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const voteEmbed = new Discord.MessageEmbed()
@@ -24,13 +24,13 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   )
   voteEmbed.description = willReplace
     ? `Warning: This part will replace your existing ${
-        willReplace.emoji + ' ' || ''
+        willReplace.emoji + ` ` || ``
       } ${willReplace.displayName}, which will be sold for 50% of market price.`
-    : ''
+    : ``
   voteEmbed.fields = []
 
   const voteResult = await runYesNoVote({
-    pollType: 'buy',
+    pollType: `buy`,
     embed: voteEmbed,
     minimumMemberPercent: 0.2,
     msg,
@@ -62,7 +62,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   const { soldCredits, soldPart } = guild.ship.addPart(part, cost)
   if (soldCredits) {
     voteEmbed.description +=
-      '\n\n' + story.sell.equipment.votePassed(soldPart, soldCredits)
+      `\n\n` + story.sell.equipment.votePassed(soldPart, soldCredits)
   }
 
   voteEmbed.description += `\n\nYou have \`💳${Math.round(

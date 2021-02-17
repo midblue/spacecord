@@ -1,14 +1,14 @@
-const { usageTag, distance } = require('../../../../common')
-const attackShip = require('../../../../discord/actions/attackShip')
-const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
-const staminaRequirements = require('../../crew/staminaRequirements')
-const story = require('../../story/story')
+const { usageTag, distance } = require(`../../../../common`)
+const attackShip = require(`../../../../discord/actions/attackShip`)
+const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
+const staminaRequirements = require(`../../crew/staminaRequirements`)
+const story = require(`../../story/story`)
 
 module.exports = (guild) => {
   guild.ship.scanOtherShip = (otherShip) => {
     // todo check if in range
 
-    let fields = [{ name: 'Name', value: otherShip.name }]
+    let fields = [{ name: `Name`, value: otherShip.name }]
     const message = []
     const ok = true
 
@@ -47,12 +47,12 @@ module.exports = (guild) => {
     if (didSucceed) {
       fields = scanRes.result
       fields.push({
-        name: '🔍 Your Scanner',
+        name: `🔍 Your Scanner`,
         value: scanner.displayName
       })
       fields.push({
-        name: '⚡️Your Ship Power',
-        value: guild.ship.power + ' ' + POWER_UNIT
+        name: `⚡️Your Ship Power`,
+        value: guild.ship.power + ` ` + POWER_UNIT
       })
     }
     const enemyTotalEngineeringLevel = otherShip.members.reduce(
@@ -83,13 +83,13 @@ module.exports = (guild) => {
       dist <= guild.ship.equipment.scanner[0].range
     ) {
       actions.push({
-        emoji: '🔍',
+        emoji: `🔍`,
         label:
-          'Scan Ship ' +
-          usageTag(guild.ship.equipment.scanner[0].powerUse, 'scanShip'),
+          `Scan Ship ` +
+          usageTag(guild.ship.equipment.scanner[0].powerUse, `scanShip`),
         async action ({ user, msg, guild }) {
           await runGuildCommand({
-            commandTag: 'scanShip',
+            commandTag: `scanShip`,
             author: user,
             msg,
             props: { otherShip, guild }
@@ -100,8 +100,8 @@ module.exports = (guild) => {
 
     if (!otherShip.status.docked && dist <= guild.ship.attackRadius()) {
       actions.push({
-        emoji: '⚔️',
-        label: 'Start Attack Vote ' + usageTag(0, 'poll'),
+        emoji: `⚔️`,
+        label: `Start Attack Vote ` + usageTag(0, `poll`),
         async action ({ msg, guild }) {
           attackShip({ msg, guild, otherShip })
         }

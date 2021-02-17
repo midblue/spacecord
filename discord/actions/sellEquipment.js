@@ -1,12 +1,12 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
 
 module.exports = async ({ msg, part, cost, guild }) => {
   msg.guild = msg.channel.guild
-  log(msg, 'Sell Equipment', msg.channel.guild.name)
+  log(msg, `Sell Equipment`, msg.channel.guild.name)
 
   if (!guild.ship.equipment[part.type].find((p) => p === part)) return
 
@@ -14,8 +14,8 @@ module.exports = async ({ msg, part, cost, guild }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) { return console.log('no user found in sellEquipment') }
-  const staminaRes = authorCrewMemberObject.useStamina('poll')
+  if (!authorCrewMemberObject) { return console.log(`no user found in sellEquipment`) }
+  const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const voteEmbed = new Discord.MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
   )
 
   const voteResult = await runYesNoVote({
-    pollType: 'sell',
+    pollType: `sell`,
     embed: voteEmbed,
     minimumMemberPercent: 0.2,
     msg,

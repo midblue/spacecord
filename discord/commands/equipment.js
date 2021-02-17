@@ -1,21 +1,21 @@
-const send = require('../actions/send')
-const { log, username } = require('../botcommon')
-const Discord = require('discord.js-light')
-const awaitReaction = require('../actions/awaitReaction')
-const { capitalize } = require('../../common')
-const repair = require('./repair')
+const send = require(`../actions/send`)
+const { log, username } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const { capitalize } = require(`../../common`)
+const repair = require(`./repair`)
 
 module.exports = {
-  tag: 'equipment',
+  tag: `equipment`,
   documentation: {
-    value: 'Stats on the ship\'s equipment.',
-    emoji: '🔩',
-    category: 'ship'
+    value: `Stats on the ship's equipment.`,
+    emoji: `🔩`,
+    category: `ship`
   },
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:equip|equipment|gear|items)$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({
@@ -28,13 +28,13 @@ module.exports = {
     authorCrewMemberObject,
     equipment
   }) {
-    log(msg, 'Equipment', msg.guild.name)
+    log(msg, `Equipment`, msg.guild.name)
 
     if (!equipment) {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(`${guild.ship.name} | Equipment`)
-        .setDescription('Which equipment would you like to see details on?')
+        .setDescription(`Which equipment would you like to see details on?`)
 
       const equipmentActions = guild.ship.equipmentInfo().actions
 
@@ -54,8 +54,8 @@ module.exports = {
           )})`
         )
         .setDescription(
-          (equipment.repair === 0 ? '**🚨 BROKEN DOWN 🚨**\n' : '') +
-            (equipment.description || '')
+          (equipment.repair === 0 ? `**🚨 BROKEN DOWN 🚨**\n` : ``) +
+            (equipment.description || ``)
         )
 
       const fields = guild.ship.getEquipmentData(equipment)
@@ -63,7 +63,7 @@ module.exports = {
 
       const availableActions = [
         {
-          emoji: '🔧',
+          emoji: `🔧`,
           action: ({ user, msg }) => {
             repair.action({ msg, settings, guild, ship, equipment })
           }

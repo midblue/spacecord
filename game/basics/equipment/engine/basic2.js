@@ -1,7 +1,7 @@
 module.exports = {
-  emoji: '⚙️',
-  description: 'Standard workhorse engine. What it lacks in power it makes up for in affordability and 4 whole directions of movement.',
-  displayName: 'Sparkler 2000',
+  emoji: `⚙️`,
+  description: `Standard workhorse engine. What it lacks in power it makes up for in affordability and 4 whole directions of movement.`,
+  displayName: `Sparkler 2000`,
   baseHp: 20,
   maxSpeed: 0.5,
   weight: 80,

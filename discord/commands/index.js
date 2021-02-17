@@ -1,17 +1,17 @@
-const send = require('../actions/send')
-const { username, applyCustomParams } = require('../botcommon')
-const defaultServerSettings = require('../defaults/defaultServerSettings')
-const db = require('../../db/db')
+const send = require(`../actions/send`)
+const { username, applyCustomParams } = require(`../botcommon`)
+const defaultServerSettings = require(`../defaults/defaultServerSettings`)
+const db = require(`../../db/db`)
 
 // * get all commands from files in this folder
-const fs = require('fs')
+const fs = require(`fs`)
 const commands = []
-fs.readdir('./discord/commands', (err, files) => {
+fs.readdir(`./discord/commands`, (err, files) => {
   files.forEach((file) => {
     if (
-      !file.endsWith('.js') ||
-      file === 'index.js' ||
-      (!process.env.DEV && file.startsWith('debug'))
+      !file.endsWith(`.js`) ||
+      file === `index.js` ||
+      (!process.env.DEV && file.startsWith(`debug`))
     ) { return }
     commands.push(require(`./${file}`))
   })
@@ -35,7 +35,7 @@ module.exports = {
       if (match) {
         if (command.gameAdminsOnly) {
           if (
-            !['244651135984467968', '395634705120100367'].includes(
+            ![`244651135984467968`, `395634705120100367`].includes(
               msg.author.id
             )
           ) { return }
@@ -45,8 +45,8 @@ module.exports = {
         if (msg.guild && command.admin) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
-          authorIsAdmin = member.permissions.has('BAN_MEMBERS')
-          if (!authorIsAdmin) { return send(msg, 'That command is only available to server admins.') }
+          authorIsAdmin = member.permissions.has(`BAN_MEMBERS`)
+          if (!authorIsAdmin) { return send(msg, `That command is only available to server admins.`) }
         }
 
         let authorIsCaptain = false
@@ -59,7 +59,7 @@ module.exports = {
           if (ship.status.dead && !command.gameAdminsOnly) {
             return send(
               msg,
-              'Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.'
+              `Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.`
             )
           }
           const captain = ship && ship.captain

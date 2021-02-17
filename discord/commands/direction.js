@@ -1,35 +1,35 @@
-const send = require('../actions/send')
-const { log, username } = require('../botcommon')
-const { capitalize } = require('../../common')
-const runPoll = require('../actions/runPoll')
-const Discord = require('discord.js-light')
+const send = require(`../actions/send`)
+const { log, username } = require(`../botcommon`)
+const { capitalize } = require(`../../common`)
+const runPoll = require(`../actions/runPoll`)
+const Discord = require(`discord.js-light`)
 
 const voteTime = process.env.DEV ? 10 * 1000 : GENERAL_VOTE_TIME
 
 module.exports = {
-  tag: 'direction',
-  equipmentType: 'telemetry',
+  tag: `direction`,
+  equipmentType: `telemetry`,
   documentation: {
-    value: 'Starts a vote to steer the ship in any direction.',
-    emoji: '🧭',
-    category: 'ship',
+    value: `Starts a vote to steer the ship in any direction.`,
+    emoji: `🧭`,
+    category: `ship`,
     priority: 75
   },
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:dir|direction|steer|turn|rotate)$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({ msg, author, guild, ship, requirements }) {
-    log(msg, 'Direction Vote', msg.guild.name)
+    log(msg, `Direction Vote`, msg.guild.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(
       (m) => m.id === msg.author.id
     )
-    if (!authorCrewMemberObject) { return console.log('no user found in direction') }
-    const staminaRes = authorCrewMemberObject.useStamina('poll')
+    if (!authorCrewMemberObject) { return console.log(`no user found in direction`) }
+    const staminaRes = authorCrewMemberObject.useStamina(`poll`)
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const availableDirections = ship.getAvailableDirections()
@@ -41,7 +41,7 @@ module.exports = {
         `Crew with at least ${Object.keys(requirements)
           .map((r) => `level \`${requirements[r]}\` in \`${capitalize(r)}\` `)
           .join(
-            'and '
+            `and `
           )}can vote on the ship's bearing. The final direction will be an average of the crew's vote, with votes from users with higher piloting skills carrying more weight.
 
 Current direction is ${ship.getDirectionString()}
@@ -52,14 +52,14 @@ Your ship's engine supports \`${
       )
 
     const { ok, message, userReactions, sentMessage } = await runPoll({
-      pollType: 'direction',
+      pollType: `direction`,
       embed,
       time: voteTime,
       reactions: availableDirections,
       guild,
       msg,
       requirements,
-      weightByLevelType: 'piloting'
+      weightByLevelType: `piloting`
     })
     if (!ok) return send(msg, message)
 
@@ -77,14 +77,14 @@ Your ship's engine supports \`${
     embed.description = `Previous direction was ${previousDirection}`
     if (!embed.fields || !embed.fields.length) embed.fields = []
     embed.fields.push({
-      name: 'Vote Complete!',
+      name: `Vote Complete!`,
       value: res.ok
         ? `Result: Steering to ${ship.getDirectionString()}`
-        : 'Result: Stay the course'
+        : `Result: Stay the course`
     })
     embed.description = embed.description.replace(
-      'Current direction is',
-      'Previous direction was'
+      `Current direction is`,
+      `Previous direction was`
     )
 
     sentMessage.edit(embed)

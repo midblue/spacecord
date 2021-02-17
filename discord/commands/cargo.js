@@ -1,45 +1,45 @@
-const send = require('../actions/send')
-const { log, username } = require('../botcommon')
-const { capitalize, usageTag } = require('../../common')
-const Discord = require('discord.js-light')
-const awaitReaction = require('../actions/awaitReaction')
-const jettison = require('../actions/jettison')
+const send = require(`../actions/send`)
+const { log, username } = require(`../botcommon`)
+const { capitalize, usageTag } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const jettison = require(`../actions/jettison`)
 
 module.exports = {
-  tag: 'cargo',
+  tag: `cargo`,
   documentation: {
-    value: 'See and edit the ship\'s cargo.',
-    emoji: '📦',
-    category: 'ship'
+    value: `See and edit the ship's cargo.`,
+    emoji: `📦`,
+    category: `ship`
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:cargo|c|jettison)$`, 'gi').exec(
+    return new RegExp(`^${settings.prefix}(?:cargo|c|jettison)$`, `gi`).exec(
       content
     )
   },
   async action ({ msg, ship, guild }) {
-    log(msg, 'Cargo', msg.guild.name)
+    log(msg, `Cargo`, msg.guild.name)
 
     const actualCargo = ship.cargo.filter((c) => c.amount > 0.0001)
     if (guild.ship.credits) {
       actualCargo.push({
-        type: 'credits',
-        displayName: 'Credits',
+        type: `credits`,
+        displayName: `Credits`,
         amount: guild.ship.credits,
-        emoji: '💳'
+        emoji: `💳`
       })
     }
 
-    if (actualCargo.length === 0) { return send(msg, 'Your ship currently has no cargo at all.') }
+    if (actualCargo.length === 0) { return send(msg, `Your ship currently has no cargo at all.`) }
 
     const currentCargoString = actualCargo
       .map(
         (c) =>
           `${c.emoji} ${c.displayName}: ${
-            c.type === 'credits' ? Math.round(c.amount) : c.amount.toFixed(2)
-          } ${c.type === 'credits' ? '' : WEIGHT_UNITS}`
+            c.type === `credits` ? Math.round(c.amount) : c.amount.toFixed(2)
+          } ${c.type === `credits` ? `` : WEIGHT_UNITS}`
       )
-      .join('\n')
+      .join(`\n`)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -48,8 +48,8 @@ module.exports = {
 
     const reactions = [
       {
-        emoji: '🗑',
-        label: 'Vote to Jettison Cargo ' + usageTag(0, 'poll'),
+        emoji: `🗑`,
+        label: `Vote to Jettison Cargo ` + usageTag(0, `poll`),
         action: async ({ msg, guild }) => {
           jettison({ msg, guild })
         }

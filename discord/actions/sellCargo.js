@@ -1,14 +1,14 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const { percentToTextBars } = require('../../common')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
-const cargo = require('../../game/basics/cargo')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const { percentToTextBars } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
+const cargo = require(`../../game/basics/cargo`)
 
 module.exports = async ({ msg, type, cost, guild, amount }) => {
   msg.guild = msg.channel.guild
-  log(msg, 'Sell Cargo', msg.channel.guild.name)
+  log(msg, `Sell Cargo`, msg.channel.guild.name)
 
   const heldCargo = guild.ship.cargo.find((c) => c.type === type)
   if (!heldCargo || !heldCargo.amount) return
@@ -18,8 +18,8 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) return console.log('no user found in sellCargo')
-  const staminaRes = authorCrewMemberObject.useStamina('poll')
+  if (!authorCrewMemberObject) return console.log(`no user found in sellCargo`)
+  const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const voteEmbed = new Discord.MessageEmbed()
@@ -34,7 +34,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   )
 
   const voteResult = await runYesNoVote({
-    pollType: 'sell',
+    pollType: `sell`,
     embed: voteEmbed,
     minimumMemberPercent: 0.1,
     msg,
@@ -67,14 +67,14 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   voteEmbed.description =
     `You now have \`💳${Math.round(guild.ship.credits)}\` credits.` +
-    '\n\nShip weight is ' +
+    `\n\nShip weight is ` +
     percentToTextBars(
       guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
     ) +
     Math.round(guild.ship.getTotalWeight()) +
-    '/' +
+    `/` +
     Math.round(guild.ship.equipment.chassis[0].maxWeight) +
-    ' ' +
+    ` ` +
     WEIGHT_UNITS
 
   voteResult.sentMessage.edit(voteEmbed)

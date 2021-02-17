@@ -1,11 +1,11 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 
 module.exports = (guild) => {
   guild.ship.getMap = () => {
-    let mapString = ''
+    let mapString = ``
     if (!(guild.ship.seen?.planets || []).length) mapString = story.map.empty()
     else {
-      mapString = 'Planets discovered so far:\n';
+      mapString = `Planets discovered so far:\n`;
 (guild.ship.seen?.planets || []).forEach((planetName) => {
         const planetData = guild.context.planets.find(
           (p) => p.name === planetName

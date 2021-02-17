@@ -1,18 +1,18 @@
-const { capitalize, garble } = require('../../../common')
-const { allSkills } = require('../../gamecommon')
+const { capitalize, garble } = require(`../../../common`)
+const { allSkills } = require(`../../gamecommon`)
 
 module.exports = {
   guild: {
     get: {
       fail: {
         noGuild: () =>
-          'It doesn\'t look like your server has started the game yet. Use `%command%spawn%` to get started!'
+          `It doesn't look like your server has started the game yet. Use \`%command%spawn%\` to get started!`
       }
     }
   },
   prompts: {
     startGame: () =>
-      'What will you do, captain? Use `%command%ship%` to check the status of your ship.'
+      `What will you do, captain? Use \`%command%ship%\` to check the status of your ship.`
   },
   ship: {
     get: {
@@ -47,7 +47,7 @@ module.exports = {
   crew: {
     add: {
       fail: {
-        noShip: () => 'Your server doesn\'t have a ship to join yet!',
+        noShip: () => `Your server doesn't have a ship to join yet!`,
         existing: (id) =>
           `%username%${id}% is already a crew member on this ship!`
       },
@@ -67,27 +67,27 @@ module.exports = {
   },
   map: {
     empty: () =>
-      'Your galaxy map is, sadly, blank. You stare at the empty screen for a moment, then turn away filled with determination to explore.'
+      `Your galaxy map is, sadly, blank. You stare at the empty screen for a moment, then turn away filled with determination to explore.`
   },
   scanShip: {
     noScanner: () =>
-      'Since your ship has no scanner equipped, all you can see is the other ship\'s name, enscribed in block letters along its hull.',
+      `Since your ship has no scanner equipped, all you can see is the other ship's name, enscribed in block letters along its hull.`,
     repair: () =>
-      'You start to scan the ship, but your scanner whines to a halt mid-scan. Maybe repairing would help?',
+      `You start to scan the ship, but your scanner whines to a halt mid-scan. Maybe repairing would help?`,
     detected: (didSucceed, scanner) =>
       `Your engineers have managed to detect that a nearby craft has ${
-        didSucceed ? 'scanned' : 'attempted to scan'
+        didSucceed ? `scanned` : `attempted to scan`
       } you with a ${scanner.displayName}${
-        didSucceed ? '' : ', but failed to get any information'
+        didSucceed ? `` : `, but failed to get any information`
       }.`,
-    ourScanDetected: () => 'Your scan was detected by the other ship.'
+    ourScanDetected: () => `Your scan was detected by the other ship.`
   },
   fuel: {
     insufficient: () =>
-      'The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_FUEL"'
+      `The ship sputters. A readout above you flashes with the text, "ERROR: INSUFFICIENT_FUEL"`
   },
   food: {
-    insufficient: () => 'Your ship is out of food!',
+    insufficient: () => `Your ship is out of food!`,
     low: (amount, ticksLeft) =>
       `Your ship is dangerously low on food! You only have ${amount}${WEIGHT_UNITS}, which should only last ${ticksLeft} more ${TIME_UNITS}`
   },
@@ -105,7 +105,7 @@ module.exports = {
     tooSoon: (model) =>
       `Your ${model} is still recharging from your previous broadcast.`,
     voteFailed: () =>
-      'The crew decides collectively that broadcasting isn\'t the smartest move right now. A few sighs of relief are heard around the bridge.',
+      `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     location: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
         `You key in a few commands and listen as your ship's ${
@@ -200,15 +200,15 @@ module.exports = {
         yesPercent * 100
       )}% of voters agreed)`,
     message: {
-      peace: () => 'A token of peace.',
-      forYou: () => 'Enjoy!',
-      nowYou: () => 'Now it\'s your turn.',
-      gotcha: () => 'Seeya, suckers!'
+      peace: () => `A token of peace.`,
+      forYou: () => `Enjoy!`,
+      nowYou: () => `Now it's your turn.`,
+      gotcha: () => `Seeya, suckers!`
     }
   },
   xp: {
     add: {
-      missingUser: () => 'Couldn\'t find the user to give experience!',
+      missingUser: () => `Couldn't find the user to give experience!`,
       success: (
         id,
         skill,
@@ -222,7 +222,7 @@ module.exports = {
         `%username%${id}% gains ${xpAmount} experience in \`${
           allSkills.find((s) => s.name === skill).emoji
         }${capitalize(skill)}\`${
-          didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : '.'
+          didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
         } You're \`${levelProgress}/${levelSize} (${(
           percentToLevel * 100
         ).toFixed()}%)\` to \`Level ${level + 1}\`.`
@@ -237,18 +237,18 @@ module.exports = {
               allSkills.find((s) => s.name === r).emoji
             }${capitalize(r)}\` `
         )
-        .join('and ')}to use that. You have${Object.keys(requirements)
+        .join(`and `)}to use that. You have${Object.keys(requirements)
         .map(
           (r) =>
             ` level \`${member?.level?.[r] || 0}\` in \`${
               allSkills.find((s) => s.name === r).emoji
             }${capitalize(r)}\` `
         )
-        .join('and')}.`
+        .join(`and`)}.`
   },
   buy: {
     notEnoughMoney: () =>
-      '"Damn," you say as you turn your credits onto the counter. "I thought we had enough to pay for this, but I guess we don\'t..." You shrug and return to shopping.',
+      `"Damn," you say as you turn your credits onto the counter. "I thought we had enough to pay for this, but I guess we don't..." You shrug and return to shopping.`,
     equipment: {
       voteFailed: (part, cost) =>
         `The crew decides collectively not to buy a ${part.emoji}${part.displayName} for \`💳${cost}\` credits.`,
@@ -256,9 +256,9 @@ module.exports = {
         `You bought a brand new ${part.emoji} ${
           part.displayName
         }! It cost you \`💳${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${
-          part.type === 'chassis'
-            ? 'all of your equipment in it.'
-            : 'it in its housing.'
+          part.type === `chassis`
+            ? `all of your equipment in it.`
+            : `it in its housing.`
         }`
     },
     cargo: {
@@ -298,7 +298,7 @@ module.exports = {
     equipment: {
       beakdown: (model) => `Your ${model} has broken down.`,
       notFound: () =>
-        'Sorry, I couldn\'t find the equipment you\'re trying to repair.',
+        `Sorry, I couldn't find the equipment you're trying to repair.`,
       success: (name, repairLevel) =>
         `You give your ship's ${name} a few good whacks with the hammer, and that seems to do the trick. It's repaired to ${Math.round(
           repairLevel * 100
@@ -313,24 +313,24 @@ module.exports = {
   },
   vote: {
     insufficientVotes: () =>
-      'Not enough eligible crew members voted, and you don\'t feel comfortable making such an important decision without getting everyone\'s input. You decide to hold off for now.'
+      `Not enough eligible crew members voted, and you don't feel comfortable making such an important decision without getting everyone's input. You decide to hold off for now.`
   },
   attack: {
     tooSoon: (untilNext) =>
       `Your ship's weapons are still recharging! Your next weapon recharge is in ${untilNext}.`,
     voteFailed: () =>
-      'The crew decides collectively that attacking isn\'t the smartest move right now. A few sighs of relief are heard around the bridge.',
-    noWeapon: () => 'Your ship has no weapons to attack with!',
-    noShips: () => 'There are no ships in range to attack.',
+      `The crew decides collectively that attacking isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
+    noWeapon: () => `Your ship has no weapons to attack with!`,
+    noShips: () => `There are no ships in range to attack.`,
     brokenWeapons: () =>
-      'All of your weapons are too damaged to attack with! Repair them first!',
+      `All of your weapons are too damaged to attack with! Repair them first!`,
     tooLowMunitionsSkill: (required, current, weapon) =>
       `Voters' collective munitions skill (\`${
-        allSkills.find((s) => s.name === 'munitions').emoji
+        allSkills.find((s) => s.name === `munitions`).emoji
       }${current}\`), is too low to operate the ${weapon.emoji} ${
         weapon.displayName
       } (requires \`${
-        allSkills.find((s) => s.name === 'munitions').emoji
+        allSkills.find((s) => s.name === `munitions`).emoji
       }${required}\`).`,
     docked: (enemyShip) =>
       `Just as you train your sights on the enemy, they manage to slip inside the protective field of ${capitalize(
@@ -343,27 +343,27 @@ module.exports = {
         otherShip.name
       }! The participating crew members take their places at their battle stations with a collective munitions skill of \`${collectiveMunitionsSkill}\`.`,
     outOfRange: () =>
-      'By the time you got your weapons ready, the other ship had moved out of range! You\'ll have to catch up to attack them.',
+      `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
     miss: (weapon, wasClose, accuracyMultiplier) =>
       `The attack from your ${weapon.emoji} ${weapon.displayName} misses${
-        wasClose ? ' by a hair\'s breadth' : ''
+        wasClose ? ` by a hair's breadth` : ``
       }! ${
         accuracyMultiplier > 1
-          ? 'Even though our munitions experts were in peak condition, it wasn\'t enough.'
+          ? `Even though our munitions experts were in peak condition, it wasn't enough.`
           : accuracyMultiplier < 1
-          ? 'The opposition\'s pilots are better than expected, and due to some brilliant flying, the attack bore wide.'
-          : 'All those watching from the bridge confirm: it was a lucky dodge by the enemy.'
+          ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
+          : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
       }`,
     hit: (weapon, advantageDamageMultiplier, totalDamageDealt, destroyedShip) =>
       `Your ${weapon.emoji} ${weapon.displayName} hits the enemy, dealing ${
         Math.round(totalDamageDealt * 10) / 10
       } damage${
         advantageDamageMultiplier > 1
-          ? ', a critical hit!'
+          ? `, a critical hit!`
           : advantageDamageMultiplier < 1
-          ? ' in a glancing blow.'
-          : '.'
-      }${destroyedShip ? ' You destroyed their ship!' : ''}`
+          ? ` in a glancing blow.`
+          : `.`
+      }${destroyedShip ? ` You destroyed their ship!` : ``}`
   },
   defend: {
     miss: (attacker, weapon, accuracyMultiplier) =>
@@ -373,49 +373,49 @@ module.exports = {
         attacker.name
       }. ${
         accuracyMultiplier > 1
-          ? 'They appear to be expert shots, and you wonder how long you can stay lucky...'
+          ? `They appear to be expert shots, and you wonder how long you can stay lucky...`
           : accuracyMultiplier < 1
-          ? 'Thanks to the quick action of your pilots, the shot went fairly wide.'
-          : 'It looks like a tight battle is unfolding.'
+          ? `Thanks to the quick action of your pilots, the shot went fairly wide.`
+          : `It looks like a tight battle is unfolding.`
       }`,
     hit: (attacker, weapon, advantageDamageMultiplier, totalDamageTaken) =>
       `The ${weapon.emoji} ${weapon.displayName} of ${
         attacker.name
       } hits your ship for ${Math.round(totalDamageTaken * 10) / 10} damage${
         advantageDamageMultiplier > 1
-          ? ' in a critical hit!'
+          ? ` in a critical hit!`
           : advantageDamageMultiplier < 1
-          ? ' in a glancing blow.'
-          : '.'
+          ? ` in a glancing blow.`
+          : `.`
       }`,
     advice: () =>
-      'Repair equipment and train pilots to increase your dodge chance, drop cargo to increase your speed, and train munitions experts to better fight back!'
+      `Repair equipment and train pilots to increase your dodge chance, drop cargo to increase your speed, and train munitions experts to better fight back!`
   },
   move: {
     oob: {
-      reEnter: () => 'Your ship has reentered known space.',
+      reEnter: () => `Your ship has reentered known space.`,
       goOOB: () =>
-        'Your ship has left the realms of known space. There\'s nothing but the void to be found out here.'
+        `Your ship has left the realms of known space. There's nothing but the void to be found out here.`
     },
     redirect: {
       success: (degrees, arrow, voteCount) =>
         `Your ship rotates to face ${arrow} ${degrees} degrees. (${voteCount} vote${
-          voteCount === 1 ? '' : 's'
+          voteCount === 1 ? `` : `s`
         })`
     },
     adjustSpeed: {
       success: (spedUp, newSpeed, speedPercent, voteCount) =>
         `Tour ship ${
-          spedUp ? 'speeds up' : 'slows down'
+          spedUp ? `speeds up` : `slows down`
         } to ${newSpeed}${SPEED_UNIT}, which is ${Math.round(
           speedPercent * 100
         )}% of its maximum power. (${voteCount} vote${
-          voteCount === 1 ? '' : 's'
+          voteCount === 1 ? `` : `s`
         })`
     }
   },
   land: {
-    voteFailed: () => 'The crew decides collectively not to land here.',
+    voteFailed: () => `The crew decides collectively not to land here.`,
     votePassed: (yesPercent, planet) =>
       `You've landed on ${planet.name}. (${Math.round(
         yesPercent * 100
@@ -429,10 +429,10 @@ module.exports = {
         Math.random() * 23
       )}:00, and the crew descends the extended gangplank, ready to stretch their legs amongst the locals at the spaceport.`,
     recharge: () =>
-      'The friendly crew at the dock refills your batteries, on the house.'
+      `The friendly crew at the dock refills your batteries, on the house.`
   },
   depart: {
-    voteFailed: () => 'The crew decides collectively not to depart.',
+    voteFailed: () => `The crew decides collectively not to depart.`,
     votePassed: (yesPercent, planet) =>
       `You've departed from ${planet.name}. (${Math.round(
         yesPercent * 100
@@ -444,17 +444,17 @@ module.exports = {
   },
   log: {
     empty: () =>
-      'Looks like there\'s nothing in your log yet. Explore the galaxy to discover things!'
+      `Looks like there's nothing in your log yet. Explore the galaxy to discover things!`
   },
   interact: {
-    nothing: () => 'There\'s nothing close enough to you to interact with.'
+    nothing: () => `There's nothing close enough to you to interact with.`
   },
   discovery: {
     planet: (planet) =>
       `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${
         planet.color
       } planet located at [${planet.location.join(
-        ', '
+        `, `
       )}] ${DISTANCE_UNIT}. It has been added to your galaxy map. Congratulations!`
   }
 }

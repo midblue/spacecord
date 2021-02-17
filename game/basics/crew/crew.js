@@ -1,4 +1,4 @@
-const addins = require('./addins/index')
+const addins = require(`./addins/index`)
 
 function spawn (user, guild) {
   const id = user.id || user.user.id

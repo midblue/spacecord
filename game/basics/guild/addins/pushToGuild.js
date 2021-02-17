@@ -1,4 +1,4 @@
-const pushToGuild = require('../../../../discord/actions/pushToGuild')
+const pushToGuild = require(`../../../../discord/actions/pushToGuild`)
 
 module.exports = (guild) => {
   guild.pushToGuild = guild.ship.pushToGuild = async (

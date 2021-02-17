@@ -1,14 +1,14 @@
-const send = require('../actions/send')
-const Discord = require('discord.js-light')
-const { applyCustomParams } = require('../botcommon')
-const { allSkills } = require('../../game/gamecommon')
-const readyCheck = require('../actions/readyCheck')
-const { msToTimeString } = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
+const send = require(`../actions/send`)
+const Discord = require(`discord.js-light`)
+const { applyCustomParams } = require(`../botcommon`)
+const { allSkills } = require(`../../game/gamecommon`)
+const readyCheck = require(`../actions/readyCheck`)
+const { msToTimeString } = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = ({ msg, user, guild }) => {
   return new Promise(async (resolve) => {
-    const emoji = allSkills.find((s) => s.name === 'munitions').emoji
+    const emoji = allSkills.find((s) => s.name === `munitions`).emoji
 
     // ------- generate general game variables
     let done = false
@@ -17,7 +17,7 @@ module.exports = ({ msg, user, guild }) => {
     const boardWidth = Math.max(
       4,
       Math.round(userLevel / 4),
-      targetSizes.reduce((t, c) => Math.max(t, c), 0)
+      targetSizes.reduce((t, c) => Math.max(t, c), 0),
     )
     const shots =
       targetSizes.reduce((t, c) => t + c, 0) +
@@ -32,7 +32,7 @@ module.exports = ({ msg, user, guild }) => {
     const board = []
     for (let i = 0; i < boardWidth; i++) {
       board.push([])
-      for (let j = 0; j < boardWidth; j++) board[i].push('◼️')
+      for (let j = 0; j < boardWidth; j++) board[i].push(`◼️`)
     }
     targetSizes.forEach((targetSize) => {
       const findSpace = () => {
@@ -40,16 +40,20 @@ module.exports = ({ msg, user, guild }) => {
         if (horiz) {
           const startX = Math.floor(Math.random() * (boardWidth - targetSize))
           const startY = Math.floor(Math.random() * boardWidth)
-          for (let i = startX; i < startX + targetSize; i++) { if (board[startY][i] !== '◼️') return false }
           for (let i = startX; i < startX + targetSize; i++) {
-            board[startY][i] = '🚢'
+            if (board[startY][i] !== `◼️`) return false
+          }
+          for (let i = startX; i < startX + targetSize; i++) {
+            board[startY][i] = `🚢`
           }
         } else {
           const startX = Math.floor(Math.random() * boardWidth)
           const startY = Math.floor(Math.random() * (boardWidth - targetSize))
-          for (let i = startY; i < startY + targetSize; i++) { if (board[i][startX] !== '◼️') return false }
           for (let i = startY; i < startY + targetSize; i++) {
-            board[i][startX] = '🚢'
+            if (board[i][startX] !== `◼️`) return false
+          }
+          for (let i = startY; i < startY + targetSize; i++) {
+            board[i][startX] = `🚢`
           }
         }
         return true
@@ -62,14 +66,14 @@ module.exports = ({ msg, user, guild }) => {
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`${emoji} Munitions Training | ${msg.author.nickname}`)
-    embed.description = 'it\'s battleship ya dummy'
+    embed.description = `it's battleship ya dummy`
     embed.fields = [
-      { name: '🧨 Shots', value: shots, inline: true },
+      { name: `🧨 Shots`, value: shots, inline: true },
       {
-        name: '⏱ Time',
+        name: `⏱ Time`,
         value: msToTimeString(remainingTime),
-        inline: true
-      }
+        inline: true,
+      },
     ]
 
     // ------- wait for them to say I'm Ready
@@ -78,21 +82,22 @@ module.exports = ({ msg, user, guild }) => {
 
     embed.fields = [
       {
-        name: 'Key',
-        value: '📍Current Target, 💢Hit, ✖️Miss, 👍Current(Hit), 👎Current(Miss)'
+        name: `Key`,
+        value:
+          `📍Current Target, 💢Hit, ✖️Miss, 👍Current(Hit), 👎Current(Miss)`,
       },
       {
-        name: '🧨 Shots Remaining',
+        name: `🧨 Shots Remaining`,
         value: remainingShots,
-        id: 'remainingShots',
-        inline: true
+        id: `remainingShots`,
+        inline: true,
       },
       {
-        name: '⏱ Time Remaining',
+        name: `⏱ Time Remaining`,
         value: msToTimeString(remainingTime),
-        id: 'remainingTime',
-        inline: true
-      }
+        id: `remainingTime`,
+        inline: true,
+      },
     ]
     await sentMessage.edit(embed)
 
@@ -103,7 +108,7 @@ module.exports = ({ msg, user, guild }) => {
       remainingTime -= Math.abs(startTime - Date.now())
       if (remainingTime < 0) remainingTime = 0
       embed.fields[
-        embed.fields.findIndex((f) => f.id === 'remainingTime')
+        embed.fields.findIndex((f) => f.id === `remainingTime`)
       ].value = msToTimeString(remainingTime)
       if (remainingTime <= 0) {
         clearInterval(embedUpdateInterval)
@@ -119,20 +124,20 @@ module.exports = ({ msg, user, guild }) => {
         .map((row, index) =>
           index === targetY
             ? row.map((x, i) =>
-              i === targetX
-                ? x === '💢'
-                  ? '👍'
-                  : x === '✖️'
-                    ? '👎'
-                    : '📍'
-                : x
-            )
-            : row
+                i === targetX
+                  ? x === `💢`
+                    ? `👍`
+                    : x === `✖️`
+                    ? `👎`
+                    : `📍`
+                  : x,
+              )
+            : row,
         )
-        .map((row) => row.reduce((total, c) => total + c, ''))
-        .join('\n')
-        .replace(/🚢/gi, '◼️')
-      embed.description = '```' + outputBoardString + '```'
+        .map((row) => row.reduce((total, c) => total + c, ``))
+        .join(`\n`)
+        .replace(/🚢/gi, `◼️`)
+      embed.description = `\`\`\`` + outputBoardString + `\`\`\``
       if (!sentMessage.deleted) sentMessage.edit(embed)
     }
 
@@ -141,10 +146,10 @@ module.exports = ({ msg, user, guild }) => {
       remainingShots--
       if (remainingShots <= 0) end()
       embed.fields[
-        embed.fields.findIndex((f) => f.id === 'remainingShots')
+        embed.fields.findIndex((f) => f.id === `remainingShots`)
       ].value = remainingShots
-      if (board[targetY][targetX] === '🚢') board[targetY][targetX] = '💢'
-      else board[targetY][targetX] = '✖️'
+      if (board[targetY][targetX] === `🚢`) board[targetY][targetX] = `💢`
+      else board[targetY][targetX] = `✖️`
       updateBoardView()
     }
 
@@ -153,43 +158,43 @@ module.exports = ({ msg, user, guild }) => {
     if (!sentMessage.deleted) sentMessage.edit(embed)
     const reactions = [
       {
-        emoji: '◀',
+        emoji: `◀`,
         action: () => {
           targetX--
           if (targetX < 0) targetX = 0
           updateBoardView()
-        }
+        },
       },
       {
-        emoji: '▶️',
+        emoji: `▶️`,
         action: () => {
           targetX++
           if (targetX >= boardWidth) targetX = boardWidth
           updateBoardView()
-        }
+        },
       },
       {
-        emoji: '🔼',
+        emoji: `🔼`,
         action: () => {
           targetY--
           if (targetY < 0) targetY = 0
           updateBoardView()
-        }
+        },
       },
       {
-        emoji: '🔽',
+        emoji: `🔽`,
         action: () => {
           targetY++
           if (targetY >= boardWidth) targetY = boardWidth
           updateBoardView()
-        }
+        },
       },
       {
-        emoji: '🧨',
+        emoji: `🧨`,
         action: () => {
           takeShot()
-        }
-      }
+        },
+      },
     ]
     awaitReaction({
       msg: sentMessage,
@@ -197,7 +202,7 @@ module.exports = ({ msg, user, guild }) => {
       respondeeFilter: (u) => u.id === user.id,
       embed,
       guild,
-      time
+      time,
     })
 
     // ------- end game
@@ -206,7 +211,7 @@ module.exports = ({ msg, user, guild }) => {
       done = true
       // ------- calculate and add XP
       const xp = Math.round(1000)
-      const res = user.addXp('munitions', xp)
+      const res = user.addXp(`munitions`, xp)
 
       // ------- update embed with results
       embed.description = `**${challengeCount} challenges in ${(

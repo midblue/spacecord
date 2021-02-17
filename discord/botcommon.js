@@ -1,16 +1,16 @@
-const defaultServerSettings = require('./defaults/defaultServerSettings')
+const defaultServerSettings = require(`./defaults/defaultServerSettings`)
 
 module.exports = {
-  async log (msg, identifier, context, type = 'command') {
+  async log (msg, identifier, context, type = `command`) {
     console.log(
       `${
         msg.guild
-          ? msg.guild.name.substring(0, 16).padEnd(17, ' ') +
+          ? msg.guild.name.substring(0, 16).padEnd(17, ` `) +
             ` (${msg.guild.id})`
-          : 'Private Message'
-      }`.padEnd(30, ' ') +
+          : `Private Message`
+      }`.padEnd(30, ` `) +
         ` | ${identifier}` +
-        (context ? `: ${context}` : '') +
+        (context ? `: ${context}` : ``) +
         ` (${await username(msg)}) `
     )
   },
@@ -36,8 +36,8 @@ async function username (msgOrUserOrChannel, id) {
   else if (msgOrUserOrChannel.username) {
     user = msgOrUserOrChannel
   }
-  if (!user) return 'System'
-  return user.nickname || user.username || user.user.username || 'Unknown User'
+  if (!user) return `System`
+  return user.nickname || user.username || user.user.username || `Unknown User`
 }
 
 const customParams = [
@@ -56,14 +56,14 @@ const customParams = [
   }
 ]
 async function applyCustomParams (msgOrChannel, textOrObject) {
-  if (typeof textOrObject === 'string') return await apply(textOrObject)
+  if (typeof textOrObject === `string`) return await apply(textOrObject)
   if (Array.isArray(textOrObject)) {
     return await Promise.all(
       textOrObject.map(async (t) => {
         return await applyCustomParams(msgOrChannel, t)
       })
     )
-  } else if (typeof textOrObject === 'object') {
+  } else if (typeof textOrObject === `object`) {
     const newObj = {}
     for (const key of Object.keys(textOrObject)) {
       newObj[key] = await applyCustomParams(msgOrChannel, textOrObject[key])

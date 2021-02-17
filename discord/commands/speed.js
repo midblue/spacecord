@@ -1,35 +1,35 @@
-const { log, username } = require('../botcommon')
-const { capitalize } = require('../../common')
-const Discord = require('discord.js-light')
-const runPoll = require('../actions/runPoll')
-const send = require('../actions/send')
+const { log, username } = require(`../botcommon`)
+const { capitalize } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const runPoll = require(`../actions/runPoll`)
+const send = require(`../actions/send`)
 
 const voteTime = process.env.DEV ? 10 * 1000 : GENERAL_VOTE_TIME
 
 module.exports = {
-  tag: 'speed',
-  equipmentType: 'engine',
+  tag: `speed`,
+  equipmentType: `engine`,
   documentation: {
-    value: 'Starts a vote to set the ship\'s speed.',
-    emoji: '⏩',
-    category: 'ship',
+    value: `Starts a vote to set the ship's speed.`,
+    emoji: `⏩`,
+    category: `ship`,
     priority: 75
   },
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:speed|speedup|slowdown|accelerate|decelerate|accel|decel|thrust|go|move|forward)$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({ msg, author, guild, ship, requirements }) {
-    log(msg, 'Speed Vote', msg.guild.name)
+    log(msg, `Speed Vote`, msg.guild.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(
       (m) => m.id === msg.author.id
     )
-    if (!authorCrewMemberObject) return console.log('no user found in speed')
-    const staminaRes = authorCrewMemberObject.useStamina('poll')
+    if (!authorCrewMemberObject) return console.log(`no user found in speed`)
+    const staminaRes = authorCrewMemberObject.useStamina(`poll`)
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const effectiveSpeed = ship.effectiveSpeed()
@@ -59,14 +59,14 @@ Your ship's engine supports \`${
       )
 
     const { ok, message, userReactions, sentMessage } = await runPoll({
-      pollType: 'speed',
+      pollType: `speed`,
       embed,
       time: voteTime,
       reactions: availableSpeedLevels,
       guild,
       msg,
       requirements,
-      weightByLevelType: 'piloting'
+      weightByLevelType: `piloting`
     })
     if (!ok) return send(msg, message)
 
@@ -85,7 +85,7 @@ Your ship's engine supports \`${
       3
     )} ${SPEED_UNIT}\``
     embed.fields = {
-      name: 'Vote Complete!',
+      name: `Vote Complete!`,
       value: res.ok
         ? `Result: \`${res.voteResult.toFixed(3)}\`, or \`${(
             res.voteResult * 10
@@ -97,10 +97,10 @@ Final speed is \`${ship
             )} ${SPEED_UNIT}\` out of a maximum of \`${maxSpeed.toFixed(
             3
           )} ${SPEED_UNIT}\`.`
-        : 'Result: Maintain speed' +
+        : `Result: Maintain speed` +
           (ship.status.stranded
-            ? '\n\nHowever, your ship is out of fuel, so it won\'t be going at any speed.'
-            : '')
+            ? `\n\nHowever, your ship is out of fuel, so it won't be going at any speed.`
+            : ``)
     }
 
     sentMessage.edit(embed)

@@ -1,63 +1,63 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
-const awaitReaction = require('../actions/awaitReaction')
-const Discord = require('discord.js-light')
-const runGuildCommand = require('../actions/runGuildCommand')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const Discord = require(`discord.js-light`)
+const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
-  tag: 'mainDeck',
+  tag: `mainDeck`,
   documentation: false,
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:maindeck)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:maindeck)$`, `gi`).exec(content)
   },
   async action ({ msg, guild }) {
-    log(msg, 'Main Deck', msg.guild.name)
+    log(msg, `Main Deck`, msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle('🎛 Main Deck')
+      .setTitle(`🎛 Main Deck`)
 
-    embed.description = 'The main deck of the ship hums with activity as deck workers tend to the ship\'s equipment and cargo, and overseers monitor the ship\'s status.'
+    embed.description = `The main deck of the ship hums with activity as deck workers tend to the ship's equipment and cargo, and overseers monitor the ship's status.`
 
     const reactions = [
       {
-        emoji: '📊',
-        label: 'Ship Info',
+        emoji: `📊`,
+        label: `Ship Info`,
         async action ({ msg }) {
           await runGuildCommand({
-            commandTag: 'shipInfo',
+            commandTag: `shipInfo`,
             msg
           })
         }
       },
       {
-        emoji: '📦',
-        label: 'Cargo',
+        emoji: `📦`,
+        label: `Cargo`,
         async action ({ msg }) {
           await runGuildCommand({
-            commandTag: 'cargo',
+            commandTag: `cargo`,
             msg
           })
         }
       },
 
       {
-        emoji: '🔩',
-        label: 'Equipment',
+        emoji: `🔩`,
+        label: `Equipment`,
         async action ({ msg }) {
           await runGuildCommand({
-            commandTag: 'equipment',
+            commandTag: `equipment`,
             msg
           })
         }
       },
       {
-        emoji: '🧾',
-        label: 'Ship Log',
+        emoji: `🧾`,
+        label: `Ship Log`,
         async action ({ msg }) {
           await runGuildCommand({
             msg,
-            commandTag: 'log'
+            commandTag: `log`
           })
         }
       }

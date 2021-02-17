@@ -3,16 +3,16 @@ const defaults = () => ({
   shipyardSellMultiplier: 0.5,
   shipyard: {},
   location: [0, 0],
-  color: 'green',
+  color: `green`,
   size: 1
 })
 
 // * get all exports from files in this folder
-const fs = require('fs')
+const fs = require(`fs`)
 const planets = []
 fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith('.js') || file === 'index.js') return
+    if (!file.endsWith(`.js`) || file === `index.js`) return
     planets.push({
       ...defaults(),
       ...require(`./${file}`),
@@ -33,9 +33,9 @@ function liveify (planet, context) {
   planet.context = context
 
   planet.getSizeDescriptor = function () {
-    if (this.size > 5) return 'large'
-    if (this.size < 2) return 'small'
-    return 'normal-sized'
+    if (this.size > 5) return `large`
+    if (this.size < 2) return `small`
+    return `normal-sized`
   }
 
   planet.getDockedShips = function () {

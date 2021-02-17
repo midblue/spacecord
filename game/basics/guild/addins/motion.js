@@ -1,10 +1,10 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 const {
   bearingToRadians,
   bearingToDegrees,
   bearingToArrow,
   distance
-} = require('../../../../common')
+} = require(`../../../../common`)
 
 module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
@@ -68,17 +68,17 @@ module.exports = (guild) => {
       2
     )
 
-    availableSpeedLevels.push({ emoji: '🔟', speed: 1 })
-    if (bestShipSpeedLevels > 1) { availableSpeedLevels.push({ emoji: '0️⃣', speed: 0 }) }
-    if (bestShipSpeedLevels > 2) { availableSpeedLevels.push({ emoji: '5️⃣', speed: 0.5 }) }
-    if (bestShipSpeedLevels > 3) { availableSpeedLevels.push({ emoji: '7️⃣', speed: 0.7 }) }
-    if (bestShipSpeedLevels > 4) { availableSpeedLevels.push({ emoji: '2️⃣', speed: 0.2 }) }
-    if (bestShipSpeedLevels > 5) { availableSpeedLevels.push({ emoji: '1️⃣', speed: 0.1 }) }
-    if (bestShipSpeedLevels > 6) { availableSpeedLevels.push({ emoji: '9️⃣', speed: 0.9 }) }
-    if (bestShipSpeedLevels > 7) { availableSpeedLevels.push({ emoji: '4️⃣', speed: 0.4 }) }
-    if (bestShipSpeedLevels > 8) { availableSpeedLevels.push({ emoji: '8️⃣', speed: 0.8 }) }
-    if (bestShipSpeedLevels > 9) { availableSpeedLevels.push({ emoji: '3️⃣', speed: 0.3 }) }
-    if (bestShipSpeedLevels > 10) { availableSpeedLevels.push({ emoji: '6️⃣', speed: 0.6 }) }
+    availableSpeedLevels.push({ emoji: `🔟`, speed: 1 })
+    if (bestShipSpeedLevels > 1) { availableSpeedLevels.push({ emoji: `0️⃣`, speed: 0 }) }
+    if (bestShipSpeedLevels > 2) { availableSpeedLevels.push({ emoji: `5️⃣`, speed: 0.5 }) }
+    if (bestShipSpeedLevels > 3) { availableSpeedLevels.push({ emoji: `7️⃣`, speed: 0.7 }) }
+    if (bestShipSpeedLevels > 4) { availableSpeedLevels.push({ emoji: `2️⃣`, speed: 0.2 }) }
+    if (bestShipSpeedLevels > 5) { availableSpeedLevels.push({ emoji: `1️⃣`, speed: 0.1 }) }
+    if (bestShipSpeedLevels > 6) { availableSpeedLevels.push({ emoji: `9️⃣`, speed: 0.9 }) }
+    if (bestShipSpeedLevels > 7) { availableSpeedLevels.push({ emoji: `4️⃣`, speed: 0.4 }) }
+    if (bestShipSpeedLevels > 8) { availableSpeedLevels.push({ emoji: `8️⃣`, speed: 0.8 }) }
+    if (bestShipSpeedLevels > 9) { availableSpeedLevels.push({ emoji: `3️⃣`, speed: 0.3 }) }
+    if (bestShipSpeedLevels > 10) { availableSpeedLevels.push({ emoji: `6️⃣`, speed: 0.6 }) }
 
     return availableSpeedLevels
   }
@@ -93,19 +93,19 @@ module.exports = (guild) => {
 
     if (bestShipDirections === 3) {
       return [
-        { emoji: '↗️', vector: [1, 1] },
-        { emoji: '↖️', vector: [-1, 1] },
-        { emoji: '⬇️', vector: [0, -1.414] }
+        { emoji: `↗️`, vector: [1, 1] },
+        { emoji: `↖️`, vector: [-1, 1] },
+        { emoji: `⬇️`, vector: [0, -1.414] }
       ]
     }
-    availableDirections.push({ emoji: '➡️', vector: [1.414, 0] })
-    if (bestShipDirections > 4) { availableDirections.push({ emoji: '↗️', vector: [1, 1] }) }
-    availableDirections.push({ emoji: '⬆️', vector: [0, 1.414] })
-    if (bestShipDirections > 5) { availableDirections.push({ emoji: '↖️', vector: [-1, 1] }) }
-    availableDirections.push({ emoji: '⬅️', vector: [-1.414, 0] })
-    if (bestShipDirections > 6) { availableDirections.push({ emoji: '↙️', vector: [-1, -1] }) }
-    availableDirections.push({ emoji: '⬇️', vector: [0, -1.414] })
-    if (bestShipDirections > 7) { availableDirections.push({ emoji: '↘️', vector: [1, -1] }) }
+    availableDirections.push({ emoji: `➡️`, vector: [1.414, 0] })
+    if (bestShipDirections > 4) { availableDirections.push({ emoji: `↗️`, vector: [1, 1] }) }
+    availableDirections.push({ emoji: `⬆️`, vector: [0, 1.414] })
+    if (bestShipDirections > 5) { availableDirections.push({ emoji: `↖️`, vector: [-1, 1] }) }
+    availableDirections.push({ emoji: `⬅️`, vector: [-1.414, 0] })
+    if (bestShipDirections > 6) { availableDirections.push({ emoji: `↙️`, vector: [-1, -1] }) }
+    availableDirections.push({ emoji: `⬇️`, vector: [0, -1.414] })
+    if (bestShipDirections > 7) { availableDirections.push({ emoji: `↘️`, vector: [1, -1] }) }
 
     return availableDirections
   }
@@ -119,7 +119,7 @@ module.exports = (guild) => {
   guild.ship.move = (useFuel = true, coordinates) => {
     const ship = guild.ship
 
-    const fuel = ship.cargo.find((c) => c.type === 'fuel')
+    const fuel = ship.cargo.find((c) => c.type === `fuel`)
     if (!fuel.amount && useFuel) {
       return {
         ok: false
@@ -201,7 +201,7 @@ module.exports = (guild) => {
   guild.ship.getDirectionString = () => {
     const arrow = bearingToArrow(guild.ship.bearing)
     const degrees = bearingToDegrees(guild.ship.bearing)
-    return arrow + ' ' + degrees.toFixed(0) + ' degrees'
+    return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
 
   guild.ship.maxSpeed = () => {

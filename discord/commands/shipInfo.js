@@ -1,22 +1,22 @@
-const send = require('../actions/send')
-const { log, applyCustomParams } = require('../botcommon')
-const Discord = require('discord.js-light')
-const awaitReaction = require('../actions/awaitReaction')
+const send = require(`../actions/send`)
+const { log, applyCustomParams } = require(`../botcommon`)
+const Discord = require(`discord.js-light`)
+const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
-  tag: 'shipInfo',
+  tag: `shipInfo`,
   documentation: {
-    name: 'shipinfo',
-    value: 'Ship equipment, age, health, etc.',
-    emoji: '📊',
-    category: 'ship',
+    name: `shipinfo`,
+    value: `Ship equipment, age, health, etc.`,
+    emoji: `📊`,
+    category: `ship`,
     priority: 80
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:shipinfo|si)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:shipinfo|si)$`, `gi`).exec(content)
   },
   async action ({ msg, settings, ship, guild }) {
-    log(msg, 'Ship Info', msg.guild.name)
+    log(msg, `Ship Info`, msg.guild.name)
 
     const status = ship.shipInfo()
     status.fields = await applyCustomParams(msg, status.fields)

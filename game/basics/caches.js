@@ -1,4 +1,4 @@
-const cargoData = require('./cargo')
+const cargoData = require(`./cargo`)
 
 module.exports = {
   liveify (cache) {

@@ -1,12 +1,12 @@
-const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
+const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 const {
   bearingToDegrees,
   bearingToArrow,
   percentToTextBars,
   distance
-} = require('../../../../common')
-const story = require('../../story/story')
-const getCache = require('../../../../discord/actions/getCache')
+} = require(`../../../../common`)
+const story = require(`../../story/story`)
+const getCache = require(`../../../../discord/actions/getCache`)
 
 module.exports = (guild) => {
   guild.ship.scanArea = (eyesOnly) => {
@@ -32,9 +32,9 @@ module.exports = (guild) => {
         (total, found) => (total += found.length),
         0
       )
-      let preMessage = 'Since you\'re out of power,'
-      if (!telemetry) preMessage = 'Since you don\'t have any telemetry'
-      if (eyesOnly) preMessage = 'Deciding that technology is for the weak,'
+      let preMessage = `Since you're out of power,`
+      if (!telemetry) preMessage = `Since you don't have any telemetry`
+      if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
       messages.push(
         preMessage +
           ` you look out out the window. 
@@ -43,13 +43,13 @@ You see ${
             thingsFoundCount
               ? thingsFoundCount +
                 ` unidentifiable thing${
-                  thingsFoundCount === 1 ? '' : 's'
+                  thingsFoundCount === 1 ? `` : `s`
                 } out there in the dark.`
-              : 'nothing but the inky void of space.'
+              : `nothing but the inky void of space.`
           }` +
           (haveEnoughPower || eyesOnly
-            ? ''
-            : '\nMaybe you should think about generating some power.')
+            ? ``
+            : `\nMaybe you should think about generating some power.`)
       )
       return {
         ok: false,
@@ -82,44 +82,44 @@ You see ${
 
     const data = [
       {
-        name: '⏩ Our Speed',
+        name: `⏩ Our Speed`,
         value: guild.ship.status.stranded
-          ? 'Out of Fuel!'
+          ? `Out of Fuel!`
           : guild.ship.speed
-            ? guild.ship.speed.toFixed(2) + ' ' + SPEED_UNIT
-            : 'Stopped'
+            ? guild.ship.speed.toFixed(2) + ` ` + SPEED_UNIT
+            : `Stopped`
       },
       {
-        name: '🧭 Our Bearing',
+        name: `🧭 Our Bearing`,
         value:
           bearingToArrow(guild.ship.bearing) +
-          ' ' +
+          ` ` +
           bearingToDegrees(guild.ship.bearing).toFixed(0) +
-          ' degrees'
+          ` degrees`
       },
       {
-        name: '📍 Our Location',
+        name: `📍 Our Location`,
         value:
           `${guild.ship.location[0].toFixed(
             2
           )}, ${guild.ship.location[1].toFixed(2)} ` + DISTANCE_UNIT
       },
       {
-        name: '📡 Scan Radius',
+        name: `📡 Scan Radius`,
         value: `${telemetry.range} ${DISTANCE_UNIT}`
       },
       {
-        name: '⚡Power',
+        name: `⚡Power`,
         value:
           percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
-          '\n' +
+          `\n` +
           telemetry.powerUse +
-          ' ' +
+          ` ` +
           POWER_UNIT +
-          ' used'
+          ` used`
       },
       {
-        name: '⏱ Next Update',
+        name: `⏱ Next Update`,
         value: `${Math.ceil(guild.context.timeUntilNextTick() / 1000 / 60)}m`
       }
     ]
@@ -127,7 +127,7 @@ You see ${
     const lowPower = telemetry.powerUse * 2 > guild.ship.power
     if (lowPower) {
       data.push({
-        name: '⚠️ Low Power ⚠️',
+        name: `⚠️ Low Power ⚠️`,
         value: `${guild.ship.power + POWER_UNIT} remaining`
       })
     }
@@ -142,12 +142,12 @@ You see ${
     }).guilds
     if (interactableGuilds && interactableGuilds.length) {
       actions.push({
-        emoji: '👉',
+        emoji: `👉`,
         async action ({ user, msg }) {
           await runGuildCommand({
             msg,
             author: user,
-            commandTag: 'nearby',
+            commandTag: `nearby`,
             props: { interactableGuilds }
           })
         }
@@ -166,10 +166,10 @@ You see ${
         ).length)
     ) {
       actions.push({
-        emoji: '👉',
+        emoji: `👉`,
         async action ({ user, msg, guild }) {
           runGuildCommand({
-            commandTag: 'nearby',
+            commandTag: `nearby`,
             msg,
             author: user
           })

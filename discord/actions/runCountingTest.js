@@ -1,12 +1,12 @@
-const send = require('./send')
-const Discord = require('discord.js')
+const send = require(`./send`)
+const Discord = require(`discord.js`)
 
 module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
   return new Promise(async (resolve) => {
     const SNIPPET_WIDTH = 5
     const SNIPPET_HEIGHT = 5
 
-    let mojcodeSnippet = ''
+    let mojcodeSnippet = ``
 
     function randomNumber (min, max) {
       return Math.random() * (max - min) + min
@@ -27,12 +27,12 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
         }
       }
       if (i != SNIPPET_HEIGHT - 1) {
-        mojcodeSnippet += '\n'
+        mojcodeSnippet += `\n`
       }
     }
-    const regex = new RegExp(targetEmoji, 'g')
+    const regex = new RegExp(targetEmoji, `g`)
     const targetEmojiTotal = (mojcodeSnippet.match(regex) || []).length
-    mojcodeSnippet += '\nDEBUG: COUNT=' + targetEmojiTotal
+    mojcodeSnippet += `\nDEBUG: COUNT=` + targetEmojiTotal
     const time = Math.floor(targetEmojiTotal * 0.2 * 1000)
 
     embed.description += `\nYou have ${Math.round(
@@ -56,10 +56,11 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
       if (isNaN(guess)) return
 
       const guessError = Math.abs(targetEmojiTotal - guess)
+      let rewardXp
       if (guessError / targetEmojiTotal < 0) {
-        var rewardXp = 0
+        rewardXp = 0
       } else {
-        var rewardXp = 1500 - 145 * guessError ** 2
+        rewardXp = 1500 - 145 * guessError ** 2
       }
 
       if (rewardXp < 0) rewardXp = 0

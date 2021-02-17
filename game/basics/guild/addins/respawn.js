@@ -1,6 +1,6 @@
-const story = require('../../story/story')
-const { liveify } = require('../guild')
-const createDefault = require('../createDefaultGuild')
+const story = require(`../../story/story`)
+const { liveify } = require(`../guild`)
+const createDefault = require(`../createDefaultGuild`)
 
 module.exports = (guild) => {
   guild.ship.respawn = (msg) => {

@@ -1,30 +1,30 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
 const {
   numberToEmoji,
   capitalize,
   percentToTextBars,
   msToTimeString
-} = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
-const Discord = require('discord.js-light')
-const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
-const runGuildCommand = require('../actions/runGuildCommand')
+} = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const Discord = require(`discord.js-light`)
+const staminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
+const runGuildCommand = require(`../actions/runGuildCommand`)
 const trainingActions = {
-  engineering: require('./trainEngineering').action,
-  mechanics: require('./trainMechanics').action
+  engineering: require(`./trainEngineering`).action,
+  mechanics: require(`./trainMechanics`).action
 }
 
 module.exports = {
-  tag: 'me', // this is also the 'train' command
+  tag: `me`, // this is also the 'train' command
   documentation: {
-    value: 'See your stats and take actions.',
-    emoji: '💁‍♂️',
-    category: 'crew',
+    value: `See your stats and take actions.`,
+    emoji: `💁‍♂️`,
+    category: `crew`,
     priority: 70
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:me|stamina|aboutme)$`, 'gi').exec(
+    return new RegExp(`^${settings.prefix}(?:me|stamina|aboutme)$`, `gi`).exec(
       content
     )
   },
@@ -38,7 +38,7 @@ module.exports = {
     authorCrewMemberObject,
     author
   }) {
-    log(msg, 'Me', msg.guild.name)
+    log(msg, `Me`, msg.guild.name)
     // my skills, my options to train things, etc
 
     const embed = new Discord.MessageEmbed()
@@ -52,12 +52,12 @@ module.exports = {
     embed.fields.push(
       ...[
         {
-          name: '👵🏽 Age',
-          value: userAge.toFixed(2) + ' ' + TIME_UNIT_LONGS,
+          name: `👵🏽 Age`,
+          value: userAge.toFixed(2) + ` ` + TIME_UNIT_LONGS,
           inline: true
         },
         {
-          name: '💪 Stamina',
+          name: `💪 Stamina`,
           value:
             percentToTextBars(authorCrewMemberObject.stamina || 0) +
             `\n${
@@ -70,7 +70,7 @@ module.exports = {
           inline: true
         },
         {
-          name: '🛌 Stamina Gain',
+          name: `🛌 Stamina Gain`,
           value: `\`+ 💪${
             Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
           }\` stamina/ship ${TIME_UNIT}
@@ -101,21 +101,21 @@ module.exports = {
     }))
 
     const trainableSkillsField = {
-      name: 'Skills',
+      name: `Skills`,
       value: trainableSkills
         .map((e) => {
           return `${e.emoji} **${capitalize(e.name)}**: Level ${e.level}`
         })
-        .join('\n')
+        .join(`\n`)
     }
     embed.fields.push(trainableSkillsField)
 
     const reactions = [
       {
-        emoji: '🏋️‍♂️',
-        label: 'Train your skills',
+        emoji: `🏋️‍♂️`,
+        label: `Train your skills`,
         action: async () => {
-          runGuildCommand({ msg, commandTag: 'train' })
+          runGuildCommand({ msg, commandTag: `train` })
         }
       }
     ]

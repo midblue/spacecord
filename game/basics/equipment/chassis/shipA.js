@@ -4,8 +4,8 @@ module.exports = {
   agility: 0.2,
   maxWeight: 1000,
   weight: 100,
-  emoji: '🚙',
-  displayName: 'Model D',
+  emoji: `🚙`,
+  displayName: `Model D`,
   description:
-    'A small starter chassis with a good balance of agility, cargo space, and cost.'
+    `A small starter chassis with a good balance of agility, cargo space, and cost.`
 }

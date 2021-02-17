@@ -1,6 +1,6 @@
-const { distance, percentToTextBars } = require('../../../../common')
-const story = require('../../story/story')
-const Discord = require('discord.js-light')
+const { distance, percentToTextBars } = require(`../../../../common`)
+const story = require(`../../story/story`)
+const Discord = require(`discord.js-light`)
 
 const advantageRandomChoiceRange = 15
 const flatCritMultiplierDamageBoost = 0.3
@@ -81,27 +81,27 @@ module.exports = (guild) => {
     const finalAccuracy = adjustedAccuracy * advantageAccuracyMultiplier
     const accuracyTarget = Math.random()
     const didHit = finalAccuracy > accuracyTarget
-    console.log('hit check:', didHit, finalAccuracy, accuracyTarget)
+    console.log(`hit check:`, didHit, finalAccuracy, accuracyTarget)
 
-    outputEmbed.setTitle = didHit ? 'Hit!' : 'Miss!'
+    outputEmbed.setTitle = didHit ? `Hit!` : `Miss!`
     outputEmbed.fields = [
       {
-        name: 'Weapon',
-        value: weapon.emoji + ' ' + weapon.displayName,
+        name: `Weapon`,
+        value: weapon.emoji + ` ` + weapon.displayName,
         inline: true
       },
       {
-        name: 'Range',
-        value: attackDistance.toFixed(3) + ' ' + DISTANCE_UNIT,
+        name: `Range`,
+        value: attackDistance.toFixed(3) + ` ` + DISTANCE_UNIT,
         inline: true
       },
       {
-        name: 'Base Hit %',
-        value: Math.round(adjustedAccuracy * 100) + '%',
+        name: `Base Hit %`,
+        value: Math.round(adjustedAccuracy * 100) + `%`,
         inline: true
       },
       {
-        name: 'Total Munitions Skill',
+        name: `Total Munitions Skill`,
         value: collectiveMunitionsSkill,
         inline: true
       }
@@ -181,7 +181,7 @@ module.exports = (guild) => {
     outputEmbed.fields.push(
       ...[
         {
-          name: 'Damage Breakdown',
+          name: `Damage Breakdown`,
           value: damageTaken
             .map(
               (d) =>
@@ -190,10 +190,10 @@ module.exports = (guild) => {
                 } damage${
                   d.negated
                     ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                    : ''
-                }${d.wasDisabled ? ' (**Disabled!**)' : ''}`
+                    : ``
+                }${d.wasDisabled ? ` (**Disabled!**)` : ``}`
             )
-            .join('\n')
+            .join(`\n`)
         }
       ]
     )
@@ -227,13 +227,13 @@ module.exports = (guild) => {
 
     outputEmbed.fields = [
       {
-        name: 'Attack Weapon',
-        value: weapon.emoji + ' ' + weapon.displayName,
+        name: `Attack Weapon`,
+        value: weapon.emoji + ` ` + weapon.displayName,
         inline: true
       },
       {
-        name: 'Attack Range',
-        value: attackDistance.toFixed(3) + ' ' + DISTANCE_UNIT,
+        name: `Attack Range`,
+        value: attackDistance.toFixed(3) + ` ` + DISTANCE_UNIT,
         inline: true
       }
     ]
@@ -328,20 +328,20 @@ module.exports = (guild) => {
       outputEmbed.fields.push(
         ...[
           {
-            name: 'Damage Taken',
+            name: `Damage Taken`,
             value: Math.round(totalDamageTaken * 10) / 10,
             inline: true
           },
           {
-            name: 'Ship Health',
+            name: `Ship Health`,
             value:
               percentToTextBars(currentHp / maxHp) +
-              '\n' +
+              `\n` +
               `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`,
             inline: true
           },
           {
-            name: 'Damage Breakdown',
+            name: `Damage Breakdown`,
             value:
               damageTaken
                 .map(
@@ -355,10 +355,10 @@ module.exports = (guild) => {
                     }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
                       d.negated
                         ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                        : ''
-                    }${d.wasDisabled ? ' (**Disabled!**)' : ''}`
+                        : ``
+                    }${d.wasDisabled ? ` (**Disabled!**)` : ``}`
                 )
-                .join('\n') || 'No damage taken.'
+                .join(`\n`) || `No damage taken.`
           }
         ]
       )
@@ -375,7 +375,7 @@ module.exports = (guild) => {
     guild.ship.logEntry(outputEmbed.description)
 
     let reactions
-    if (attacker.name !== 'God') { reactions = guild.ship.getActionsOnOtherShip(attacker) }
+    if (attacker.name !== `God`) { reactions = guild.ship.getActionsOnOtherShip(attacker) }
 
     // notify
     guild.pushToGuild(outputEmbed, null, reactions)

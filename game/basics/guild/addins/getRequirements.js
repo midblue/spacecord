@@ -1,8 +1,8 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 
 const equipmentTypeToSkill = {
-  engine: 'piloting',
-  telemetry: 'navigation'
+  engine: `piloting`,
+  telemetry: `navigation`
 }
 
 module.exports = (guild) => {
@@ -25,7 +25,7 @@ module.exports = (guild) => {
       ok,
       requirements,
       message: ok
-        ? ''
+        ? ``
         : story.action.doesNotMeetRequirements(requirements, member)
     }
   }

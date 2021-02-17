@@ -1,59 +1,59 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
-const equipment = require('../../game/basics/equipment/equipment')
-const Discord = require('discord.js-light')
-const { capitalize, numberToEmoji, usageTag } = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
-const runGuildCommand = require('../actions/runGuildCommand')
-const equipmentTypes = require('../../game/basics/equipment/equipmentTypes')
-const buyEquipment = require('../actions/buyEquipment')
-const sellEquipment = require('../actions/sellEquipment')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
+const equipment = require(`../../game/basics/equipment/equipment`)
+const Discord = require(`discord.js-light`)
+const { capitalize, numberToEmoji, usageTag } = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const runGuildCommand = require(`../actions/runGuildCommand`)
+const equipmentTypes = require(`../../game/basics/equipment/equipmentTypes`)
+const buyEquipment = require(`../actions/buyEquipment`)
+const sellEquipment = require(`../actions/sellEquipment`)
 
 module.exports = {
-  tag: 'shipyard',
+  tag: `shipyard`,
   documentation: {
-    name: 'shipyard',
-    value: 'Buy and sell equipment for your ship.',
-    emoji: '🛠',
-    category: 'planet',
+    name: `shipyard`,
+    value: `Buy and sell equipment for your ship.`,
+    emoji: `🛠`,
+    category: `planet`,
     priority: 30
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:shipyard)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:shipyard)$`, `gi`).exec(content)
   },
   async action ({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
-    log(msg, 'Shipyard', msg.guild.name)
+    log(msg, `Shipyard`, msg.guild.name)
 
     const planet = guild.context.planets.find(
       (p) => p.name === guild.ship.status.docked
     )
-    if (!planet) return send(msg, 'Your ship isn\'t docked anywhere!')
+    if (!planet) return send(msg, `Your ship isn't docked anywhere!`)
 
     if (!buyOrSell) {
       const embed = new Discord.MessageEmbed()
-        .setTitle('Shipyard')
-        .setDescription('Would you like to buy or sell parts?')
+        .setTitle(`Shipyard`)
+        .setDescription(`Would you like to buy or sell parts?`)
 
       const availableActions = [
         {
-          emoji: '💸',
-          label: 'Buy',
+          emoji: `💸`,
+          label: `Buy`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
-              commandTag: 'shipyard',
-              props: { buyOrSell: 'buy' }
+              commandTag: `shipyard`,
+              props: { buyOrSell: `buy` }
             })
           }
         },
         {
-          emoji: '💰',
-          label: 'Sell',
+          emoji: `💰`,
+          label: `Sell`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
-              commandTag: 'shipyard',
-              props: { buyOrSell: 'sell' }
+              commandTag: `shipyard`,
+              props: { buyOrSell: `sell` }
             })
           }
         }
@@ -67,7 +67,7 @@ module.exports = {
         guild
       })
       if (!sentMessage.deleted) sentMessage.delete()
-    } else if (buyOrSell === 'buy' && !type) {
+    } else if (buyOrSell === `buy` && !type) {
       let totalParts = 0
       const completeParts = {}
       Object.keys(planet.shipyard).forEach((type) => {
@@ -77,14 +77,14 @@ module.exports = {
             if (!Array.isArray(completeParts[type])) completeParts[type] = []
             completeParts[type].push({ ...foundPart, type })
             totalParts++
-          } else console.log('No part found for', type, part)
+          } else console.log(`No part found for`, type, part)
         })
       })
 
       const embed = new Discord.MessageEmbed()
-        .setTitle('Parts for Sale')
+        .setTitle(`Parts for Sale`)
         .setDescription(
-          'Choose a category to see the parts for sale of that type.'
+          `Choose a category to see the parts for sale of that type.`
         )
 
       const availableActions = []
@@ -97,8 +97,8 @@ module.exports = {
           action: ({ user, msg, guild }) => {
             runGuildCommand({
               msg,
-              commandTag: 'shipyard',
-              props: { buyOrSell: 'buy', type, parts: completeParts[type] }
+              commandTag: `shipyard`,
+              props: { buyOrSell: `buy`, type, parts: completeParts[type] }
             })
           }
         })
@@ -114,7 +114,7 @@ module.exports = {
       if (!sentMessage.deleted) sentMessage.delete()
     }
     // otherwise, we already know what type to show
-    else if (buyOrSell === 'buy') {
+    else if (buyOrSell === `buy`) {
       parts.forEach(async (part, index) => {
         const cost = part.baseCost * planet.shipyardPriceMultiplier
         const tooExpensive = cost > guild.ship.credits
@@ -134,13 +134,13 @@ module.exports = {
             )}) \`💳${cost} Credits\``
           )
           .setDescription(
-            `${alreadyOwned ? '_(Already Owned)_\n' : ''}` +
+            `${alreadyOwned ? `_(Already Owned)_\n` : ``}` +
               `${
                 tooExpensive
                   ? `_(Insufficient Credits! You need \`💳${
                       cost - guild.ship.credits
                     }\` more)_\n`
-                  : ''
+                  : ``
               }` +
               part.description
           )
@@ -151,10 +151,10 @@ module.exports = {
         const availableActions = []
         if (!tooExpensive) {
           availableActions.push({
-            emoji: '💰',
+            emoji: `💰`,
             label:
               `Start a vote to buy this ${part.emoji} ${part.displayName} ` +
-              usageTag(0, 'poll'),
+              usageTag(0, `poll`),
             action: ({ user, msg, guild }) => {
               buyEquipment({
                 msg,
@@ -178,9 +178,9 @@ module.exports = {
         })
         if (!sentMessage.deleted) sentMessage.delete()
       })
-    } else if (buyOrSell === 'sell') {
+    } else if (buyOrSell === `sell`) {
       const allSellableEquipment = []
-      for (const [eqType, eqArr] of Object.entries(guild.ship.equipment)) { if (eqType !== 'chassis') allSellableEquipment.push(...eqArr) }
+      for (const [eqType, eqArr] of Object.entries(guild.ship.equipment)) { if (eqType !== `chassis`) allSellableEquipment.push(...eqArr) }
 
       const sellableActions = allSellableEquipment.map((part, index) => {
         const cost = Math.round(
@@ -204,7 +204,7 @@ module.exports = {
 
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle('Which equipment would you like to sell?')
+        .setTitle(`Which equipment would you like to sell?`)
 
       const sentMessage = (await send(msg, embed))[0]
       await awaitReaction({

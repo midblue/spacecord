@@ -1,4 +1,4 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 const maxLogLength = 50
 
 module.exports = (guild) => {
@@ -28,7 +28,7 @@ module.exports = (guild) => {
         if (isLong) { unit = Math.round(timeCount) === 1 ? TIME_UNIT_LONG : TIME_UNIT_LONGS }
         return `\`${timeCount} ${unit} ago:\` ${l.text}`
       })
-      .join('\n')
+      .join(`\n`)
     if (!outputString) outputString = story.log.empty()
     return { ok: true, message: outputString }
   }

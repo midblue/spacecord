@@ -1,14 +1,14 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const { percentToTextBars } = require('../../common')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
-const cargo = require('../../game/basics/cargo')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const { percentToTextBars } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
+const cargo = require(`../../game/basics/cargo`)
 
 module.exports = async ({ msg, type, cost, guild, amount }) => {
   msg.guild = msg.channel.guild
-  log(msg, 'Buy Cargo', msg.channel.guild.name)
+  log(msg, `Buy Cargo`, msg.channel.guild.name)
 
   if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
 
@@ -16,8 +16,8 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) { return console.log('no user found in buyEquipment') }
-  const staminaRes = authorCrewMemberObject.useStamina('poll')
+  if (!authorCrewMemberObject) { return console.log(`no user found in buyEquipment`) }
+  const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const cargoData = cargo[type]
@@ -34,7 +34,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   )
 
   const voteResult = await runYesNoVote({
-    pollType: 'trade',
+    pollType: `trade`,
     embed: voteEmbed,
     minimumMemberPercent: 0.1,
     msg,
@@ -69,14 +69,14 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   voteEmbed.description =
     `You have \`💳${Math.round(guild.ship.credits)}\` credits remaining.` +
-    '\n\nShip weight is ' +
+    `\n\nShip weight is ` +
     percentToTextBars(
       guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
     ) +
     Math.round(guild.ship.getTotalWeight()) +
-    '/' +
+    `/` +
     Math.round(guild.ship.equipment.chassis[0].maxWeight) +
-    ' ' +
+    ` ` +
     WEIGHT_UNITS
 
   voteResult.sentMessage.edit(voteEmbed)

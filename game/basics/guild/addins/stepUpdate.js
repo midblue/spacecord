@@ -1,4 +1,4 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 
 module.exports = (guild) => {
   guild.stepUpdate = async (amount, notify = true) => {
@@ -19,7 +19,7 @@ module.exports = (guild) => {
     const ship = guild.ship
     let ok = true
     let message
-    const food = ship.cargo.find((c) => c.type === 'food')
+    const food = ship.cargo.find((c) => c.type === `food`)
     if (!food || !food.amount) {
       return {
         ok: false

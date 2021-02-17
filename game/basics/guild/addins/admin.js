@@ -1,4 +1,4 @@
-const story = require('../../story/story')
+const story = require(`../../story/story`)
 module.exports = (guild) => {
   guild.ship.setCaptain = async (id) => {
     const foundMember = guild.ship.members.find((m) => m.id === id)
@@ -22,7 +22,7 @@ module.exports = (guild) => {
     await guild.saveNewDataToDb()
     return {
       ok: true,
-      message: 'Guild channel updated.'
+      message: `Guild channel updated.`
     }
   }
 

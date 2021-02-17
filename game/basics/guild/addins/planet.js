@@ -1,7 +1,7 @@
-const runGuildCommand = require('../../../../discord/actions/runGuildCommand')
-const story = require('../../story/story')
-const { capitalize, captainTag, usageTag } = require('../../../../common')
-const depart = require('../../../../discord/actions/depart')
+const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
+const story = require(`../../story/story`)
+const { capitalize, captainTag, usageTag } = require(`../../../../common`)
+const depart = require(`../../../../discord/actions/depart`)
 
 module.exports = (guild) => {
   guild.ship.land = ({ planet, msg }) => {
@@ -22,7 +22,7 @@ module.exports = (guild) => {
 
     runGuildCommand({
       msg,
-      commandTag: 'planet',
+      commandTag: `planet`,
       guild
     })
     return { ok: true, message: story.land.generalPlanet(guild.ship, planet) }
@@ -39,7 +39,7 @@ module.exports = (guild) => {
     guild.ship.status.docked = false
 
     runGuildCommand({
-      commandTag: 'ship',
+      commandTag: `ship`,
       msg,
       props: { guild }
     })
@@ -50,30 +50,30 @@ module.exports = (guild) => {
   guild.ship.getPlanetFields = (planet) => {
     const fields = []
     fields.push({
-      name: '📍 Location',
+      name: `📍 Location`,
       value:
-        planet.location.map((l) => l.toFixed(2)).join(', ') +
-        ' ' +
+        planet.location.map((l) => l.toFixed(2)).join(`, `) +
+        ` ` +
         DISTANCE_UNIT
     })
     fields.push({
-      name: '📏 Size',
+      name: `📏 Size`,
       value: capitalize(planet.getSizeDescriptor())
     })
     fields.push({
-      name: '🎨 Color',
+      name: `🎨 Color`,
       value: capitalize(planet.color)
     })
     const dockedShips = planet.getDockedShips()
     fields.push({
-      name: '🛸 Docked Ships',
+      name: `🛸 Docked Ships`,
       value:
         dockedShips.length < 5
-          ? dockedShips.map((s) => s.ship.name).join(', ')
+          ? dockedShips.map((s) => s.ship.name).join(`, `)
           : dockedShips.length
     })
     fields.push({
-      name: '💳 Your Credits',
+      name: `💳 Your Credits`,
       value: Math.round(guild.ship.credits)
     })
     return fields
@@ -83,11 +83,11 @@ module.exports = (guild) => {
     const actions = []
 
     actions.push({
-      emoji: '🛠',
-      label: 'Shipyard',
+      emoji: `🛠`,
+      label: `Shipyard`,
       async action ({ user, msg, guild }) {
         await runGuildCommand({
-          commandTag: 'shipyard',
+          commandTag: `shipyard`,
           author: user,
           msg
         })
@@ -95,11 +95,11 @@ module.exports = (guild) => {
     })
 
     actions.push({
-      emoji: '⚖️',
-      label: 'Merchant Quarter',
+      emoji: `⚖️`,
+      label: `Merchant Quarter`,
       async action ({ user, msg, guild }) {
         await runGuildCommand({
-          commandTag: 'merchant',
+          commandTag: `merchant`,
           author: user,
           msg
         })
@@ -120,8 +120,8 @@ module.exports = (guild) => {
     // })
 
     actions.push({
-      emoji: '🛫',
-      label: 'Start Leave Vote ' + usageTag(0, 'poll'),
+      emoji: `🛫`,
+      label: `Start Leave Vote ` + usageTag(0, `poll`),
       async action ({ user, msg, guild, planet }) {
         depart({ msg, guild, planet })
       }

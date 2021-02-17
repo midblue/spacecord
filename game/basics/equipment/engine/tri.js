@@ -1,6 +1,6 @@
 module.exports = {
-  emoji: '🔱',
-  displayName: 'The Trident',
+  emoji: `🔱`,
+  displayName: `The Trident`,
   baseHp: 15,
   weight: 100,
   baseCost: 333,

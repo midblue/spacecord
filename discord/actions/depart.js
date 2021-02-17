@@ -1,13 +1,13 @@
-const send = require('./send')
-const { log } = require('../botcommon')
-const { distance, usageTag } = require('../../common')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
-const manager = require('../../game/manager')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
+const { distance, usageTag } = require(`../../common`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
+const manager = require(`../../game/manager`)
 
 module.exports = async ({ msg, guild, planet }) => {
-  log(msg, 'Depart', msg.guild.name)
+  log(msg, `Depart`, msg.guild.name)
 
   if (!planet) {
     planet = manager.game.planets.find(
@@ -20,8 +20,8 @@ module.exports = async ({ msg, guild, planet }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) return console.log('no user found in depart')
-  const staminaRes = authorCrewMemberObject.useStamina('depart')
+  if (!authorCrewMemberObject) return console.log(`no user found in depart`)
+  const staminaRes = authorCrewMemberObject.useStamina(`depart`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   // ---------- vote on departing
@@ -39,7 +39,7 @@ module.exports = async ({ msg, guild, planet }) => {
     yesVoters,
     sentMessage: voteMessage
   } = await runYesNoVote({
-    pollType: 'depart',
+    pollType: `depart`,
     embed: voteEmbed,
     msg,
     guild,
@@ -62,7 +62,7 @@ module.exports = async ({ msg, guild, planet }) => {
 
   // depart
   const res = guild.ship.depart({ planet, msg })
-  if (res.message) voteEmbed.description += '\n\n' + res.message
+  if (res.message) voteEmbed.description += `\n\n` + res.message
 
   voteMessage.edit(voteEmbed)
 }

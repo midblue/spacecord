@@ -1,8 +1,8 @@
-const send = require('./send')
-const runPoll = require('./runPoll')
-const Discord = require('discord.js-light')
-const manager = require('../../game/manager')
-const { usageTag } = require('../../common')
+const send = require(`./send`)
+const runPoll = require(`./runPoll`)
+const Discord = require(`discord.js-light`)
+const manager = require(`../../game/manager`)
+const { usageTag } = require(`../../common`)
 
 module.exports = async ({
   pollType, // todo use type to make sure we don't have two of the same poll open at once
@@ -24,14 +24,14 @@ module.exports = async ({
 
   const reactions = [
     {
-      emoji: '✅',
+      emoji: `✅`,
       label:
-        'Yes' +
-        (yesStaminaRequirement ? ' ' + usageTag(0, yesStaminaRequirement) : '')
+        `Yes` +
+        (yesStaminaRequirement ? ` ` + usageTag(0, yesStaminaRequirement) : ``)
     },
     {
-      emoji: '❌',
-      label: 'No'
+      emoji: `❌`,
+      label: `No`
     }
   ]
 
@@ -72,19 +72,19 @@ module.exports = async ({
     }
   }
 
-  const yesVoters = voters.filter((v) => v.votes.includes('✅'))
-  const noVoters = voters.filter((v) => v.votes.includes('❌'))
+  const yesVoters = voters.filter((v) => v.votes.includes(`✅`))
+  const noVoters = voters.filter((v) => v.votes.includes(`❌`))
 
   return {
     ok,
     result: insufficientVotes
       ? false
-      : (userReactions['✅']?.weightedCount || 0) >
-        (userReactions['❌']?.weightedCount || 0),
+      : (userReactions[`✅`]?.weightedCount || 0) >
+        (userReactions[`❌`]?.weightedCount || 0),
     yesPercent:
-      (userReactions['✅']?.weightedCount || 0) /
-      ((userReactions['❌']?.weightedCount || 0) +
-        (userReactions['✅']?.weightedCount || 0)),
+      (userReactions[`✅`]?.weightedCount || 0) /
+      ((userReactions[`❌`]?.weightedCount || 0) +
+        (userReactions[`✅`]?.weightedCount || 0)),
     insufficientVotes,
     voters,
     yesVoters,

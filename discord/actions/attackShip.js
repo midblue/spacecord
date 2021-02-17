@@ -1,21 +1,21 @@
-const send = require('./send')
-const { log } = require('../botcommon')
+const send = require(`./send`)
+const { log } = require(`../botcommon`)
 const {
   numberToEmoji,
   emojiToNumber,
   capitalize,
   msToTimeString,
   distance
-} = require('../../common')
-const awaitReaction = require('./awaitReaction')
-const Discord = require('discord.js-light')
-const runYesNoVote = require('./runYesNoVote')
-const story = require('../../game/basics/story/story')
-const runPoll = require('./runPoll')
-const { allSkills } = require('../../game/gamecommon')
+} = require(`../../common`)
+const awaitReaction = require(`./awaitReaction`)
+const Discord = require(`discord.js-light`)
+const runYesNoVote = require(`./runYesNoVote`)
+const story = require(`../../game/basics/story/story`)
+const runPoll = require(`./runPoll`)
+const { allSkills } = require(`../../game/gamecommon`)
 
 module.exports = async ({ msg, guild, otherShip }) => {
-  log(msg, 'Attack Ship', msg.guild.name)
+  log(msg, `Attack Ship`, msg.guild.name)
   if (!otherShip || guild.status.docked) return
 
   // ---------- check equipment
@@ -35,8 +35,8 @@ module.exports = async ({ msg, guild, otherShip }) => {
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id
   )
-  if (!authorCrewMemberObject) return console.log('no user found in attackShip')
-  const staminaRes = authorCrewMemberObject.useStamina('poll')
+  if (!authorCrewMemberObject) return console.log(`no user found in attackShip`)
+  const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   // ---------- pick a weapon to use
@@ -55,14 +55,14 @@ module.exports = async ({ msg, guild, otherShip }) => {
         ).toFixed(0)}% base hit chance` +
         (w.requirements?.munitions
           ? ` (Cumulative total of \`${
-              allSkills.find((s) => s.name === 'munitions').emoji
+              allSkills.find((s) => s.name === `munitions`).emoji
             }${w.requirements.munitions}\` in munitions required from voters)`
-          : '')
+          : ``)
     }))
     const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
       msg,
       guild,
-      pollTitle: 'Which weapon should we attack with?',
+      pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects
     })
     if (!pollMessage.deleted) pollMessage.delete()
@@ -86,13 +86,13 @@ ${
     ? `The \`${weaponToUse.emoji} ${
         weaponToUse.displayName
       }\` requires a cumulative voter munitions level of \`${
-        allSkills.find((s) => s.name === 'munitions').emoji
+        allSkills.find((s) => s.name === `munitions`).emoji
       }${weaponToUse.requirements.munitions}\` to fire.
 
 	`
-    : ''
+    : ``
 }Vote with more collective ${
-    allSkills.find((s) => s.name === 'munitions').emoji
+    allSkills.find((s) => s.name === `munitions`).emoji
   }munitions skill, get closer, and repair your weapons to have a better shot!`
 
   const {
@@ -104,7 +104,7 @@ ${
     insufficientVotes,
     sentMessage: voteMessage
   } = await runYesNoVote({
-    pollType: 'attack',
+    pollType: `attack`,
     embed: voteEmbed,
     question: `Attack ${otherShip.name} with ${weaponToUse.emoji} ${weaponToUse.displayName}? | Vote started by ${msg.author.nickname}`,
     minimumMemberPercent: 0.1,

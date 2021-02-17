@@ -3,8 +3,8 @@ const {
   usageTag,
   percentToTextBars,
   msToTimeString
-} = require('../../../../common')
-const equipmentTypes = require('../../equipment/equipmentTypes')
+} = require(`../../../../common`)
+const equipmentTypes = require(`../../equipment/equipmentTypes`)
 
 module.exports = (guild) => {
   guild.ship.addPart = (part, cost) => {
@@ -69,10 +69,10 @@ module.exports = (guild) => {
 
     if (e.repair !== undefined) {
       fields.push({
-        name: '🔧 Repair',
+        name: `🔧 Repair`,
         value:
           percentToTextBars(e.repair) +
-          '\n' +
+          `\n` +
           `${Math.round(e.repair * e.baseHp * 10) / 10}/${
             Math.round(e.baseHp * 10) / 10
           } HP`
@@ -81,76 +81,76 @@ module.exports = (guild) => {
 
     if (e.weight) {
       fields.push({
-        name: '🎒 Weight',
+        name: `🎒 Weight`,
         value: `${Math.round(e.weight * 10) / 10} ${WEIGHT_UNITS}`
       })
     }
 
     if (e.maxWeight) {
       fields.push({
-        name: '🎒 Carrying Capacity',
+        name: `🎒 Carrying Capacity`,
         value: `${Math.round(e.maxWeight * 10) / 10} ${WEIGHT_UNITS}`
       })
     }
     if (e.agility) {
       fields.push({
-        name: '🐇 Agility',
-        value: e.agility * 100 + '%'
+        name: `🐇 Agility`,
+        value: e.agility * 100 + `%`
       })
     }
 
     if (e.maxSpeed) {
       fields.push({
-        name: '💨 Unburdened Speed',
+        name: `💨 Unburdened Speed`,
         value:
           (e.maxSpeed * e.repair).toFixed(2) +
-          ' ' +
+          ` ` +
           DISTANCE_UNIT +
-          '/' +
+          `/` +
           TIME_UNIT
       })
     }
 
     if (e.directions) {
       fields.push({
-        name: '🧭 Movement Directions',
+        name: `🧭 Movement Directions`,
         value: e.directions
       })
     }
     if (e.powerLevels) {
       fields.push({
-        name: '⏩ Speed Levels',
+        name: `⏩ Speed Levels`,
         value: e.powerLevels
       })
     }
 
     if (e.damageToArmorMultiplier) {
       fields.push({
-        name: '🛡 Damage Reduction',
-        value: Math.round((1 - e.damageToArmorMultiplier) * 100) + '%'
+        name: `🛡 Damage Reduction`,
+        value: Math.round((1 - e.damageToArmorMultiplier) * 100) + `%`
       })
     }
 
     if (e.powerUse) {
       fields.push({
-        name: '⚡Power Use',
-        value: e.powerUse + ' ' + POWER_UNIT
+        name: `⚡Power Use`,
+        value: e.powerUse + ` ` + POWER_UNIT
       })
     }
 
     if (e.fuelUse) {
       fields.push({
-        name: '⛽️ Fuel Use',
+        name: `⛽️ Fuel Use`,
         value:
           e.fuelUse +
-          ' ' +
-          (e.fuelUse === 1 ? '(normal)' : e.fuelUse < 1 ? '(low)' : '(high)')
+          ` ` +
+          (e.fuelUse === 1 ? `(normal)` : e.fuelUse < 1 ? `(low)` : `(high)`)
       })
     }
 
     if (e.requirements) {
       fields.push({
-        name: '💪 Use Requirements',
+        name: `💪 Use Requirements`,
         value: Object.keys(e.requirements).map(
           (r) => `${capitalize(r)}: Level ${e.requirements[r]}`
         )
@@ -161,80 +161,80 @@ module.exports = (guild) => {
     // battery
     {
       fields.push({
-        name: '🔋 Capacity',
-        value: e.capacity + ' ' + POWER_UNIT
+        name: `🔋 Capacity`,
+        value: e.capacity + ` ` + POWER_UNIT
       })
     }
 
     if (e.damage) {
       fields.push({
-        name: '⚔️ Base Damage',
+        name: `⚔️ Base Damage`,
         value: e.damage
       })
     }
 
     if (e.range) {
       fields.push({
-        name: '📡 Max Range',
-        value: e.range + ' ' + DISTANCE_UNIT
+        name: `📡 Max Range`,
+        value: e.range + ` ` + DISTANCE_UNIT
       })
     }
 
     if (e.interactRadius) {
       fields.push({
-        name: '👉 Interact Radius',
-        value: e.interactRadius + ' ' + DISTANCE_UNIT
+        name: `👉 Interact Radius`,
+        value: e.interactRadius + ` ` + DISTANCE_UNIT
       })
     }
 
     if (e.rechargeTime !== undefined) {
       fields.push({
-        name: '⏱ Cooldown',
-        value: msToTimeString(e.rechargeTime * STEP_INTERVAL) + ' (real-time)'
+        name: `⏱ Cooldown`,
+        value: msToTimeString(e.rechargeTime * STEP_INTERVAL) + ` (real-time)`
       })
     }
 
     if (e.durabilityLostOnUse) {
       fields.push({
-        name: '🩹 Durability Loss',
+        name: `🩹 Durability Loss`,
         value:
-          '-' + Math.round(e.durabilityLostOnUse * 1000) / 10 + '% per use'
+          `-` + Math.round(e.durabilityLostOnUse * 1000) / 10 + `% per use`
       })
     }
 
     if (e.maxGarble) {
       fields.push({
-        name: '💬 Minimum Message Clarity',
-        value: Math.round((1 - e.maxGarble) * 100) + '%'
+        name: `💬 Minimum Message Clarity`,
+        value: Math.round((1 - e.maxGarble) * 100) + `%`
       })
     }
 
     if (e.scanUndetectability) {
       fields.push({
-        name: '🤫 Scan Sneakiness',
+        name: `🤫 Scan Sneakiness`,
         value: Math.round(e.scanUndetectability)
       })
     }
 
     if (e.broadcastCapabilities) {
       fields.push({
-        name: '📣 Broadcast Types',
-        value: e.broadcastCapabilities.map((b) => capitalize(b)).join(', ')
+        name: `📣 Broadcast Types`,
+        value: e.broadcastCapabilities.map((b) => capitalize(b)).join(`, `)
       })
     }
 
     const repairDiff = e.repairDifficulty || 1
     fields.push({
-      name: '🔧 Repair Difficulty',
+      name: `🔧 Repair Difficulty`,
       value:
         repairDiff +
-        ' ' +
-        (repairDiff === 1 ? '(normal)' : repairDiff < 1 ? '(easy)' : '(hard)')
+        ` ` +
+        (repairDiff === 1 ? `(normal)` : repairDiff < 1 ? `(easy)` : `(hard)`)
     })
 
     if (e.repairRequirements) {
       fields.push({
-        name: '🔧 Repair Requirements',
+        name: `🔧 Repair Requirements`,
         value: Object.keys(e.repairRequirements).map(
           (r) => `${capitalize(r)}: Level ${e.repairRequirements[r]}`
         )

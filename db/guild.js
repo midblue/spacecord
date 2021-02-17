@@ -1,4 +1,4 @@
-const admin = require('firebase-admin')
+const admin = require(`firebase-admin`)
 
 let db
 
@@ -8,8 +8,8 @@ module.exports = function (passedDb) {
     async getAll () {
       try {
         const snapshot = await db
-          .collection('guilds')
-          .where('active', '==', true)
+          .collection(`guilds`)
+          .where(`active`, `==`, true)
           .get()
         if (snapshot.empty) return []
 

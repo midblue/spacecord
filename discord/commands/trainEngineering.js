@@ -1,17 +1,17 @@
-const send = require('../actions/send')
-const { log, applyCustomParams } = require('../botcommon')
-const Discord = require('discord.js')
-const lunicode = require('Lunicode')
-const Fuse = require('fuse.js')
-const runCountingTest = require('../actions/runCountingTest')
+const send = require(`../actions/send`)
+const { log, applyCustomParams } = require(`../botcommon`)
+const Discord = require(`discord.js`)
+const lunicode = require(`Lunicode`)
+const Fuse = require(`fuse.js`)
+const runCountingTest = require(`../actions/runCountingTest`)
 
 module.exports = {
-  tag: 'trainEngineering',
+  tag: `trainEngineering`,
   documentation: false,
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:trainengineering|engineeringtraining)$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({
@@ -28,30 +28,30 @@ module.exports = {
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
-    if (!member) return console.log('no user found in trainEng')
+    if (!member) return console.log(`no user found in trainEng`)
     if (!staminaRequired) {
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(
-        'engineering'
+        `engineering`
       )
     }
-    const staminaRes = member.useStamina('train')
+    const staminaRes = member.useStamina(`train`)
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const emojiChoices = [
-      '🚀',
-      '👾',
-      '🔭',
-      '🪐',
-      '☄️',
-      '🛸',
-      '👽',
-      '🛰',
-      '1️⃣',
-      '0️⃣',
-      '💫',
-      '🌌',
-      '🌠',
-      '🤖'
+      `🚀`,
+      `👾`,
+      `🔭`,
+      `🪐`,
+      `☄️`,
+      `🛸`,
+      `👽`,
+      `🛰`,
+      `1️⃣`,
+      `0️⃣`,
+      `💫`,
+      `🌌`,
+      `🌠`,
+      `🤖`
     ]
 
     const choiceIndex = Math.floor(Math.random() * emojiChoices.length)
@@ -80,9 +80,9 @@ and it needs labeled training data to improve its performance. The input data is
 
     if (!guess) return
 
-    const res = authorCrewMemberObject.addXp('engineering', rewardXp)
+    const res = authorCrewMemberObject.addXp(`engineering`, rewardXp)
 
-    description = ''
+    description = ``
     if (guess == correctAnswer) {
       description += `Excellent — You found all ${guess} ${targetEmoji} in the training data!\n`
     } else if (guess > correctAnswer * 0.8) {

@@ -1,43 +1,43 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
 const {
   numberToEmoji,
   capitalize,
   positionAndAngleDifference,
   usageTag
-} = require('../../common')
-const awaitReaction = require('../actions/awaitReaction')
-const runGuildCommand = require('../actions/runGuildCommand')
-const Discord = require('discord.js-light')
-const story = require('../../game/basics/story/story')
-const { interact } = require('../../game/basics/story/story')
-const getCache = require('../actions/getCache')
-const land = require('../actions/land')
+} = require(`../../common`)
+const awaitReaction = require(`../actions/awaitReaction`)
+const runGuildCommand = require(`../actions/runGuildCommand`)
+const Discord = require(`discord.js-light`)
+const story = require(`../../game/basics/story/story`)
+const { interact } = require(`../../game/basics/story/story`)
+const getCache = require(`../actions/getCache`)
+const land = require(`../actions/land`)
 
 module.exports = {
-  tag: 'nearby',
+  tag: `nearby`,
   documentation: {
-    name: 'nearby',
-    value: 'Inspect and interact with nearby ships, planets, etc.',
-    emoji: '👉',
-    category: 'interaction',
+    name: `nearby`,
+    value: `Inspect and interact with nearby ships, planets, etc.`,
+    emoji: `👉`,
+    category: `interaction`,
     priority: 80
   },
   test (content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:nearbyships?|nearby|near)$`,
-      'gi'
+      `gi`
     ).exec(content)
   },
   async action ({ msg, guild, interactableGuilds, filter }) {
-    log(msg, 'Nearby', filter || 'No Filter')
+    log(msg, `Nearby`, filter || `No Filter`)
 
-    if (guild.ship.status.docked) { return runGuildCommand({ msg, commandTag: 'planet' }) }
+    if (guild.ship.status.docked) { return runGuildCommand({ msg, commandTag: `planet` }) }
 
-    if (filter && filter !== 'guilds') interactableGuilds = []
+    if (filter && filter !== `guilds`) interactableGuilds = []
     if (interactableGuilds === undefined) {
       interactableGuilds =
-        !filter || filter === 'guilds'
+        !filter || filter === `guilds`
           ? guild.context.scanArea({
             x: guild.ship.location[0],
             y: guild.ship.location[1],
@@ -48,7 +48,7 @@ module.exports = {
     }
 
     const interactableCaches =
-      !filter || filter === 'caches'
+      !filter || filter === `caches`
         ? guild.context.scanArea({
           x: guild.ship.location[0],
           y: guild.ship.location[1],
@@ -58,7 +58,7 @@ module.exports = {
         : []
 
     const interactablePlanets =
-      !filter || filter === 'planets'
+      !filter || filter === `planets`
         ? guild.context.scanArea({
           x: guild.ship.location[0],
           y: guild.ship.location[1],
@@ -77,7 +77,7 @@ module.exports = {
     if (interactableCaches.length) {
       const cacheEmbed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle('📦 Caches')
+        .setTitle(`📦 Caches`)
 
       const availableActions = []
       interactableCaches.forEach(async (cache, index) => {
@@ -89,8 +89,8 @@ module.exports = {
           emoji: numberToEmoji(index + 1),
           label:
             cache.amount.toFixed(2) +
-            (cache.type === 'credits' ? '' : ' ' + WEIGHT_UNITS + ' of') +
-            ' ' +
+            (cache.type === `credits` ? `` : ` ` + WEIGHT_UNITS + ` of`) +
+            ` ` +
             cache.emoji +
             cache.displayName,
           action: ({ msg, guild }) => {
@@ -137,7 +137,7 @@ module.exports = {
       })
       const sentMessage = (await send(msg, cacheEmbed))[0]
       awaitReaction({
-        commandsLabel: 'Grab which cache?',
+        commandsLabel: `Grab which cache?`,
         msg: sentMessage,
         reactions: availableActions,
         embed: cacheEmbed,
@@ -152,7 +152,7 @@ module.exports = {
       )
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle('🪐 ' + planet.name)
+        .setTitle(`🪐 ` + planet.name)
         .setDescription(
           `A ${planet.getSizeDescriptor()} ${
             planet.color
@@ -165,8 +165,8 @@ module.exports = {
 
       const availableActions = [
         {
-          emoji: '🛬',
-          label: 'Vote to land on ' + planet.name + ' ' + usageTag(0, 'land'),
+          emoji: `🛬`,
+          label: `Vote to land on ` + planet.name + ` ` + usageTag(0, `land`),
           action: ({ user, msg }) => {
             land({ msg, user, planet, guild })
           }
@@ -190,7 +190,7 @@ module.exports = {
       )
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
-        .setTitle('🛸 ' + otherGuild.ship.name)
+        .setTitle(`🛸 ` + otherGuild.ship.name)
         .setDescription(
           otherGuild.ship.status.docked
             ? `Docked on ${otherGuild.ship.status.docked}.`

@@ -1,21 +1,21 @@
-const send = require('../actions/send')
-const { log } = require('../botcommon')
+const send = require(`../actions/send`)
+const { log } = require(`../botcommon`)
 
 module.exports = {
-  tag: 'joinCrew',
+  tag: `joinCrew`,
   public: true,
   documentation: {
-    name: 'join',
-    value: 'Become a member of the ship\'s crew.',
-    emoji: '➕',
-    category: 'crew',
+    name: `join`,
+    value: `Become a member of the ship's crew.`,
+    emoji: `➕`,
+    category: `crew`,
     priority: 5
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:j|join)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:j|join)$`, `gi`).exec(content)
   },
   async action ({ msg, settings, game, ship }) {
-    log(msg, 'Join Crew', msg.guild.name)
+    log(msg, `Join Crew`, msg.guild.name)
 
     const res = await ship.addCrewMember(msg.author)
     send(msg, res.message)

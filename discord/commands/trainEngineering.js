@@ -87,9 +87,9 @@ and it needs labeled training data to improve its performance. The input data is
       description += `Excellent — You found all ${guess} ${targetEmoji} in the training data!\n`;
     } else if (guess > correctAnswer * 0.8) {
       description += `Wow, you were close — You found ${guess} ${targetEmoji} in the training data.\n`;
-    } else if (guess < correctAnswer * 0.8 && guess > 0.25) {
+    } else if (guess < correctAnswer * 0.8 && guess > correctAnswer * 0.25) {
       description += `Thanks for your effort — You found ${guess} ${targetEmoji} in the training data!\n`;
-    } else if (guess != 0 && guess < 0.25) {
+    } else if (guess != 0 && guess < correctAnswer * 0.25) {
       description += `This must have been a tough one — At least you found ${guess} ${targetEmoji} in the training data!\n`;
     } else {
       description += `Hey! Did you forget to count the ${targetEmoji}? Try again!\n`;

@@ -14,8 +14,9 @@ a way to make money (quests??)
 actually write help guide
 
 **NEXT**
-ship chatter and flavor text on the different decks
-mine ore from environment (mining laser as weapon)
+athletics skill for generatepower and stamina gain
+ship chatter on the different decks
+mine ore from environment (and also use mining laser as weapon)
 html based scanner
 jettison equipment too
 tractor beam item

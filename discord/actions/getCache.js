@@ -8,7 +8,7 @@ module.exports = async ({ msg, guild, cache }) => {
   if (!cache) return
 
   if (!guild.context.caches.find((c) => c.id === cache.id)) {
-    msg.delete()
+    if (!msg.deleted) msg.delete()
     return send(msg, `Ouch! That cache has already been snagged!`)
   }
 

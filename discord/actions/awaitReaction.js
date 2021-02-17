@@ -2,6 +2,7 @@ const story = require('../../game/basics/story/story')
 const send = require('../actions/send')
 const { client, rawWatchers } = require('../bot')
 const { username } = require('../botcommon')
+const Discord = require('discord.js-light')
 
 module.exports = async ({
   msg,
@@ -14,6 +15,7 @@ module.exports = async ({
   guild,
   actionProps,
   allowNonMembers = false,
+  removeUserReactions = true,
 }) => {
   return new Promise(async (resolve) => {
     // make sure all other edits have gone through so we don't lose the commands
@@ -66,6 +68,11 @@ module.exports = async ({
       // check if they're actually a member of the game
       const member = (guild?.ship?.members || []).find((m) => m.id === user.id)
       if (!allowNonMembers && !member) return
+
+      if (removeUserReactions) {
+        const reaction = await new Discord.MessageReaction(client, data, msg)
+        reaction.users.remove(data.user_id)
+      }
 
       const userReactedWithEmoji = data.emoji.id
         ? `${data.emoji.name}:${data.emoji.id}`

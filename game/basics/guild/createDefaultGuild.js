@@ -39,11 +39,11 @@ module.exports = function ({ discordGuild, channelId }) {
         // },
       ],
       weapon: [
-        // {
-        //   id: 'basic1',
-        //   repaired: Date.now(),
-        //   repair: 0.7,
-        // },
+        {
+          id: 'starter',
+          repaired: Date.now(),
+          repair: 0.7,
+        },
       ],
       telemetry: [
         {

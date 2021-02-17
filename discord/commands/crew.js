@@ -19,6 +19,8 @@ module.exports = {
       .setColor(APP_COLOR)
       .setTitle(`👨‍👩‍👧‍👧 Crew Quarters`)
 
+    embed.description = `This section of the ship has the smell of life about it. Off-duty members pass by — on their way to the mess hall, no doubt, or to the gym for training.`
+
     embed.fields = [
       {
         name: `👩‍👩‍👧‍👦 Crew`,

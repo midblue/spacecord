@@ -17,6 +17,8 @@ module.exports = {
       .setColor(APP_COLOR)
       .setTitle(`🎛 Main Deck`)
 
+    embed.description = `The main deck of the ship hums with activity as deck workers tend to the ship's equipment and cargo, and overseers monitor the ship's status.`
+
     const reactions = [
       {
         emoji: '📊',

@@ -21,6 +21,8 @@ module.exports = {
       .setColor(APP_COLOR)
       .setTitle(`🕹 Flight Deck`)
 
+    embed.description = `A cadre of pilots sits clustered around the ship's controls. The view from the windows beyond shows a full panorama of the ship's surroundings.`
+
     const reactions = []
     if (guild.ship.status.docked)
       reactions.push({

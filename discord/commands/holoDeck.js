@@ -21,6 +21,8 @@ module.exports = {
       .setColor(APP_COLOR)
       .setTitle(`🕹 Holo Deck`)
 
+    embed.description = `The dazzling array of the map projection in the center of the room provides a centerpiece around which the crew's cartogaphers and technicians operate the ship's various sensors and beacons.`
+
     const reactions = []
     const scannableShips =
       !guild.ship.status.docked &&

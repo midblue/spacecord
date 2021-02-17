@@ -1,20 +1,13 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const {
-  numberToEmoji,
-  capitalize,
-  percentToTextBars,
-  msToTimeString,
-  usageTag,
-} = require('../../common')
+const { capitalize, usageTag } = require('../../common')
 const awaitReaction = require('../actions/awaitReaction')
 const Discord = require('discord.js-light')
-const staminaRequirements = require('../../game/basics/crew/staminaRequirements')
 const minigames = {
-  engineering: require('../common/engineeringMinigame'),
-  mechanics: require('../common/mechanicsMinigame'),
-  piloting: require('../common/pilotingMinigame'),
-  munitions: require('../common/munitionsMinigame'),
+  engineering: require('../minigames/engineeringMinigame'),
+  mechanics: require('../minigames/mechanicsMinigame'),
+  piloting: require('../minigames/pilotingMinigame'),
+  munitions: require('../minigames/munitionsMinigame'),
 }
 
 module.exports = {

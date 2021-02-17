@@ -110,6 +110,7 @@ module.exports = async ({
     time: time,
     listeningType: 'votes',
     respondeeFilter,
+    removeUserReactions: false,
   })
   done = true
   if (pollType) delete thisGuild.activePolls[pollType]

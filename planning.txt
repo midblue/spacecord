@@ -4,6 +4,7 @@ i can train for someone else lol
 cache not giving me the stuff
 
 **MVP**
+.weapons -> see recharge times, dmg, repair, acc%, etc
 actual minigames for training and repairing
 determine good xp numbers for training
 better generatepower
@@ -13,16 +14,16 @@ a way to make money (quests??)
 actually write help guide
 
 **NEXT**
-ship chatter and such flavor text on the different decks
+ship chatter and flavor text on the different decks
 mine ore from environment (mining laser as weapon)
 html based scanner
 jettison equipment too
-booby trap cache item
 tractor beam item
 mini battleship game for munitions
 single-use items
 	teleporters
 	trackers
+	booby trap cache
 implement map
 more other ship interaction options
 	repair
@@ -33,6 +34,7 @@ see all docked ships on a planet
 global leaderboard
 status report on ship
 cantina & cantina chatter (report)
+
 
 
 space for equipment vs space for cargo in chasses

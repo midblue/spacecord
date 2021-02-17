@@ -1,6 +1,6 @@
 const send = require('../actions/send')
 const { log } = require('../botcommon')
-const munitionsMinigame = require('../common/munitionsMinigame')
+const munitionsMinigame = require('../minigames/munitionsMinigame')
 
 module.exports = {
   tag: 'trainMunitions',

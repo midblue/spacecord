@@ -45,7 +45,7 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
     const puzzleMessage = (await send(msg, mojcodeSnippet))[0]
 
     setTimeout(() => {
-      puzzleMessage.delete()
+      if (!puzzleMessage.deleted) puzzleMessage.delete()
     }, time)
 
     const handler = (receivedMessage) => {
@@ -66,7 +66,7 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
 
       clearTimeout(noInputTimeout)
 
-      receivedMessage.delete()
+      if (!receivedMessage.deleted) receivedMessage.delete()
       collector.stop()
       resolve({
         rewardXp: rewardXp,
@@ -77,8 +77,8 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
 
     const collector = new Discord.MessageCollector(msg.channel, handler)
     const noInputTimeout = setTimeout(() => {
-      sentMessage.delete()
-      puzzleMessage.delete()
+      if (!sentMessage.deleted) sentMessage.delete()
+      if (!puzzleMessage.deleted) puzzleMessage.delete()
       collector.stop()
       resolve({})
     }, 20 * 1000)

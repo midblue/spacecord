@@ -5,6 +5,7 @@ const Discord = require('discord.js-light')
 const textOptions = require('../defaults/typingTestOptions')
 const { applyCustomParams } = require('../botcommon')
 const { allSkills } = require('../../game/gamecommon')
+const readyCheck = require('../actions/readyCheck')
 
 module.exports = ({ msg, user, guild }) => {
   return new Promise(async (resolve) => {
@@ -30,14 +31,19 @@ module.exports = ({ msg, user, guild }) => {
     // ------- make game embed
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle(`${msg.author.nickname} | ${emoji}Mechanics Training`)
-      .setDescription(`Type as many sentences as fast as you can within the time limit!
+      .setTitle(`${emoji} Mechanics Training | ${msg.author.nickname}`)
+      .setDescription(`When it comes to mechanics, speed and accuracy are paramount, as is teamwork. This training regimen has been specifically designed to boost your capabilities in all of the above.
+
+Type as many sentences as fast as you can within the time limit!
 One line per message.
-You'll gain XP for speed and accuracy.
 Capitalization doesn't matter, but copy-and-pasting won't work.
-Your crewmates can help too, if they want to.`)
+Your crewmates can help out.`)
 
     embed.description += `\n\n**You have ${(time / 1000).toFixed(0)} seconds.**`
+
+    // ------- wait for them to say I'm Ready
+    const sentMessage = (await send(msg, embed))[0]
+    await readyCheck({ msg: sentMessage, embed, user })
 
     // ------- get challenge text to use
     let challengeTextInOneArray = []
@@ -58,13 +64,14 @@ Your crewmates can help too, if they want to.`)
     embed.description +=
       '\n\n**↓↓↓ Type these sentences! ↓↓↓**\n' +
       challengeTextInOneArray.join('\n')
-    const sentMessage = (await send(msg, embed))[0]
+    await sentMessage.edit(embed)
 
     // ------- define fuzzy search
     fuse = new Fuse(sentTextOptions, {
       includeScore: true,
       keys: ['target'],
       threshold: 1, // 1 is anything
+      minMatchCharLength: 8,
     })
 
     // ------- define message collect action
@@ -108,7 +115,9 @@ Your crewmates can help too, if they want to.`)
     // ------- end of game
     setTimeout(async () => {
       setTimeout(() => {
-        ;[...messagesToDelete].forEach((c) => c.delete())
+        ;[...messagesToDelete].forEach((c) => {
+          if (!c.deleted) c.delete()
+        })
       }, 500)
       collector.stop()
 

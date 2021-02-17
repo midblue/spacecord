@@ -185,7 +185,7 @@ module.exports = async ({ msg, guild }) => {
   }
 
   const finalJettisonVote = async (sentMessage) => {
-    sentMessage.delete()
+    if (!sentMessage.deleted) sentMessage.delete()
 
     detailsEmbed.setTitle(
       `Jettison ${amountToJettison.toFixed(2)} ${

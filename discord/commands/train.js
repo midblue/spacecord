@@ -19,14 +19,15 @@ module.exports = {
     priority: 69,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:train|xp)$`, 'gi').exec(content)
+    return new RegExp(`^${settings.prefix}(?:t|train|xp)$`, 'gi').exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, author }) {
     log(msg, 'Train', msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
-      .setTitle(`Train | ${author.nickname}`)
+      .setTitle(`🏋️‍♂️ Train | ${author.nickname}`)
+    embed.description = `You step into the gym, which resembles less the sweaty muscle factories of the old days and more a holographic light show. Other crew members around you are deeply immersed in simulations of all kinds.`
 
     let trainableSkills = await authorCrewMemberObject.getTrainableSkills()
 

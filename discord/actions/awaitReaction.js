@@ -16,11 +16,14 @@ module.exports = async ({
   actionProps,
   allowNonMembers = false,
   removeUserReactions = true,
+  endOnReaction = false,
 }) => {
   return new Promise(async (resolve) => {
     // make sure all other edits have gone through so we don't lose the commands
     // todo confirm this works
     await SLEEP(200)
+
+    let ended = false
 
     if (embed) {
       if ((reactions && reactions.length) || listeningType)
@@ -45,8 +48,27 @@ module.exports = async ({
 
     let collectedReactions = []
 
-    // define an event handler that takes raw API data and filters it
+    // ending function
+    const end = () => {
+      if (ended) return
+      ended = true
+      rawWatchers.splice(rawWatchers.indexOf(eventHandler), 1)
+      if (embed) {
+        delete embed.footer
+        if (embed.fields) {
+          // console.log(JSON.stringify(embed.fields) + '121221313123')
+          const fieldIndex = embed.fields.findIndex(
+            (f) => f.id === 'commandLabel',
+          )
+          if (fieldIndex) embed.fields.splice(fieldIndex, 1)
+        }
+        if (!msg.deleted) msg.edit(embed)
+      }
+      if (!msg.deleted) msg.reactions.removeAll().catch((e) => {})
+      resolve(collectedReactions)
+    }
 
+    // define an event handler that takes raw API data and filters it
     const eventHandler = async (event) => {
       // `event.t` is the raw event name
       if (
@@ -142,25 +164,12 @@ module.exports = async ({
           guild,
           ...(actionProps || {}),
         })
+
+      if (endOnReaction) end()
     }
 
     rawWatchers.push(eventHandler)
 
-    setTimeout(() => {
-      rawWatchers.splice(rawWatchers.indexOf(eventHandler), 1)
-      if (embed) {
-        delete embed.footer
-        if (embed.fields) {
-          // console.log(JSON.stringify(embed.fields) + '121221313123')
-          const fieldIndex = embed.fields.findIndex(
-            (f) => f.id === 'commandLabel',
-          )
-          if (fieldIndex) embed.fields.splice(fieldIndex, 1)
-        }
-        if (!msg.deleted) msg.edit(embed)
-      }
-      if (!msg.deleted) msg.reactions.removeAll().catch((e) => {})
-      resolve(collectedReactions)
-    }, time)
+    setTimeout(end, time)
   })
 }

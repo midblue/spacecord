@@ -20,7 +20,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Buy ${part.emoji} ${part.displayName} for \`💳${cost}\` credits? | Vote started by ${msg.author.nickname}`
+    `Buy ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits? | Vote started by ${msg.author.nickname}`
   )
   voteEmbed.description = willReplace
     ? `Warning: This part will replace your existing ${
@@ -55,7 +55,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   // vote passed
   guild.ship.logEntry(story.buy.equipment.votePassed(part, cost))
 
-  voteEmbed.title = `Bought ${part.emoji} ${part.displayName} for \`💳${cost}\` credits`
+  voteEmbed.title = `Bought ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits`
 
   voteEmbed.description = story.buy.equipment.votePassed(part, cost)
 
@@ -65,7 +65,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
       `\n\n` + story.sell.equipment.votePassed(soldPart, soldCredits)
   }
 
-  voteEmbed.description += `\n\nYou have \`💳${Math.round(
+  voteEmbed.description += `\n\nYou have \`💳 ${Math.round(
     guild.ship.credits
   )}\` credits remaining.`
 

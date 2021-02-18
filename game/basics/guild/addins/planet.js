@@ -73,7 +73,7 @@ module.exports = (guild) => {
           : dockedShips.length
     })
     fields.push({
-      name: `💳 Your Credits`,
+      name: `💳  Your Credits`,
       value: Math.round(guild.ship.credits)
     })
     return fields

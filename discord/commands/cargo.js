@@ -26,7 +26,7 @@ module.exports = {
         type: `credits`,
         displayName: `Credits`,
         amount: guild.ship.credits,
-        emoji: `💳`
+        emoji: `💳 `
       })
     }
 

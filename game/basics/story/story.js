@@ -251,11 +251,11 @@ module.exports = {
       `"Damn," you say as you turn your credits onto the counter. "I thought we had enough to pay for this, but I guess we don't..." You shrug and return to shopping.`,
     equipment: {
       voteFailed: (part, cost) =>
-        `The crew decides collectively not to buy a ${part.emoji}${part.displayName} for \`💳${cost}\` credits.`,
+        `The crew decides collectively not to buy a ${part.emoji}${part.displayName} for \`💳 ${cost}\` credits.`,
       votePassed: (part, cost) =>
         `You bought a brand new ${part.emoji} ${
           part.displayName
-        }! It cost you \`💳${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${
+        }! It cost you \`💳 ${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${
           part.type === `chassis`
             ? `all of your equipment in it.`
             : `it in its housing.`
@@ -267,19 +267,19 @@ module.exports = {
           amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
         } of ${cargo.emoji}${
           cargo.displayName
-        } for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
+        } for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
         `You bought ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
           cargo.emoji
-        }${cargo.displayName} for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`
+        }${cargo.displayName} for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`
     }
   },
   sell: {
     equipment: {
       voteFailed: (part, cost) =>
-        `The crew decides collectively not to sell your ${part.emoji}${part.displayName} for \`💳${cost}\` credits.`,
+        `The crew decides collectively not to sell your ${part.emoji}${part.displayName} for \`💳 ${cost}\` credits.`,
       votePassed: (part, credits) =>
-        `You've sold your ${part.emoji}${part.displayName} for \`💳${credits}\` credits.`
+        `You've sold your ${part.emoji}${part.displayName} for \`💳 ${credits}\` credits.`
     },
     cargo: {
       voteFailed: (cargo, amount, cost) =>
@@ -287,11 +287,11 @@ module.exports = {
           amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
         } of ${cargo.emoji}${
           cargo.displayName
-        } for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`,
+        } for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
         `You sold ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
           cargo.emoji
-        }${cargo.displayName} for \`💳${cost}\` credits per ${WEIGHT_UNIT}.`
+        }${cargo.displayName} for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`
     }
   },
   repair: {

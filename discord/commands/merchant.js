@@ -130,7 +130,7 @@ module.exports = {
       )
       embed.fields = [
         {
-          name: `💳 Credits`,
+          name: `💳  Credits`,
           value: `${guild.ship.credits}`,
           inline: true
         },
@@ -344,7 +344,7 @@ module.exports = {
       )
       embed.fields = [
         {
-          name: `💳 Credits`,
+          name: `💳  Credits`,
           value: `${guild.ship.credits}`,
           inline: true
         },

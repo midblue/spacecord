@@ -28,7 +28,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
       cargoData.emoji
     } ${
       cargoData.displayName
-    } for \`💳${cost}\` credits per ${WEIGHT_UNIT} (\`💳${
+    } for \`💳 ${cost}\` credits per ${WEIGHT_UNIT} (\`💳 ${
       cost * amount
     }\` total) ? | Vote started by ${msg.author.nickname}`
   )
@@ -61,12 +61,12 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   voteEmbed.title = `Sold ${amount} ${
     amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
-  } of ${cargoData.emoji} ${cargoData.displayName} for \`💳${
+  } of ${cargoData.emoji} ${cargoData.displayName} for \`💳 ${
     cost * amount
   }\` credits.`
 
   voteEmbed.description =
-    `You now have \`💳${Math.round(guild.ship.credits)}\` credits.` +
+    `You now have \`💳 ${Math.round(guild.ship.credits)}\` credits.` +
     `\n\nShip weight is ` +
     percentToTextBars(
       guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight

@@ -131,13 +131,13 @@ module.exports = {
           .setTitle(
             `${part.emoji} ${part.displayName} (${capitalize(
               type
-            )}) \`💳${cost} Credits\``
+            )}) \`💳 ${cost} Credits\``
           )
           .setDescription(
             `${alreadyOwned ? `_(Already Owned)_\n` : ``}` +
               `${
                 tooExpensive
-                  ? `_(Insufficient Credits! You need \`💳${
+                  ? `_(Insufficient Credits! You need \`💳 ${
                     cost - guild.ship.credits
                   }\` more)_\n`
                   : ``

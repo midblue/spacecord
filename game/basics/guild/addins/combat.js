@@ -8,14 +8,16 @@ const enemyNonVotingAdjustment = 0.8
 
 module.exports = (guild) => {
   guild.ship.canAttack = () => {
-    if (!guild.ship.equipment.weapon.length) return false
+    if (!guild.ship.equipment.weapon.length)
+      return false
     const canAttackWeapons = guild.ship.equipment.weapon.filter(
       (w) =>
         w.repair > 0 &&
         (w.lastAttack || 0) <
           Date.now() - (w.rechargeTime || 1) * STEP_INTERVAL
     )
-    if (!canAttackWeapons.length) return false
+    if (!canAttackWeapons.length)
+      return false
     return canAttackWeapons
   }
   guild.ship.nextAttackInMs = () => {
@@ -31,7 +33,8 @@ module.exports = (guild) => {
   }
 
   guild.ship.checkForDeath = () => {
-    if (guild.ship.status.dead) return true
+    if (guild.ship.status.dead)
+      return true
     const dead = guild.ship.currentHp() < 0.0001
     if (dead) {
       guild.ship.status.dead = true
@@ -69,14 +72,17 @@ module.exports = (guild) => {
 
     // calculate accuracy
     let advantageAccuracyMultiplier = 1
-    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random())
     // crit
-    { advantageAccuracyMultiplier = Math.min(1 + randomizedAdvantage / 100, 2) } else if (
+    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random()) {
+      advantageAccuracyMultiplier = Math.min(1 + randomizedAdvantage / 100, 2)
+    }
+    // glancing
+    else if (
       randomizedAdvantage <
       -1 * advantageRandomChoiceRange * Math.random()
-    )
-    // glancing
-    { advantageAccuracyMultiplier = Math.max(1 - randomizedAdvantage / 100, 0.5) }
+    ) {
+      advantageAccuracyMultiplier = Math.max(1 - randomizedAdvantage / 100, 0.5)
+    }
 
     const finalAccuracy = adjustedAccuracy * advantageAccuracyMultiplier
     const accuracyTarget = Math.random()
@@ -109,7 +115,8 @@ module.exports = (guild) => {
 
     // durability loss
     weapon.repair -= weapon.durabilityLostOnUse
-    if (weapon.repair < 0) weapon.repair = 0
+    if (weapon.repair < 0)
+      weapon.repair = 0
 
     // miss
     if (!didHit) {
@@ -137,18 +144,17 @@ module.exports = (guild) => {
 
     // calculate damage,
     let advantageDamageMultiplier = 1
-    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random())
     // crit
-    {
+    if (randomizedAdvantage > advantageRandomChoiceRange * Math.random()) {
       advantageDamageMultiplier =
         Math.min(1 + randomizedAdvantage / 100, 2) +
         flatCritMultiplierDamageBoost
-    } else if (
+    }
+    // glancing
+    else if (
       randomizedAdvantage <
       -1 * advantageRandomChoiceRange * Math.random()
-    )
-    // glancing
-    {
+    ) {
       advantageDamageMultiplier =
         Math.max(1 - randomizedAdvantage / 100, 0.3) -
         flatCritMultiplierDamageBoost
@@ -237,7 +243,8 @@ module.exports = (guild) => {
         inline: true
       }
     ]
-    if (!miss) outputEmbed.footer = story.defend.advice()
+    if (!miss)
+      outputEmbed.footer = story.defend.advice()
 
     const damageTaken = []
     let damageRemaining = damage
@@ -267,7 +274,8 @@ module.exports = (guild) => {
           const damageToArmorAsPercent =
             damageToArmor / randomUnbrokenArmor.baseHp
           randomUnbrokenArmor.repair -= damageToArmorAsPercent
-          if (randomUnbrokenArmor.repair <= 0) randomUnbrokenArmor.repair = 0
+          if (randomUnbrokenArmor.repair <= 0)
+            randomUnbrokenArmor.repair = 0
           damageTaken.push({
             equipment: randomUnbrokenArmor,
             damage:
@@ -308,11 +316,14 @@ module.exports = (guild) => {
         const damageToEquipmentAsPercent = damageRemaining / target.baseHp
 
         target.repair -= damageToEquipmentAsPercent
-        if (target.repair <= 0) target.repair = 0
-        if (target.onTakeDamage) target.onTakeDamage(guild)
+        if (target.repair <= 0)
+          target.repair = 0
+        if (target.onTakeDamage)
+          target.onTakeDamage(guild)
         damageDealt = (previousEqRepair - target.repair) * target.baseHp
         damageRemaining -= damageDealt
-        if (damageRemaining < 0.000001) damageRemaining = 0
+        if (damageRemaining < 0.000001)
+          damageRemaining = 0
 
         damageTaken.push({
           equipment: target,

@@ -3,6 +3,7 @@ const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
+const { usageTag } = require(`../../common`)
 
 module.exports = {
   tag: `scanArea`,
@@ -25,12 +26,15 @@ module.exports = {
     const authorCrewMemberObject = guild.ship.members.find(
       (m) => m.id === msg.author.id
     )
-    if (!authorCrewMemberObject) return console.log(`no user found in scanArea`)
+    if (!authorCrewMemberObject)
+      return console.log(`no user found in scanArea`)
     const staminaRes = authorCrewMemberObject.useStamina(`scan`)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok)
+      return send(msg, staminaRes.message)
 
     const scanRes = await ship.scanArea()
-    if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
+    if (!scanRes.ok)
+      return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -47,7 +51,8 @@ module.exports = {
     embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })))
     const sentMessage = (await send(msg, embed))[0]
 
-    if (scanRes.message) send(msg, scanRes.message)
+    if (scanRes.message)
+      send(msg, scanRes.message)
 
     const reactions = scanRes.actions || []
 
@@ -71,6 +76,8 @@ module.exports = {
 
     reactions.push({
       emoji: `📡`,
+      label: `Scan Again ` +
+      usageTag(guild.ship.equipment.telemetry[0].powerUse, `scan`),
       action () {
         runGuildCommand({ msg, commandTag: `scanArea` })
       }

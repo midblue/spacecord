@@ -114,8 +114,8 @@ module.exports = {
       {
         emoji: `🏋️‍♂️`,
         label: `Train your skills`,
-        action: async () => {
-          runGuildCommand({ msg, commandTag: `train` })
+        action: async ({ user, }) => {
+          runGuildCommand({ msg: { ...msg, author: user }, commandTag: `train` })
         }
       }
     ]

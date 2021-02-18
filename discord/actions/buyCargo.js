@@ -77,7 +77,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     `/` +
     Math.round(guild.ship.equipment.chassis[0].maxWeight) +
     ` ` +
-    WEIGHT_UNITS
+    WEIGHT_UNITS + (guild.ship.isOverburdened() ? `\nYou're overburdened! You won't be able to move until you drop or sell something.` : ``)
 
   voteResult.sentMessage.edit(voteEmbed)
 }

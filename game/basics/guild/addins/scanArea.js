@@ -18,8 +18,10 @@ module.exports = (guild) => {
     let haveEnoughPower = true
     let powerRes = { ok: true }
     if (telemetry && !eyesOnly) { powerRes = guild.ship.usePower(telemetry.powerUse) }
-    if (!powerRes.ok) haveEnoughPower = false
-    if (powerRes.message) messages.push(powerRes.message)
+    if (!powerRes.ok)
+      haveEnoughPower = false
+    if (powerRes.message)
+      messages.push(powerRes.message)
 
     if (!telemetry || !haveEnoughPower || eyesOnly) {
       const scanResult = guild.context.scanArea({
@@ -33,8 +35,10 @@ module.exports = (guild) => {
         0
       )
       let preMessage = `Since you're out of power,`
-      if (!telemetry) preMessage = `Since you don't have any telemetry`
-      if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
+      if (!telemetry)
+        preMessage = `Since you don't have any telemetry`
+      if (eyesOnly)
+        preMessage = `Deciding that technology is for the weak,`
       messages.push(
         preMessage +
           ` you look out out the window. 
@@ -57,7 +61,8 @@ You see ${
       }
     }
 
-    if (telemetry) range = telemetry.range
+    if (telemetry)
+      range = telemetry.range
     const scanResult = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
@@ -134,48 +139,19 @@ You see ${
 
     // ---------------- actions ------------------
     const actions = []
-    const interactableGuilds = guild.context.scanArea({
-      x: guild.ship.location[0],
-      y: guild.ship.location[1],
-      range: guild.ship.maxActionRadius(),
-      excludeIds: guild.guildId
-    }).guilds
-    if (interactableGuilds && interactableGuilds.length) {
+    if (guild.ship.canInteract())
       actions.push({
         emoji: `👉`,
+        label: `See/Interact With Nearby Objects`,
         async action ({ user, msg }) {
           await runGuildCommand({
             msg,
             author: user,
             commandTag: `nearby`,
-            props: { interactableGuilds }
           })
         }
       })
-    } else if (
-      scanResult.caches.filter(
-        (c) =>
-          distance(...c.location, ...guild.ship.location) <=
-          guild.ship.tractorRadius()
-      ).length ||
-      (!guild.ship.status.docked &&
-        scanResult.planets.filter(
-          (c) =>
-            distance(...c.location, ...guild.ship.location) <=
-            guild.ship.equipment.chassis[0].interactRadius
-        ).length)
-    ) {
-      actions.push({
-        emoji: `👉`,
-        async action ({ user, msg, guild }) {
-          runGuildCommand({
-            commandTag: `nearby`,
-            msg,
-            author: user
-          })
-        }
-      })
-    }
+    
     return {
       ok: true,
       message: messages,

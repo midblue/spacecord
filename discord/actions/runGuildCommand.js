@@ -1,6 +1,6 @@
 const client = require(`../bot`).client
 const { log } = require(`../botcommon`)
-const { test } = require(`../commands/index`)
+const { test } = require(`../commands`)
 
 module.exports = async ({
   guildId,

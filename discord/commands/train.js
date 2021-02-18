@@ -3,12 +3,7 @@ const { log } = require(`../botcommon`)
 const { capitalize, usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
-const minigames = {
-  engineering: require(`../minigames/engineeringMinigame`),
-  mechanics: require(`../minigames/mechanicsMinigame`),
-  piloting: require(`../minigames/pilotingMinigame`),
-  munitions: require(`../minigames/munitionsMinigame`)
-}
+const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
   tag: `train`, // this is also the 'train' command
@@ -47,18 +42,10 @@ module.exports = {
         }, ${(e.percentToLevel * 100).toFixed(0)}% to level ${e.level + 1}) ` +
         usageTag(0, e.staminaRequired),
 
-      action: ({ msg, guild }) => {
-        const member =
-          authorCrewMemberObject ||
-          guild.ship.members.find((m) => m.id === msg.author.id)
-        if (!member) return console.log(`no user found in train`)
-        const staminaRes = member.useStamina(e.staminaRequired)
-        if (!staminaRes.ok) return send(msg, staminaRes.message)
-
-        minigames[e.name]({
-          msg,
-          user: member,
-          guild
+      action: ({ msg, guild, user }) => {
+        runGuildCommand({
+          msg: msg,
+          commandTag: `train${capitalize(e.name)}`
         })
       }
     }))

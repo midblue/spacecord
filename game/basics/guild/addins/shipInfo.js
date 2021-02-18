@@ -11,7 +11,8 @@ const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 
 module.exports = (guild) => {
   guild.ship.canInteract = () => {
-    if (guild.ship.status.docked) return false
+    if (guild.ship.status.docked)
+      return false
     const interactableThings = {
       guilds: guild.context.scanArea({
         x: guild.ship.location[0],
@@ -24,13 +25,13 @@ module.exports = (guild) => {
         y: guild.ship.location[1],
         range: guild.ship.tractorRadius(),
         excludeIds: guild.guildId
-      }),
+      }).caches,
       planets: guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
         range: guild.ship.equipment.chassis[0].interactRadius,
         excludeIds: guild.guildId
-      })
+      }).planets
     }
     return (
       interactableThings.guilds.length +
@@ -100,85 +101,6 @@ module.exports = (guild) => {
       }
     })
 
-    // actions.push({
-    //   emoji: '📡',
-    //   label:
-    //     'Scan Area ' +
-    //     usageTag(guild.ship.equipment.telemetry[0].powerUse, 'scan'),
-    //   requirements: {
-    //     engineering: 2,
-    //   },
-    //   async action({ user, msg }) {
-    //     await runGuildCommand({
-    //       msg,
-    //       author: user,
-    //       commandTag: 'scanArea',
-    //     })
-    //   },
-    // })
-
-    // if (!guild.ship.status.docked) {
-    //   actions.push({
-    //     emoji: '🧭',
-    //     label: 'Start Direction Vote ' + usageTag(null, 'poll'),
-    //     async action({ user, msg }) {
-    //       await runGuildCommand({
-    //         msg,
-    //         author: user,
-    //         commandTag: 'direction',
-    //       })
-    //     },
-    //   })
-    //   actions.push({
-    //     emoji: '⏩',
-    //     label: 'Start Speed Vote ' + usageTag(null, 'poll'),
-    //     async action({ user, msg }) {
-    //       await runGuildCommand({
-    //         msg,
-    //         author: user,
-    //         commandTag: 'speed',
-    //       })
-    //     },
-    //   })
-    // }
-
-    // actions.push({
-    //   emoji: '🏃‍♀️',
-    //   label: 'Generate Power ' + usageTag(null, 'generatePower'),
-    //   async action({ user, msg }) {
-    //     await runGuildCommand({
-    //       commandTag: 'generatePower',
-    //       author: user,
-    //       msg,
-    //       props: { exerciseType: 'Treadmill' },
-    //     })
-    //   },
-    // })
-
-    // if (guild.ship.equipment.transceiver?.[0])
-    //   actions.push({
-    //     emoji: '📣',
-    //     label: 'Broadcast',
-    //     async action({ user, msg }) {
-    //       await runGuildCommand({
-    //         commandTag: 'broadcast',
-    //         author: user,
-    //         msg,
-    //       })
-    //     },
-    //   })
-
-    // actions.push({
-    //   emoji: '📊',
-    //   label: 'Ship Info',
-    //   async action({ user, msg }) {
-    //     await runGuildCommand({
-    //       commandTag: 'shipInfo',
-    //       author: user,
-    //       msg,
-    //     })
-    //   },
-    // })
 
     return actions
   }
@@ -207,7 +129,8 @@ module.exports = (guild) => {
           bearingToDegrees(guild.ship.bearing).toFixed(0) +
           ` degrees`
       })
-    } else {
+    }
+    else {
       const dockedPlanet = guild.context.planets.find(
         (p) => p.name === guild.ship.status.docked
       )

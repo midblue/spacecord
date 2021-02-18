@@ -116,6 +116,12 @@ module.exports = (guild) => {
     )
   }
 
+  guild.ship.isOverburdened = () => {
+    return (
+      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
+    ) >= 1
+  }
+
   guild.ship.move = (useFuel = true, coordinates) => {
     const ship = guild.ship
 

@@ -1,10 +1,10 @@
 const { spawn, liveify } = require(`./basics/guild/guild`)
-const spawnPlanets = require(`./basics/planet`)
+const spawnPlanets = require(`./basics/planet`).spawnAll
 const caches = require(`./basics/caches`)
 const story = require(`./basics/story/story`)
 const { log } = require(`./gamecommon`)
 const { pointIsInsideCircle, distance } = require(`../common`)
-const coreLoop = require(`./core loop/index`)
+const coreLoop = require(`./core loop/`)
 const db = require(`../db/db`)
 
 //
@@ -15,12 +15,12 @@ const db = require(`../db/db`)
 
 const game = {
   async init () {
-    const a = (await db.guild.getAll()).forEach((g) =>
-      this.loadExistingGuild(g)
-    )
-    log(`init`, `Loaded ${this.guilds.length} guilds from db`)
-
-    const b = (await db.caches.getAll()).forEach((c) => this.loadCache(c))
+    (await db.guild.getAll()).forEach((g) =>
+      this.loadExistingGuild(g))
+    
+    log(`init`, `Loaded ${this.guilds.length} guilds from db`);
+    
+    (await db.caches.getAll()).forEach((c) => this.loadCache(c))
     log(`init`, `Loaded ${this.caches.length} caches from db`)
 
     this.planets = await spawnPlanets({ context: this })
@@ -142,7 +142,8 @@ const game = {
   },
 
   scanArea ({ x, y, range, excludeIds = [] }) {
-    if (!Array.isArray(excludeIds)) excludeIds = [excludeIds]
+    if (!Array.isArray(excludeIds))
+      excludeIds = [excludeIds]
     return {
       guilds: this.guilds.filter((g) => {
         return (
@@ -193,9 +194,7 @@ const game = {
       this.caches.findIndex((c) => c.id === cacheId),
       1
     )
-    return {
-      ok: true
-    }
+    return { ok: true }
   }
 }
 

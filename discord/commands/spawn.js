@@ -28,9 +28,15 @@ module.exports = {
       send(msg, res.message)
       const res2 = await res.guild.ship.addCrewMember(msg.author)
       send(msg, res2.message)
-    } else if (res.guild.ship.status.dead) {
-      if (authorIsAdmin || res.guild.ship.captain === msg.author.id) { res.guild.ship.respawn(msg) } else send(msg, `Only the captain or a server admin can respawn the ship.`)
-    } else {
+    }
+    else if (res.guild.ship.status.dead) {
+      if (authorIsAdmin || res.guild.ship.captain === msg.author.id) {
+        res.guild.ship.respawn(msg)
+      }
+      else
+        send(msg, `Only the captain or a server admin can respawn the ship.`)
+    }
+    else {
       send(msg, res.message)
     }
   }

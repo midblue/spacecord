@@ -56,6 +56,6 @@ module.exports = async ({ msg, guild, cache }) => {
           (guild.ship.getTotalWeight() /
               guild.ship.equipment.chassis[0].maxWeight) *
               100
-        )}% of its maximum capacity.`)
+        )}% of its maximum capacity.`) + (guild.ship.isOverburdened() ? `\nYou're overburdened! You won't be able to move until you drop or sell something.` : ``)
   )
 }

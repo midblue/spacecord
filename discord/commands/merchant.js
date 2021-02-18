@@ -27,7 +27,7 @@ module.exports = {
     priority: 20
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:merchants?)$`, `gi`).exec(content)
+    return new RegExp(`^${settings.prefix}(?:merchants?|shops?)$`, `gi`).exec(content)
   },
   async action ({ msg, guild, buyOrSell, type, cost, amount }) {
     log(msg, `Merchant`, msg.guild.name)

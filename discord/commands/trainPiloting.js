@@ -1,6 +1,5 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
-const pilotingMinigame = require(`../minigames/pilotingMinigame`)
 
 module.exports = {
   tag: `trainPiloting`,
@@ -18,10 +17,12 @@ module.exports = {
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
-    if (!member) return console.log(`no user found in trainPiloting`)
+    if (!member)
+      return console.log(`no user found in trainPiloting`)
     if (!staminaRequired) { staminaRequired = authorCrewMemberObject.staminaRequiredFor(`piloting`) }
     const staminaRes = member.useStamina(`train`)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok)
+      return send(msg, staminaRes.message)
 
     pilotingMinigame({ msg, user: authorCrewMemberObject, guild })
   }

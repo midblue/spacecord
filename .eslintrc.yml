@@ -25,7 +25,10 @@ rules:
   block-spacing:
     - error
     - always
-  brace-style: 'off'
+  brace-style: 
+    - error
+    - stroustrup
+    - allowSingleLine: true
   camelcase: error
   capitalized-comments:
     - error
@@ -208,8 +211,12 @@ rules:
   no-void: error
   no-warning-comments: 'off'
   no-whitespace-before-property: error
-  nonblock-statement-body-position: error
-  object-curly-newline: error
+  nonblock-statement-body-position: 
+    - error
+    - below
+  object-curly-newline:
+    - error
+    - multiline: true
   object-curly-spacing:
     - error
     - always

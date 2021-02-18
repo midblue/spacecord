@@ -1,5 +1,6 @@
 const defaultServerSettings = require(`../../../discord/defaults/defaultServerSettings`)
 const factions = require(`../factions`)
+const planets = require(`../planet/index`).naiveList
 
 module.exports = function ({ discordGuild, channelId }) {
   const ship = {
@@ -9,7 +10,7 @@ module.exports = function ({ discordGuild, channelId }) {
     captain: false,
     status: {
       dead: false,
-      docked: `Origin`
+      docked: planets[Math.floor(Math.random() * planets.length)].name
     },
     power: 5,
     members: [],

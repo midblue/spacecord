@@ -1,13 +1,12 @@
 
 **BUGS**
-i can train for someone else from .me
-cache not giving me the stuff
+* i can train for someone else from .me
+* cache not giving me the stuff
 
 **MVP**
 .weapons -> see recharge times, dmg, repair, acc%, etc
-actual minigames for training and repairing
+actual minigames for piloting, repairing, power gen
 determine good xp numbers for training
-better generatepower
 more equipment
 more planets
 a way to make money (quests??)
@@ -36,6 +35,16 @@ global leaderboard
 status report on ship
 cantina & cantina chatter (report)
 
+piloting
+  angry birds style launcher but you type in degrees and power
+repair
+  get lots of broken parts of a string that you have to rearrange by typing like 41325 or something
+  crossword fill in the blank - get a clue and some letters filled in
+  follow complex set of directions (i.e. a manual) (manipulate something) (logic rules) to get simple answer ('XXYXYXX')
+  math puzzle
+generate power
+
+dice based game
 
 
 space for equipment vs space for cargo in chasses

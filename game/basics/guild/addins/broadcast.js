@@ -1,6 +1,6 @@
 const story = require(`../../story/story`)
 const runYesNoVote = require(`../../../../discord/actions/runYesNoVote`)
-const allTransceivers = require(`../../equipment/transceiver/index`)
+const allTransceivers = require(`../../equipment/transceiver`)
 const { msToTimeString, usageTag } = require(`../../../../common`)
 const staminaRequirements = require(`../../crew/staminaRequirements`)
 

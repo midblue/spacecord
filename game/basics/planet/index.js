@@ -12,7 +12,8 @@ const fs = require(`fs`)
 const planets = []
 fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith(`.js`) || file === `index.js`) return
+    if (!file.endsWith(`.js`) || file === `index.js`)
+      return
     planets.push({
       ...defaults(),
       ...require(`./${file}`),
@@ -33,8 +34,10 @@ function liveify (planet, context) {
   planet.context = context
 
   planet.getSizeDescriptor = function () {
-    if (this.size > 5) return `large`
-    if (this.size < 2) return `small`
+    if (this.size > 5)
+      return `large`
+    if (this.size < 2)
+      return `small`
     return `normal-sized`
   }
 
@@ -45,4 +48,4 @@ function liveify (planet, context) {
   }
 }
 
-module.exports = spawnAll
+module.exports = { spawnAll, naiveList: planets }

@@ -78,13 +78,17 @@ module.exports = ({ msg, user, guild }) => {
 
     // ------- wait for them to say I'm Ready
     const sentMessage = (await send(msg, embed))[0]
-    await readyCheck({ msg: sentMessage, embed, user })
+    const ready = await readyCheck({ msg: sentMessage, embed, user })
+    if (!ready) {
+      if (!sentMessage.deleted) sentMessage.delete()
+      return
+    }
 
     embed.fields = [
       {
         name: `Key`,
         value:
-          `📍Current Target, 💢Hit, ✖️Miss, 👍Current(Hit), 👎Current(Miss)`,
+          `\`📍Current Target\`, \`💢Hit\`, \`✖️Miss\`, \`👍Current(Hit)\`, \`👎Current(Miss)\``,
       },
       {
         name: `🧨 Shots Remaining`,

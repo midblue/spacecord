@@ -176,7 +176,7 @@ function staminaTag (stamina) {
   return `\`💪${stamina}\``
 }
 function creditsTag (credits) {
-  return `\`💳${credits}\``
+  return `\`💳 ${credits}\``
 }
 
 function arrayMove (arr, oldIndex, newIndex) {

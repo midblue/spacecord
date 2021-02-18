@@ -20,7 +20,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Sell ${part.emoji} ${part.displayName} for \`💳${cost}\` credits? | Vote started by ${msg.author.nickname}`
+    `Sell ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits? | Vote started by ${msg.author.nickname}`
   )
 
   const voteResult = await runYesNoVote({
@@ -49,10 +49,10 @@ module.exports = async ({ msg, part, cost, guild }) => {
 
   guild.ship.logEntry(story.sell.equipment.votePassed(part, cost))
 
-  voteEmbed.title = `Sold ${part.emoji} ${part.displayName} for \`💳${cost}\` credits`
+  voteEmbed.title = `Sold ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits`
 
   voteEmbed.description =
-    `You now have \`💳${Math.round(guild.ship.credits)}\` credits.` +
+    `You now have \`💳 ${Math.round(guild.ship.credits)}\` credits.` +
     `\n\nYour ship is now carrying ${Math.round(
       (guild.ship.getTotalWeight() /
         guild.ship.equipment.chassis[0].maxWeight) *

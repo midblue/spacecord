@@ -39,7 +39,7 @@ module.exports = (guild) => {
     if (dead) {
       guild.ship.status.dead = true
       guild.pushToGuild(story.ship.die(guild.ship))
-      guild.ship.jettisonAll()
+      guild.ship.jettisonAll(0.8)
     }
     return dead
   }
@@ -68,7 +68,7 @@ module.exports = (guild) => {
     const advantage = collectiveMunitionsSkill - enemyTotalPilotingLevel
     const randomizedAdvantage = advantage + advantage * (Math.random() - 0.5) // adjusts it from .5 to 1.5 of the advantage
     const adjustedAccuracy = weapon.hitPercent(attackDistance, enemyShip)
-    const adjustedDamage = weapon.damage * weapon.repair
+    const adjustedDamage = weapon.currentDamage()
 
     // calculate accuracy
     let advantageAccuracyMultiplier = 1

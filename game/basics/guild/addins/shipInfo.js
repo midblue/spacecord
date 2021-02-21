@@ -178,7 +178,7 @@ module.exports = (guild) => {
         `\n` +
         guild.ship.power.toFixed(1) +
         `/` +
-        guild.ship.maxPower().toFixed(0) +
+        guild.ship.maxPower().toFixed(1) +
         POWER_UNIT +
         ` (${Math.round(
           (guild.ship.power / guild.ship.maxPower() || 0) * 100
@@ -309,35 +309,5 @@ module.exports = (guild) => {
       fields,
       actions
     }
-  }
-
-  guild.ship.equipmentInfo = () => {
-    const fields = []
-    const actions = []
-
-    let index = 1
-    Object.keys(guild.ship.equipment)
-      .sort((a, b) => a - b)
-      .forEach((eqType) => {
-        guild.ship.equipment[eqType]
-          .sort((a, b) => a.displayName - b.displayName)
-          .forEach((e) => {
-            actions.push({
-              emoji: numberToEmoji(index),
-              label: `${e.emoji} \`${e.displayName}\` (${capitalize(eqType)})`,
-              action: async ({ user, msg }) => {
-                await runGuildCommand({
-                  msg,
-                  author: user,
-                  commandTag: `equipment`,
-                  props: { equipment: e }
-                })
-              }
-            })
-            index++
-          })
-      })
-
-    return { fields, actions }
   }
 }

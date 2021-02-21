@@ -4,7 +4,6 @@
 * cache not giving me the stuff
 
 **MVP**
-.weapons -> see recharge times, dmg, repair, acc%, etc
 actual minigames for piloting, repairing, power gen
 determine good xp numbers for training
 more equipment

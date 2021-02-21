@@ -8,7 +8,5 @@ module.exports = {
   damage: 2,
   rechargeTime: 0.7,
   damageType: `incendiary`,
-  requirements: {
-    munitions: 9
-  }
+  requirements: { munitions: 9 }
 }

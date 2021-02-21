@@ -2,36 +2,13 @@ const {
   capitalize,
   usageTag,
   percentToTextBars,
-  msToTimeString
+  msToTimeString,
+  numberToEmoji
 } = require(`../../../../common`)
 const equipmentTypes = require(`../../equipment/equipmentTypes`)
+const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 
 module.exports = (guild) => {
-  guild.ship.addPart = (part, cost) => {
-    let soldCredits = 0
-    let soldPart
-    if (equipmentTypes[part.type].singleton) {
-      soldPart = guild.ship.equipment[part.type][0]
-      if (soldPart) {
-        soldCredits = Math.round(
-          soldPart.baseCost * 0.5 * (cost / part.baseCost)
-        ) // half price, adjusted to the deal that you're getting now
-        guild.ship.credits += soldCredits
-      }
-    }
-
-    guild.ship.credits -= cost
-
-    part.repair = 1
-    part.repaired = Date.now()
-
-    if (equipmentTypes[part.type].singleton) { guild.ship.equipment[part.type] = [part] } else {
-      if (!guild.ship.equipment[part.type]) guild.ship.equipment[part.type] = []
-      guild.ship.equipment[part.type].push(part)
-    }
-
-    return { soldCredits, soldPart }
-  }
 
   guild.ship.addPart = (part, cost) => {
     let soldCredits = 0
@@ -51,8 +28,10 @@ module.exports = (guild) => {
     part.repair = 1
     part.repaired = Date.now()
 
-    if (equipmentTypes[part.type].singleton) { guild.ship.equipment[part.type] = [part] } else {
-      if (!guild.ship.equipment[part.type]) guild.ship.equipment[part.type] = []
+    if (equipmentTypes[part.type].singleton) { guild.ship.equipment[part.type] = [part] }
+    else {
+      if (!guild.ship.equipment[part.type])
+        guild.ship.equipment[part.type] = []
       guild.ship.equipment[part.type].push(part)
     }
 
@@ -62,6 +41,78 @@ module.exports = (guild) => {
   guild.ship.removePart = (part, cost) => {
     guild.ship.credits += cost
     guild.ship.equipment[part.type].splice((p) => p === part, 1)
+  }
+
+  guild.ship.equipmentInfo = (type) => {
+    const fields = []
+    const actions = []
+
+    let index = 1
+    Object.keys(guild.ship.equipment)
+      .sort((a, b) => a - b)
+      .filter((k) => type ? k === type : true)
+      .forEach((eqType) => {
+        guild.ship.equipment[eqType]
+          .sort((a, b) => a.displayName - b.displayName)
+          .forEach((e) => {
+            actions.push({
+              emoji: numberToEmoji(index),
+              label: `${e.emoji} \`${e.displayName}\` (${capitalize(eqType)})`,
+              equipment: e,
+              action: async ({ user, msg }) => {
+                await runGuildCommand({
+                  msg,
+                  commandTag: `equipment`,
+                  props: { equipment: e }
+                })
+              }
+            })
+            index++
+          })
+      })
+
+    return { fields, actions }
+  }
+
+  guild.ship.weaponsInfo = () => {
+    const fields = []
+    const actions = []
+
+    let index = 1
+    guild.ship.equipment.weapon
+      .sort((a, b) => a.displayName - b.displayName)
+      .forEach((w) => {
+        const timeUntilReady = ((w.lastAttack || 0) + (w.rechargeTime * STEP_INTERVAL)) - Date.now()
+        fields.push({
+          name: `${numberToEmoji(index)} ${w.emoji} \`${w.displayName}\``,
+          value: (timeUntilReady > 0
+            ? `・ **⏱ Recharges in ${msToTimeString(timeUntilReady)}**`
+            : `・ **✅ Ready to Fire** (⏱ ${msToTimeString((w.rechargeTime * STEP_INTERVAL))} cooldown)`) +
+          `\n` +
+          `・ 🔧 ${Math.round(w.repair * 1000) / 10}% Repair` +
+          `\n` +
+          `・ 📏 Range: ${w.range} ${DISTANCE_UNIT}` +
+          `\n` +
+          `・ 💥 Damage: ${Math.round(w.currentDamage() * 10) / 10}` +
+          `\n` +
+          `・ 🎲 Current Hit Chance: ${Math.round(w.hitPercent() * 1000) / 10}% at ${w.range / 2} ${DISTANCE_UNIT}`
+          ,
+        })
+        actions.push({
+          emoji: numberToEmoji(index),
+          equipment: w,
+          action: async ({ user, msg }) => {
+            await runGuildCommand({
+              msg,
+              commandTag: `equipment`,
+              props: { equipment: w }
+            })
+          }
+        })
+        index++
+      })
+
+    return { fields, actions }
   }
 
   guild.ship.getEquipmentData = (e) => {
@@ -157,9 +208,8 @@ module.exports = (guild) => {
       })
     }
 
-    if (e.capacity)
     // battery
-    {
+    if (e.capacity) {
       fields.push({
         name: `🔋 Capacity`,
         value: e.capacity + ` ` + POWER_UNIT

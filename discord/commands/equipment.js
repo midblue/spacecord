@@ -45,7 +45,8 @@ module.exports = {
         embed,
         guild
       })
-    } else {
+    }
+    else {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(

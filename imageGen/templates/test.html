@@ -1,0 +1,16 @@
+<html>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/common.css">
+
+  <script>
+    Handlebars.registerHelper('json', function (content) {
+      return JSON.stringify(content);
+    });
+  </script>
+
+  <body>
+    <div>Hello {{ name }}!</div>
+    <import "./addins/starfield.html">
+  </body>
+</html>

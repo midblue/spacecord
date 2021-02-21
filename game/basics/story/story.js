@@ -223,7 +223,7 @@ module.exports = {
           allSkills.find((s) => s.name === skill).emoji
         }${capitalize(skill)}\`${
           didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
-        } You're \`${levelProgress}/${levelSize} (${(
+        } %username%${id}% is \`${levelProgress}/${levelSize} (${(
           percentToLevel * 100
         ).toFixed()}%)\` to \`Level ${level + 1}\`.`
     }
@@ -446,9 +446,7 @@ module.exports = {
     empty: () =>
       `Looks like there's nothing in your log yet. Explore the galaxy to discover things!`
   },
-  interact: {
-    nothing: () => `There's nothing close enough to you to interact with.`
-  },
+  interact: { nothing: () => `There's nothing close enough to you to interact with.` },
   discovery: {
     planet: (planet) =>
       `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${

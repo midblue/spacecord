@@ -8,12 +8,8 @@ const {
 } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
-const staminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
-const trainingActions = {
-  engineering: require(`./trainEngineering`).action,
-  mechanics: require(`./trainMechanics`).action
-}
+
 
 module.exports = {
   tag: `me`, // this is also the 'train' command
@@ -30,16 +26,11 @@ module.exports = {
   },
   async action ({
     msg,
-    settings,
-    game,
-    client,
-    ship,
     guild,
     authorCrewMemberObject,
     author
   }) {
     log(msg, `Me`, msg.guild.name)
-    // my skills, my options to train things, etc
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -92,13 +83,6 @@ module.exports = {
         ...authorCrewMemberObject.skillLevelDetails(skill.name)
       }))
       .sort((a, b) => b.xp - a.xp)
-
-    const trainableSkillsAsReactionOptions = trainableSkills.map((e) => ({
-      emoji: e.emoji,
-      action () {
-        trainingActions[e.name](trainingActionArguments)
-      }
-    }))
 
     const trainableSkillsField = {
       name: `Skills`,

@@ -44,7 +44,8 @@ module.exports = {
         let authorIsAdmin = false
         if (msg.guild && command.admin) {
           const member = await msg.guild.members.fetch(msg.author.id)
-          if (member) msg.author = member
+          if (member)
+            msg.author = member
           authorIsAdmin = member.permissions.has(`BAN_MEMBERS`)
           if (!authorIsAdmin) { return send(msg, `That command is only available to server admins.`) }
         }
@@ -52,8 +53,9 @@ module.exports = {
         let authorIsCaptain = false
         let ship, guild
         if (!command.noShip) {
-          const res = await game.guild(msg.guild.id)
-          if (!res.ok && !command.public) return send(msg, res.message)
+          const res = await game.guild(msg.guild?.id || msg.channel?.guild?.id)
+          if (!res.ok && !command.public)
+            return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
           if (ship.status.dead && !command.gameAdminsOnly) {
@@ -63,7 +65,8 @@ module.exports = {
             )
           }
           const captain = ship && ship.captain
-          if (captain) authorIsCaptain = msg.author.id === captain
+          if (captain)
+            authorIsCaptain = msg.author.id === captain
         }
 
         const authorCrewMemberObject =

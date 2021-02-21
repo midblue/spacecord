@@ -1,0 +1,38 @@
+:root{
+  --text-size: 30px;
+  --text-size-small: 22px;
+
+  --bg: #020;
+  --bg-rgb: 0, 34, 0;
+
+  --ui: #0f0;
+}
+
+html {
+  font-family: monospace;
+  font-size: var(--text-size);
+}
+
+body {
+  width: 600px;
+  height: 600px;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--bg);
+  color: var(--ui);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.minilabel {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: var(--text-size-small);
+}

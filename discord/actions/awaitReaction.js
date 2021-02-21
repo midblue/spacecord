@@ -42,16 +42,21 @@ module.exports = async ({
             .join(`\n`)
         })
       }
-      if (reactions && reactions.length && !msg.deleted) msg.edit(embed)
+      if (reactions && reactions.length && !msg.deleted && msg.edit)
+        msg.edit(embed)
     }
 
-    if (reactions && reactions.length && !msg.deleted) { for (const r of reactions) msg.react(r.emoji) }
+    if (reactions && reactions.length && !msg.deleted) {
+      for (const r of reactions)
+        msg.react(r.emoji)
+    }
 
     const collectedReactions = []
 
     // ending function
     const end = () => {
-      if (ended) return
+      if (ended)
+        return
       ended = true
       rawWatchers.splice(rawWatchers.indexOf(eventHandler), 1)
       if (embed) {
@@ -61,11 +66,14 @@ module.exports = async ({
           const fieldIndex = embed.fields.findIndex(
             (f) => f.id === `commandLabel`
           )
-          if (fieldIndex) embed.fields.splice(fieldIndex, 1)
+          if (fieldIndex)
+            embed.fields.splice(fieldIndex, 1)
         }
-        if (!msg.deleted) msg.edit(embed)
+        if (!msg.deleted && msg.edit)
+          msg.edit(embed)
       }
-      if (!msg.deleted) msg.reactions.removeAll().catch((e) => {})
+      if (!msg.deleted)
+        msg.reactions.removeAll().catch((e) => {})
       resolve(collectedReactions)
     }
 
@@ -78,18 +86,23 @@ module.exports = async ({
 
       const { d: data } = event
       const user = await client.users.fetch(data.user_id)
-      if (user.bot) return
-      if (respondeeFilter && !respondeeFilter(user)) return
+      if (user.bot)
+        return
+      if (respondeeFilter && !respondeeFilter(user))
+        return
       const channel =
         (await client.channels.fetch(data.channel_id)) ||
         (await user.createDM())
-      if (channel.id !== msg.channel.id) return
+      if (channel.id !== msg.channel.id)
+        return
       const message = await channel.messages.fetch(data.message_id)
-      if (!message || message.id !== msg.id) return
+      if (!message || message.id !== msg.id)
+        return
 
       // check if they're actually a member of the game
       const member = (guild?.ship?.members || []).find((m) => m.id === user.id)
-      if (!allowNonMembers && !member) return
+      if (!allowNonMembers && !member)
+        return
 
       if (removeUserReactions) {
         const reaction = await new Discord.MessageReaction(client, data, msg)
@@ -105,11 +118,13 @@ module.exports = async ({
         const chosenReaction = reactions.find(
           (r) => r.emoji === userReactedWithEmoji
         )
-        if (!chosenReaction) return
+        if (!chosenReaction)
+          return
 
         // if there are level requirements
         if (chosenReaction.requirements) {
-          if (!member) return
+          if (!member)
+            return
           for (const r in chosenReaction.requirements) {
             if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
               send(
@@ -131,7 +146,8 @@ module.exports = async ({
           (c) => c.user.id === user.id && c.emoji === userReactedWithEmoji
         ) &&
         event.t === `MESSAGE_REACTION_ADD`
-      ) { collectedReactions.push({ user, emoji: userReactedWithEmoji }) } else if (event.t === `MESSAGE_REACTION_REMOVE`) {
+      ) { collectedReactions.push({ user, emoji: userReactedWithEmoji }) }
+      else if (event.t === `MESSAGE_REACTION_REMOVE`) {
         collectedReactions.splice(
           collectedReactions.indexOf(
             (r) => r.user.id === user.id && r.emoji === userReactedWithEmoji
@@ -163,7 +179,8 @@ module.exports = async ({
           ...(actionProps || {})
         })
 
-      if (endOnReaction) end()
+      if (endOnReaction)
+        end()
     }
 
     rawWatchers.push(eventHandler)

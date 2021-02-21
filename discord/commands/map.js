@@ -1,6 +1,7 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
+const generateImage = require(`../../imageGen/generateImage`)
 
 module.exports = {
   tag: `map`,
@@ -17,10 +18,28 @@ module.exports = {
       `gi`
     ).exec(content)
   },
-  async action ({ msg, settings, client, ship }) {
+  async action ({ msg, guild }) {
     log(msg, `Map`, msg.guild.name)
     // todo
-    const res = ship.getMap()
-    return send(msg, res.message)
+
+    const sentImage = (
+      await send(
+        msg,
+        new Discord.MessageAttachment(
+          await generateImage(
+            `map`,
+            {
+              ship: guild.saveableData().ship,
+              planets: guild.context.planets
+                .filter((p) => guild.ship.seen.planets.includes(p.name))
+                .map((p) => ({ ...p, context: undefined }))
+            }
+          ),
+          `map.png`)
+      )
+    ) [0]
+
+    // const res = guild.ship.getMap()
+    // return send(msg, res.message)
   }
 }

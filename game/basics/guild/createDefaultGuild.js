@@ -47,7 +47,7 @@ module.exports = function ({ discordGuild, channelId }) {
       ],
       telemetry: [
         {
-          id: `telemetry1`,
+          id: `image1`,
           repaired: Date.now(),
           repair: 0.8
         }

@@ -1,9 +1,9 @@
 :root{
-  --text-size: 30px;
-  --text-size-small: 22px;
+  --text-size: 24px;
+  --text-size-small: 18px;
 
-  --bg: #020;
-  --bg-rgb: 0, 34, 0;
+  --bg: #001100;
+  --bg-rgb: 0, 17, 0;
 
   --ui: #0f0;
 }
@@ -11,6 +11,7 @@
 html {
   font-family: monospace;
   font-size: var(--text-size);
+  line-height: 1.1;
 }
 
 body {

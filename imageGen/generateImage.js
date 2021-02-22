@@ -6,7 +6,7 @@ module.exports = async (templateName = `map`, data = {}) => {
   return await nodeHtmlToImage({
     html,
     type: `png`,
-    puppeteerArgs: { args: [`--no-sandbox`], },
+    // puppeteerArgs: { args: [`--no-sandbox`], },
     encoding: `buffer`,
   })
 }

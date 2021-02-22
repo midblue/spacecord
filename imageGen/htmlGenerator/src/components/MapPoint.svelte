@@ -3,10 +3,11 @@
   export let leftPercent;
   export let label;
   export let color = 'white';
+  export let size = 6;
   console.log({topPercent, leftPercent})
 </script>
 
-<div class="pointholder" style="--accent-color: {color}; left: {leftPercent}%; top: {topPercent}%; ">
+<div class="pointholder" style="--accent-color: {color}; --size: {size}px; left: {leftPercent}%; top: {topPercent}%; ">
   {#if label}
     <div class="label minilabel">{label}</div>
   {/if}
@@ -26,8 +27,8 @@
     color: var(--accent-color);
   }
   .point {
-    width: 6px;
-    height: 6px;
+    width: var(--size);
+    height: var(--size);
     background: var(--accent-color);
     position: absolute;
     top: -2px;

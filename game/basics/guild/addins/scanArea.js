@@ -9,7 +9,7 @@ const story = require(`../../story/story`)
 const getCache = require(`../../../../discord/actions/getCache`)
 
 module.exports = (guild) => {
-  guild.ship.scanArea = (eyesOnly) => {
+  guild.ship.scanArea = async (eyesOnly) => {
     const messages = []
     const telemetry = (guild.ship.equipment.telemetry || [])[0]
 
@@ -79,10 +79,12 @@ You see ${
       }
     }
 
-    const telemetryResult = telemetry.use({
+    const telemetryResult = await telemetry.use({
       scanResult,
+      range,
       x: guild.ship.location[0],
-      y: guild.ship.location[1]
+      y: guild.ship.location[1],
+      guild,
     })
 
     const data = [

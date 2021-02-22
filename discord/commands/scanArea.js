@@ -36,11 +36,18 @@ module.exports = {
     if (!scanRes.ok)
       return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
 
+    if (scanRes.image)
+      await send(
+        msg,
+        new Discord.MessageAttachment(
+          scanRes.map,
+          `scan.png`)
+      )
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       // .setTitle(scanRes.message)
       .setDescription(
-        `\`\`\`Telemetry Unit: ` + scanRes.model + `\n` + scanRes.map + `\`\`\``
+        `\`\`\`Telemetry Unit: ` + scanRes.model + (scanRes.image ? '' : `\n` + scanRes.map) + `\`\`\``
       )
     if (scanRes.key && scanRes.key.length) {
       embed.addFields({

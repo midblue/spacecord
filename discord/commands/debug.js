@@ -185,7 +185,7 @@ module.exports = {
           const member = guild.ship.members.find((m) => m.id === msg.author.id)
           if (!member)
             return `no member with id ` + msg.author.id
-          member.stamina = 1
+          member.stamina = 10
           return `refilled your stamina`
         }
       },

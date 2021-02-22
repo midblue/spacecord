@@ -11,8 +11,9 @@
 
   let pointsToShow = [
     ...planets.map(p => ({name: p.name, location: p.location, color: p.validColor || p.color})), 
-  {name: ship.name + '\n(you)', location: ship.location, color: 'white'}
-]
+    {name: ship.name + '\n(you)', location: ship.location, color: 'white'}
+  ]
+
   let upperBound = pointsToShow.reduce((max,p) => Math.max((p.location[1]), max), -99999999)
   let rightBound = pointsToShow.reduce((max,p) => Math.max((p.location[0]), max), -99999999)
   let lowerBound = pointsToShow.reduce((min,p) => Math.min((p.location[1]), min), 99999999)
@@ -72,8 +73,8 @@
 </script>
 
 
-<Starfield />
-<Box label={'Map'}>
+<!-- <Starfield /> -->
+<Box label={'Discovered Planets'}>
   {#each circlesToShow as c}
     <MapCircle {...c} />
   {/each}

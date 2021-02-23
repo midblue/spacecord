@@ -141,23 +141,29 @@ const game = {
     }
   },
 
-  scanArea ({ x, y, range, excludeIds = [] }) {
+  scanArea ({ x, y, range, excludeIds = [], type }) {
     if (!Array.isArray(excludeIds))
       excludeIds = [excludeIds]
     return {
-      guilds: this.guilds.filter((g) => {
-        return (
-          !g.ship.status.dead &&
-          !excludeIds.includes(g.guildId) &&
-          pointIsInsideCircle(x, y, ...g.ship.location, range)
+      guilds: (!type || type === `guilds`)
+        ? this.guilds.filter((g) => {
+          return (
+            !g.ship.status.dead &&
+            !excludeIds.includes(g.guildId) &&
+            pointIsInsideCircle(x, y, ...g.ship.location, range)
+          )
+        })
+        : [],
+      planets: (!type || type === `planets`)
+        ? this.planets.filter((p) =>
+          pointIsInsideCircle(x, y, ...p.location, range)
         )
-      }),
-      planets: this.planets.filter((p) =>
-        pointIsInsideCircle(x, y, ...p.location, range)
-      ),
-      caches: this.caches.filter((c) =>
-        pointIsInsideCircle(x, y, ...c.location, range)
-      )
+        : [],
+      caches: (!type || type === `caches`)
+        ? this.caches.filter((c) =>
+          pointIsInsideCircle(x, y, ...c.location, range)
+        )
+        : []
     }
   },
 

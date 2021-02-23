@@ -47,7 +47,7 @@ module.exports = {
       .setColor(APP_COLOR)
       // .setTitle(scanRes.message)
       .setDescription(
-        `\`\`\`Telemetry Unit: ` + scanRes.model + (scanRes.image ? '' : `\n` + scanRes.map) + `\`\`\``
+        `\`\`\`Telemetry Unit: ` + scanRes.model + (scanRes.image ? `` : `\n` + scanRes.map) + (scanRes.repairMessage ? `\n` + scanRes.repairMessage : ``) + `\`\`\``
       )
     if (scanRes.key && scanRes.key.length) {
       embed.addFields({

@@ -20,7 +20,6 @@ module.exports = {
   },
   async action ({ msg, guild }) {
     log(msg, `Map`, msg.guild.name)
-    // todo
 
     const sentImage = (
       await send(

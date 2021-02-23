@@ -8,7 +8,8 @@ const {
 
 module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
-    if (guild.ship.status.docked) return 0
+    if (guild.ship.status.docked)
+      return 0
 
     const rawMaxSpeed = guild.ship.equipment.engine.reduce(
       (total, engine) => engine.maxSpeed * engine.repair + total,
@@ -17,11 +18,13 @@ module.exports = (guild) => {
 
     let percentOfMaxShipWeight =
       guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
-    if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
+    if (percentOfMaxShipWeight > 1)
+      percentOfMaxShipWeight = 1
 
     let effectiveSpeed =
       (guild.ship.speed || 0) * rawMaxSpeed * (1 - percentOfMaxShipWeight)
-    if (effectiveSpeed < 0) effectiveSpeed = 0
+    if (effectiveSpeed < 0)
+      effectiveSpeed = 0
 
     return effectiveSpeed
   }
@@ -34,9 +37,7 @@ module.exports = (guild) => {
 
   guild.ship.redetermineSpeed = (aggregate = []) => {
     if (!aggregate.length) {
-      return {
-        ok: false
-      }
+      return { ok: false }
     }
     const { voteResult, newSpeed } = getShipSpeedFromAggregate(aggregate, guild)
     const previousSpeed = guild.ship.speed
@@ -127,9 +128,7 @@ module.exports = (guild) => {
 
     const fuel = ship.cargo.find((c) => c.type === `fuel`)
     if (!fuel.amount && useFuel) {
-      return {
-        ok: false
-      }
+      return { ok: false }
     }
 
     let ok = true
@@ -146,7 +145,8 @@ module.exports = (guild) => {
     }
     const fuelLoss = useFuel ? ship.fuelUsePerTick() : 0
 
-    if (coordinates) ship.location = coordinates
+    if (coordinates)
+      ship.location = coordinates
     else {
       const newX =
         currentLocation[0] + distanceToTravel * Math.cos(currentBearing)
@@ -155,9 +155,28 @@ module.exports = (guild) => {
       ship.location = [newX, newY]
     }
 
+    // check if we discovered any new planets
+    const scanResult = guild.context.scanArea({
+      x: guild.ship.location[0],
+      y: guild.ship.location[1],
+      range: guild.ship.chassis[0].interactRadius || 0,
+      excludeIds: guild.guildId,
+      type: `planets`
+    })
+    for (const planet of scanResult.planets) {
+      const seenPlanets = guild.ship.seen.planets
+      if (!seenPlanets.find((p) => p === planet.name)) {
+        seenPlanets.push(planet.name)
+        guild.ship.logEntry(story.discovery.planet(planet))
+        messages.push(story.discovery.planet(planet))
+      }
+    }
+
     const endedOOB = ship.isOOB()
-    if (startedOOB && !endedOOB) message = story.move.oob.reEnter()
-    if (!startedOOB && endedOOB) message = story.move.oob.goOOB()
+    if (startedOOB && !endedOOB)
+      message = story.move.oob.reEnter()
+    if (!startedOOB && endedOOB)
+      message = story.move.oob.goOOB()
 
     fuel.amount -= fuelLoss
     if (fuel.amount <= 0) {
@@ -165,7 +184,8 @@ module.exports = (guild) => {
       ship.status.stranded = true
       ok = false
       message = story.fuel.insufficient()
-    } else {
+    }
+    else {
       ship.status.stranded = false
     }
 
@@ -173,7 +193,8 @@ module.exports = (guild) => {
       guild.ship.equipment.engine.forEach((engine) => {
       // durability loss
         engine.repair -= engine.durabilityLostOnUse * (guild.ship.speed || 0)
-        if (engine.repair < 0) engine.repair = 0
+        if (engine.repair < 0)
+          engine.repair = 0
       })
     }
 
@@ -218,16 +239,15 @@ module.exports = (guild) => {
 
     let percentOfMaxShipWeight =
       guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
-    if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
+    if (percentOfMaxShipWeight > 1)
+      percentOfMaxShipWeight = 1
 
     return rawMaxSpeed * (1 - percentOfMaxShipWeight)
   }
 
   guild.ship.redirect = (aggregate = []) => {
     if (!aggregate.length) {
-      return {
-        ok: false
-      }
+      return { ok: false }
     }
     const directionVector = getShipDirectionFromAggregate(aggregate)
     // const previousBearing = guild.ship.bearing

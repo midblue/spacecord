@@ -122,11 +122,12 @@ module.exports = async ({
           return
 
         // if there are level requirements
-        if (chosenReaction.requirements) {
+        if (event.t === `MESSAGE_REACTION_ADD` && chosenReaction.requirements) {
           if (!member)
             return
           for (const r in chosenReaction.requirements) {
             if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
+              console.log(member.id, userReactedWithEmoji)
               send(
                 msg,
                 story.action.doesNotMeetRequirements(

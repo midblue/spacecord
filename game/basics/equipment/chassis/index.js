@@ -1,7 +1,7 @@
 const defaults = {
   type: `chassis`,
   baseCost: 2000,
-  interactRadius: 1.5,
+  interactRadius: 1,
   weight: 150,
   baseHp: 40,
   repairDifficulty: 1,
@@ -15,7 +15,8 @@ const fs = require(`fs`)
 const addins = {}
 fs.readdir(__dirname, (err, files) => {
   files.forEach((file) => {
-    if (!file.endsWith(`.js`) || file === `index.js`) return
+    if (!file.endsWith(`.js`) || file === `index.js`)
+      return
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,

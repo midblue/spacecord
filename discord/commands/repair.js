@@ -13,7 +13,7 @@ module.exports = {
     priority: 50
   },
   test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:repair|fix)$`, `gi`).exec(content)
+    return new RegExp(`^${settings.prefix}(?:r|repair|fix)$`, `gi`).exec(content)
   },
   async action ({ msg, settings, guild, ship, equipment }) {
     log(msg, `Repair`, msg.guild.name)
@@ -63,8 +63,7 @@ module.exports = {
 
       if (!equipmentAsReactionOptions.length) { embed.setTitle(`Repair`).setDescription(`No equipment needs repairing!`) }
 
-      const sentMessages = await send(msg, embed)
-      const sentMessage = sentMessages[sentMessages.length - 1]
+      const sentMessage = (await send(msg, embed))[0]
       await awaitReaction({
         msg: sentMessage,
         reactions: equipmentAsReactionOptions,
@@ -72,7 +71,8 @@ module.exports = {
         guild
       })
       sentMessage.delete()
-    } else {
+    }
+    else {
       const res = guild.ship.repairEquipment({
         type: equipment.type,
         index: equipment.index,

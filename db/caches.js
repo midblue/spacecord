@@ -1,19 +1,22 @@
 let db
 
 module.exports = function (passedDb) {
-  if (passedDb) db = passedDb
+  if (passedDb)
+    db = passedDb
   return {
     async getAll () {
       try {
         const snapshot = await db.collection(`caches`).get()
-        if (snapshot.empty) return []
+        if (snapshot.empty)
+          return []
 
         const caches = []
         snapshot.forEach((doc) => {
           caches.push({ ...doc.data(), id: doc.id })
         })
         return caches
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -22,7 +25,8 @@ module.exports = function (passedDb) {
       try {
         await db.collection(`caches`).add(data)
         console.log(`Added cache to database.`)
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -31,7 +35,8 @@ module.exports = function (passedDb) {
       try {
         const document = db.doc(`caches/${cacheId}`)
         await document.delete()
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -40,7 +45,8 @@ module.exports = function (passedDb) {
       try {
         const document = db.doc(`caches/${cacheId}`)
         await document.update(updateData)
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     }

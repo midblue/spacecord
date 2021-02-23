@@ -4,6 +4,7 @@
 * cache not giving me the stuff
 
 **MVP**
+test auto discover planets in interact range on move
 actual minigames for piloting, repairing, power gen
 determine good xp numbers for training
 more equipment

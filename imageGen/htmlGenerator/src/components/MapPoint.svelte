@@ -1,17 +1,18 @@
 <script>
-  export let topPercent;
-  export let leftPercent;
-  export let label;
-  export let color = 'white';
-  export let size = 6;
-  console.log({topPercent, leftPercent})
+  export let topPercent
+  export let leftPercent
+  export let label
+  export let color = 'white'
+  export let size = 6
+  export let round = false
+  // console.log({topPercent, leftPercent})
 </script>
 
 <div class="pointholder" style="--accent-color: {color}; --size: {size}px; left: {leftPercent}%; top: {topPercent}%; ">
   {#if label}
     <div class="label minilabel">{label}</div>
   {/if}
-  <div class="point"></div>
+  <div class="point" style="border-radius: {round ? '50%': '0'};"></div>
 </div>
 
 <style>

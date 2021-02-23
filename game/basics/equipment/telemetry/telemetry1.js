@@ -11,11 +11,12 @@ module.exports = {
   needsRepairAt: 0.8,
   breakdownSeverity: 0.05,
   repairRequirements: { mechanics: 4 },
-  requirements: { engineering: 2 },
+  requirements: { engineering: 6 },
   use ({ scanResult, x, y }) {
     const previousRepair = this.repair
     this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
-    if (this.repair < 0) this.repair = 0
+    if (this.repair < 0)
+      this.repair = 0
 
     const repair = this.repair
     const range = this.range
@@ -76,7 +77,8 @@ module.exports = {
 
     let row = []
     row.push(`┏`)
-    for (let rowIndex = 0; rowIndex < range * 4 + 4; rowIndex++) row.push(`━`)
+    for (let rowIndex = 0; rowIndex < range * 4 + 4; rowIndex++)
+      row.push(`━`)
     row.push(`┓`)
     grid.push(row)
 
@@ -84,7 +86,8 @@ module.exports = {
       const row = [`┃`]
       for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++) { row.push(getChar(emptySpace)) }
 
-      if (rowIndex % 2) row.push(`┠ ${Math.round(range - rowIndex + y)}`)
+      if (rowIndex % 2)
+        row.push(`┠ ${Math.round(range - rowIndex + y)}`)
       else {
         row.push(`┃`)
       }
@@ -94,7 +97,8 @@ module.exports = {
 
     row = []
     row.push(`┗┯`)
-    for (let rowIndex = 0; rowIndex < range * 4 + 2; rowIndex++) row.push(`━`)
+    for (let rowIndex = 0; rowIndex < range * 4 + 2; rowIndex++)
+      row.push(`━`)
     row.push(`┯┛`)
     grid.push(row)
 
@@ -156,15 +160,17 @@ module.exports = {
     key.push(`🛸 Spacecraft`)
     key.push(`📦 Cache`)
 
+    let repairMessage
     if (repair < this.needsRepairAt) {
       key.push(`❌ Not Sure`)
-      map += `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
+      repairMessage = `\n> SYSTEM_REPAIR_AT_${(repair * 100).toFixed(0)}%`
     }
 
     return {
       map,
       key,
       model: this.displayName,
+      repairMessage,
       repair
     }
   }

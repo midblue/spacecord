@@ -3,7 +3,8 @@ const admin = require(`firebase-admin`)
 let db
 
 module.exports = function (passedDb) {
-  if (passedDb) db = passedDb
+  if (passedDb)
+    db = passedDb
   return {
     async getAll () {
       try {
@@ -11,14 +12,16 @@ module.exports = function (passedDb) {
           .collection(`guilds`)
           .where(`active`, `==`, true)
           .get()
-        if (snapshot.empty) return []
+        if (snapshot.empty)
+          return []
 
         const guilds = []
         snapshot.forEach((doc) => {
           guilds.push(doc.data())
         })
         return guilds
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -28,8 +31,10 @@ module.exports = function (passedDb) {
         const document = db.doc(`guilds/${guildId}`)
         const doc = await document.get()
         const data = doc.data()
-        if (data) return data
-      } catch (e) {
+        if (data)
+          return data
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -39,7 +44,8 @@ module.exports = function (passedDb) {
         const document = db.doc(`guilds/${guildId}`)
         await document.set(data)
         console.log(`Added guild to database: ${guildId}`)
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -49,7 +55,8 @@ module.exports = function (passedDb) {
         // console.log(updates)
         const document = db.doc(`guilds/${guildId}`)
         await document.update(updates)
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -58,7 +65,8 @@ module.exports = function (passedDb) {
       try {
         const document = db.doc(`guilds/${guildId}`)
         await document.delete()
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -68,13 +76,15 @@ module.exports = function (passedDb) {
         const document = db.doc(`guilds/${guildId}`)
         const doc = await document.get()
         const data = doc.data()
-        if (!data) return defaultServerSettings
+        if (!data)
+          return defaultServerSettings
         const settings = {
           ...defaultServerSettings,
           ...(data.settings || {})
         }
         return settings
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -84,9 +94,11 @@ module.exports = function (passedDb) {
         const document = db.doc(`guilds/${guildId}`)
         const existingSettings = await this.getGuildSettings({ guildId })
         const newSettings = existingSettings
-        for (const prop in settings) newSettings[prop] = settings[prop]
+        for (const prop in settings)
+          newSettings[prop] = settings[prop]
         await document.update({ settings: newSettings })
-      } catch (e) {
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -94,10 +106,9 @@ module.exports = function (passedDb) {
     async addCrewMember ({ guildId, member }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
-        await document.update({
-          'ship.members': admin.firestore.FieldValue.arrayUnion(member)
-        })
-      } catch (e) {
+        await document.update({ 'ship.members': admin.firestore.FieldValue.arrayUnion(member) })
+      }
+      catch (e) {
         errorHandler(e)
       }
     },
@@ -105,10 +116,9 @@ module.exports = function (passedDb) {
     async updateCrewMembers ({ guildId, members }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
-        await document.update({
-          'ship.members': members
-        })
-      } catch (e) {
+        await document.update({ 'ship.members': members })
+      }
+      catch (e) {
         errorHandler(e)
       }
     }

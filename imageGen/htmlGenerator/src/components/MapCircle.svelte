@@ -2,8 +2,8 @@
   export let topPercent
   export let leftPercent
   export let radiusPercent
-  export let label;
-  export let blackout;
+  export let label
+  export let blackout
   export let color = 'var(--ui)'
   export let opacity = 0.2
   export let strokeWidth = 2

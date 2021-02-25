@@ -1,4 +1,4 @@
-version: "2"
+version: "3.7"
 services:
   node:
     image: "node:15.7.0"
@@ -9,3 +9,20 @@ services:
     volumes:
       - ./:/home/node/app
     command: "npx nodemon index.js"
+    env_file:
+      - .env
+
+  db:
+    image: "mongo:4.0"
+    restart: always
+    volumes:
+      - db_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: spacecord
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+volumes:
+  db_data:

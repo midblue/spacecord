@@ -27,13 +27,12 @@ db.once(`open`, () => {
   console.log(`we did it! :) :D `)
   ready = true
 
-
   guilds = require(`./guilds`)(db)
   console.log(`in db.js - guilds = `)
   console.log(guilds)
   caches = require(`./caches`)(db)
-
-
+  console.log(`in db.js - caches = `)
+  console.log(caches)
   toRun.forEach((f) => f({
     db,
     guilds,

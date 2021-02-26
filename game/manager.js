@@ -1,25 +1,33 @@
-const { spawn, liveify } = require(`./basics/guild/guild`)
-const spawnPlanets = require(`./basics/planet`).spawnAll
-const caches = require(`./basics/caches`)
-const story = require(`./basics/story/story`)
-const { log } = require(`./gamecommon`)
-const { pointIsInsideCircle, distance } = require(`../common`)
-const coreLoop = require(`./core loop/`)
-const db = require(`../db/db`)
+// const { spawn, liveify } = require(`./basics/guild/guild`)
+// const spawnPlanets = require(`./basics/planet`).spawnAll
+// const caches = require(`./basics/caches`)
+// const story = require(`./basics/story/story`)
+// const { log } = require(`./gamecommon`)
+// const { pointIsInsideCircle, distance } = require(`../common`)
+// const coreLoop = require(`./core loop/`)
+const { db, runOnReady } = require(`../db/db`)
 
 //
 // ---------------- Game Object ----------------
 // this object is our "instance" of the game that will handle updates,
 // the core loop, etc.
 //
+runOnReady(({
+  guilds,
+  caches
+}) => {
+  console.log(`in manager.js - guilds = `)
+  console.log(guilds)
+})
+return
 
 const game = {
   async init () {
-    (await db.guild.getAll()).forEach((g) =>
+    (await db.guilds.getAll()).forEach((g) =>
       this.loadExistingGuild(g))
-    
+
     log(`init`, `Loaded ${this.guilds.length} guilds from db`);
-    
+
     (await db.caches.getAll()).forEach((c) => this.loadCache(c))
     log(`init`, `Loaded ${this.caches.length} caches from db`)
 
@@ -204,7 +212,7 @@ const game = {
   }
 }
 
-game.init()
+db.runOnReady(game.init)
 
 //
 // ---------------- Exports ----------------

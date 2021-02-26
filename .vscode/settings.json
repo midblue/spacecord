@@ -6,5 +6,8 @@
     "javascript",
     "svelte"
   ],
-  "prettier.enable": false
+  "prettier.enable": false,
+  "eslint.run": "onSave",
+  "eslint.format.enable": true,
+  "eslint.alwaysShowStatus": true
  }

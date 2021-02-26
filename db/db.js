@@ -1,22 +1,65 @@
-/* eslint-disable */
+const mongoose = require(`mongoose`)
 
-const admin = require(`firebase-admin`)
+let db
+let guilds
+let caches
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    project_id: process.env.FIREBASE_PROJECT_ID,
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, `\n`)
-  })
+let ready = false
+
+const toRun = []
+
+const username = encodeURIComponent(process.env.MONGODB_ADMINUSERNAME)
+const password = encodeURIComponent(process.env.MONGODB_ADMINPASSWORD)
+
+const hostname = `mongodb`
+const port = 27017
+const dbName = `spacecord`
+
+const uri = `mongodb://${username}:${password}@${hostname}:${port}\
+/${dbName}?poolSize=20&writeConcern=majority?connectTimeoutMS=5000`
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
+db = mongoose.connection
+db.on(`error`, console.error.bind(console, `connection error`))
+db.once(`open`, () => {
+  console.log(`we did it! :) :D `)
+  ready = true
+
+
+  guilds = require(`./guilds`)(db)
+  console.log(`in db.js - guilds = `)
+  console.log(guilds)
+  caches = require(`./caches`)(db)
+
+
+  toRun.forEach((f) => f({
+    db,
+    guilds,
+    caches,
+    runOnReady
+  }))
 })
 
-const db = admin.firestore()
-db.settings({ ignoreUndefinedProperties: true })
+const runOnReady = (f) => {
+  if (ready) {
+    f({
+      db,
+      guilds,
+      caches,
+      runOnReady
+    })
+  }
+  else {
+    toRun.push(f)
+  }
+}
 
-const guild = require(`./guild`)(db)
-const caches = require(`./caches`)(db)
 
 module.exports = {
-  guild,
-  caches
+  db,
+  guilds,
+  caches,
+  runOnReady
 }

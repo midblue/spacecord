@@ -39,7 +39,10 @@ module.exports = function (passedDb) {
       }
     },
 
-    async add ({ guildId, data }) {
+    async add ({
+      guildId,
+      data
+    }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
         await document.set(data)
@@ -50,7 +53,10 @@ module.exports = function (passedDb) {
       }
     },
 
-    async update ({ guildId, updates }) {
+    async update ({
+      guildId,
+      updates
+    }) {
       try {
         // console.log(updates)
         const document = db.doc(`guilds/${guildId}`)
@@ -89,7 +95,10 @@ module.exports = function (passedDb) {
       }
     },
 
-    async setSettings ({ guildId, settings }) {
+    async setSettings ({
+      guildId,
+      settings
+    }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
         const existingSettings = await this.getGuildSettings({ guildId })
@@ -103,7 +112,10 @@ module.exports = function (passedDb) {
       }
     },
 
-    async addCrewMember ({ guildId, member }) {
+    async addCrewMember ({
+      guildId,
+      member
+    }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
         await document.update({ 'ship.members': admin.firestore.FieldValue.arrayUnion(member) })
@@ -113,7 +125,10 @@ module.exports = function (passedDb) {
       }
     },
 
-    async updateCrewMembers ({ guildId, members }) {
+    async updateCrewMembers ({
+      guildId,
+      members
+    }) {
       try {
         const document = db.doc(`guilds/${guildId}`)
         await document.update({ 'ship.members': members })

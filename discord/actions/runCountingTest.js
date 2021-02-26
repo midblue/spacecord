@@ -1,7 +1,9 @@
 const send = require(`./send`)
 const Discord = require(`discord.js`)
+const gamecommon = require(`../../game/gamecommon`)
 
-module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
+
+module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices, skillLevel }) => {
   return new Promise(async (resolve) => {
     const SNIPPET_WIDTH = 5
     const SNIPPET_HEIGHT = 5
@@ -55,15 +57,10 @@ module.exports = ({ msg, sentMessage, embed, targetEmoji, emojiChoices }) => {
       const guess = parseInt(content)
       if (isNaN(guess)) return
 
-      const guessError = Math.abs(targetEmojiTotal - guess)
-      let rewardXp
-      if (guessError / targetEmojiTotal < 0) {
-        rewardXp = 0
-      } else {
-        rewardXp = 1500 - 145 * guessError ** 2
-      }
 
-      if (rewardXp < 0) rewardXp = 0
+      const minigameScore = guess / content
+
+      const rewardXp = gamecommon.getTrainingXp(minigameScore, skillLevel)
 
       clearTimeout(noInputTimeout)
 

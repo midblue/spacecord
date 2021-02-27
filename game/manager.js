@@ -5,19 +5,16 @@
 // const { log } = require(`./gamecommon`)
 // const { pointIsInsideCircle, distance } = require(`../common`)
 // const coreLoop = require(`./core loop/`)
-const { db, runOnReady } = require(`../db/db`)
+const { db, routes, runOnReady } = require(`../db/db`)
 
 //
 // ---------------- Game Object ----------------
 // this object is our "instance" of the game that will handle updates,
 // the core loop, etc.
 //
-runOnReady(({
-  guilds,
-  caches
-}) => {
-  console.log(`in manager.js - guilds = `)
-  console.log(guilds)
+runOnReady(() => {
+  console.log(`in manager.js - guilds =`)
+  console.log(routes.guilds)
 })
 return
 

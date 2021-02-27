@@ -1,8 +1,7 @@
 const mongoose = require(`mongoose`)
 
 let db
-let guilds
-let caches
+const routes = {}
 
 let ready = false
 
@@ -20,35 +19,27 @@ const uri = `mongodb://${username}:${password}@${hostname}:${port}\
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
-
 db = mongoose.connection
 db.on(`error`, console.error.bind(console, `connection error`))
 db.once(`open`, () => {
-  console.log(`we did it! :) :D `)
-  ready = true
-
-  guilds = require(`./guilds`)(db)
+  routes.guilds = require(`./guilds`)(db)
   console.log(`in db.js - guilds = `)
-  console.log(guilds)
-  caches = require(`./caches`)(db)
+  console.log(routes.guilds)
+
+  routes.caches = require(`./caches`)(db)
   console.log(`in db.js - caches = `)
-  console.log(caches)
-  toRun.forEach((f) => f({
-    db,
-    guilds,
-    caches,
-    runOnReady
-  }))
+  console.log(routes.caches)
+
+  ready = true
+ 
+  toRun.forEach((f) => {
+    f()
+  })
 })
 
 const runOnReady = (f) => {
   if (ready) {
-    f({
-      db,
-      guilds,
-      caches,
-      runOnReady
-    })
+    f()
   }
   else {
     toRun.push(f)
@@ -58,7 +49,6 @@ const runOnReady = (f) => {
 
 module.exports = {
   db,
-  guilds,
-  caches,
+  routes,
   runOnReady
 }

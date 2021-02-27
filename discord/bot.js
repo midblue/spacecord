@@ -23,8 +23,8 @@ const client = new Discord.Client({
     `TYPING_START`,
     `TYPING_END`,
     `VOICE_STATE_UPDATE`,
-    `VOICE_SERVER_UPDATE`
-  ]
+    `VOICE_SERVER_UPDATE`,
+  ],
 })
 
 const privateMessage = require(`./events/privateMessage`)
@@ -37,7 +37,7 @@ client.on(`ready`, async () => {
   console.log(
     `Logged in as ${client.user.tag} in ${
       (await client.guilds.cache.array()).length
-    } guilds`
+    } guilds`,
   )
   client.user.setActivity(`.help`, { type: `LISTENING` })
   client.game.verifyActiveGuilds(await client.guilds.cache.array())
@@ -50,12 +50,12 @@ client.on(`guildCreate`, addedToGuild)
 client.on(`guildDelete`, kickedFromGuild)
 
 // other user leaves a guild
-// client.on('guildMemberRemove', otherMemberLeaveServer)
+// client.on(`guildMemberRemove`, otherMemberLeaveServer)
 
 client.login(process.env.DISCORD_TOKEN)
 
 module.exports = {
-  init (gameController) {
+  init(gameController) {
     client.game = gameController
 
     client.on(`message`, async (msg) => {
@@ -69,5 +69,5 @@ module.exports = {
     })
   },
   client,
-  rawWatchers: []
+  rawWatchers: [],
 }

@@ -20,7 +20,7 @@ module.exports = (guild) => {
   guild.ship.maxPower = () => {
     return guild.ship.equipment.battery.reduce(
       (total, battery) => battery.capacity * battery.repair + total,
-      0
+      0,
     )
   }
 
@@ -32,6 +32,7 @@ module.exports = (guild) => {
     if (currentPower + toAdd > maxPower) toAdd = maxPower - currentPower
     if (toAdd < 0) toAdd = 0 // don't kill an overcharge
     guild.ship.power = currentPower + toAdd
+    if (guild.ship.power < 0) guild.ship.power = 0
     return {
       ok: true,
       generatedPower: toAdd,
@@ -40,8 +41,8 @@ module.exports = (guild) => {
         generateResult,
         toAdd,
         guild.ship.power,
-        maxPower
-      )
+        maxPower,
+      ),
     }
   }
 }

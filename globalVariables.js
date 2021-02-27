@@ -30,4 +30,7 @@ TIME_UNIT_LONGS = `years`
 TIME_UNIT_SHORTS_PER_LONG = 365
 TIME_UNIT_LONGS_MULTIPLIER = 1 / 365
 
-SLEEP = (ms) => new Promise((resolve) => { setTimeout(resolve, ms) })
+SLEEP = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })

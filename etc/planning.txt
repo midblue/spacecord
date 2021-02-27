@@ -2,6 +2,7 @@
 **BUGS**
 * i can train for someone else from .me
 * cache not giving me the stuff
+munitions can keep going after game over
 
 **MVP**
 test auto discover planets in interact range on move
@@ -37,12 +38,15 @@ cantina & cantina chatter (report)
 
 piloting
   angry birds style launcher but you type in degrees and power
+  bounce in straight lines through a maze (or like pool?)
 repair
   get lots of broken parts of a string that you have to rearrange by typing like 41325 or something
   crossword fill in the blank - get a clue and some letters filled in
   follow complex set of directions (i.e. a manual) (manipulate something) (logic rules) to get simple answer ('XXYXYXX')
   math puzzle
+  minesweeper
 generate power
+  slot machine rolls — hand-crank the reactor & cores come out aligned/not, bigger matches = more power, you have a certain number of rerolls for columns based on... ?
 
 dice based game
 

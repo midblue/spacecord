@@ -28,6 +28,7 @@ module.exports = (member) => {
           member.id,
           currentMemberStamina,
           amount,
+          member.guild.context.timeUntilNextTick(),
         ),
       }
     }

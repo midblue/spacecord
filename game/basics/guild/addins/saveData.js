@@ -1,4 +1,4 @@
-const db = require(`../../../../db/db`)
+const { db } = require(`../../../../db/db`)
 const createDefaultGuild = require(`../createDefaultGuild`)
 const factionsData = require(`../../factions`)
 const cargoData = require(`../../cargo`)
@@ -30,7 +30,8 @@ module.exports = (guild) => {
     // remove base properties from faction
     if (guild.faction?.color) {
       Object.keys(factionsData[guild.faction.color]).forEach((key) => {
-        if (key !== `color`) delete guildToSave.faction[key]
+        if (key !== `color`)
+          delete guildToSave.faction[key]
       })
     }
 
@@ -38,14 +39,17 @@ module.exports = (guild) => {
     Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
       guildToSave.ship.equipment[equipmentType].forEach((part) => {
         const itemData = equipmentData[equipmentType][part.id]
-        for (const prop in itemData) if (prop !== `id`) delete part[prop]
+        for (const prop in itemData)
+          if (prop !== `id`)
+            delete part[prop]
       })
     })
 
     guildToSave.ship.cargo = guild.ship.cargo
       .map((c) => {
         const baseCargo = { ...c }
-        for (const prop in cargoData[c.type]) delete baseCargo[prop]
+        for (const prop in cargoData[c.type])
+          delete baseCargo[prop]
         return baseCargo
       })
       .filter((c) => c.amount > 0.000001)
@@ -57,8 +61,14 @@ module.exports = (guild) => {
       discordGuild: { name: `asdf`, id: 1234 },
       channelId: `asdf`
     })
-    for (const key of Object.keys(guildToSave)) { if (dummyGuildObject[key] === undefined) delete guildToSave[key] }
-    for (const key of Object.keys(guildToSave.ship)) { if (dummyGuildObject.ship[key] === undefined) delete guildToSave.ship[key] }
+    for (const key of Object.keys(guildToSave)) {
+      if (dummyGuildObject[key] === undefined)
+        delete guildToSave[key]
+    }
+    for (const key of Object.keys(guildToSave.ship)) {
+      if (dummyGuildObject.ship[key] === undefined)
+        delete guildToSave.ship[key]
+    }
 
     return guildToSave
   }
@@ -85,13 +95,17 @@ module.exports = (guild) => {
             const int = parseInt(pEl.replace(/[[\]]/g, ``))
             if (isNaN(int)) {
               propertyToCheck = propertyToCheck[pEl]
-            } else {
+            }
+            else {
               propertyToCheck = propertyToCheck[int]
             }
-          } catch (e) {}
+          }
+          catch (e) {}
         })
-        if (propertyToCheck === obj) return false
-      } catch (e) {}
+        if (propertyToCheck === obj)
+          return false
+      }
+      catch (e) {}
       differences[path.replace(/\.\[/g, `[`)] = obj
     }
 
@@ -113,7 +127,7 @@ module.exports = (guild) => {
     guild.previousDiff = currentDiff
 
     if (Object.keys(differencesWithGeneralizedArrays).length) {
-      await db.guild.update({
+      await db.guilds.update({
         guildId: guild.guildId,
         updates: differencesWithGeneralizedArrays
       })

@@ -10,8 +10,8 @@ module.exports = function (passedDb) {
       try {
         const snapshot = await db
           .collection(`guilds`)
-          .where(`active`, `==`, true)
-          .get()
+          .find({ active: { $eq: true } })
+
         if (snapshot.empty)
           return []
 
@@ -22,8 +22,10 @@ module.exports = function (passedDb) {
         return guilds
       }
       catch (e) {
+        console.log(`Got error ${e}`)
         errorHandler(e)
       }
+      console.log(`End of getAll()`)
     },
 
     async get ({ guildId }) {

@@ -7,7 +7,6 @@ const { pointIsInsideCircle, distance } = require(`../common`)
 const coreLoop = require(`./core loop/`)
 const { db, runOnReady: runOnDbReady } = require(`../db/db`)
 
-
 runOnDbReady(() => {
   game.init()
   // console.log(`in manager.js - guilds =`)
@@ -27,18 +26,19 @@ const game = {
       discordGuild: { name: `testGuild`, id: `testGuildId` },
       channelId: `testChannel`
     })
-    // * you can try saving demoGuild for now and see if the data comes back nicely
-    
-    // (await db.guilds.getAll()).forEach((g) =>
-    //   this.loadExistingGuild(g))
 
-    // log(`init`, `Loaded ${this.guilds.length} guilds from db`);
+    const guilds = await db.guilds.getAll()
+    guilds.forEach((g) =>
+      this.loadExistingGuild(g))
 
-    // (await db.caches.getAll()).forEach((c) => this.loadCache(c))
-    // log(`init`, `Loaded ${this.caches.length} caches from db`)
+    log(`init`, `Loaded ${this.guilds.length} guilds from db`)
+    const caches = await db.caches.getAll()
+    caches.forEach((c) => this.loadCache(c))
 
-    // this.planets = await spawnPlanets({ context: this })
-    // log(`init`, `Loaded ${this.planets.length} planets`)
+    log(`init`, `Loaded ${this.caches.length} caches from db`)
+
+    this.planets = await spawnPlanets({ context: this })
+    log(`init`, `Loaded ${this.planets.length} planets`)
 
     this.start()
   },

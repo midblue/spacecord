@@ -1,5 +1,5 @@
 const { log } = require(`../gamecommon`)
-const db = require(`../../db/db`)
+const { db } = require(`../../db/db`)
 const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = STEP_INTERVAL * 500

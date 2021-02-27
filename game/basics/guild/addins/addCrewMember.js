@@ -1,7 +1,7 @@
 const story = require(`../../story/story`)
 const crewMember = require(`../../crew/crew`)
 const { log } = require(`../../../gamecommon`)
-const db = require(`../../../../db/db`)
+const { db } = require(`../../../../db/db`)
 
 module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {
@@ -27,7 +27,7 @@ module.exports = (guild) => {
       guild.saveNewDataToDb()
     }
     guild.ship.members.push(newMember)
-    db.guild.addCrewMember({
+    db.guilds.addCrewMember({
       guildId: guild.guildId,
       member: newMember.saveableData()
     })

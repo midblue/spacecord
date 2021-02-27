@@ -1,6 +1,6 @@
 const levelNumbers = require(`../levels`)
 const story = require(`../../story/story`)
-const db = require(`../../../../db/db`)
+const { db } = require(`../../../../db/db`)
 const { log, allSkills } = require(`../../../gamecommon`)
 
 module.exports = (member) => {
@@ -29,7 +29,7 @@ module.exports = (member) => {
 
     const result = member.skillLevelDetails(skill)
 
-    db.guild.updateCrewMembers({
+    db.guilds.updateCrewMembers({
       guildId: member.guild.guildId,
       members: member.guild.saveableMembers()
     })
@@ -50,8 +50,10 @@ module.exports = (member) => {
   }
 
   member.skillLevelDetails = (skill) => {
-    if (!member.level) member.level = {}
-    if (!member.xp) member.xp = {}
+    if (!member.level)
+      member.level = {}
+    if (!member.xp)
+      member.xp = {}
 
     let xp = member.xp?.[skill] || 0
     if (!xp) {

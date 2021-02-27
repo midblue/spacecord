@@ -3,12 +3,12 @@ const cargoData = require(`../cargo`)
 const equipmentData = require(`../equipment/equipment`)
 const addins = require(`./addins`)
 const createDefaultGuild = require(`./createDefaultGuild`)
-const db = require(`../../../db/db`)
+const { db } = require(`../../../db/db`)
 const memberLiveify = require(`../crew/crew`).liveify
 
 async function spawn ({ discordGuild, channelId, context }) {
   let guild
-  guild = await db.guild.get({ guildId: discordGuild.id })
+  guild = await db.guilds.get({ guildId: discordGuild.id })
   if (guild) {
     if (guild.banned)
       return false // todo implement
@@ -18,7 +18,7 @@ async function spawn ({ discordGuild, channelId, context }) {
 
   guild = createDefaultGuild({ discordGuild, channelId })
   liveify(guild, context)
-  await db.guild.add({ guildId: discordGuild.id, data: guild.saveableData() })
+  await db.guilds.add({ guildId: discordGuild.id, data: guild.saveableData() })
   return guild
 }
 

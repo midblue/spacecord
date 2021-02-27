@@ -10,7 +10,8 @@ async function spawn ({ discordGuild, channelId, context }) {
   let guild
   guild = await db.guild.get({ guildId: discordGuild.id })
   if (guild) {
-    if (guild.banned) return false // todo implement
+    if (guild.banned)
+      return false // todo implement
     liveify(guild)
     return guild
   }

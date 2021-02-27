@@ -21,18 +21,16 @@ const routes = {}
 db.on(`error`, console.error.bind(console, `connection error`))
 db.once(`open`, () => {
   routes.guilds = require(`./guilds`)(db)
-  console.log(`in db.js - guilds = `)
-  console.log(routes.guilds)
+  // console.log(`in db.js - guilds = `)
+  // console.log(routes.guilds)
 
   routes.caches = require(`./caches`)(db)
-  console.log(`in db.js - caches = `)
-  console.log(routes.caches)
+  // console.log(`in db.js - caches = `)
+  // console.log(routes.caches)
 
   ready = true
  
-  toRun.forEach((f) => {
-    f()
-  })
+  toRun.forEach((f) => f())
 })
 
 const runOnReady = (f) => {
@@ -43,7 +41,6 @@ const runOnReady = (f) => {
 }
 
 module.exports = {
-  db,
-  routes,
+  db: routes,
   runOnReady
 }

@@ -1,35 +1,39 @@
-// const { spawn, liveify } = require(`./basics/guild/guild`)
-// const spawnPlanets = require(`./basics/planet`).spawnAll
-// const caches = require(`./basics/caches`)
-// const story = require(`./basics/story/story`)
-// const { log } = require(`./gamecommon`)
-// const { pointIsInsideCircle, distance } = require(`../common`)
-// const coreLoop = require(`./core loop/`)
-const { db, routes, runOnReady } = require(`../db/db`)
+const { spawn, liveify } = require(`./basics/guild/guild`)
+const spawnPlanets = require(`./basics/planet`).spawnAll
+const caches = require(`./basics/caches`)
+const story = require(`./basics/story/story`)
+const { log } = require(`./gamecommon`)
+const { pointIsInsideCircle, distance } = require(`../common`)
+const coreLoop = require(`./core loop/`)
+const { db, runOnReady: runOnDbReady } = require(`../db/db`)
+
+
+runOnDbReady(() => {
+  game.init()
+  console.log(`in manager.js - guilds =`)
+  console.log(db.guilds)
+})
+
 
 //
 // ---------------- Game Object ----------------
 // this object is our "instance" of the game that will handle updates,
 // the core loop, etc.
 //
-runOnReady(() => {
-  console.log(`in manager.js - guilds =`)
-  console.log(routes.guilds)
-})
-return
-
 const game = {
   async init () {
-    (await db.guilds.getAll()).forEach((g) =>
-      this.loadExistingGuild(g))
+    // todo this is the part we need to work on first!
+    
+    // (await db.guilds.getAll()).forEach((g) =>
+    //   this.loadExistingGuild(g))
 
-    log(`init`, `Loaded ${this.guilds.length} guilds from db`);
+    // log(`init`, `Loaded ${this.guilds.length} guilds from db`);
 
-    (await db.caches.getAll()).forEach((c) => this.loadCache(c))
-    log(`init`, `Loaded ${this.caches.length} caches from db`)
+    // (await db.caches.getAll()).forEach((c) => this.loadCache(c))
+    // log(`init`, `Loaded ${this.caches.length} caches from db`)
 
-    this.planets = await spawnPlanets({ context: this })
-    log(`init`, `Loaded ${this.planets.length} planets`)
+    // this.planets = await spawnPlanets({ context: this })
+    // log(`init`, `Loaded ${this.planets.length} planets`)
 
     this.start()
   },
@@ -116,7 +120,7 @@ const game = {
     }
     // success
     this.guilds.splice(existingGuildInGame, 1)
-    await db.guild.remove(guildId)
+    await db.guilds.remove(guildId)
     return {
       ok: true,
       message: `deleted guild`
@@ -126,7 +130,7 @@ const game = {
   async getGuild (id) {
     let thisGuild = this.guilds.find((g) => g.guildId === id) // check local
     if (!thisGuild) {
-      thisGuild = await db.guild.get({ guildId: id })
+      thisGuild = await db.guilds.get({ guildId: id })
       if (thisGuild) {
         liveify(thisGuild, this)
         this.guilds.push(thisGuild)
@@ -209,8 +213,6 @@ const game = {
   }
 }
 
-db.runOnReady(game.init)
-
 //
 // ---------------- Exports ----------------
 // these functions are the bridge between discord and the game —
@@ -261,9 +263,9 @@ module.exports = {
     }, 3000)
   },
   async activateGuild (guildId) {
-    const existing = await db.guild.get({ guildId })
+    const existing = await db.guilds.get({ guildId })
     if (existing) {
-      await db.guild.update({ guildId, updates: { active: true } })
+      await db.guilds.update({ guildId, updates: { active: true } })
       existing.active = true
       game.loadExistingGuild(existing)
       return true
@@ -271,7 +273,7 @@ module.exports = {
   },
   async deactivateGuild (guildId) {
     // intentionally not removing them from the game just so other players can still kill them
-    await db.guild.update({ guildId, updates: { active: false } })
+    await db.guilds.update({ guildId, updates: { active: false } })
   },
   tick () {
     return game.update()

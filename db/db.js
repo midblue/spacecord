@@ -1,25 +1,23 @@
 const mongoose = require(`mongoose`)
 
-let db
-const routes = {}
+const hostname = `mongodb`
+const port = 27017
+const dbName = `spacecord`
 
 let ready = false
-
 const toRun = []
 
 const username = encodeURIComponent(process.env.MONGODB_ADMINUSERNAME)
 const password = encodeURIComponent(process.env.MONGODB_ADMINPASSWORD)
-
-const hostname = `mongodb`
-const port = 27017
-const dbName = `spacecord`
 
 const uri = `mongodb://${username}:${password}@${hostname}:${port}\
 /${dbName}?poolSize=20&writeConcern=majority?connectTimeoutMS=5000`
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
-db = mongoose.connection
+const db = mongoose.connection
+const routes = {}
+
 db.on(`error`, console.error.bind(console, `connection error`))
 db.once(`open`, () => {
   routes.guilds = require(`./guilds`)(db)
@@ -38,14 +36,11 @@ db.once(`open`, () => {
 })
 
 const runOnReady = (f) => {
-  if (ready) {
+  if (ready)
     f()
-  }
-  else {
+  else
     toRun.push(f)
-  }
 }
-
 
 module.exports = {
   db,

@@ -10,8 +10,8 @@ const { db, runOnReady: runOnDbReady } = require(`../db/db`)
 
 runOnDbReady(() => {
   game.init()
-  console.log(`in manager.js - guilds =`)
-  console.log(db.guilds)
+  // console.log(`in manager.js - guilds =`)
+  // console.log(db.guilds)
 })
 
 
@@ -23,6 +23,11 @@ runOnDbReady(() => {
 const game = {
   async init () {
     // todo this is the part we need to work on first!
+    const demoGuild = await require(`./basics/guild/createDefaultGuild`)({
+      discordGuild: { name: `testGuild`, id: `testGuildId` },
+      channelId: `testChannel`
+    })
+    // * you can try saving demoGuild for now and see if the data comes back nicely
     
     // (await db.guilds.getAll()).forEach((g) =>
     //   this.loadExistingGuild(g))

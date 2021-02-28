@@ -10,7 +10,7 @@ module.exports = (member) => {
         const memberSkill = member.level[s.name] || 0
         const staminaRequired = member.staminaRequiredFor(s.name)
         return { ...s, memberSkill, staminaRequired }
-      })
+      }),
     ]
     return trainableSkills
   }
@@ -19,7 +19,7 @@ module.exports = (member) => {
     return Math.ceil(Math.sqrt(member.level[skill] || 1))
   }
 
-  member.addXp = (skill, xpAmount) => {
+  member.addXp = (skill, xpAmount, silent) => {
     const baseline = member.skillLevelDetails(skill) // this resets everything for us, in case the user spawned with levels but no xp
 
     const startLevel = baseline.level
@@ -31,21 +31,23 @@ module.exports = (member) => {
 
     db.guild.updateCrewMembers({
       guildId: member.guild.guildId,
-      members: member.guild.saveableMembers()
+      members: member.guild.saveableMembers(),
     })
 
     return {
       ok: true,
-      message: story.xp.add.success(
-        member.id,
-        skill,
-        xpAmount,
-        result.level,
-        startLevel !== result.level,
-        result.levelSize,
-        result.levelProgress,
-        result.percentToLevel
-      )
+      message: silent
+        ? ``
+        : story.xp.add.success(
+            member.id,
+            skill,
+            xpAmount,
+            result.level,
+            startLevel !== result.level,
+            result.levelSize,
+            result.levelProgress,
+            result.percentToLevel,
+          ),
     }
   }
 
@@ -80,7 +82,7 @@ module.exports = (member) => {
       toNextLevel,
       levelProgress,
       percentToLevel,
-      overallPercentToLevel
+      overallPercentToLevel,
     }
     return data
   }

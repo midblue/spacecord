@@ -15,7 +15,7 @@ module.exports = {
   },
   test (content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:p|planet|cantina|outside|walkaround|walk|viewplanet|seeplanet|lookatplanet)$`,
+      `^${settings.prefix}(?:p|planet|cantina|outside|walkaround|walk|here|viewplanet|seeplanet|lookatplanet)$`,
       `gi`
     ).exec(content)
   },

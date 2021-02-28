@@ -451,7 +451,7 @@ module.exports = {
   },
   discovery: {
     planet: (planet) =>
-      `You've discovered ${planet.name}, a ${planet.getSizeDescriptor()} ${
+      `You've discovered 🪐${planet.name}, a ${planet.getSizeDescriptor()} ${
         planet.color
       } planet located at [${planet.location.join(
         `, `,

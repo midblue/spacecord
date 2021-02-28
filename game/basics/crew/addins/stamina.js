@@ -32,6 +32,9 @@ module.exports = (member) => {
         ),
       }
     }
+
+    member.addXp(`legacy`, amount, true) // because they did something
+
     member.stamina = (member.stamina || 1) - amount / member.maxStamina()
     if (member.stamina < 0.001) member.stamina = 0
 

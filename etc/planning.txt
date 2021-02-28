@@ -1,12 +1,30 @@
 
+skiffs for individual players to go off and do their own thing within a certain range of the main server ship
+also big thing was the messages in the main bot channel quickly overwhelming, said training and looking at shops etc stuff should be in DMs
+suggested that users with the skiffs could go do mining themselves (minigame style of course) and bring back resources, way to feel productive toward the ship as an individual in a more material-feeling way than just leveling up your stats
+add some stat like 'contribution points' which give you more abilities/say in votes/something, w the main thing being an equivalent to WoW i thought of, like hitting level 20 and being able to get a mount letting you know you've kinda crossed into the next level of gameplay where you have more freedom and ability to do stuff, hitting a certain contribution level would grant you your own vessel in the form of a skiff
+
+skiffs
+  ship needs "skiff docking bay" or something?
+  what are the meaningful things you could do with a skiff?
+    mine
+    pew pew fight (untargetable but low damage)
+    upgrade
+      speed
+      range from ship
+      "efficiency"
+      recharge speed
+      weapon
+
 **BUGS**
 * i can train for someone else from .me
 * cache not giving me the stuff
+* undefined undefined in cargo
 munitions can keep going after game over
 
 **MVP**
 test auto discover planets in interact range on move
-actual minigames for piloting, repairing, power gen
+actual minigames for piloting and repairing
 determine good xp numbers for training
 more equipment
 more planets
@@ -14,13 +32,12 @@ a way to make money (quests??)
 actually write help guide
 
 **NEXT**
-athletics skill for generatepower and stamina gain
+athletics skill for stamina gain and ...?
 ship chatter on the different decks
 mine ore from environment (and also use mining laser as weapon)
-html based scanner
+more html based scanners
 jettison equipment too
 tractor beam item
-mini battleship game for munitions
 single-use items
 	teleporters
 	trackers
@@ -45,8 +62,7 @@ repair
   follow complex set of directions (i.e. a manual) (manipulate something) (logic rules) to get simple answer ('XXYXYXX')
   math puzzle
   minesweeper
-generate power
-  slot machine rolls — hand-crank the reactor & cores come out aligned/not, bigger matches = more power, you have a certain number of rerolls for columns based on... ?
+  connect wires
 
 dice based game
 

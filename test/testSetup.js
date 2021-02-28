@@ -1,4 +1,5 @@
 const assert = require(`assert`)
+const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
 
 const hostname = `127.0.0.1`
@@ -18,10 +19,29 @@ describe(`Test database interactions`, () => {
     assert(mongoose.connection.readyState === 1) // connected
   })
 
-  it(`Test 2`, () => {
-    assert.strictEqual(`This shouldn't fail`, `This shouldn't fail`)
-    assert.notStrictEqual(false, `This should fail`)
+  it(`should have guilds,caches,planets collections by default`, async () => {
+    db = mongoose.connection.db
+
+    collections = (await db.listCollections().toArray()).map((c) => c.name)
+    expect(collections)
+      .to.include.all.members([`guilds`, `caches`, `planets`])
+
+    //   mongoose.connection.db.listCollections().toArray(function (err, names) {
+    //     console.log(names); // [{ name: 'dbname.myCollection' }]
+    //     module.exports.Collection = names;
+    // });
+    
+    //   expect(res.body)
+    // .to.be.an.instanceof(Array)
+    // .and.to.have.property(0)
+    // .that.includes.all.keys([ 'id', 'category', 'tenant' ])
+
+  // expect(res)
+  // .to.have.nested.property('body[0]')
+  // .that.includes.all.keys([ 'id', 'category', 'tenant' ])
   })
+
+  
 })
 
 after(() => {

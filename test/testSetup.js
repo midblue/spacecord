@@ -1,15 +1,33 @@
 const assert = require(`assert`)
 const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
-
 let db
 
-describe(`Test database interactions`, () => {
+describe(`Database`, () => {
   it(`should create a mongoose connection to mongo successfully`, async () => {
     assert(mongoose.connection.readyState === 1) // connected
   })
 
-  it(`should have guilds,caches,planets collections by default`, async () => {
+  it(`should be able to add data to each model`, async () => {
+    const models = require(`../db/models`)
+    try {
+      const testGuild = new models.Guild({ active: false })
+      await testGuild.save()
+
+      const testCache = new models.Cache({ amount: 1 })
+      await testCache.save()
+
+      const testPlanet = new models.Planet({ name: `test` })
+      await testPlanet.save()
+
+      assert(true)
+    }
+    catch (e) {
+      assert.fail(false, true, e.message)
+    }
+  })
+
+  it(`should have guilds, caches, planets collections`, async () => {
     collections = (await db.listCollections().toArray()).map((c) => c.name)
     expect(collections)
       .to.include.all.members([`guilds`, `caches`, `planets`])
@@ -24,38 +42,17 @@ describe(`Test database interactions`, () => {
     // .that.includes.all.keys([ 'id', 'category', 'tenant' ])
   })
 
-  it(`should be able to retrieve a test document from guilds`, async () => {
-    // db.collection(`guilds`).find().on(`data`, (doc) => {
-    //   console.log(doc)
-    // })
-    // await cursor.forEach(console.dir);
-    // console.log((await db.collection(`guilds`).find({})))
-
-    const Guild = mongoose.model(`cache`, {})
-    let all = await Guild.find({})
-    console.log(all, `all`)
-
-    cursor = await db.collection(`guilds`).find({})
-
-    // const MyModel = mongoose.model('Test', new Schema({ name: String }));
-    // const doc = new MyModel();
-    // 
-    // doc instanceof MyModel; // true
-    // doc instanceof mongoose.Model; // true
-    // doc instanceof mongoose.Document; // true
-    // 
-    // const doc = await MyModel.findOne();
-    // 
-    // doc instanceof MyModel; // true
-    // doc instanceof mongoose.Model; // true
-    // doc instanceof mongoose.Document; // true
-    // 
-    // 
-    
-
-    expect(cursor)
-      .to.contain.members([{ guild: 1 }])
-    
+  it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
+    const models = require(`../db/models`)
+    let guild = await models.Guild.findOne()
+    expect(guild)
+      .to.have.property(`_id`)
+    let planet = await models.Planet.findOne()
+    expect(planet)
+      .to.have.property(`_id`)
+    let cache = await models.Cache.findOne()
+    expect(cache)
+      .to.have.property(`_id`)
   })
 
 })
@@ -64,21 +61,33 @@ before(async () => {
   const mongoose = require(`mongoose`)
   const hostname = `127.0.0.1`
   const port = 27017
-  const dbName = `spacecord`
-  const username = encodeURIComponent(`spacecord`)
-  const password = encodeURIComponent(`spacecord123`)
+  const dbName = `spacecord-test`
+  const username = encodeURIComponent(`testuser`)
+  const password = encodeURIComponent(`testpass`)
   const uri = `mongodb://${username}:${password}@${hostname}:${port}\
   /${dbName}?poolSize=20&writeConcern=majority?connectTimeoutMS=5000`
 
   await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-  })
-  db = mongoose.connection.db
-})
-after(() => {
-  mongoose.disconnect()
-  console.log(`Disconnected from mongo`)
+  }).catch((error) => console.log(error))
+  console.log(`Connected to mongo.\n`)
+  db = mongoose.connection.db;
+
+  (await db.listCollections().toArray())
+    .forEach(
+      async (c) => await mongoose.connection.collection(c.name).drop()
+    )
+  console.log(`    Made sure no collections exist before running tests.\n`)
 })
 
+after(async () => {
 
+  (await db.listCollections().toArray())
+    .forEach(
+      async (c) => await mongoose.connection.collection(c.name).drop()
+    )
+  console.log(`    Dropped test database collections.\n`)
+  await mongoose.disconnect()
+  console.log(`Disconnected from mongo.`)
+})

@@ -19,6 +19,11 @@ module.exports = (member) => {
     return Math.ceil(Math.sqrt(member.level[skill] || 1))
   }
 
+  member.train = (skill, successRatio, difficultyMod = 1) => {
+    const xpToGain = 500 * successRatio * difficultyMod
+    return member.addXp(skill, xpToGain)
+  }
+
   member.addXp = (skill, xpAmount, silent) => {
     const baseline = member.skillLevelDetails(skill) // this resets everything for us, in case the user spawned with levels but no xp
 

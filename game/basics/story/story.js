@@ -219,11 +219,11 @@ module.exports = {
         levelProgress,
         percentToLevel,
       ) =>
-        `%username%${id}% gains ${xpAmount} experience in \`${
+        `%username%${id}% gains ${Math.round(xpAmount)} experience in \`${
           allSkills.find((s) => s.name === skill).emoji
         }${capitalize(skill)}\`${
           didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
-        } %username%${id}% is \`${levelProgress}/${levelSize} (${(
+        } %username%${id}% is \`${Math.round(levelProgress)}/${levelSize} (${(
           percentToLevel * 100
         ).toFixed()}%)\` to \`Level ${level + 1}\`.`,
     },

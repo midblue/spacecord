@@ -2,9 +2,9 @@ const { username, applyCustomParams } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 
 module.exports = async function (
-  msgOrChannel,
+  msgOrChannelOrUser,
   messages = ``,
-  surroundingCharacters = `\`\`\``
+  surroundingCharacters = `\`\`\``,
 ) {
   const sentMessages = []
   if (!Array.isArray(messages)) messages = [messages]
@@ -16,14 +16,16 @@ module.exports = async function (
     else {
       message = `${message}` // some types (i.e. raw numbers) couldn't have 'indexOf' run on them. this makes everything a string.
       // * here, we also apply custom params we've built into our story text.
-      let remainingText = await applyCustomParams(msgOrChannel, message)
+      let remainingText = msgOrChannelOrUser.username // for now we ignore custom params for DMs
+        ? message
+        : await applyCustomParams(msgOrChannelOrUser, message)
       const surroundingCharactersToUse =
         remainingText.indexOf(`\``) === -1 ? surroundingCharacters : ``
       while (remainingText.length > 0) {
         splitMessage.push(
           surroundingCharactersToUse +
             remainingText.substring(0, 1990) +
-            surroundingCharactersToUse
+            surroundingCharactersToUse,
         )
         remainingText = remainingText.substring(1990)
       }
@@ -34,11 +36,14 @@ module.exports = async function (
       //   .setColor(APP_COLOR)
       //   .setDescription(textEl)
       sentMessages.push(
-        await (msgOrChannel.channel ? msgOrChannel.channel : msgOrChannel)
+        await (msgOrChannelOrUser.channel
+          ? msgOrChannelOrUser.channel
+          : msgOrChannelOrUser
+        )
           .send(textEl)
           .catch((err) => {
             console.error(`Failed to send!`, err.message)
-          })
+          }),
       )
     }
   }

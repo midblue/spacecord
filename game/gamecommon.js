@@ -1,27 +1,27 @@
 module.exports = {
-  log (type = `Core`, ...text) {
+  log(type = `Core`, ...text) {
     console.log(`> ${type.padEnd(15, ` `)} |`, ...text)
   },
   allSkills: [
     {
       emoji: `👩‍💻`,
-      name: `engineering`
+      name: `engineering`,
     },
     {
       emoji: `🚀`,
-      name: `piloting`
+      name: `piloting`,
     },
     {
       emoji: `🔧`,
-      name: `mechanics`
+      name: `mechanics`,
     },
     {
       emoji: `⚔️`,
-      name: `munitions`
-    }
+      name: `munitions`,
+    },
     // {
     //   emoji: '📚',
     //   name: 'linguistics',
     // },
-  ]
+  ],
 }

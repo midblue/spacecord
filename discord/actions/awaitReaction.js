@@ -25,7 +25,7 @@ module.exports = async ({
 
     let ended = false
 
-    if (embed) {
+    if (embed && typeof embed === `object`) {
       if ((reactions && reactions.length) || listeningType) {
         embed.setFooter(
           `Listening for ${

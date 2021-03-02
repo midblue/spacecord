@@ -58,8 +58,7 @@ module.exports = {
     
     Type as many sentences as fast as you can within the time limit!
     One line per message.
-    Capitalization doesn't matter, but copy-and-pasting won't work.
-    Your crewmates can help out.`)
+    Capitalization doesn't matter, but copy-and-pasting won't work.`)
 
     embed.description += `\n\n**You have ${(time / 1000).toFixed(0)} seconds.**`
 
@@ -147,8 +146,10 @@ module.exports = {
       )
 
       // ------- calculate and add XP
-      const xp = Math.round(hits * 1000)
-      const res = authorCrewMemberObject.addXp(`mechanics`, xp)
+      const res = authorCrewMemberObject.train(
+        `mechanics`,
+        hits / challengeCount,
+      )
 
       // ------- update embed with results
       embed.description = `**${challengeCount} challenges in ${(

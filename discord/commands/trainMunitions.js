@@ -10,25 +10,25 @@ const awaitReaction = require(`../actions/awaitReaction`)
 module.exports = {
   tag: `trainMunitions`,
   documentation: false,
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:trainmunitions?|munitions?training)$`,
-      `gi`
+      `gi`,
     ).exec(content)
   },
-  async action ({ msg, guild, authorCrewMemberObject, staminaRequired }) {
+  async action({ msg, guild, authorCrewMemberObject, staminaRequired }) {
     log(msg, `Train Munitions`, msg.guild.name)
 
     // ---------- use stamina
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
-    if (!member)
-      return console.log(`no user found in trainMunitions`)
-    if (!staminaRequired) { staminaRequired = authorCrewMemberObject.staminaRequiredFor(`munitions`) }
+    if (!member) return console.log(`no user found in trainMunitions`)
+    if (!staminaRequired) {
+      staminaRequired = authorCrewMemberObject.staminaRequiredFor(`munitions`)
+    }
     const staminaRes = member.useStamina(`train`)
-    if (!staminaRes.ok)
-      return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const emoji = allSkills.find((s) => s.name === `munitions`).emoji
 
@@ -55,8 +55,7 @@ module.exports = {
     const board = []
     for (let i = 0; i < boardWidth; i++) {
       board.push([])
-      for (let j = 0; j < boardWidth; j++)
-        board[i].push(`◼️`)
+      for (let j = 0; j < boardWidth; j++) board[i].push(`◼️`)
     }
     targetSizes.forEach((targetSize) => {
       const findSpace = () => {
@@ -65,19 +64,16 @@ module.exports = {
           const startX = Math.floor(Math.random() * (boardWidth - targetSize))
           const startY = Math.floor(Math.random() * boardWidth)
           for (let i = startX; i < startX + targetSize; i++) {
-            if (board[startY][i] !== `◼️`)
-              return false
+            if (board[startY][i] !== `◼️`) return false
           }
           for (let i = startX; i < startX + targetSize; i++) {
             board[startY][i] = `🚢`
           }
-        }
-        else {
+        } else {
           const startX = Math.floor(Math.random() * boardWidth)
           const startY = Math.floor(Math.random() * (boardWidth - targetSize))
           for (let i = startY; i < startY + targetSize; i++) {
-            if (board[i][startX] !== `◼️`)
-              return false
+            if (board[i][startX] !== `◼️`) return false
           }
           for (let i = startY; i < startY + targetSize; i++) {
             board[i][startX] = `🚢`
@@ -86,15 +82,23 @@ module.exports = {
         return true
       }
       let found = false
-      while (!found)
-        found = findSpace()
+      while (!found) found = findSpace()
     })
 
     // ------- make game embed
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`${emoji} Munitions Training | ${msg.author.nickname}`)
-    embed.description = `it's battleship ya dummy`
+    embed.description = `Focus and logic prevail in the midst of a firefight. This training has been developed to sharpen your tactics and your precision under duress.
+
+Use your 🧨 Shots to take down the practice dummies hidden in the inky blackness of space.
+There are \`${
+      targetSizes.length
+    }\` enemy ships somewhere on the board with lengths ${targetSizes
+      .slice(0, targetSizes.length - 2)
+      .map((s) => `\`${s}\``)
+      .join(`, `)}, and \`${targetSizes[targetSizes.length - 1]}\`.
+Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.`
     embed.fields = [
       { name: `🧨 Shots`, value: shots, inline: true },
       {
@@ -106,19 +110,21 @@ module.exports = {
 
     // ------- wait for them to say I'm Ready
     const sentMessage = (await send(msg, embed))[0]
-    const ready = await readyCheck({ msg: sentMessage, embed, user: authorCrewMemberObject })
+    const ready = await readyCheck({
+      msg: sentMessage,
+      embed,
+      user: authorCrewMemberObject,
+    })
     if (!ready) {
-      if (!sentMessage.deleted)
-        sentMessage.delete()
+      if (!sentMessage.deleted) sentMessage.delete()
       return
     }
 
     embed.fields = [
       {
         name: `Key`,
-        value:
-          `\`📍Current Target\`, \`💢Hit\`, \`✖️Miss\`, \`👍Current(Hit)\`, \`👎Current(Miss)\``,
-        id: `key`
+        value: `\`📍Current Target\`, \`💢Hit\`, \`✖️Miss\`, \`👍Current(Hit)\`, \`👎Current(Miss)\``,
+        id: `key`,
       },
       {
         name: `🧨 Shots Remaining`,
@@ -138,12 +144,10 @@ module.exports = {
     // update remaining time
     let startTime = Date.now()
     const embedUpdateInterval = setInterval(() => {
-      if (done)
-        return clearInterval(embedUpdateInterval)
+      if (done) return clearInterval(embedUpdateInterval)
       remainingTime -= Math.abs(startTime - Date.now())
       startTime = Date.now()
-      if (remainingTime < 0)
-        remainingTime = 0
+      if (remainingTime < 0) remainingTime = 0
       embed.fields[
         embed.fields.findIndex((f) => f.id === `remainingTime`)
       ].value = msToTimeString(remainingTime)
@@ -153,8 +157,7 @@ module.exports = {
         embed.fields = []
         end()
       }
-      if (!sentMessage.deleted)
-        sentMessage.edit(embed)
+      if (!sentMessage.deleted) sentMessage.edit(embed)
     }, 5000)
 
     // ------- update board view
@@ -163,57 +166,54 @@ module.exports = {
         .map((row, index) =>
           index === targetY
             ? row.map((x, i) =>
-              i === targetX
-                ? x === `💢`
-                  ? `👍`
-                  : x === `✖️`
+                i === targetX
+                  ? x === `💢`
+                    ? `👍`
+                    : x === `✖️`
                     ? `👎`
                     : `📍`
-                : x,
-            )
+                  : x,
+              )
             : row,
         )
         .map((row) => row.reduce((total, c) => total + c, ``))
         .join(`\n`)
         .replace(/🚢/gi, `◼️`)
       embed.description = `\`\`\`` + outputBoardString + `\`\`\``
-      if (!sentMessage.deleted)
-        sentMessage.edit(embed)
+      if (!sentMessage.deleted) sentMessage.edit(embed)
     }
 
     // ------- take shot
     const takeShot = () => {
       remainingShots--
-      if (remainingShots <= 0)
-        return end()
+      if (remainingShots <= 0) return end()
 
       embed.fields[
         embed.fields.findIndex((f) => f.id === `remainingShots`)
       ].value = remainingShots
-      if (board[targetY][targetX] === `🚢`)
-        board[targetY][targetX] = `💢`
-      else
-        board[targetY][targetX] = `✖️`
+      if (board[targetY][targetX] === `🚢`) board[targetY][targetX] = `💢`
+      else board[targetY][targetX] = `✖️`
 
-      const hits = board.reduce((t1, row) => t1 + row.reduce((t2, col) => t2 + (col === `💢` ? 1 : 0), 0), 0)
+      const hits = board.reduce(
+        (t1, row) =>
+          t1 + row.reduce((t2, col) => t2 + (col === `💢` ? 1 : 0), 0),
+        0,
+      )
       const percent = hits / totalTargetSquares
-      if (percent === 1)
-        return end()
-      
+      if (percent === 1) return end()
+
       updateBoardView()
     }
 
     // ------- start game
     updateBoardView()
-    if (!sentMessage.deleted)
-      sentMessage.edit(embed)
+    if (!sentMessage.deleted) sentMessage.edit(embed)
     const reactions = [
       {
         emoji: `◀`,
         action: () => {
           targetX--
-          if (targetX < 0)
-            targetX = 0
+          if (targetX < 0) targetX = 0
           updateBoardView()
         },
       },
@@ -221,8 +221,7 @@ module.exports = {
         emoji: `▶️`,
         action: () => {
           targetX++
-          if (targetX >= boardWidth)
-            targetX = boardWidth
+          if (targetX >= boardWidth) targetX = boardWidth
           updateBoardView()
         },
       },
@@ -230,8 +229,7 @@ module.exports = {
         emoji: `🔼`,
         action: () => {
           targetY--
-          if (targetY < 0)
-            targetY = 0
+          if (targetY < 0) targetY = 0
           updateBoardView()
         },
       },
@@ -239,8 +237,7 @@ module.exports = {
         emoji: `🔽`,
         action: () => {
           targetY++
-          if (targetY >= boardWidth)
-            targetY = boardWidth
+          if (targetY >= boardWidth) targetY = boardWidth
           updateBoardView()
         },
       },
@@ -262,21 +259,20 @@ module.exports = {
 
     // ------- end game
     const end = async () => {
-      if (done)
-        return
+      if (done) return
       done = true
 
-      const hits = board.reduce((t1, row) => t1 + row.reduce((t2, col) => t2 + (col === `💢` ? 1 : 0), 0), 0)
+      const hits = board.reduce(
+        (t1, row) =>
+          t1 + row.reduce((t2, col) => t2 + (col === `💢` ? 1 : 0), 0),
+        0,
+      )
       const percent = hits / totalTargetSquares
 
       // ------- calculate and add XP
-      const xp = Math.round(1000 * percent)
-      const res = authorCrewMemberObject.addXp(`munitions`, xp)
+      const res = authorCrewMemberObject.train(`munitions`, percent)
 
       // ------- update embed with results
-      // embed.fields.splice(
-      //   embed.fields.findIndex((f) => f.id === `key`)
-      //   , 1)
       embed.fields = []
       embed.description += `\n**${Math.round(percent * 1000) / 10}% hit**
 
@@ -285,5 +281,5 @@ Result: ${await applyCustomParams(msg, res.message)}`
     }
     // ------- end of game
     setTimeout(end, time)
-  }
+  },
 }

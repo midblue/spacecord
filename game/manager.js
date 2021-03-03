@@ -1,49 +1,52 @@
-const { spawn, liveify } = require(`./basics/guild/guild`)
+const { spawn: spawnNewGuildData, liveify } = require(`./basics/guild/guild`)
 const spawnPlanets = require(`./basics/planet`).spawnAll
 const caches = require(`./basics/caches`)
 const story = require(`./basics/story/story`)
 const { log } = require(`./gamecommon`)
 const { pointIsInsideCircle, distance } = require(`../common`)
 const coreLoop = require(`./core loop/`)
-const { db, runOnReady: runOnDbReady } = require(`../db/db`)
-
-runOnDbReady(() => {
-  game.init()
-  // console.log(`in manager.js - guilds =`)
-  // console.log(db.guilds)
-})
-
 
 //
 // ---------------- Game Object ----------------
 // this object is our "instance" of the game that will handle updates,
 // the core loop, etc.
 //
-const game = {
-  async init () {
-    // todo this is the part we need to work on first!
-    const demoGuild = await require(`./basics/guild/createDefaultGuild`)({
-      discordGuild: { name: `testGuild`, id: `testGuildId` },
-      channelId: `testChannel`
-    })
+// ---------------- Exports ----------------
+// these functions are the bridge between discord and the game —
+// they provide an interface to game functions and handle conversions
+// from discord types to game types, and vice versa.
+//
+//
 
-    const guilds = await db.guilds.getAll()
-    guilds.forEach((g) =>
-      this.loadExistingGuild(g))
+module.exports = {
+  async init (db) {
+    this.db = db
+    // const demoGuild = await require(`./basics/guild/createDefaultGuild`)({
+    //   discordGuild: { name: `testGuild`, id: `testGuildId` },
+    //   channelId: `testChannel`
+    // })
 
-    log(`init`, `Loaded ${this.guilds.length} guilds from db`)
-    const caches = await db.caches.getAll()
-    caches.forEach((c) => this.loadCache(c))
+    // const guilds = await db.guilds.getAll()
+    // guilds.forEach((g) =>
+    //   this.loadExistingGuild(g))
+    // log(`init`, `Loaded ${this.guilds.length} guilds from db`)
 
-    log(`init`, `Loaded ${this.caches.length} caches from db`)
+    // const caches = await db.caches.getAll()
+    // caches.forEach((c) => this.loadCache(c))
+    // log(`init`, `Loaded ${this.caches.length} caches from db`)
 
-    this.planets = await spawnPlanets({ context: this })
-    log(`init`, `Loaded ${this.planets.length} planets`)
+    // this.planets = await spawnPlanets({ context: this.game })
+    // log(`init`, `Loaded ${this.planets.length} planets`)
 
+    this.isReady = true
     this.start()
+    log(`init`, `Init complete`)
   },
 
+
   // ---------------- Game Properties ----------------
+  db: {},
+  isReady: false,
   gameDiameter: () => {
     return Math.sqrt(this.guilds?.length || 1) * 15
   },
@@ -103,6 +106,7 @@ const game = {
     // success
     this.guilds.push(newGuild)
     log(`addGuild`, `Added guild to game`, newGuild.guildName)
+    // console.log(`newGuild`, newGuild)
     return {
       ok: true,
       message: story.ship.get.first(newGuild),
@@ -135,7 +139,7 @@ const game = {
   async getGuild (id) {
     let thisGuild = this.guilds.find((g) => g.guildId === id) // check local
     if (!thisGuild) {
-      thisGuild = await db.guilds.get({ guildId: id })
+      thisGuild = await this.db.guilds.get({ guildId: id })
       if (thisGuild) {
         liveify(thisGuild, this)
         this.guilds.push(thisGuild)
@@ -215,20 +219,10 @@ const game = {
       1
     )
     return { ok: true }
-  }
-}
+  },
 
-//
-// ---------------- Exports ----------------
-// these functions are the bridge between discord and the game —
-// they provide an interface to game functions and handle conversions
-// from discord types to game types, and vice versa.
-//
-//
-module.exports = {
-  game,
   async spawn ({ discordGuild, channelId }) {
-    const existingGuildInDb = await game.getGuild(discordGuild.id)
+    const existingGuildInDb = await this.getGuild(discordGuild.id)
     if (existingGuildInDb.ok) {
       return {
         ...existingGuildInDb,
@@ -236,23 +230,16 @@ module.exports = {
         message: story.ship.get.fail.existing(existingGuildInDb.guild)
       }
     }
-
-    const newGuild = await spawn({ discordGuild, channelId, context: game })
+    const newGuild = await spawnNewGuildData({ db: this.db, discordGuild, channelId, context: this })
     if (!newGuild) { return { ok: false, message: `This guild has been banned from the game.` } }
-    return game.addGuild(newGuild)
+    return this.addGuild(newGuild)
   },
   async guild (guildId) {
-    return await game.getGuild(guildId)
-  },
-  async guilds () {
-    return game.guilds
-  },
-  async removeGuild (guildId) {
-    return await game.removeGuild(guildId)
+    return await this.getGuild(guildId)
   },
   verifyActiveGuilds (discordGuilds) {
     setTimeout(() => {
-      game.guilds.forEach((g) => {
+      this.guilds.forEach((g) => {
         if (
           !discordGuilds.find((discordGuild) => discordGuild.id === g.guildId)
         ) {
@@ -272,7 +259,7 @@ module.exports = {
     if (existing) {
       await db.guilds.update({ guildId, updates: { active: true } })
       existing.active = true
-      game.loadExistingGuild(existing)
+      this.loadExistingGuild(existing)
       return true
     } return false
   },
@@ -280,10 +267,8 @@ module.exports = {
     // intentionally not removing them from the game just so other players can still kill them
     await db.guilds.update({ guildId, updates: { active: false } })
   },
+
   tick () {
-    return game.update()
+    return this.update()
   },
-  timeUntilNextTick () {
-    return game.timeUntilNextTick()
-  }
 }

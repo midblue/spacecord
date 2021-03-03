@@ -1,7 +1,6 @@
 const send = require(`../actions/send`)
 const { username, applyCustomParams } = require(`../botcommon`)
 const defaultServerSettings = require(`../defaults/defaultServerSettings`)
-const { db } = require(`../../db/db`)
 
 // * get all commands from files in this folder
 const fs = require(`fs`)
@@ -109,7 +108,7 @@ module.exports = {
         // in case the server changes their name, update it here
         if (guild && msg.guild && msg.guild.name !== guild.guildName) {
           guild.guildName = msg.guild.name
-          db.guilds.update({
+          game.db.guilds.update({
             guildId: msg.guild.id,
             updates: { guildName: msg.guild.name }
           })

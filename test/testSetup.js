@@ -1,7 +1,11 @@
+require(`dotenv`).config()
+require(`../globalVariables`)
 const assert = require(`assert`)
 const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
-let db
+const { init: initDb, db } = require(`../db/mongo/db`)
+const { msg } = require(`./tools/messages`)
+const models = require(`../db/mongo/models`)
 
 describe(`Database`, () => {
   it(`should create a mongoose connection to mongo successfully`, async () => {
@@ -9,7 +13,7 @@ describe(`Database`, () => {
   })
 
   it(`should be able to add data to each model`, async () => {
-    const models = require(`../db/models`)
+    
     try {
       const testGuild = new models.Guild({ active: false })
       await testGuild.save()
@@ -27,8 +31,8 @@ describe(`Database`, () => {
     }
   })
 
-  it(`should have guilds, caches, planets collections`, async () => {
-    collections = (await db.listCollections().toArray()).map((c) => c.name)
+  it(`should have guilds, caches, plagnets collections`, async () => {
+    collections = (await mongoose.connection.db.listCollections().toArray()).map((c) => c.name)
     expect(collections)
       .to.include.all.members([`guilds`, `caches`, `planets`])
     
@@ -43,7 +47,7 @@ describe(`Database`, () => {
   })
 
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
-    const models = require(`../db/models`)
+    const models = require(`../db/mongo/models`)
     let guild = await models.Guild.findOne()
     expect(guild)
       .to.have.property(`_id`)
@@ -55,7 +59,33 @@ describe(`Database`, () => {
       .to.have.property(`_id`)
   })
 
+  it(`should be able to initialize the game`, async () => {
+    const { runOnReady, init: initDb, db } = require(`../db/mongo/db`)
+    runOnReady(async () => {
+      assert(true, `Db is ready`)
+
+      const game = require(`../game/manager`)
+      await game.init(db)
+      assert(game.isReady, `Game is ready`)
+
+      const bot = require(`../discord/bot`)
+      await bot.init(game)
+      assert(bot.client.isReady, `Bot is ready`)
+    })
+    await initDb({})
+
+  })
+
+  it(`should create a new guild when running bot.spawn()`, async () => {
+    const spawnAction = require(`../discord/commands/spawn`).action
+    const bot = require(`../discord/bot`)
+    await spawnAction({ msg, authorIsAdmin: true, client: bot.client })
+    
+    const createdGuild = await models.Guild.findOne({ guildId: msg.guild.id })
+    assert(createdGuild.guildId === msg.guild.id)
+  })
 })
+
 
 before(async () => {
   const mongoose = require(`mongoose`)
@@ -64,17 +94,10 @@ before(async () => {
   const dbName = `spacecord-test`
   const username = encodeURIComponent(`testuser`)
   const password = encodeURIComponent(`testpass`)
-  const uri = `mongodb://${username}:${password}@${hostname}:${port}\
-  /${dbName}?poolSize=20&writeConcern=majority?connectTimeoutMS=5000`
+ 
+  await initDb({ hostname, port, dbName, username, password });
 
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }).catch((error) => console.log(error))
-  console.log(`Connected to mongo.\n`)
-  db = mongoose.connection.db;
-
-  (await db.listCollections().toArray())
+  (await mongoose.connection.db.listCollections().toArray())
     .forEach(
       async (c) => await mongoose.connection.collection(c.name).drop()
     )
@@ -82,8 +105,7 @@ before(async () => {
 })
 
 after(async () => {
-
-  (await db.listCollections().toArray())
+  (await mongoose.connection.db.listCollections().toArray())
     .forEach(
       async (c) => await mongoose.connection.collection(c.name).drop()
     )

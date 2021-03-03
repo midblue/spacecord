@@ -1,7 +1,7 @@
 const story = require(`../../story/story`)
 const crewMember = require(`../../crew/crew`)
 const { log } = require(`../../../gamecommon`)
-const { db } = require(`../../../../db/db`)
+const db = require(`../../../manager`).db
 
 module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {

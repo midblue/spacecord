@@ -1,11 +1,14 @@
 require(`dotenv`).config()
 require(`./globalVariables`)
-require(`./db/db`)
-
-// require('events').EventEmitter.prototype._maxListeners = 5000
+const { db, init: initDb, runOnReady: runOnDbReady } = require(`./db/mongo/db`)
 
 const game = require(`./game/manager`)
 const bot = require(`./discord/bot`)
 
-bot.init(game)
+initDb({})
+
+runOnDbReady(() => {
+  game.init(db)
+  bot.init(game)
+})
 

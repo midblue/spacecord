@@ -1,4 +1,4 @@
-const { db } = require(`../../../../db/db`)
+const db = require(`../../../manager`).db
 const createDefaultGuild = require(`../createDefaultGuild`)
 const factionsData = require(`../../factions`)
 const cargoData = require(`../../cargo`)

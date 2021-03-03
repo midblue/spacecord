@@ -1,6 +1,6 @@
 const levelNumbers = require(`../levels`)
 const story = require(`../../story/story`)
-const { db } = require(`../../../../db/db`)
+const game = require(`../../../manager`)
 const { log, allSkills } = require(`../../../gamecommon`)
 
 module.exports = (member) => {
@@ -29,7 +29,7 @@ module.exports = (member) => {
 
     const result = member.skillLevelDetails(skill)
 
-    db.guilds.updateCrewMembers({
+    game.db.guilds.updateCrewMembers({
       guildId: member.guild.guildId,
       members: member.guild.saveableMembers()
     })

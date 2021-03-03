@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "nodemon index.js",
     "dcu": "docker-compose up",
-    "lint": "eslint . --ext .js --fix"
+    "hard-restart": "docker-compose down --remove-orphans --volumes && docker-compose up -d",
+    "restart": "docker-compose down --remove-orphans && docker-compose up -d",
+    "lint": "eslint . --ext .js --fix",
+    "test": "mocha --require tests/*.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bad-words": "^3.0.4",
     "bufferutil": "^4.0.3",
+    "chai": "4.3.0",
     "discord.js-light": "^3.5.2",
     "dotenv": "^8.2.0",
     "erlpack": "github:discord/erlpack",
@@ -32,6 +36,7 @@
     "cssnano": "^4.1.10",
     "eslint": "^7.20.0",
     "eslint-plugin-svelte3": "^3.1.1",
+    "mocha": "8.3.0",
     "rollup": "^2.39.0",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-svelte": "^7.1.0",

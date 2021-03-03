@@ -54,7 +54,7 @@ client.on(`guildDelete`, kickedFromGuild)
 client.login(process.env.DISCORD_TOKEN)
 
 module.exports = {
-  init (gameController) {
+  async init (gameController) {
     client.game = gameController
 
     client.on(`message`, async (msg) => {
@@ -68,6 +68,7 @@ module.exports = {
     client.on(`raw`, async (event) => {
       this.rawWatchers.forEach((handler) => handler(event))
     })
+    client.isReady = true
   },
   client,
   rawWatchers: []

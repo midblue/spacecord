@@ -1,7 +1,6 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const story = require(`../../game/basics/story/story`)
-const { guild } = require(`../../game/manager`)
 
 module.exports = {
   tag: `spawn`,
@@ -17,10 +16,10 @@ module.exports = {
   test (content, settings) {
     return new RegExp(`^${settings.prefix}(?:r?e?spawn)$`, `gi`).exec(content)
   },
-  async action ({ msg, settings, game, authorIsAdmin }) {
+  async action ({ msg, settings, client, authorIsAdmin }) {
     log(msg, `Spawn`, msg.guild.name)
 
-    const res = await game.spawn({
+    const res = await client.game.spawn({
       discordGuild: msg.guild,
       channelId: msg.channel.id
     })

@@ -97,6 +97,43 @@ describe(`Database`, () => {
   })
 })
 
+
+describe(`Guilds Model`, () => {
+  it(`should add a ship and guild to the database when creating a new guild, \
+      and the guild should have a reference to the shipId`, async () => {
+    const game = require(`../game/manager`)
+
+    game.spawn({ discordGuild: msg.guild, channelId: msg.channel.id })
+    const createdGuild = await models.Guild.findOne({
+      _id: msg.guild.id,
+    })
+    const createdShip = await models.Ship.findOne({
+      guildId: msg.guild.id,
+    })
+    assert(createdGuild.id === msg.guild.id)
+    expect(createdGuild.shipIds).to.contain(createdShip.id)
+
+
+  })
+
+  it(`should be able to spawn a new user and add a member to a guild`, async () => {
+    const { add: addCrewMember } = require(`../db/mongo/crewMembers`)
+    const guild = await models.Guild.findOne({ _id: msg.guild.id, })
+    assert(guild, `Guild exists`)
+    const crewMember = await addCrewMember({
+      guildId: guild.id,
+      userId: msg.author.id,
+      member: { stamina: 0.69 }
+    })
+    assert(crewMember, `Crew member was created`)
+    assert(crewMember.stamina === 0.69, `Crew member was initialized with very nice properties`)
+    const user = await models.User.findOne({ _id: msg.author.id, })
+    assert(user, `User was created`)
+    assert(user.memberships[msg.guild.id] === crewMember.id, `User has link to crew member`)
+    assert(guild.members.find((m) => m === crewMember.id), `Ship has link to crew member`)
+  })
+})
+
 before(async () => {
   const mongoose = require(`mongoose`)
   const hostname = `127.0.0.1`
@@ -112,14 +149,16 @@ before(async () => {
     username,
     password,
   })
-  ;(await mongoose.connection.db.listCollections().toArray()).forEach(
+  const collections = (await mongoose.connection.db.listCollections().toArray())
+  collections.forEach(
     async (c) => await mongoose.connection.collection(c.name).drop(),
   )
   console.log(`    Made sure no collections exist before running tests.\n`)
 })
 
 after(async () => {
-  ;(await mongoose.connection.db.listCollections().toArray()).forEach(
+  const collections = (await mongoose.connection.db.listCollections().toArray())
+  collections.forEach(
     async (c) => await mongoose.connection.collection(c.name).drop(),
   )
   console.log(`    Dropped test database collections.\n`)

@@ -13,7 +13,7 @@ module.exports = {
   },
 
   async add({ id, data }) {
-    const ship = await addShip({ data: data.ship })
+    const ship = await addShip({ data: data.ship, guildId: id })
     const guild = new Guild({ ...data, id, shipIds: [ship._id] })
     await guild.save()
     return guild

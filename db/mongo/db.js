@@ -1,5 +1,11 @@
 const mongoose = require(`mongoose`)
-const routes = {}
+const routes = {
+  guilds: require(`./guilds`),
+  caches: require(`./caches`),
+  ships: require(`./ships`),
+  users: require(`./users`),
+  crewMembers: require(`./crewMembers`),
+}
 let ready = false
 const toRun = []
 
@@ -14,12 +20,7 @@ const init = ({
     if (ready) resolve()
 
     const setup = async () => {
-      routes.guilds = require(`./guilds`)
-      routes.caches = require(`./caches`)
-      routes.ships = require(`./ships`)
-      routes.users = require(`./users`)
-      routes.crewMembers = require(`./crewMembers`)
-
+      // console.log(`setup`)
       ready = true
       const promises = toRun.map(async (f) => await f())
       await Promise.all(promises)

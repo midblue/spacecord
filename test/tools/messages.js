@@ -9,12 +9,10 @@ const msg = {
   },
   channel: {
     id: `816361901549420615`,
-    send (message) {
+    send(message) {
       console.log(`Test sent message:`, message)
-    }
+    },
   },
-  
 }
-
 
 module.exports = { msg }

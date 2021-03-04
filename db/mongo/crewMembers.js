@@ -11,8 +11,8 @@ module.exports = {
   },
 
   async add({ guildId, userId, member }) {
-    const g = await getGuild({ id: guildId })
-    if (!g)
+    const guild = await getGuild({ id: guildId })
+    if (!guild)
       return console.log(
         `Failed to find guild`,
         guildId,
@@ -25,8 +25,14 @@ module.exports = {
     else if (user.memberships[guildId])
       return console.log(`Attempted to double add`, userId, `to guild`, guildId)
 
-    const crewMember = new CrewMember({ ...member })
-    user.memberships[guildId] = crewMember._id
+    const crewMember = new CrewMember({ ...member, userId })
+    crewMember.save()
+
+    guild.members.push(crewMember.id)
+    guild.save()
+
+    user.memberships[guildId] = crewMember.id
+    user.save()
   },
 
   async update({ id, memberData }) {

@@ -5,24 +5,25 @@ const mongoose = require(`mongoose`)
 
 const schemas = {
   Guild: mongoose.Schema({
+    _id: { type: String, alias: `id` },
     active: { type: Boolean, default: true },
     channel: String,
     created: { type: Number, default: Date.now() },
     faction: { color: String },
-    _id: { type: String, alias: `id` },
+    members: [mongoose.Schema.Types.ObjectId],
     name: String,
     settings: { prefix: { type: String, default: `.` } },
     shipIds: [String],
   }),
 
   Ship: mongoose.Schema({
+    guildId: String,
     bearing: [Number],
     cargo: [mongoose.Mixed],
     credits: { type: Number, default: 0 },
     equipment: { type: mongoose.Mixed },
     launched: { type: Number, default: Date.now() },
     location: [{ type: Number, default: 0 }],
-    members: [mongoose.Schema.Types.ObjectId],
     name: String,
     power: Number,
     seen: { planets: [String] },
@@ -60,7 +61,21 @@ const schemas = {
   Planet: mongoose.Schema({ name: String }),
 }
 
+schemas.Ship.virtual(`id`)
+  .get(function () {
+    return this._id
+  })
+  .set(function (id) {
+    this._id = id
+  })
 schemas.Cache.virtual(`id`)
+  .get(function () {
+    return this._id
+  })
+  .set(function (id) {
+    this._id = id
+  })
+schemas.CrewMember.virtual(`id`)
   .get(function () {
     return this._id
   })

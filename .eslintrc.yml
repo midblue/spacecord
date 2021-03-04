@@ -146,6 +146,7 @@ rules:
   no-extra-bind: error
   no-extra-label: error
   no-extra-parens: 'off'
+  no-extra-semi: 'off'
   no-floating-decimal: error
   no-implicit-coercion: error
   no-implicit-globals: 'off'
@@ -204,7 +205,7 @@ rules:
   no-undef-init: error
   no-undef: 'off'
   no-undefined: 'off'
-  no-underscore-dangle: error
+  no-underscore-dangle: 'off'
   no-unmodified-loop-condition: 'off'
   no-unneeded-ternary: error
   no-unreachable-loop: error
@@ -276,7 +277,7 @@ rules:
     - error
     - after: true
       before: false
-  semi-style: error
+  semi-style: 'off'
   sort-imports: error
   sort-keys: 'off'
   sort-vars: 'off'

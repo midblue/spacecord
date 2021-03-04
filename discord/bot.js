@@ -54,14 +54,12 @@ client.on(`guildDelete`, kickedFromGuild)
 client.login(process.env.DISCORD_TOKEN)
 
 module.exports = {
-  init (gameController) {
+  init(gameController) {
     client.game = gameController
 
     client.on(`message`, async (msg) => {
-      if (!msg.author || msg.author.bot)
-        return
-      if (!msg.guild || !msg.guild.available)
-        return privateMessage(msg)
+      if (!msg.author || msg.author.bot) return
+      if (!msg.guild || !msg.guild.available) return privateMessage(msg)
       return guildMessage({ msg, client, game: gameController })
     })
 

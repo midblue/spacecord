@@ -17,32 +17,17 @@ const schemas = {
 
   Ship: mongoose.Schema({
     bearing: [Number],
-    cargo: [{ amount: Number, type: String }],
+    cargo: [mongoose.Mixed],
     credits: { type: Number, default: 0 },
-    equipment: {
-      type: Map,
-      of: [
-        {
-          id: String,
-          repair: { type: Number, default: 1 },
-          repaired: { type: Number, default: Date.now() },
-        },
-      ],
-    },
+    equipment: { type: mongoose.Mixed },
     launched: { type: Number, default: Date.now() },
     location: [{ type: Number, default: 0 }],
     members: [mongoose.Schema.Types.ObjectId],
     name: String,
     power: Number,
-    seen: {
-      type: Map,
-      of: Array,
-    },
+    seen: { planets: [String] },
     speed: Number,
-    status: {
-      type: Map,
-      of: mongoose.Mixed,
-    },
+    status: { type: mongoose.Mixed },
   }),
 
   User: mongoose.Schema({
@@ -80,10 +65,7 @@ const schemas = {
 
 const models = {}
 Object.keys(schemas).forEach((schemaName) => {
-  models[schemaName] = mongoose.model(
-    schemaName,
-    schemas[schemaName],
-  )
+  models[schemaName] = mongoose.model(schemaName, schemas[schemaName])
 })
 
 module.exports = models

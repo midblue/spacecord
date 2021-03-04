@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "local": "nodemon index.js",
+    "dev": "npm run dcu",
     "dcu": "docker-compose up",
     "hard-restart": "docker-compose down --remove-orphans --volumes && docker-compose up -d",
     "restart": "docker-compose down --remove-orphans && docker-compose up -d",
     "l": "docker-compose logs --tail=200 --follow",
     "lint": "eslint . --ext .js --fix",
-    "test": "mocha --require tests/*.js"
+    "test": "mocha ./test/testSetup.js"
   },
   "author": "",
   "license": "ISC",

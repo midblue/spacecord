@@ -1,3 +1,4 @@
+const whyIsNodeRunning = require(`why-is-node-running`)
 require(`dotenv`).config()
 require(`../globalVariables`)
 const assert = require(`assert`)
@@ -14,8 +15,20 @@ describe(`Database`, () => {
 
   it(`should be able to add data to each model`, async () => {
     try {
-      const testGuild = new models.Guild({ active: false })
+      const testGuild = new models.Guild({ active: false, id: `testGuildId` })
       await testGuild.save()
+
+      const testShip = new models.Ship({ energy: 5 })
+      await testShip.save()
+
+      const testUser = new models.User({
+        id: `testUserId`,
+        activeGuild: `testGuildId`,
+      })
+      await testUser.save()
+
+      const testGuildMember = new models.GuildMember({ stamina: 0.5 })
+      await testGuildMember.save()
 
       const testCache = new models.Cache({ amount: 1 })
       await testCache.save()
@@ -25,30 +38,22 @@ describe(`Database`, () => {
 
       assert(true)
     } catch (e) {
-      assert.fail(false, true, e.message)
+      assert.fail(e.message)
     }
   })
 
-  it(`should have guilds, caches, plagnets collections`, async () => {
+  it(`should have guilds, caches, planets, ships, users, guildmembers collections`, async () => {
     collections = (
-      await mongoose.connection.db
-        .listCollections()
-        .toArray()
+      await mongoose.connection.db.listCollections().toArray()
     ).map((c) => c.name)
     expect(collections).to.include.all.members([
       `guilds`,
       `caches`,
       `planets`,
+      `ships`,
+      `users`,
+      `guildmembers`,
     ])
-
-    //   expect(res.body)
-    // .to.be.an.instanceof(Array)
-    // .and.to.have.property(0)
-    // .that.includes.all.keys([ 'id', 'category', 'tenant' ])
-
-    // expect(res)
-    // .to.have.nested.property('body[0]')
-    // .that.includes.all.keys([ 'id', 'category', 'tenant' ])
   })
 
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
@@ -62,11 +67,7 @@ describe(`Database`, () => {
   })
 
   it(`should be able to initialize the game`, async () => {
-    const {
-      runOnReady,
-      init: initDb,
-      db,
-    } = require(`../db/mongo/db`)
+    const { runOnReady, init: initDb, db } = require(`../db/mongo/db`)
     runOnReady(async () => {
       assert(true, `Db is ready`)
 
@@ -82,8 +83,7 @@ describe(`Database`, () => {
   })
 
   it(`should create a new guild when running bot.spawn()`, async () => {
-    const spawnAction = require(`../discord/commands/spawn`)
-      .action
+    const spawnAction = require(`../discord/commands/spawn`).action
     const bot = require(`../discord/bot`)
     await spawnAction({
       msg,
@@ -92,7 +92,7 @@ describe(`Database`, () => {
     })
 
     const createdGuild = await models.Guild.findOne({
-      id: msg.guild.id,
+      _id: msg.guild.id,
     })
     assert(createdGuild.id === msg.guild.id)
   })
@@ -112,26 +112,19 @@ before(async () => {
     dbName,
     username,
     password,
-  });
-  (
-    await mongoose.connection.db.listCollections().toArray()
-  ).forEach(
-    async (c) =>
-      await mongoose.connection.collection(c.name).drop(),
+  })
+  ;(await mongoose.connection.db.listCollections().toArray()).forEach(
+    async (c) => await mongoose.connection.collection(c.name).drop(),
   )
-  console.log(
-    `    Made sure no collections exist before running tests.\n`,
-  )
+  console.log(`    Made sure no collections exist before running tests.\n`)
 })
 
 after(async () => {
-  (
-    await mongoose.connection.db.listCollections().toArray()
-  ).forEach(
-    async (c) =>
-      await mongoose.connection.collection(c.name).drop(),
+  ;(await mongoose.connection.db.listCollections().toArray()).forEach(
+    async (c) => await mongoose.connection.collection(c.name).drop(),
   )
   console.log(`    Dropped test database collections.\n`)
   await mongoose.disconnect()
   console.log(`Disconnected from mongo.`)
+  process.exit()
 })

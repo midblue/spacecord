@@ -20,11 +20,6 @@ module.exports = {
     }, STEP_INTERVAL)
   },
 
-  stop() {
-    log(`init`, `Stopping game`)
-    clearInterval(loopInterval)
-  },
-
   async update() {
     this.lastTick = Date.now()
 

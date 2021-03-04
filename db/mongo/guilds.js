@@ -1,4 +1,5 @@
-const { Guild, Ship } = require(`./models`)
+const { Guild } = require(`./models`)
+const { add: addShip } = require(`./ships`)
 
 module.exports = {
   async getAll() {
@@ -12,94 +13,34 @@ module.exports = {
   },
 
   async add({ id, data }) {
-    const s = new Ship({ ...data.ship })
-    await s.save()
-    const g = new Guild({ ...data, id, shipId: s._id })
-    await g.save()
+    const ship = await addShip({ data: data.ship })
+    const guild = new Guild({ ...data, id, shipIds: [ship._id] })
+    await guild.save()
+    return guild
     // console.log(`Added guild and ship to database: ${id}`, g, s)
   },
 
   async update({ id, updates }) {
-    return console.log(`skipping db update`)
-    // try {
-    //   console.log(`updates`, updates)
-    //   const document = db.doc(`guilds/${id}`)
-    //   await document.update(updates)
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
+    Guild.findOneAndUpdate({ _id: id }, { ...updates }, (e, res) => {
+      if (e) console.log(`error updating guild:`, e)
+      // console.log('guild update result:', res)
+    })
   },
 
   async remove(id) {
-    return console.log(`skipping db remove`)
-    // try {
-    //   const document = db.doc(`guilds/${id}`)
-    //   await document.delete()
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
+    Guild.deleteOne({ _id: id }, (e) => console.log(`cache delete error`, e))
   },
 
   async getSettings({ id }) {
     const g = await this.get({ id })
     if (!g) return {}
     return g.settings
-    // try {
-    //   const document = db.doc(`guilds/${id}`)
-    //   const doc = await document.get()
-    //   const data = doc.data()
-    //   if (!data) return defaultServerSettings
-    //   const settings = {
-    //     ...defaultServerSettings,
-    //     ...(data.settings || {}),
-    //   }
-    //   return settings
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
   },
 
   async setSettings({ id, settings }) {
     const g = await this.get({ id })
-    if (!g) return {}
+    if (!g) return
     g.settings = settings
     g.save()
-    // try {
-    //   const document = db.doc(`guilds/${id}`)
-    //   const existingSettings = await this.getGuildSettings({
-    //     id,
-    //   })
-    //   const newSettings = existingSettings
-    //   for (const prop in settings) newSettings[prop] = settings[prop]
-    //   await document.update({ settings: newSettings })
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
   },
-
-  async addCrewMember({ id, member }) {
-    return console.log(`skipping db addCrewMember`)
-    // try {
-    //   const document = db.doc(`guilds/${id}`)
-    //   await document.update({
-    //     'ship.members': admin.firestore.FieldValue.arrayUnion(member),
-    //   })
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
-  },
-
-  async updateCrewMembers({ id, members }) {
-    return console.log(`skipping db updateCrewMembers`)
-    // try {
-    //   const document = db.doc(`guilds/${id}`)
-    //   await document.update({ 'ship.members': members })
-    // } catch (e) {
-    //   errorHandler(e)
-    // }
-  },
-}
-
-function errorHandler(e) {
-  console.log(e)
 }

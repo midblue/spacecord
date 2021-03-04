@@ -1,58 +1,30 @@
-let db
+const { Cache } = require(`./models`)
+const updateOptions = { new: true, omitUndefined: true }
 
-module.exports = function (passedDb) {
-  if (passedDb)
-    db = passedDb
-  return {
-    async getAll () {
-      try {
-        const snapshot = await db.collection(`caches`).find()
-        if (snapshot.empty)
-          return []
+module.exports = {
+  async getAll() {
+    return await Cache.find({})
+  },
 
-        const caches = []
-        snapshot.forEach((doc) => {
-          caches.push({ ...doc, id: doc.id })
-        })
-        return caches
-      }
-      catch (e) {
-        errorHandler(e)
-      }
-    },
+  async add(data) {
+    const cache = new Cache({ ...data })
+    await cache.save()
+    return cache
+  },
 
-    async add (data) {
-      try {
-        await db.collection(`caches`).add(data)
-        console.log(`Added cache to database.`)
-      }
-      catch (e) {
-        errorHandler(e)
-      }
-    },
+  async remove(id) {
+    Cache.deleteOne({ _id: id }, (e) => console.log(`cache delete error`, e))
+  },
 
-    async remove (cacheId) {
-      try {
-        const document = db.doc(`caches/${cacheId}`)
-        await document.delete()
-      }
-      catch (e) {
-        errorHandler(e)
-      }
-    },
-
-    async update ({ cacheId, updateData }) {
-      try {
-        const document = db.doc(`caches/${cacheId}`)
-        await document.update(updateData)
-      }
-      catch (e) {
-        errorHandler(e)
-      }
-    }
-  }
-}
-
-function errorHandler (e) {
-  console.log(e.code, e.details, e.metadata, e.note)
+  async update({ cacheId, updateData }) {
+    Cache.findOneAndUpdate(
+      { _id: cacheId },
+      { ...updateData },
+      updateOptions,
+      (e, res) => {
+        if (e) console.log(`error updating cache:`, e)
+        // console.log('cache update result:', res)
+      },
+    )
+  },
 }

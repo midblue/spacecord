@@ -8,52 +8,54 @@ const init = ({
   port = 27017,
   dbName = `spacecord`,
   username = encodeURIComponent(process.env.MONGODB_ADMINUSERNAME),
-  password = encodeURIComponent(process.env.MONGODB_ADMINPASSWORD)
+  password = encodeURIComponent(process.env.MONGODB_ADMINPASSWORD),
 }) => {
   return new Promise(async (resolve) => {
-    if (ready)
-      resolve()
-    
+    if (ready) resolve()
+
     const setup = async () => {
       routes.guilds = require(`./guilds`)
       routes.caches = require(`./caches`)
+      routes.ships = require(`./ships`)
+      routes.users = require(`./users`)
+      routes.crewMembers = require(`./crewMembers`)
+
       ready = true
       const promises = toRun.map(async (f) => await f())
       await Promise.all(promises)
       resolve()
     }
-    
+
     if (mongoose.connection.readyState == 0) {
       const uri = `mongodb://${username}:${password}@${hostname}:${port}/${dbName}?poolSize=20&writeConcern=majority?connectTimeoutMS=5000`
       // console.log(`No existing db connection, creating with`, uri)
-      
-      mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      }).catch((error) => console.log(error))
-    
+
+      mongoose
+        .connect(uri, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+        })
+        .catch((error) => console.log(error))
+
       mongoose.connection.on(`error`, (error) => console.log(error))
       mongoose.connection.once(`open`, () => {
         setup()
       })
-    }
-    else {
+    } else {
       // console.log(`Running with existing db connection`)
       setup()
     }
   })
 }
 
-
 const runOnReady = (f) => {
-  if (ready)
-    f()
-  else
-    toRun.push(f)
+  if (ready) f()
+  else toRun.push(f)
 }
 
 module.exports = {
   init,
   db: routes,
-  runOnReady
+  runOnReady,
 }

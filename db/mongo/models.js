@@ -12,7 +12,7 @@ const schemas = {
     _id: { type: String, alias: `id` },
     name: String,
     settings: { prefix: { type: String, default: `.` } },
-    shipId: String,
+    shipIds: [String],
   }),
 
   Ship: mongoose.Schema({
@@ -33,13 +33,10 @@ const schemas = {
   User: mongoose.Schema({
     _id: { type: String, alias: `id` },
     activeGuild: String,
-    memberships: {
-      type: Map,
-      of: String,
-    },
+    memberships: { type: mongoose.Mixed, default: {} },
   }),
 
-  GuildMember: mongoose.Schema({
+  CrewMember: mongoose.Schema({
     user: String,
     joined: { type: Number, default: Date.now() },
     stamina: Number,
@@ -62,6 +59,14 @@ const schemas = {
 
   Planet: mongoose.Schema({ name: String }),
 }
+
+schemas.Cache.virtual(`id`)
+  .get(function () {
+    return this._id
+  })
+  .set(function (id) {
+    this._id = id
+  })
 
 const models = {}
 Object.keys(schemas).forEach((schemaName) => {

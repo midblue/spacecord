@@ -5,14 +5,9 @@ const db = require(`../../../manager`).db
 
 module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {
-    const newMember = await crewMember.spawn(
-      discordUser,
-      guild,
-    )
+    const newMember = await crewMember.spawn(discordUser, guild)
 
-    if (
-      guild.ship.members.find((m) => m.id === newMember.id)
-    ) {
+    if (guild.ship.members.find((m) => m.id === newMember.id)) {
       log(
         `addCrew`,
         `Attempted to add a member that already exists.`,
@@ -32,16 +27,12 @@ module.exports = (guild) => {
       guild.saveNewDataToDb()
     }
     guild.ship.members.push(newMember)
-    db.guilds.addCrewMember({
-      id: guild.id,
+    db.crewMembers.add({
+      guildId: guild.id,
+      userId: newMember.id,
       member: newMember.saveableData(),
     })
-    log(
-      `addCrew`,
-      `Added new member to guild`,
-      newMember.id,
-      guild.name,
-    )
+    log(`addCrew`, `Added new member to guild`, newMember.id, guild.name)
     if (guild.ship.members.length === 1) {
       return {
         ok: true,

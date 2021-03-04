@@ -1,4 +1,3 @@
-const whyIsNodeRunning = require(`why-is-node-running`)
 require(`dotenv`).config()
 require(`../globalVariables`)
 const assert = require(`assert`)
@@ -27,8 +26,8 @@ describe(`Database`, () => {
       })
       await testUser.save()
 
-      const testGuildMember = new models.GuildMember({ stamina: 0.5 })
-      await testGuildMember.save()
+      const testCrewMember = new models.CrewMember({ stamina: 0.5 })
+      await testCrewMember.save()
 
       const testCache = new models.Cache({ amount: 1 })
       await testCache.save()
@@ -42,7 +41,7 @@ describe(`Database`, () => {
     }
   })
 
-  it(`should have guilds, caches, planets, ships, users, guildmembers collections`, async () => {
+  it(`should have guilds, caches, planets, ships, users, crewmembers collections`, async () => {
     collections = (
       await mongoose.connection.db.listCollections().toArray()
     ).map((c) => c.name)
@@ -52,7 +51,7 @@ describe(`Database`, () => {
       `planets`,
       `ships`,
       `users`,
-      `guildmembers`,
+      `crewmembers`,
     ])
   })
 
@@ -126,5 +125,5 @@ after(async () => {
   console.log(`    Dropped test database collections.\n`)
   await mongoose.disconnect()
   console.log(`Disconnected from mongo.`)
-  process.exit()
+  setTimeout(() => process.exit(), 500) // was beating mocha's output lol
 })

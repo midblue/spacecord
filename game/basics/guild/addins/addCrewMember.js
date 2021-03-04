@@ -5,18 +5,23 @@ const db = require(`../../../manager`).db
 
 module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {
-    const newMember = await crewMember.spawn(discordUser, guild)
+    const newMember = await crewMember.spawn(
+      discordUser,
+      guild,
+    )
 
-    if (guild.ship.members.find((m) => m.id === newMember.id)) {
+    if (
+      guild.ship.members.find((m) => m.id === newMember.id)
+    ) {
       log(
         `addCrew`,
         `Attempted to add a member that already exists.`,
         newMember.id,
-        guild.id
+        guild.id,
       )
       return {
         ok: false,
-        message: story.crew.add.fail.existing(newMember.id)
+        message: story.crew.add.fail.existing(newMember.id),
       }
     }
 
@@ -28,19 +33,27 @@ module.exports = (guild) => {
     }
     guild.ship.members.push(newMember)
     db.guilds.addCrewMember({
-      guildId: guild.guildId,
-      member: newMember.saveableData()
+      id: guild.id,
+      member: newMember.saveableData(),
     })
-    log(`addCrew`, `Added new member to guild`, newMember.id, guild.guildName)
+    log(
+      `addCrew`,
+      `Added new member to guild`,
+      newMember.id,
+      guild.name,
+    )
     if (guild.ship.members.length === 1) {
       return {
         ok: true,
         message: [
           story.crew.add.first(newMember, guild),
-          story.prompts.startGame()
-        ]
+          story.prompts.startGame(),
+        ],
       }
     }
-    return { ok: true, message: story.crew.add.success(newMember, guild) }
+    return {
+      ok: true,
+      message: story.crew.add.success(newMember, guild),
+    }
   }
 }

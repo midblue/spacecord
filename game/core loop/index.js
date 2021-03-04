@@ -3,13 +3,15 @@ const { log } = require(`../gamecommon`)
 const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = STEP_INTERVAL * 500
+let loopInterval
 
 module.exports = {
-  async start () {
+  async start() {
     log(`init`, `Starting game`)
     this.lastTick = Date.now()
 
-    setInterval(async () => {
+    if (loopInterval) clearInterval(loopInterval)
+    loopInterval = setInterval(async () => {
       console.log(``)
       log(``, `============= NEW GAME STEP =============`)
       await this.update()
@@ -18,7 +20,12 @@ module.exports = {
     }, STEP_INTERVAL)
   },
 
-  async update () {
+  stop() {
+    log(`init`, `Starting game`)
+    clearInterval(loopInterval)
+  },
+
+  async update() {
     this.lastTick = Date.now()
 
     // update guilds
@@ -40,21 +47,33 @@ module.exports = {
         deletedCacheCount++
       }
     })
-    if (deletedCacheCount) { log(`update`, `Removed ${deletedCacheCount} expired caches`) }
+    if (deletedCacheCount) {
+      log(
+        `update`,
+        `Removed ${deletedCacheCount} expired caches`,
+      )
+    }
 
     // spawn caches randomly
-    if (this.caches.length <= this.gameDiameter() / 2 && Math.random() > 0.9) {
+    if (
+      this.caches.length <= this.gameDiameter() / 2 &&
+      Math.random() > 0.9
+    ) {
       const amount = Math.ceil(Math.random() * 40 + 3)
       this.spawnCache({
         location: [
-          Math.random() * this.gameDiameter() - this.gameDiameter() / 2,
-          Math.random() * this.gameDiameter() - this.gameDiameter() / 2
+          Math.random() * this.gameDiameter() -
+            this.gameDiameter() / 2,
+          Math.random() * this.gameDiameter() -
+            this.gameDiameter() / 2,
         ],
         type: Object.keys(cargo)[
-          Math.floor(Math.random() * Object.keys(cargo).length)
+          Math.floor(
+            Math.random() * Object.keys(cargo).length,
+          )
         ],
-        amount: amount
+        amount: amount,
       })
     }
-  }
+  },
 }

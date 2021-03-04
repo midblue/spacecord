@@ -5,33 +5,33 @@ const {
   percentToTextBars,
   numberToEmoji,
   msToTimeString,
-  usageTag
+  usageTag,
 } = require(`../../../../common`)
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 
 module.exports = (guild) => {
   guild.ship.canInteract = () => {
-    if (guild.ship.status.docked)
-      return false
+    if (guild.ship.status.docked) return false
     const interactableThings = {
       guilds: guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
         range: guild.ship.maxActionRadius(),
-        excludeIds: guild.guildId
+        excludeIds: guild.id,
       }).guilds,
       caches: guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
         range: guild.ship.tractorRadius(),
-        excludeIds: guild.guildId
+        excludeIds: guild.id,
       }).caches,
       planets: guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
-        range: guild.ship.equipment.chassis[0].interactRadius,
-        excludeIds: guild.guildId
-      }).planets
+        range:
+          guild.ship.equipment.chassis[0].interactRadius,
+        excludeIds: guild.id,
+      }).planets,
     }
     return (
       interactableThings.guilds.length +
@@ -48,59 +48,58 @@ module.exports = (guild) => {
       actions.push({
         emoji: `👉`,
         label: `See/Interact With Nearby Objects`,
-        async action ({ user, msg }) {
+        async action({ user, msg }) {
           await runGuildCommand({
             msg,
-            commandTag: `nearby`
+            commandTag: `nearby`,
           })
-        }
+        },
       })
     }
 
     actions.push({
       emoji: `🕹`,
       label: `Flight Deck`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
-          commandTag: `flightDeck`
+          commandTag: `flightDeck`,
         })
-      }
+      },
     })
 
     actions.push({
       emoji: `🎛`,
       label: `Main Deck`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
-          commandTag: `mainDeck`
+          commandTag: `mainDeck`,
         })
-      }
+      },
     })
 
     actions.push({
       emoji: `👨‍👩‍👧‍👧`,
       label: `Crew Quarters`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
-          commandTag: `crewQuarters`
+          commandTag: `crewQuarters`,
         })
-      }
+      },
     })
 
     actions.push({
       emoji: `🌐`,
       label: `Holo Deck`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
-          commandTag: `holoDeck`
+          commandTag: `holoDeck`,
         })
-      }
+      },
     })
-
 
     return actions
   }
@@ -109,7 +108,9 @@ module.exports = (guild) => {
     const fields = []
     const actions = await guild.ship.getShipActions()
 
-    const fuel = guild.ship.cargo.find((c) => c.type === `fuel`).amount
+    const fuel = guild.ship.cargo.find(
+      (c) => c.type === `fuel`,
+    ).amount
 
     if (!guild.ship.status.docked) {
       fields.push({
@@ -117,8 +118,8 @@ module.exports = (guild) => {
         value: guild.ship.status.stranded
           ? `Out of Fuel!`
           : guild.ship.speed
-            ? guild.ship.speed.toFixed(2) + ` ` + SPEED_UNIT
-            : `Stopped`
+          ? guild.ship.speed.toFixed(2) + ` ` + SPEED_UNIT
+          : `Stopped`,
       })
 
       fields.push({
@@ -127,25 +128,26 @@ module.exports = (guild) => {
           bearingToArrow(guild.ship.bearing) +
           ` ` +
           bearingToDegrees(guild.ship.bearing).toFixed(0) +
-          ` degrees`
+          ` degrees`,
       })
-    }
-    else {
+    } else {
       const dockedPlanet = guild.context.planets.find(
-        (p) => p.name === guild.ship.status.docked
+        (p) => p.name === guild.ship.status.docked,
       )
       fields.push({
         name: `Docked at:`,
-        value: `🪐 ` + dockedPlanet.name
+        value: `🪐 ` + dockedPlanet.name,
       })
     }
 
     fields.push({
       name: `📍 Location`,
       value:
-        guild.ship.location.map((l) => l.toFixed(2)).join(`, `) +
+        guild.ship.location
+          .map((l) => l.toFixed(2))
+          .join(`, `) +
         ` ` +
-        DISTANCE_UNIT
+        DISTANCE_UNIT,
     })
 
     const currentHp = guild.ship.currentHp()
@@ -155,7 +157,9 @@ module.exports = (guild) => {
       value:
         percentToTextBars(currentHp / maxHp) +
         `\n` +
-        `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`
+        `${Math.round(currentHp)}/${Math.round(
+          maxHp,
+        )} ${HEALTH_UNIT}`,
     })
 
     fields.push({
@@ -166,34 +170,39 @@ module.exports = (guild) => {
         WEIGHT_UNITS +
         (guild.ship.speed
           ? `\n(${Math.floor(
-            fuel / guild.ship.fuelUsePerTick()
-          )} ${TIME_UNITS} at\ncurrent speed)`
-          : ``)
+              fuel / guild.ship.fuelUsePerTick(),
+            )} ${TIME_UNITS} at\ncurrent speed)`
+          : ``),
     })
 
     fields.push({
       name: `⚡️Power`,
       value:
-        percentToTextBars(guild.ship.power / guild.ship.maxPower()) +
+        percentToTextBars(
+          guild.ship.power / guild.ship.maxPower(),
+        ) +
         `\n` +
         guild.ship.power.toFixed(1) +
         `/` +
         guild.ship.maxPower().toFixed(1) +
         POWER_UNIT +
         ` (${Math.round(
-          (guild.ship.power / guild.ship.maxPower() || 0) * 100
-        )}%)`
+          (guild.ship.power / guild.ship.maxPower() || 0) *
+            100,
+        )}%)`,
     })
 
     fields.push({
       name: `⏱ Next Tick`,
-      value: msToTimeString(guild.context.timeUntilNextTick()) + ` (real-time)`
+      value:
+        msToTimeString(guild.context.timeUntilNextTick()) +
+        ` (real-time)`,
     })
 
     return {
       headline: ``, // `All systems normal.`, // todo
       fields,
-      actions
+      actions,
     }
   }
 
@@ -205,13 +214,15 @@ module.exports = (guild) => {
       name: `Chassis`,
       value:
         guild.ship.equipment.chassis[0].emoji +
-        guild.ship.equipment.chassis[0].displayName
+        guild.ship.equipment.chassis[0].displayName,
     })
 
     const captain = guild.ship.captain
     fields.push({
       name: `👩‍✈️ Captain`,
-      value: captain ? `%username%${captain}%` : `No captain`
+      value: captain
+        ? `%username%${captain}%`
+        : `No captain`,
     })
 
     fields.push({
@@ -223,25 +234,27 @@ module.exports = (guild) => {
           TIME_UNIT_LONGS_MULTIPLIER
         ).toFixed(2) +
         ` ` +
-        TIME_UNIT_LONGS
+        TIME_UNIT_LONGS,
     })
 
     fields.push({
       name: `👩‍👩‍👧‍👦 Crew`,
-      value: guild.ship.members.length + ` members`
+      value: guild.ship.members.length + ` members`,
     })
 
     if (guild.faction && guild.faction.color) {
       fields.push({
         name: `Faction`,
-        value: guild.faction.emoji + guild.faction.name
+        value: guild.faction.emoji + guild.faction.name,
       })
     }
 
     fields.push({
       name: `👉 Interact Range`,
       value:
-        guild.ship.equipment.chassis[0].interactRadius + ` ` + DISTANCE_UNIT
+        guild.ship.equipment.chassis[0].interactRadius +
+        ` ` +
+        DISTANCE_UNIT,
     })
 
     fields.push({
@@ -249,14 +262,16 @@ module.exports = (guild) => {
       value:
         percentToTextBars(
           guild.ship.getTotalWeight() /
-            guild.ship.equipment.chassis[0].maxWeight
+            guild.ship.equipment.chassis[0].maxWeight,
         ) +
         `\n` +
         Math.round(guild.ship.getTotalWeight()) +
         `/` +
-        Math.round(guild.ship.equipment.chassis[0].maxWeight) +
+        Math.round(
+          guild.ship.equipment.chassis[0].maxWeight,
+        ) +
         ` ` +
-        WEIGHT_UNITS
+        WEIGHT_UNITS,
     })
 
     fields.push({
@@ -268,46 +283,46 @@ module.exports = (guild) => {
         `/` +
         TIME_UNIT +
         `\n` +
-        `(At current weight)`
+        `(At current weight)`,
     })
 
     actions.push({
       emoji: `🔩`,
       label: `Equipment`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
           author: user,
-          commandTag: `equipment`
+          commandTag: `equipment`,
         })
-      }
+      },
     })
     actions.push({
       emoji: `🏆`,
       label: `Crew Rankings`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
           author: user,
-          commandTag: `rankings`
+          commandTag: `rankings`,
         })
-      }
+      },
     })
     actions.push({
       emoji: `🧾`,
       label: `Ship Log`,
-      async action ({ user, msg }) {
+      async action({ user, msg }) {
         await runGuildCommand({
           msg,
           author: user,
-          commandTag: `log`
+          commandTag: `log`,
         })
-      }
+      },
     })
 
     return {
       fields,
-      actions
+      actions,
     }
   }
 }

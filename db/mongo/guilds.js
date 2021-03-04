@@ -1,111 +1,96 @@
 const { Guild } = require(`./models`)
 
 module.exports = {
-  async getAll () {
+  async getAll() {
     const guilds = await Guild.find({})
     return guilds
   },
 
-  async get ({ guildId }) {
-    const guild = await Guild.findOne({ guildId: guildId })
+  async get({ id }) {
+    const guild = await Guild.findOne({ id })
     return guild
   },
 
-  async add ({
-    guildId,
-    data
-  }) {
-    const g = new Guild({ data, guildId: guildId })
+  async add({ id, data }) {
+    console.log(data)
+    const g = new Guild({ data, id })
     await g.save()
-    console.log(`Added guild to database: ${guildId}`)
+    console.log(`Added guild to database: ${id}`)
   },
 
-  async update ({
-    guildId,
-    updates
-  }) {
+  async update({ id, updates }) {
     try {
       // console.log(updates)
-      const document = db.doc(`guilds/${guildId}`)
+      const document = db.doc(`guilds/${id}`)
       await document.update(updates)
-    }
-    catch (e) {
+    } catch (e) {
       errorHandler(e)
     }
   },
 
-  async remove (guildId) {
+  async remove(id) {
     try {
-      const document = db.doc(`guilds/${guildId}`)
+      const document = db.doc(`guilds/${id}`)
       await document.delete()
-    }
-    catch (e) {
+    } catch (e) {
       errorHandler(e)
     }
   },
 
-  async getSettings ({ guildId }) {
+  async getSettings({ id }) {
     try {
-      const document = db.doc(`guilds/${guildId}`)
+      const document = db.doc(`guilds/${id}`)
       const doc = await document.get()
       const data = doc.data()
-      if (!data)
-        return defaultServerSettings
+      if (!data) return defaultServerSettings
       const settings = {
         ...defaultServerSettings,
-        ...(data.settings || {})
+        ...(data.settings || {}),
       }
       return settings
-    }
-    catch (e) {
+    } catch (e) {
       errorHandler(e)
     }
   },
 
-  async setSettings ({
-    guildId,
-    settings
-  }) {
+  async setSettings({ id, settings }) {
     try {
-      const document = db.doc(`guilds/${guildId}`)
-      const existingSettings = await this.getGuildSettings({ guildId })
+      const document = db.doc(`guilds/${id}`)
+      const existingSettings = await this.getGuildSettings({
+        id,
+      })
       const newSettings = existingSettings
       for (const prop in settings)
         newSettings[prop] = settings[prop]
       await document.update({ settings: newSettings })
-    }
-    catch (e) {
+    } catch (e) {
       errorHandler(e)
     }
   },
 
-  async addCrewMember ({
-    guildId,
-    member
-  }) {
+  async addCrewMember({ id, member }) {
     try {
-      const document = db.doc(`guilds/${guildId}`)
-      await document.update({ 'ship.members': admin.firestore.FieldValue.arrayUnion(member) })
-    }
-    catch (e) {
+      const document = db.doc(`guilds/${id}`)
+      await document.update({
+        'ship.members': admin.firestore.FieldValue.arrayUnion(
+          member,
+        ),
+      })
+    } catch (e) {
       errorHandler(e)
     }
   },
 
-  async updateCrewMembers ({
-    guildId,
-    members
-  }) {
+  async updateCrewMembers({ id, members }) {
     try {
-      const document = db.doc(`guilds/${guildId}`)
+      const document = db.doc(`guilds/${id}`)
       await document.update({ 'ship.members': members })
-    }
-    catch (e) {
+    } catch (e) {
       errorHandler(e)
     }
-  }
+  },
 }
 
-function errorHandler (e) {
+function errorHandler(e) {
   console.log(e)
 }

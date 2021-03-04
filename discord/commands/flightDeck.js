@@ -9,12 +9,13 @@ const depart = require(`../actions/depart`)
 module.exports = {
   tag: `flightDeck`,
   documentation: false,
-  test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:flightdeck|flight)$`, `gi`).exec(
-      content
-    )
+  test(content, settings) {
+    return new RegExp(
+      `^${settings.prefix}(?:flightdeck|flight)$`,
+      `gi`,
+    ).exec(content)
   },
-  async action ({ msg, guild }) {
+  async action({ msg, guild }) {
     log(msg, `Flight Deck`, msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
@@ -30,14 +31,15 @@ module.exports = {
         label: `Start Depart Vote ` + usageTag(0, `poll`),
         action: ({ msg, guild }) => {
           depart({ msg, guild })
-        }
+        },
       })
     } else {
       const interactablePlanets = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
-        range: guild.ship.equipment.chassis[0].interactRadius,
-        excludeIds: guild.guildId
+        range:
+          guild.ship.equipment.chassis[0].interactRadius,
+        excludeIds: guild.id,
       }).planets
 
       if (interactablePlanets.length) {
@@ -48,9 +50,9 @@ module.exports = {
             runGuildCommand({
               msg,
               commandTag: `nearby`,
-              props: { filter: `planets` }
+              props: { filter: `planets` },
             })
-          }
+          },
         })
       }
     }
@@ -59,19 +61,23 @@ module.exports = {
       ...[
         {
           emoji: `🧭`,
-          label: `Start Direction Vote ` + usageTag(0, `poll`),
+          label:
+            `Start Direction Vote ` + usageTag(0, `poll`),
           action: ({ msg, guild }) => {
-            runGuildCommand({ msg, commandTag: `direction` })
-          }
+            runGuildCommand({
+              msg,
+              commandTag: `direction`,
+            })
+          },
         },
         {
           emoji: `⏩`,
           label: `Start Speed Vote ` + usageTag(0, `poll`),
           action: ({ msg, guild }) => {
             runGuildCommand({ msg, commandTag: `speed` })
-          }
-        }
-      ]
+          },
+        },
+      ],
     )
 
     const sentMessage = (await send(msg, embed))[0]
@@ -81,8 +87,8 @@ module.exports = {
       embed,
       guild,
       commandsLabel: `Flight Commands`,
-      respondeeFilter: (user) => user.id === msg.author.id
+      respondeeFilter: (user) => user.id === msg.author.id,
     })
     sentMessage.delete()
-  }
+  },
 }

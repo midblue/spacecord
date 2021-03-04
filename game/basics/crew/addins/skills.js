@@ -8,9 +8,11 @@ module.exports = (member) => {
     const trainableSkills = [
       ...allSkills.map((s) => {
         const memberSkill = member.level[s.name] || 0
-        const staminaRequired = member.staminaRequiredFor(s.name)
+        const staminaRequired = member.staminaRequiredFor(
+          s.name,
+        )
         return { ...s, memberSkill, staminaRequired }
-      })
+      }),
     ]
     return trainableSkills
   }
@@ -30,8 +32,8 @@ module.exports = (member) => {
     const result = member.skillLevelDetails(skill)
 
     game.db.guilds.updateCrewMembers({
-      guildId: member.guild.guildId,
-      members: member.guild.saveableMembers()
+      id: member.guild.id,
+      members: member.guild.saveableMembers(),
     })
 
     return {
@@ -44,16 +46,14 @@ module.exports = (member) => {
         startLevel !== result.level,
         result.levelSize,
         result.levelProgress,
-        result.percentToLevel
-      )
+        result.percentToLevel,
+      ),
     }
   }
 
   member.skillLevelDetails = (skill) => {
-    if (!member.level)
-      member.level = {}
-    if (!member.xp)
-      member.xp = {}
+    if (!member.level) member.level = {}
+    if (!member.xp) member.xp = {}
 
     let xp = member.xp?.[skill] || 0
     if (!xp) {
@@ -68,11 +68,14 @@ module.exports = (member) => {
     member.level[skill] = level
 
     const totalLevelXp = levelNumbers[level] || 0
-    const levelSize = levelNumbers[level] - (levelNumbers[level - 1] || 0)
+    const levelSize =
+      levelNumbers[level] - (levelNumbers[level - 1] || 0)
     const toNextLevel = totalLevelXp - xp
-    const levelProgress = xp - (levelNumbers[level - 1] || 0)
+    const levelProgress =
+      xp - (levelNumbers[level - 1] || 0)
     const percentToLevel = levelProgress / levelSize || 0
-    const overallPercentToLevel = xp / levelNumbers[level] || 0
+    const overallPercentToLevel =
+      xp / levelNumbers[level] || 0
 
     const data = {
       xp,
@@ -82,12 +85,15 @@ module.exports = (member) => {
       toNextLevel,
       levelProgress,
       percentToLevel,
-      overallPercentToLevel
+      overallPercentToLevel,
     }
     return data
   }
 
   member.totalLevel = () => {
-    return Object.values(member.level).reduce((total, curr) => curr + total, 0)
+    return Object.values(member.level).reduce(
+      (total, curr) => curr + total,
+      0,
+    )
   }
 }

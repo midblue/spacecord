@@ -4,8 +4,7 @@ env:
   es2021: true
 extends: 'eslint:recommended'
 overrides:
-  -
-    files: 
+  - files:
       - '*.svelte'
     processor: 'svelte3/svelte3'
 parserOptions:
@@ -32,10 +31,11 @@ rules:
   block-spacing:
     - error
     - always
-  brace-style: 
-    - error
-    - stroustrup
-    - allowSingleLine: true
+  brace-style:
+    'off'
+    # - error
+    # - stroustrup
+    # - allowSingleLine: true
   camelcase: error
   capitalized-comments:
     - error
@@ -85,7 +85,7 @@ rules:
   id-length: 'off'
   id-match: error
   implicit-arrow-linebreak: 'off'
-  indent: ["error", 2]
+  indent: ['error', 2]
   init-declarations: 'off'
   jsx-quotes: error
   key-spacing: error
@@ -192,7 +192,7 @@ rules:
   no-template-curly-in-string: error
   no-ternary: 'off'
   no-throw-literal: error
-  no-trailing-spaces: 
+  no-trailing-spaces:
     - warn
     - skipBlankLines: true
       ignoreComments: true
@@ -218,12 +218,11 @@ rules:
   no-void: error
   no-warning-comments: 'off'
   no-whitespace-before-property: error
-  nonblock-statement-body-position: 
-    - error
-    - below
+  nonblock-statement-body-position: 'off'
   object-curly-newline:
-    - error
-    - multiline: true
+    'off'
+    # - error
+    # - multiline: true
   object-curly-spacing:
     - error
     - always
@@ -277,7 +276,7 @@ rules:
   sort-keys: 'off'
   sort-vars: 'off'
   space-before-blocks: error
-  space-before-function-paren: error
+  space-before-function-paren: 'off'
   space-in-parens:
     - error
     - never

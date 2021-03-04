@@ -13,7 +13,6 @@ describe(`Database`, () => {
   })
 
   it(`should be able to add data to each model`, async () => {
-    
     try {
       const testGuild = new models.Guild({ active: false })
       await testGuild.save()
@@ -25,17 +24,23 @@ describe(`Database`, () => {
       await testPlanet.save()
 
       assert(true)
-    }
-    catch (e) {
+    } catch (e) {
       assert.fail(false, true, e.message)
     }
   })
 
   it(`should have guilds, caches, plagnets collections`, async () => {
-    collections = (await mongoose.connection.db.listCollections().toArray()).map((c) => c.name)
-    expect(collections)
-      .to.include.all.members([`guilds`, `caches`, `planets`])
-    
+    collections = (
+      await mongoose.connection.db
+        .listCollections()
+        .toArray()
+    ).map((c) => c.name)
+    expect(collections).to.include.all.members([
+      `guilds`,
+      `caches`,
+      `planets`,
+    ])
+
     //   expect(res.body)
     // .to.be.an.instanceof(Array)
     // .and.to.have.property(0)
@@ -49,18 +54,19 @@ describe(`Database`, () => {
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
     const models = require(`../db/mongo/models`)
     let guild = await models.Guild.findOne()
-    expect(guild)
-      .to.have.property(`_id`)
+    expect(guild).to.have.property(`_id`)
     let planet = await models.Planet.findOne()
-    expect(planet)
-      .to.have.property(`_id`)
+    expect(planet).to.have.property(`_id`)
     let cache = await models.Cache.findOne()
-    expect(cache)
-      .to.have.property(`_id`)
+    expect(cache).to.have.property(`_id`)
   })
 
   it(`should be able to initialize the game`, async () => {
-    const { runOnReady, init: initDb, db } = require(`../db/mongo/db`)
+    const {
+      runOnReady,
+      init: initDb,
+      db,
+    } = require(`../db/mongo/db`)
     runOnReady(async () => {
       assert(true, `Db is ready`)
 
@@ -73,19 +79,24 @@ describe(`Database`, () => {
       assert(bot.client.isReady, `Bot is ready`)
     })
     await initDb({})
-
   })
 
   it(`should create a new guild when running bot.spawn()`, async () => {
-    const spawnAction = require(`../discord/commands/spawn`).action
+    const spawnAction = require(`../discord/commands/spawn`)
+      .action
     const bot = require(`../discord/bot`)
-    await spawnAction({ msg, authorIsAdmin: true, client: bot.client })
-    
-    const createdGuild = await models.Guild.findOne({ guildId: msg.guild.id })
-    assert(createdGuild.guildId === msg.guild.id)
+    await spawnAction({
+      msg,
+      authorIsAdmin: true,
+      client: bot.client,
+    })
+
+    const createdGuild = await models.Guild.findOne({
+      id: msg.guild.id,
+    })
+    assert(createdGuild.id === msg.guild.id)
   })
 })
-
 
 before(async () => {
   const mongoose = require(`mongoose`)
@@ -94,21 +105,32 @@ before(async () => {
   const dbName = `spacecord-test`
   const username = encodeURIComponent(`testuser`)
   const password = encodeURIComponent(`testpass`)
- 
-  await initDb({ hostname, port, dbName, username, password });
 
-  (await mongoose.connection.db.listCollections().toArray())
-    .forEach(
-      async (c) => await mongoose.connection.collection(c.name).drop()
-    )
-  console.log(`    Made sure no collections exist before running tests.\n`)
+  await initDb({
+    hostname,
+    port,
+    dbName,
+    username,
+    password,
+  });
+  (
+    await mongoose.connection.db.listCollections().toArray()
+  ).forEach(
+    async (c) =>
+      await mongoose.connection.collection(c.name).drop(),
+  )
+  console.log(
+    `    Made sure no collections exist before running tests.\n`,
+  )
 })
 
 after(async () => {
-  (await mongoose.connection.db.listCollections().toArray())
-    .forEach(
-      async (c) => await mongoose.connection.collection(c.name).drop()
-    )
+  (
+    await mongoose.connection.db.listCollections().toArray()
+  ).forEach(
+    async (c) =>
+      await mongoose.connection.collection(c.name).drop(),
+  )
   console.log(`    Dropped test database collections.\n`)
   await mongoose.disconnect()
   console.log(`Disconnected from mongo.`)

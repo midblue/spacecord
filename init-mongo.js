@@ -1,5 +1,6 @@
-
-print(`Start #################################################################`)
+print(
+  `Start #################################################################`,
+)
 db = db.getSiblingDB(`spacecord`)
 db.createUser({
   user: `spacecord`,
@@ -7,9 +8,9 @@ db.createUser({
   roles: [
     {
       role: `readWrite`,
-      db: `spacecord`
-    }
-  ]
+      db: `spacecord`,
+    },
+  ],
 })
 
 db = db.getSiblingDB(`spacecord-test`)
@@ -19,12 +20,14 @@ db.createUser({
   roles: [
     {
       role: `readWrite`,
-      db: `spacecord-test`
-    }
-  ]
+      db: `spacecord-test`,
+    },
+  ],
 })
 db.createCollection(`TESTASS`)
-print(`END #################################################################`)
+print(
+  `END #################################################################`,
+)
 
 // db.createCollection(`guilds`, {
 //   capped: false,
@@ -36,11 +39,11 @@ print(`END #################################################################`)
 //         channel: { bsonType: `string` },
 //         created: { bsontype: `int` },
 //         faction: { bsontype: `object` },
-//         guildId: { bsonType: `string` },
-//         guildName: { bsonType: `string` },
+//         id: { bsonType: `string` },
+//         name: { bsonType: `string` },
 //         settings: { bsonType: `object` },
 //         ship: { bsonType: `object` },
-        
+
 //       }
 //     }
 //   }

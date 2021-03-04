@@ -37,7 +37,7 @@ const schemas = {
   }),
 
   CrewMember: mongoose.Schema({
-    user: String,
+    userId: String,
     joined: { type: Number, default: Date.now() },
     stamina: Number,
     level: {

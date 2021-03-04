@@ -27,60 +27,60 @@ const numberEmojis = [
   `🕗`,
   `🕘`,
   `🕙`,
-  `🕚` // 23
+  `🕚`, // 23
 ]
 
 module.exports = {
   bearingToRadians,
   bearingToDegrees,
   bearingToArrow,
-  percentToTextBars (percent, barCount = 10) {
+  percentToTextBars(percent, barCount = 10) {
     const bars = []
     for (let i = 0; i < 1; i += 1 / barCount) bars.push(i < percent ? `▓` : `░`)
     return `\`` + bars.join(``) + `\``
   },
-  numberToEmoji (number) {
+  numberToEmoji(number) {
     return numberEmojis[number]
   },
-  emojiToNumber (emoji) {
+  emojiToNumber(emoji) {
     return numberEmojis.findIndex((e) => e === emoji)
   },
-  pointIsInsideCircle (centerX, centerY, pointX, pointY, radius) {
+  pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
         (pointY - centerY) * (pointY - centerY) <
       radius * radius
     )
   },
-  positionAndAngleDifference (x1, y1, x2, y2) {
+  positionAndAngleDifference(x1, y1, x2, y2) {
     const d = distance(x1, y1, x2, y2)
     const a = angle(x1, y1, x2, y2)
     return { distance: d, angle: a }
   },
-  capitalize (string) {
+  capitalize(string) {
     return string
       .split(` `)
       .map(
-        (s) => s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase()
+        (s) => s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase(),
       )
       .join(` `)
   },
-  checkUserInputForBadWords (string) {
+  checkUserInputForBadWords(string) {
     const ok = filter.isProfane(string)
     if (!ok) string = filter.clean(string)
     return {
       ok,
       result: string,
-      message: ok ? `ok` : `Sorry, you can't use language like that here.`
+      message: ok ? `ok` : `Sorry, you can't use language like that here.`,
     }
   },
-  msToTimeString (ms) {
+  msToTimeString(ms) {
     let seconds = Math.round((ms % (60 * 1000)) / 1000)
     if (seconds <= 9) seconds = `0` + seconds
     const minutes = Math.floor(ms / 1000 / 60)
     return `${minutes}:${seconds}`
   },
-  usageTag (power, stamina, credits) {
+  usageTag(power, stamina, credits) {
     let tag = ``
     if (power) tag += powerTag(power)
     if (power && (stamina || credits)) tag += ` `
@@ -89,14 +89,14 @@ module.exports = {
     if (credits) tag += creditsTag(credits)
     return tag
   },
-  garble (string, percent = 0) {
+  garble(string, percent = 0) {
     if (percent > 0.98) percent = 0.98
     let splitString = string.split(` `)
     while (Math.random() < percent) {
       arrayMove(
         splitString,
         Math.floor(splitString.length * Math.random()),
-        Math.floor(splitString.length * Math.random())
+        Math.floor(splitString.length * Math.random()),
       )
     }
     if (percent > 0.05) {
@@ -106,14 +106,14 @@ module.exports = {
           arrayMove(
             s,
             Math.floor(s.length * Math.random()),
-            Math.floor(s.length * Math.random())
+            Math.floor(s.length * Math.random()),
           )
         }
         if (percent > 0.2) {
           s = s.map((char) => {
             if (Math.random() < percent / 2) {
               char = possibleRandomCharacters.charAt(
-                Math.floor(Math.random() * possibleRandomCharacters.length)
+                Math.floor(Math.random() * possibleRandomCharacters.length),
               )
             }
             return char
@@ -128,17 +128,17 @@ module.exports = {
   staminaTag,
   captainTag: `\`👩‍✈️Captain\``,
   distance,
-  angle
+  angle,
 }
 
-function bearingToRadians (bearing) {
+function bearingToRadians(bearing) {
   const [x, y] = bearing
   const angle = Math.atan2(y, x)
   return angle
   // let degrees = (180 * angle) / Math.PI //degrees
   // return (360 + Math.round(degrees)) % 360 //round number, avoid decimal fragments
 }
-function bearingToDegrees (bearing) {
+function bearingToDegrees(bearing) {
   const angle = bearingToRadians(bearing)
   const degrees = (180 * angle) / Math.PI // degrees
   return (360 + Math.round(degrees)) % 360 // round number, avoid decimal fragments
@@ -151,35 +151,35 @@ const directionArrows = [
   `:arrow_left:`,
   `:arrow_lower_left:`,
   `:arrow_down:`,
-  `:arrow_lower_right:`
+  `:arrow_lower_right:`,
 ] // ['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
-function bearingToArrow (bearing) {
+function bearingToArrow(bearing) {
   const normalizedAngle = ((bearingToDegrees(bearing) + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)
   return directionArrows[arrayIndex]
 }
-function distance (x1, y1, x2, y2) {
+function distance(x1, y1, x2, y2) {
   const a = x1 - x2
   const b = y1 - y2
   return Math.sqrt(a * a + b * b)
 }
-function angle (x1, y1, x2, y2) {
+function angle(x1, y1, x2, y2) {
   return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
 }
 
-function powerTag (power) {
+function powerTag(power) {
   if (typeof power === `string`) power = powerRequirements[power]
   return `\`⚡️${power}\``
 }
-function staminaTag (stamina) {
+function staminaTag(stamina) {
   if (typeof stamina === `string`) stamina = staminaRequirements[stamina]
-  return `\`💪${stamina}\``
+  return `\`💪${Math.round(stamina * 100) / 100}\``
 }
-function creditsTag (credits) {
+function creditsTag(credits) {
   return `\`💳 ${credits}\``
 }
 
-function arrayMove (arr, oldIndex, newIndex) {
+function arrayMove(arr, oldIndex, newIndex) {
   if (newIndex >= arr.length) {
     let k = newIndex - arr.length + 1
     while (k--) {
@@ -189,5 +189,4 @@ function arrayMove (arr, oldIndex, newIndex) {
   arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0])
 }
 
-const possibleRandomCharacters =
-  `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,   `
+const possibleRandomCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,   `

@@ -10,26 +10,19 @@ module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
     if (guild.ship.status.docked) return 0
 
-    const rawMaxSpeed = guild.ship.equipment.engine.reduce(
-      (total, engine) => engine.maxSpeed * engine.repair + total,
-      0,
-    )
-
-    let percentOfMaxShipWeight =
-      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
-    if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
-
-    let effectiveSpeed =
-      (guild.ship.speed || 0) * rawMaxSpeed * (1 - percentOfMaxShipWeight)
+    let effectiveSpeed = (guild.ship.speed || 0) * guild.ship.maxSpeed()
     if (effectiveSpeed < 0) effectiveSpeed = 0
 
     return effectiveSpeed
   }
 
   guild.ship.fuelUsePerTick = () => {
-    return (guild.ship.equipment.engine || []).reduce((total, engine) => {
-      return total + (engine.fuelUse || 0) * (guild.ship.speed || 0)
-    }, 0)
+    const fuelUseMod = 0.1
+    return (
+      (guild.ship.equipment.engine || []).reduce((total, engine) => {
+        return total + (engine.fuelUse || 0) * (guild.ship.speed || 0)
+      }, 0) * fuelUseMod
+    )
   }
 
   guild.ship.redetermineSpeed = (aggregate = []) => {
@@ -142,13 +135,6 @@ module.exports = (guild) => {
     )
   }
 
-  guild.ship.isOverburdened = () => {
-    return (
-      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight >=
-      1
-    )
-  }
-
   guild.ship.move = (useFuel = true, coordinates) => {
     const ship = guild.ship
 
@@ -184,7 +170,7 @@ module.exports = (guild) => {
     const scanResult = guild.context.scanArea({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
-      range: guild.ship.equipment.chassis[0].interactRadius || 0,
+      range: guild.ship.interactRadius() || 0,
       excludeIds: guild.guildId,
       type: `planets`,
     })
@@ -226,26 +212,6 @@ module.exports = (guild) => {
     }
   }
 
-  guild.ship.getTotalWeight = () => {
-    const equipmentWeight = Object.keys(guild.ship.equipment).reduce(
-      (t, eqType) => {
-        const typeWeight = guild.ship.equipment[eqType].reduce(
-          (total, eq) => total + (eq.weight || 0),
-          0,
-        )
-        return t + typeWeight
-      },
-      0,
-    )
-    const cargoWeight = guild.ship.cargo.reduce(
-      (total, c) => total + Math.abs(c.amount || 0),
-      0,
-    )
-    const totalWeight = (guild.ship.weight || 0) + equipmentWeight + cargoWeight
-
-    return totalWeight
-  }
-
   guild.ship.getDirectionString = () => {
     const arrow = bearingToArrow(guild.ship.bearing)
     const degrees = bearingToDegrees(guild.ship.bearing)
@@ -259,7 +225,7 @@ module.exports = (guild) => {
     )
 
     let percentOfMaxShipWeight =
-      guild.ship.getTotalWeight() / guild.ship.equipment.chassis[0].maxWeight
+      guild.ship.getTotalWeight() / guild.ship.maxWeight()
     if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
 
     return rawMaxSpeed * (1 - percentOfMaxShipWeight)
@@ -287,16 +253,16 @@ module.exports = (guild) => {
 }
 
 function getShipSpeedFromAggregate(aggregate) {
-  // aggregate is in form [{speed: 0..1, weight: 0..1}]
+  // aggregate is in form [{speed: 0..1, weight: Number}]
   const totalWeight = aggregate.reduce(
     (total, current) => (total += current.weight),
     0,
   )
-  const speedNormalized =
-    aggregate.reduce(
-      (total, current) => (total += current.speed * current.weight),
-      0,
-    ) / totalWeight
+  const speedNormalized = aggregate.reduce(
+    (total, current) =>
+      (total += current.speed * (current.weight / totalWeight)),
+    0,
+  )
 
   const newSpeed = speedNormalized
   return {

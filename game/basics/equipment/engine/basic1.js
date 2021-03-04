@@ -1,5 +1,5 @@
 module.exports = {
-  emoji: `⚙️`,
+  emoji: `🎆`,
   description: `Starter engine capable of powering a ship for light, slow-paced transit.`,
   displayName: `Sparkler 1000`,
   baseCost: 100,
@@ -9,5 +9,5 @@ module.exports = {
   fuelUse: 0.8,
   directions: 4,
   powerLevels: 2,
-  requirements: { piloting: 2 }
+  requirements: { piloting: 2 },
 }

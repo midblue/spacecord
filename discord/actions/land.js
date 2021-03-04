@@ -11,12 +11,12 @@ module.exports = async ({ msg, guild, planet }) => {
   // ---------- check if in range
   const inRange =
     distance(...guild.ship.location, ...planet.location) <=
-    guild.ship.equipment.chassis[0].interactRadius
+    guild.ship.interactRadius()
   if (!inRange) return send(msg, `That planet isn't in range anymore!`)
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in land`)
   const staminaRes = authorCrewMemberObject.useStamina(`land`)
@@ -26,7 +26,7 @@ module.exports = async ({ msg, guild, planet }) => {
   const voteEmbed = new Discord.MessageEmbed()
     .setColor(APP_COLOR)
     .setTitle(
-      `Land on 🪐${planet.name}? | Vote started by ${msg.author.nickname}`
+      `Land on 🪐${planet.name}? | Vote started by ${msg.author.nickname}`,
     )
 
   const {
@@ -35,13 +35,13 @@ module.exports = async ({ msg, guild, planet }) => {
     result,
     yesPercent,
     yesVoters,
-    sentMessage: voteMessage
+    sentMessage: voteMessage,
   } = await runYesNoVote({
     pollType: `land`,
     embed: voteEmbed,
     msg,
     guild,
-    cleanUp: false
+    cleanUp: false,
   })
   if (!ok) return send(msg, message)
 

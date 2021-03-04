@@ -14,7 +14,7 @@ module.exports = async ({ msg, guild, cache }) => {
 
   // ---------- use cache getter stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in getCache`)
   const staminaRes = authorCrewMemberObject.useStamina(`cache`)
@@ -30,7 +30,7 @@ module.exports = async ({ msg, guild, cache }) => {
       guild.ship.cargo.push({
         type: cargo.type,
         amount: cargo.amount,
-        ...cargo[cargo.type]
+        ...cargo[cargo.type],
       })
     }
   }
@@ -47,15 +47,16 @@ module.exports = async ({ msg, guild, cache }) => {
       `. ` +
       (cache.message
         ? `\nAs you pull in the cache, you see that there's a message attached! It says, "${
-          cache.message.emoji + ` ` + cache.message.message
-        }"`
+            cache.message.emoji + ` ` + cache.message.message
+          }"`
         : ``) +
       (cache.type === `credits`
         ? ``
         : `\nYour ship is now carrying ${Math.round(
-          (guild.ship.getTotalWeight() /
-              guild.ship.equipment.chassis[0].maxWeight) *
-              100
-        )}% of its maximum capacity.`) + (guild.ship.isOverburdened() ? `\nYou're overburdened! You won't be able to move until you drop or sell something.` : ``)
+            (guild.ship.getTotalWeight() / guild.ship.maxWeight()) * 100,
+          )}% of its maximum capacity.`) +
+      (guild.ship.isOverburdened()
+        ? `\nYou're overburdened! You won't be able to move until you drop or sell something.`
+        : ``),
   )
 }

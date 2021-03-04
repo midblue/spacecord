@@ -6,7 +6,7 @@ const {
   capitalize,
   numberToEmoji,
   usageTag,
-  percentToTextBars
+  percentToTextBars,
 } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
@@ -24,16 +24,18 @@ module.exports = {
     value: `Buy and sell cargo.`,
     emoji: `⚖️`,
     category: `planet`,
-    priority: 20
+    priority: 20,
   },
-  test (content, settings) {
-    return new RegExp(`^${settings.prefix}(?:merchants?|shops?)$`, `gi`).exec(content)
+  test(content, settings) {
+    return new RegExp(`^${settings.prefix}(?:merchants?|shops?)$`, `gi`).exec(
+      content,
+    )
   },
-  async action ({ msg, guild, buyOrSell, type, cost, amount }) {
+  async action({ msg, guild, buyOrSell, type, cost, amount }) {
     log(msg, `Merchant`, msg.guild.name)
 
     const planet = guild.context.planets.find(
-      (p) => p.name === guild.ship.status.docked
+      (p) => p.name === guild.ship.status.docked,
     )
     if (!planet) return send(msg, `Your ship isn't docked anywhere!`)
 
@@ -50,9 +52,9 @@ module.exports = {
             runGuildCommand({
               msg,
               commandTag: `merchant`,
-              props: { buyOrSell: `buy` }
+              props: { buyOrSell: `buy` },
             })
-          }
+          },
         },
         {
           emoji: `💰`,
@@ -61,10 +63,10 @@ module.exports = {
             runGuildCommand({
               msg,
               commandTag: `merchant`,
-              props: { buyOrSell: `sell` }
+              props: { buyOrSell: `sell` },
             })
-          }
-        }
+          },
+        },
       ]
 
       const sentMessage = (await send(msg, embed))[0]
@@ -72,7 +74,7 @@ module.exports = {
         reactions: availableActions,
         msg: sentMessage,
         embed,
-        guild
+        guild,
       })
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === `buy` && !type) {
@@ -85,7 +87,7 @@ module.exports = {
         if (!cargo[type]) return
 
         const cost = Math.round(
-          cargo[type].baseCost * (planet.merchant[type] || 1)
+          cargo[type].baseCost * (planet.merchant[type] || 1),
         )
 
         availableActions.push({
@@ -93,7 +95,7 @@ module.exports = {
           label: `${cargo[type].displayName} ${usageTag(
             0,
             0,
-            cost
+            cost,
           )}/${WEIGHT_UNIT} (You have ${
             guild.ship.cargo.find((c) => c.type === type)?.amount || 0
           } ${WEIGHT_UNITS})`,
@@ -104,11 +106,11 @@ module.exports = {
               props: {
                 buyOrSell: `buy`,
                 type,
-                cost
+                cost,
               },
-              guild
+              guild,
             })
-          }
+          },
         })
       })
 
@@ -117,7 +119,7 @@ module.exports = {
         reactions: availableActions,
         msg: sentMessage,
         embed,
-        guild
+        guild,
       })
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === `buy`) {
@@ -125,34 +127,33 @@ module.exports = {
         `Buy ${cargo[type].displayName} at ${usageTag(
           0,
           0,
-          cost
-        )}/${WEIGHT_UNIT}`
+          cost,
+        )}/${WEIGHT_UNIT}`,
       )
       embed.fields = [
         {
           name: `💳  Credits`,
           value: `${guild.ship.credits}`,
-          inline: true
+          inline: true,
         },
         {
           name: `🎒 Ship Weight`,
           value:
             percentToTextBars(
-              guild.ship.getTotalWeight() /
-                guild.ship.equipment.chassis[0].maxWeight
+              guild.ship.getTotalWeight() / guild.ship.maxWeight(),
             ) +
             `\n` +
             Math.round(guild.ship.getTotalWeight()) +
             `/` +
-            Math.round(guild.ship.equipment.chassis[0].maxWeight) +
+            Math.round(guild.ship.maxWeight()) +
             ` ` +
             WEIGHT_UNITS,
-          inline: true
-        }
+          inline: true,
+        },
       ]
 
       embed.setDescription(
-        `How many ${cargo[type].emoji}${cargo[type].displayName} would you like to buy?`
+        `How many ${cargo[type].emoji}${cargo[type].displayName} would you like to buy?`,
       )
 
       const canBuy = Math.floor(guild.ship.credits / cost)
@@ -167,9 +168,9 @@ module.exports = {
               type,
               cost,
               amount: 1,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -183,9 +184,9 @@ module.exports = {
               type,
               cost,
               amount: 10,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -199,9 +200,9 @@ module.exports = {
               type,
               cost,
               amount: 50,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -215,9 +216,9 @@ module.exports = {
               type,
               cost,
               amount: 100,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -231,9 +232,9 @@ module.exports = {
               type,
               cost,
               amount: 500,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -247,9 +248,9 @@ module.exports = {
               type,
               cost,
               amount: 1000,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -266,9 +267,9 @@ module.exports = {
               type,
               cost,
               amount: canBuy,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -277,7 +278,7 @@ module.exports = {
         reactions: amountsAsReactions,
         msg: sentMessage,
         embed,
-        guild
+        guild,
       })
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === `sell` && !type) {
@@ -295,7 +296,7 @@ module.exports = {
         const cost = Math.round(
           cargo[type].baseCost *
             planet.merchant[type] *
-            (planet.merchantSellMultiplier || 1)
+            (planet.merchantSellMultiplier || 1),
         )
 
         availableActions.push({
@@ -303,7 +304,7 @@ module.exports = {
           label: `${cargo[type].displayName} ${usageTag(
             0,
             0,
-            cost
+            cost,
           )}/${WEIGHT_UNIT} (You have ${
             guild.ship.cargo.find((c) => c.type === type)?.amount || 0
           } ${WEIGHT_UNITS})`,
@@ -314,11 +315,11 @@ module.exports = {
               props: {
                 buyOrSell: `sell`,
                 type,
-                cost
+                cost,
               },
-              guild
+              guild,
             })
-          }
+          },
         })
       })
 
@@ -331,7 +332,7 @@ module.exports = {
         reactions: availableActions,
         msg: sentMessage,
         embed,
-        guild
+        guild,
       })
       if (!sentMessage.deleted) sentMessage.delete()
     } else if (buyOrSell === `sell`) {
@@ -339,38 +340,37 @@ module.exports = {
         `Sell ${cargo[type].displayName} at ${usageTag(
           0,
           0,
-          cost
-        )}/${WEIGHT_UNIT}`
+          cost,
+        )}/${WEIGHT_UNIT}`,
       )
       embed.fields = [
         {
           name: `💳  Credits`,
           value: `${guild.ship.credits}`,
-          inline: true
+          inline: true,
         },
         {
           name: `🎒 Ship Weight`,
           value:
             percentToTextBars(
-              guild.ship.getTotalWeight() /
-                guild.ship.equipment.chassis[0].maxWeight
+              guild.ship.getTotalWeight() / guild.ship.maxWeight(),
             ) +
             `\n` +
             Math.round(guild.ship.getTotalWeight()) +
             `/` +
-            Math.round(guild.ship.equipment.chassis[0].maxWeight) +
+            Math.round(guild.ship.maxWeight()) +
             ` ` +
             WEIGHT_UNITS,
-          inline: true
-        }
+          inline: true,
+        },
       ]
 
       embed.setDescription(
-        `How many ${cargo[type].emoji}${cargo[type].displayName} would you like to sell?`
+        `How many ${cargo[type].emoji}${cargo[type].displayName} would you like to sell?`,
       )
 
       const canSell = Math.floor(
-        guild.ship.cargo.find((c) => c.type === type).amount
+        guild.ship.cargo.find((c) => c.type === type).amount,
       )
       const amountsAsReactions = []
       if (canSell > 1) {
@@ -383,9 +383,9 @@ module.exports = {
               type,
               cost,
               amount: 1,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -399,9 +399,9 @@ module.exports = {
               type,
               cost,
               amount: 10,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -415,9 +415,9 @@ module.exports = {
               type,
               cost,
               amount: 50,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -431,9 +431,9 @@ module.exports = {
               type,
               cost,
               amount: 100,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -447,9 +447,9 @@ module.exports = {
               type,
               cost,
               amount: 500,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -463,9 +463,9 @@ module.exports = {
               type,
               cost,
               amount: 1000,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -482,9 +482,9 @@ module.exports = {
               type,
               cost,
               amount: canSell,
-              guild
+              guild,
             })
-          }
+          },
         })
       }
 
@@ -493,9 +493,9 @@ module.exports = {
         reactions: amountsAsReactions,
         msg: sentMessage,
         embed,
-        guild
+        guild,
       })
       if (!sentMessage.deleted) sentMessage.delete()
     }
-  }
+  },
 }

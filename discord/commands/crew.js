@@ -7,13 +7,13 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `crewQuarters`,
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:crew|crews?quarters?)$`,
-      `gi`
+      `gi`,
     ).exec(content)
   },
-  async action ({ msg, guild }) {
+  async action({ msg, guild }) {
     log(msg, `Crew`, msg.guild.name)
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -25,38 +25,28 @@ module.exports = {
       {
         name: `👩‍👩‍👧‍👦 Crew`,
         value: guild.ship.members.length + ` members`,
-        inline: true
-      }
+        inline: true,
+      },
     ]
 
     const reactions = [
       {
-        emoji: `🏃‍♀️`,
-        label: `Generate Power ` + usageTag(null, `generatePower`),
-        async action ({ msg }) {
-          runGuildCommand({
-            commandTag: `generatePower`,
-            msg
-          })
-        }
-      },
-      {
         emoji: `🏆`,
         label: `Crew Rankings`,
-        async action ({ msg }) {
+        async action({ msg }) {
           runGuildCommand({
             msg,
-            commandTag: `rankings`
+            commandTag: `rankings`,
           })
-        }
+        },
       },
       {
         emoji: `🏋️‍♂️`,
         label: `Train your skills`,
         action: async ({ msg }) => {
           runGuildCommand({ msg, commandTag: `train` })
-        }
-      }
+        },
+      },
     ]
 
     const sentMessage = (await send(msg, embed))[0]
@@ -65,8 +55,8 @@ module.exports = {
       reactions,
       embed,
       guild,
-      respondeeFilter: (user) => user.id === msg.author.id
+      respondeeFilter: (user) => user.id === msg.author.id,
     })
     sentMessage.delete()
-  }
+  },
 }

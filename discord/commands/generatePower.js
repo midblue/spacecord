@@ -10,15 +10,28 @@ module.exports = {
     name: `generatepower`,
     value: `Hop on the treadmill to make some power for the ship!`,
     category: `ship`,
-    emoji: `💎`,
+    emoji: `🔌`,
   },
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:generatepower)$`, `gi`).exec(
       content,
     )
   },
-  async action({ msg, settings, guild }) {
+  async action({ msg, settings, authorCrewMemberObject, guild }) {
     log(msg, `Generate Power`, msg.guild.name)
+
+    // ---------- use stamina
+    const member =
+      authorCrewMemberObject ||
+      guild.ship.members.find((m) => m.id === msg.author.id)
+    if (!member) return console.log(`no user found in trainEng`)
+    const staminaRequired = authorCrewMemberObject.staminaRequiredFor(
+      `generatePower`,
+    )
+    const staminaRes = member.useStamina(staminaRequired)
+    if (!staminaRes.ok) return send(msg, staminaRes.message)
+
+    // ------------ game
 
     const rotationsGiven = 2
     let rotationsLeft = rotationsGiven
@@ -38,11 +51,11 @@ module.exports = {
       `🔻`,
     ]
     const values = {
-      '💎': 1.3,
-      '⚡️': 1,
-      '🔷': 0.5,
-      '🔻': 0.4,
-      '🔶': 0.3,
+      '💎': 1,
+      '⚡️': 0.8,
+      '🔷': 0.4,
+      '🔻': 0.3,
+      '🔶': 0.2,
       '🧨': -1,
     }
     const getRandom = () =>

@@ -14,7 +14,9 @@ fs.readdir(`./discord/commands`, (err, files) => {
       !file.endsWith(`.js`) ||
       file === `index.js` ||
       file.startsWith(`debug`)
-    ) { return }
+    ) {
+      return
+    }
     commands.push(require(`./${file}`))
     commands = commands.filter((c) => c && c.documentation)
   })
@@ -31,14 +33,14 @@ module.exports = {
     value: `Shows this message.`,
     emoji: `ℹ️`,
     category: `settings`,
-    priority: 100
+    priority: 100,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:help|h|info|i)$`, `gi`).exec(
-      content
+      content,
     )
   },
-  async action ({ msg, settings, game, client }) {
+  async action({ msg, settings, game, client }) {
     log(msg, `Help`)
 
     const reactions = []
@@ -54,9 +56,9 @@ module.exports = {
               user: msg.author,
               emoji: `📖`,
               title: `How To Play`,
-              commands: [] // todo add spawn and join commands here
+              commands: [], // todo add spawn and join commands here
             })
-          }
+          },
         },
         {
           emoji: `🚀`,
@@ -70,10 +72,10 @@ module.exports = {
               title: `Ship Controls and Status`,
               description: `View and control the ship's status and movement.`,
               commands: commands.filter(
-                (c) => c.documentation.category === `ship`
-              )
+                (c) => c.documentation.category === `ship`,
+              ),
             })
-          }
+          },
         },
         {
           emoji: `👋`,
@@ -87,10 +89,10 @@ module.exports = {
               title: `Interaction Commands`,
               description: `Interact with the world and other ships around you.`,
               commands: commands.filter(
-                (c) => c.documentation.category === `interaction`
-              )
+                (c) => c.documentation.category === `interaction`,
+              ),
             })
-          }
+          },
         },
         {
           emoji: `👨‍👩‍👧‍👦`,
@@ -104,10 +106,10 @@ module.exports = {
               title: `Crew Commands`,
               description: `View and upgrade your character, and see the whole crew.`,
               commands: commands.filter(
-                (c) => c.documentation.category === `crew`
-              )
+                (c) => c.documentation.category === `crew`,
+              ),
             })
-          }
+          },
         },
         {
           emoji: `👩‍✈️`,
@@ -120,9 +122,9 @@ module.exports = {
               emoji: `👩‍✈️`,
               title: `Captain/Admin Commands`,
               description: `Only the ship's captain (or server admins) can do these actions!`,
-              commands: commands.filter((c) => c.captain)
+              commands: commands.filter((c) => c.captain),
             })
-          }
+          },
         },
         {
           emoji: `⚙️`,
@@ -136,12 +138,26 @@ module.exports = {
               title: `Bot Commands`,
               description: `Help and settings for the bot itself.`,
               commands: commands.filter(
-                (c) => c.documentation.category === `settings`
-              )
+                (c) => c.documentation.category === `settings`,
+              ),
             })
-          }
-        }
-      ]
+          },
+        },
+        {
+          emoji: `❓`,
+          label: `Support & Credits`,
+          action: async () => {
+            helpPage({
+              msg,
+              settings,
+              user: msg.author,
+              emoji: `❓`,
+              title: `Support & Credits`,
+              commands: [],
+            })
+          },
+        },
+      ],
     )
 
     const embed = new Discord.MessageEmbed().setColor(APP_COLOR)
@@ -229,7 +245,7 @@ Pick a category below to get info on specific commands or elements of the game.`
       reactions,
       commandsLabel: `Info categories`,
       listeningType: `category selection`,
-      allowNonMembers: true
+      allowNonMembers: true,
     })
-  }
+  },
 }

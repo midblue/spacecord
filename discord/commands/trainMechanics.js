@@ -28,7 +28,7 @@ module.exports = {
     if (!staminaRequired) {
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`mechanics`)
     }
-    const staminaRes = member.useStamina(`train`)
+    const staminaRes = member.useStamina(staminaRequired)
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
     const emoji = allSkills.find((s) => s.name === `mechanics`).emoji
@@ -134,7 +134,7 @@ module.exports = {
     // ------- end of game
     setTimeout(async () => {
       setTimeout(() => {
-        ;[...messagesToDelete].forEach((c) => {
+        messagesToDelete.forEach((c) => {
           if (!c.deleted) c.delete()
         })
       }, 500)

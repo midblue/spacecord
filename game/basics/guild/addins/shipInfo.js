@@ -28,7 +28,7 @@ module.exports = (guild) => {
       planets: guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
-        range: guild.ship.equipment.chassis[0].interactRadius,
+        range: guild.ship.interactRadius(),
         excludeIds: guild.guildId,
       }).planets,
     }
@@ -127,8 +127,10 @@ module.exports = (guild) => {
         name: `⏩ Speed`,
         value: guild.ship.status.stranded
           ? `Out of Fuel!`
-          : guild.ship.speed
-          ? guild.ship.speed.toFixed(2) + ` ` + SPEED_UNIT
+          : guild.ship.effectiveSpeed()
+          ? Math.round(guild.ship.effectiveSpeed() * 1000) / 1000 +
+            ` ` +
+            SPEED_UNIT
           : `Stopped`,
       })
 
@@ -153,7 +155,7 @@ module.exports = (guild) => {
     fields.push({
       name: `📍 Location`,
       value:
-        guild.ship.location.map((l) => l.toFixed(2)).join(`, `) +
+        guild.ship.location.map((l) => Math.round(l * 1000) / 1000).join(`, `) +
         ` ` +
         DISTANCE_UNIT,
     })
@@ -174,7 +176,7 @@ module.exports = (guild) => {
         fuel.toFixed(1) +
         ` ` +
         WEIGHT_UNITS +
-        (guild.ship.speed
+        (guild.ship.effectiveSpeed()
           ? `\n(${Math.floor(
               fuel / guild.ship.fuelUsePerTick(),
             )} ${TIME_UNITS} at\ncurrent speed)`
@@ -250,21 +252,19 @@ module.exports = (guild) => {
 
     fields.push({
       name: `👉 Interact Range`,
-      value:
-        guild.ship.equipment.chassis[0].interactRadius + ` ` + DISTANCE_UNIT,
+      value: guild.ship.interactRadius() + ` ` + DISTANCE_UNIT,
     })
 
     fields.push({
       name: `🎒 Ship Weight`,
       value:
         percentToTextBars(
-          guild.ship.getTotalWeight() /
-            guild.ship.equipment.chassis[0].maxWeight,
+          guild.ship.getTotalWeight() / guild.ship.maxWeight(),
         ) +
         `\n` +
         Math.round(guild.ship.getTotalWeight()) +
         `/` +
-        Math.round(guild.ship.equipment.chassis[0].maxWeight) +
+        Math.round(guild.ship.maxWeight()) +
         ` ` +
         WEIGHT_UNITS,
     })
@@ -272,7 +272,7 @@ module.exports = (guild) => {
     fields.push({
       name: `🏎 Max Speed`,
       value:
-        guild.ship.maxSpeed().toFixed(2) +
+        Math.round(guild.ship.effectiveSpeed() * 1000) / 1000 +
         ` ` +
         DISTANCE_UNIT +
         `/` +
@@ -303,17 +303,17 @@ module.exports = (guild) => {
         })
       },
     })
-    actions.push({
-      emoji: `🧾`,
-      label: `Ship Log`,
-      async action({ user, msg }) {
-        await runGuildCommand({
-          msg,
-          author: user,
-          commandTag: `log`,
-        })
-      },
-    })
+    // actions.push({
+    //   emoji: `🧾`,
+    //   label: `Ship Log`,
+    //   async action({ user, msg }) {
+    //     await runGuildCommand({
+    //       msg,
+    //       author: user,
+    //       commandTag: `log`,
+    //     })
+    //   },
+    // })
 
     return {
       fields,

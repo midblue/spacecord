@@ -16,19 +16,26 @@ skiffs
       recharge speed
       weapon
 
+gravity formula: -G*m1*m2 / r**2 = Fg
+
 **BUGS**
 * i can train for someone else from .me
 * cache not giving me the stuff
 * undefined undefined in cargo
 munitions can keep going after game over
 
+I feel like this should happen more in real-time rather than a fake "day" unit
+ticks should just be arbitrary but not represent "days"
+
+motion as amounts of thrust in any direction
+set trajectory to any planet
+captain has ebrake
+
 **MVP**
-test auto discover planets in interact range on move
 actual minigames for piloting and repairing
-determine good xp numbers for training
 more equipment
 more planets
-a way to make money (quests??)
+a way to make money (quests?)
 actually write help guide
 
 **NEXT**
@@ -52,6 +59,8 @@ see all docked ships on a planet
 global leaderboard
 status report on ship
 cantina & cantina chatter (report)
+auto-healing gear
+solar panels
 
 piloting
   angry birds style launcher but you type in degrees and power
@@ -66,6 +75,8 @@ repair
 
 dice based game
 
+
+colonize/adopt a planet and have passive things being gathered or whatever
 
 space for equipment vs space for cargo in chasses
 tiers of gas, tiers of minerals

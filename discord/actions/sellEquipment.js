@@ -12,15 +12,17 @@ module.exports = async ({ msg, part, cost, guild }) => {
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
-  if (!authorCrewMemberObject) { return console.log(`no user found in sellEquipment`) }
+  if (!authorCrewMemberObject) {
+    return console.log(`no user found in sellEquipment`)
+  }
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
-    `Sell ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits? | Vote started by ${msg.author.nickname}`
+    `Sell ${part.emoji} ${part.displayName} for \`💳 ${cost}\` credits? | Vote started by ${msg.author.nickname}`,
   )
 
   const voteResult = await runYesNoVote({
@@ -29,7 +31,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
     minimumMemberPercent: 0.2,
     msg,
     guild,
-    cleanUp: false
+    cleanUp: false,
   })
   if (!voteResult.ok) return send(msg, voteResult.message)
   voteEmbed.fields = []
@@ -54,9 +56,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
   voteEmbed.description =
     `You now have \`💳 ${Math.round(guild.ship.credits)}\` credits.` +
     `\n\nYour ship is now carrying ${Math.round(
-      (guild.ship.getTotalWeight() /
-        guild.ship.equipment.chassis[0].maxWeight) *
-        100
+      (guild.ship.getTotalWeight() / guild.ship.maxWeight()) * 100,
     )}% of its maximum capacity.`
 
   voteResult.sentMessage.edit(voteEmbed)

@@ -3,26 +3,26 @@ const factions = {
     languages: [`a`, `c`],
     name: `The Green Glory`,
     emoji: `💹`,
-    color: `green`
+    color: `green`,
   },
   orange: {
     languages: [`c`],
     name: `The Orange Oligarchs`,
-    emoji: `🆚`,
-    color: `orange`
+    emoji: `🍊`,
+    color: `orange`,
   },
   purple: {
     languages: [`b`, `c`],
     name: `The Purple Peacekeepers`,
     emoji: `☯️`,
-    color: `purple`
+    color: `purple`,
   },
   gray: {
     languages: [`a`, `b`, `d`],
     name: `The Gray Gravediggers`,
     emoji: `🌚`,
-    color: `gray`
-  }
+    color: `gray`,
+  },
 }
 
 module.exports = factions

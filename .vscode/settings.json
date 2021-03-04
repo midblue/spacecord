@@ -2,11 +2,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-    "svelte"
-  ],
-  "eslint.run": "onType",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.validate": ["javascript", "svelte"],
+  "eslint.run": "onSave",
   "eslint.format.enable": true,
   "eslint.alwaysShowStatus": true
- }
+}

@@ -6,13 +6,13 @@ module.exports = function (passedDb) {
   return {
     async getAll () {
       try {
-        const snapshot = await db.collection(`caches`).get()
+        const snapshot = await db.collection(`caches`).find()
         if (snapshot.empty)
           return []
 
         const caches = []
         snapshot.forEach((doc) => {
-          caches.push({ ...doc.data(), id: doc.id })
+          caches.push({ ...doc, id: doc.id })
         })
         return caches
       }

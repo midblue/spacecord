@@ -1,21 +1,28 @@
 const { log } = require(`../gamecommon`)
-const db = require(`../../db/db`)
+
 const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = STEP_INTERVAL * 500
+let loopInterval
 
 module.exports = {
   async start() {
     log(`init`, `Starting game`)
     this.lastTick = Date.now()
 
-    setInterval(async () => {
+    if (loopInterval) clearInterval(loopInterval)
+    loopInterval = setInterval(async () => {
       console.log(``)
       log(``, `============= NEW GAME STEP =============`)
       await this.update()
       log(``, `============= END GAME STEP =============`)
       console.log(``)
     }, STEP_INTERVAL)
+  },
+
+  stop() {
+    log(`init`, `Stopping game`)
+    clearInterval(loopInterval)
   },
 
   async update() {

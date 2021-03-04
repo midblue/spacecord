@@ -3,12 +3,16 @@ const cargoData = require(`../cargo`)
 const equipmentData = require(`../equipment/equipment`)
 const addins = require(`./addins`)
 const createDefaultGuild = require(`./createDefaultGuild`)
-const db = require(`../../../db/db`)
 const memberLiveify = require(`../crew/crew`).liveify
 
-async function spawn ({ discordGuild, channelId, context }) {
+async function spawn({
+  db,
+  discordGuild,
+  channelId,
+  context,
+}) {
   let guild
-  guild = await db.guild.get({ guildId: discordGuild.id })
+  guild = await db.guilds.get({ id: discordGuild.id })
   if (guild) {
     if (guild.banned) return false // todo implement
     liveify(guild)
@@ -17,16 +21,19 @@ async function spawn ({ discordGuild, channelId, context }) {
 
   guild = createDefaultGuild({ discordGuild, channelId })
   liveify(guild, context)
-  await db.guild.add({ guildId: discordGuild.id, data: guild.saveableData() })
+  await db.guilds.add({
+    id: discordGuild.id,
+    data: guild.saveableData(),
+  })
   return guild
 }
 
-function liveify (guild, context) {
+function liveify(guild, context) {
   guild.context = context
 
   guild.ship.server = {
-    id: guild.guildId,
-    name: guild.guildName
+    id: guild.id,
+    name: guild.name,
   }
 
   guild.ship.guild = guild
@@ -35,27 +42,32 @@ function liveify (guild, context) {
   if (guild.faction?.color) {
     guild.faction = {
       ...factionsData[guild.faction.color],
-      ...guild.faction
+      ...guild.faction,
     }
   }
 
   // add base properties to items onboard
-  Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
-    guild.ship.equipment[equipmentType] = guild.ship.equipment[equipmentType]
-      .map((part) => {
-        const itemData = equipmentData[equipmentType][part.id]
-        return {
-          ...itemData,
-          ...part
-        }
-      })
-      .filter((p) => p)
-  })
+  Object.keys(guild.ship.equipment || {}).forEach(
+    (equipmentType) => {
+      guild.ship.equipment[
+        equipmentType
+      ] = guild.ship.equipment[equipmentType]
+        .map((part) => {
+          const itemData =
+            equipmentData[equipmentType][part.id]
+          return {
+            ...itemData,
+            ...part,
+          }
+        })
+        .filter((p) => p)
+    },
+  )
 
   // add base properties to cargo
   guild.ship.cargo = guild.ship.cargo.map((c) => ({
     ...cargoData[c.type],
-    ...c
+    ...c,
   }))
 
   addins.forEach((addin) => addin(guild))
@@ -65,5 +77,5 @@ function liveify (guild, context) {
 
 module.exports = {
   spawn,
-  liveify
+  liveify,
 }

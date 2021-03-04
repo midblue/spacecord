@@ -10,7 +10,7 @@ module.exports = async ({ msg, guild, planet }) => {
   log(msg, `Depart`, msg.guild.name)
 
   if (!planet) {
-    planet = manager.game.planets.find(
+    planet = manager.planets.find(
       (p) => p.name === guild.ship.status.docked
     )
   }

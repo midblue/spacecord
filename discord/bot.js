@@ -40,7 +40,6 @@ client.on(`ready`, async () => {
     } guilds`,
   )
   client.user.setActivity(`.help`, { type: `LISTENING` })
-  client.game.verifyActiveGuilds(await client.guilds.cache.array())
 })
 
 // added to a server
@@ -55,18 +54,21 @@ client.on(`guildDelete`, kickedFromGuild)
 client.login(process.env.DISCORD_TOKEN)
 
 module.exports = {
-  init(gameController) {
+  init (gameController) {
     client.game = gameController
 
     client.on(`message`, async (msg) => {
-      if (!msg.author || msg.author.bot) return
-      if (!msg.guild || !msg.guild.available) return privateMessage(msg)
+      if (!msg.author || msg.author.bot)
+        return
+      if (!msg.guild || !msg.guild.available)
+        return privateMessage(msg)
       return guildMessage({ msg, client, game: gameController })
     })
 
     client.on(`raw`, async (event) => {
       this.rawWatchers.forEach((handler) => handler(event))
     })
+    client.isReady = true
   },
   client,
   rawWatchers: [],

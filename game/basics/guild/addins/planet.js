@@ -1,6 +1,10 @@
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 const story = require(`../../story/story`)
-const { capitalize, captainTag, usageTag } = require(`../../../../common`)
+const {
+  capitalize,
+  captainTag,
+  usageTag,
+} = require(`../../../../common`)
 const depart = require(`../../../../discord/actions/depart`)
 
 module.exports = (guild) => {
@@ -8,32 +12,43 @@ module.exports = (guild) => {
     guild.ship.status.docked = planet.name
     guild.ship.location = [...planet.location]
 
-    if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
+    if (
+      planet.recharge &&
+      guild.ship.power < guild.ship.maxPower()
+    ) {
       guild.ship.power = guild.ship.maxPower()
-      setTimeout(() => guild.pushToGuild(story.land.recharge(), msg), 1000) // send after landing message
+      setTimeout(
+        () => guild.pushToGuild(story.land.recharge(), msg),
+        1000,
+      ) // send after landing message
     }
 
     const otherDockedShips = planet
       .getDockedShips()
-      .filter((s) => s.guildId !== guild.guildId)
+      .filter((s) => s.id !== guild.id)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLand(guild.ship))
+      s.pushToGuild(story.planet.otherShipLand(guild.ship)),
     )
 
     runGuildCommand({
       msg,
       commandTag: `planet`,
-      guild
+      guild,
     })
-    return { ok: true, message: story.land.generalPlanet(guild.ship, planet) }
+    return {
+      ok: true,
+      message: story.land.generalPlanet(guild.ship, planet),
+    }
   }
 
   guild.ship.depart = ({ planet, msg }) => {
     const otherDockedShips = planet
       .getDockedShips()
-      .filter((s) => s.guildId !== guild.guildId)
+      .filter((s) => s.id !== guild.id)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet))
+      s.pushToGuild(
+        story.planet.otherShipLeave(guild.ship, planet),
+      ),
     )
 
     guild.ship.status.docked = false
@@ -41,10 +56,13 @@ module.exports = (guild) => {
     runGuildCommand({
       commandTag: `ship`,
       msg,
-      props: { guild }
+      props: { guild },
     })
 
-    return { ok: true, message: story.depart.depart(planet) }
+    return {
+      ok: true,
+      message: story.depart.depart(planet),
+    }
   }
 
   guild.ship.getPlanetFields = (planet) => {
@@ -52,17 +70,19 @@ module.exports = (guild) => {
     fields.push({
       name: `📍 Location`,
       value:
-        planet.location.map((l) => l.toFixed(2)).join(`, `) +
+        planet.location
+          .map((l) => l.toFixed(2))
+          .join(`, `) +
         ` ` +
-        DISTANCE_UNIT
+        DISTANCE_UNIT,
     })
     fields.push({
       name: `📏 Size`,
-      value: capitalize(planet.getSizeDescriptor())
+      value: capitalize(planet.getSizeDescriptor()),
     })
     fields.push({
       name: `🎨 Color`,
-      value: capitalize(planet.color)
+      value: capitalize(planet.color),
     })
     const dockedShips = planet.getDockedShips()
     fields.push({
@@ -70,11 +90,11 @@ module.exports = (guild) => {
       value:
         dockedShips.length < 5
           ? dockedShips.map((s) => s.ship.name).join(`, `)
-          : dockedShips.length
+          : dockedShips.length,
     })
     fields.push({
       name: `💳  Your Credits`,
-      value: Math.round(guild.ship.credits)
+      value: Math.round(guild.ship.credits),
     })
     return fields
   }
@@ -85,25 +105,25 @@ module.exports = (guild) => {
     actions.push({
       emoji: `🛠`,
       label: `Shipyard`,
-      async action ({ user, msg, guild }) {
+      async action({ user, msg, guild }) {
         await runGuildCommand({
           commandTag: `shipyard`,
           author: user,
-          msg
+          msg,
         })
-      }
+      },
     })
 
     actions.push({
       emoji: `⚖️`,
       label: `Merchant Quarter`,
-      async action ({ user, msg, guild }) {
+      async action({ user, msg, guild }) {
         await runGuildCommand({
           commandTag: `merchant`,
           author: user,
-          msg
+          msg,
         })
-      }
+      },
     })
 
     // actions.push({
@@ -122,9 +142,9 @@ module.exports = (guild) => {
     actions.push({
       emoji: `🛫`,
       label: `Start Leave Vote ` + usageTag(0, `poll`),
-      async action ({ user, msg, guild, planet }) {
+      async action({ user, msg, guild, planet }) {
         depart({ msg, guild, planet })
-      }
+      },
     })
 
     return actions

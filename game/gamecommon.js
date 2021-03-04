@@ -24,4 +24,7 @@ module.exports = {
     //   name: 'linguistics',
     // },
   ],
+  getTrainingXp(minigameScore, skillLevel) {
+    return 235 + 5 * skillLevel * minigameScore // yea some magic numbers sorry eslint
+  },
 }

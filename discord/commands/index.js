@@ -1,7 +1,9 @@
 const send = require(`../actions/send`)
-const { username, applyCustomParams } = require(`../botcommon`)
+const {
+  username,
+  applyCustomParams,
+} = require(`../botcommon`)
 const defaultServerSettings = require(`../defaults/defaultServerSettings`)
-const db = require(`../../db/db`)
 
 // * get all commands from files in this folder
 const fs = require(`fs`)
@@ -21,7 +23,12 @@ fs.readdir(`./discord/commands`, (err, files) => {
 })
 
 module.exports = {
-  test: async ({ msg, client, predeterminedCommandTag, props }) => {
+  test: async ({
+    msg,
+    client,
+    predeterminedCommandTag,
+    props,
+  }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
     const game = client.game
     const author = msg.author
@@ -73,7 +80,9 @@ module.exports = {
         }
 
         const authorCrewMemberObject =
-          msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
+          msg.guild &&
+          ship &&
+          ship.members.find((m) => m.id === msg.author.id)
         if (!command.public && !authorCrewMemberObject) {
           return send(
             msg,

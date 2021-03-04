@@ -10,9 +10,10 @@ module.exports = {
   tag: `flightDeck`,
   documentation: false,
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:flightdeck|flight)$`, `gi`).exec(
-      content,
-    )
+    return new RegExp(
+      `^${settings.prefix}(?:flightdeck|flight)$`,
+      `gi`,
+    ).exec(content)
   },
   async action({ msg, guild }) {
     log(msg, `Flight Deck`, msg.guild.name)
@@ -59,7 +60,8 @@ module.exports = {
       ...[
         {
           emoji: `🧭`,
-          label: `Start Direction Vote ` + usageTag(0, `poll`),
+          label:
+            `Start Direction Vote ` + usageTag(0, `poll`),
           action: ({ msg, guild }) => {
             runGuildCommand({ msg, commandTag: `direction` })
           },

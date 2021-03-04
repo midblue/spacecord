@@ -11,7 +11,7 @@ module.exports = function ({ discordGuild, channelId }) {
     captain: false,
     status: {
       dead: false,
-      docked: planet.name
+      docked: planet.name,
     },
     power: 5,
     members: [],
@@ -23,15 +23,15 @@ module.exports = function ({ discordGuild, channelId }) {
         {
           id: `starter`,
           repaired: Date.now(),
-          repair: 0.9
-        }
+          repair: 0.9,
+        },
       ],
       engine: [
         {
           id: `basic1`,
           repaired: Date.now(),
-          repair: 0.8
-        }
+          repair: 0.8,
+        },
       ],
       armor: [],
       // {
@@ -43,43 +43,43 @@ module.exports = function ({ discordGuild, channelId }) {
         {
           id: `starter`,
           repaired: Date.now(),
-          repair: 0.7
-        }
+          repair: 0.7,
+        },
       ],
       telemetry: [
         {
           id: `image1`,
           repaired: Date.now(),
-          repair: 0.8
-        }
+          repair: 0.8,
+        },
       ],
       scanner: [
         {
           id: `basic1`,
           repaired: Date.now(),
-          repair: 0.5
-        }
+          repair: 0.5,
+        },
       ],
       transceiver: [
         {
           id: `transceiver1`,
           repaired: Date.now(),
-          repair: 0.5
-        }
+          repair: 0.5,
+        },
       ],
       battery: [
         {
           id: `battery1`,
           repaired: Date.now(),
-          repair: 0.9
-        }
-      ]
+          repair: 0.9,
+        },
+      ],
     },
     cargo: [
       {
         type: `fuel`,
-        amount: 8
-      }
+        amount: 8,
+      },
       // {
       //   type: 'food',
       //   amount: 2,
@@ -87,27 +87,27 @@ module.exports = function ({ discordGuild, channelId }) {
     ],
     location: [...planet.location],
     bearing: [Math.random() - 0.5, Math.random() - 0.5],
-    speed: 0
+    speed: 0,
   }
 
   const data = {
     active: true,
-    guildId: discordGuild.id,
-    guildName: discordGuild.name,
+    id: discordGuild.id,
+    name: discordGuild.name,
     channel: channelId,
     faction: {
       color: Object.keys(factions)[
         Math.floor(Object.keys(factions).length * Math.random())
-      ]
+      ],
     },
     ship,
     created: Date.now(),
-    settings: { ...defaultServerSettings }
+    settings: { ...defaultServerSettings },
   }
   return data
 }
 
-function getShipName () {
+function getShipName() {
   return names[Math.floor(Math.random() * names.length)]
 }
 
@@ -195,5 +195,5 @@ const names = [
   `STS Ghunne`,
   `ISS Utopia`,
   `SS The Javelin`,
-  `Gravity`
+  `Gravity`,
 ]

@@ -28,7 +28,7 @@ module.exports = (guild) => {
         x: guild.ship.location[0],
         y: guild.ship.location[1],
         range,
-        excludeIds: guild.guildId,
+        excludeIds: guild.id,
       })
       const thingsFoundCount = Object.values(scanResult).reduce(
         (total, found) => (total += found.length),
@@ -64,7 +64,7 @@ You see ${
       x: guild.ship.location[0],
       y: guild.ship.location[1],
       range,
-      excludeIds: guild.guildId,
+      excludeIds: guild.id,
     })
 
     for (const planet of scanResult.planets) {

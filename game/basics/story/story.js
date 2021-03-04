@@ -21,7 +21,7 @@ module.exports = {
           `Your server already has a ship! It's called '${guild.ship.name}'.`,
       },
       first: (guild) =>
-        `You find yourself aboard a discount ${guild.ship.displayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
+        `You find yourself aboard a discount ${guild.ship.equipment.chassis[0].displayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
     },
     name: {
       change: (newName) =>

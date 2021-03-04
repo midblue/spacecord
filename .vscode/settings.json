@@ -2,6 +2,11 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": ["javascript", "svelte"],
-  // "prettier.enable": false
-}
+  "eslint.validate": [
+    "javascript",
+    "svelte"
+  ],
+  "eslint.run": "onType",
+  "eslint.format.enable": true,
+  "eslint.alwaysShowStatus": true
+ }

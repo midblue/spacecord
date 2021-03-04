@@ -1,19 +1,22 @@
-version: "3.7"
+version: '3.7'
 services:
   node:
-    image: "node:15.7.0"
-    user: "node"
+    image: 'node:15.7.0'
+    user: 'node'
     working_dir: /home/node/app
     ports:
       - 8080:8080
     volumes:
       - ./:/home/node/app
-    command: "npx nodemon index.js"
-    env_file:
-      - .env
+    command: 'npx nodemon index.js'
+    environment:
+      MONGODB_ADMINUSERNAME: spacecord
+      MONGODB_ADMINPASSWORD: spacecord123
+    depends_on:
+      - mongodb
 
-  db:
-    image: "mongo:4.0"
+  mongodb:
+    image: 'mongo:4.0'
     restart: always
     volumes:
       - db_data:/data/db
@@ -24,5 +27,21 @@ services:
       MONGO_INITDB_DATABASE: spacecord
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
+
+  mongo-express:
+    image: 'mongo-express:0.54.0'
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+      ME_CONFIG_MONGODB_AUTH_DATABASE: spacecord
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rootpassword
+      ME_CONFIG_BASICAUTH_USERNAME: spacecord
+      ME_CONFIG_BASICAUTH_PASSWORD: spacecord321
+    depends_on:
+      - mongodb
+    ports:
+      - '8081:8081'
 volumes:
   db_data:

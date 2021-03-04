@@ -60,7 +60,7 @@ module.exports = {
         description: `guilds`,
         action: async () => {
           const res = (await client.game.guilds())
-            .map((g) => g.guildName + `: ` + g.guildId)
+            .map((g) => g.name + `: ` + g.id)
             .sort((a, b) => b - a)
             .join(`\n`)
           return `\n` + res
@@ -196,7 +196,10 @@ module.exports = {
           guild.ship.takeDamage({
             damage: 99999999,
             attacker: { name: `God`, location: [0, 0] },
-            weapon: { displayName: `Banhammer`, emoji: `🔨` },
+            weapon: {
+              displayName: `Banhammer`,
+              emoji: `🔨`,
+            },
             attackDistance: 999999,
             advantageDamageMultiplier: 999999,
             advantageAccuracyMultiplier: 999999,

@@ -224,7 +224,10 @@ rules:
   no-warning-comments: 'off'
   no-whitespace-before-property: error
   nonblock-statement-body-position: 'off'
-  object-curly-newline: 'off'
+  object-curly-newline:
+    'off'
+    # - error
+    # - multiline: true
   object-curly-spacing:
     - error
     - always

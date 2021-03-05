@@ -10,7 +10,7 @@ const schemas = {
     channel: String,
     created: { type: Number, default: Date.now() },
     faction: { color: String },
-    members: [mongoose.Schema.Types.ObjectId],
+    members: { type: mongoose.Mixed, default: {} },
     name: String,
     settings: { prefix: { type: String, default: `.` } },
     shipIds: [String],
@@ -19,6 +19,7 @@ const schemas = {
   Ship: mongoose.Schema({
     guildId: String,
     bearing: [Number],
+    captain: String,
     cargo: [mongoose.Mixed],
     credits: { type: Number, default: 0 },
     equipment: { type: mongoose.Mixed },
@@ -63,21 +64,21 @@ const schemas = {
 
 schemas.Ship.virtual(`id`)
   .get(function () {
-    return this._id
+    return `${this._id}`
   })
   .set(function (id) {
     this._id = id
   })
 schemas.Cache.virtual(`id`)
   .get(function () {
-    return this._id
+    return `${this._id}`
   })
   .set(function (id) {
     this._id = id
   })
 schemas.CrewMember.virtual(`id`)
   .get(function () {
-    return this._id
+    return `${this._id}`
   })
   .set(function (id) {
     this._id = id

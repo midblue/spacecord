@@ -7,6 +7,7 @@
     "local": "nodemon index.js",
     "dev": "npm run dcu",
     "dcu": "docker-compose up",
+    "down": "docker-compose down",
     "hard-restart": "docker-compose down --remove-orphans --volumes && docker-compose up -d",
     "restart": "docker-compose down --remove-orphans && docker-compose up -d",
     "l": "docker-compose logs --tail=200 --follow",

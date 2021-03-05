@@ -1,7 +1,7 @@
 const { User } = require(`./models`)
 
 module.exports = {
-  async add({ id, data }) {
+  async add({ id }) {
     const user = new User({ id })
     await user.save()
     console.log(`Added user to database: ${id}`)

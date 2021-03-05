@@ -7,11 +7,16 @@ module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {
     const newMember = await crewMember.spawn(discordUser, guild)
 
-    if (guild.ship.members.find((m) => m.id === newMember.id)) {
+    const addedCrewMember = await db.crewMembers.add({
+      guildId: guild.id,
+      userId: discordUser.id || discordUser.user.id,
+      member: newMember,
+    })
+    if (!addedCrewMember) {
       log(
         `addCrew`,
-        `Attempted to add a member that already exists.`,
-        newMember.id,
+        `Failed to add crew member (existing?)`,
+        discordUser.id || discordUser.user.id,
         guild.id,
       )
       return {
@@ -21,19 +26,18 @@ module.exports = (guild) => {
     }
 
     // success
+    log(
+      `addCrew`,
+      `Added new member`,
+      discordUser.id || discordUser.user.id,
+      `to guild`,
+      guild.name,
+    )
+    guild.ship.members.push(addedCrewMember)
 
-    if (guild.ship.members.length === 0) {
+    if (guild.ship.members.length === 1) {
       guild.ship.captain = newMember.id
       guild.saveNewDataToDb()
-    }
-    guild.ship.members.push(newMember)
-    db.crewMembers.add({
-      guildId: guild.id,
-      userId: newMember.id,
-      member: newMember.saveableData(),
-    })
-    log(`addCrew`, `Added new member to guild`, newMember.id, guild.name)
-    if (guild.ship.members.length === 1) {
       return {
         ok: true,
         message: [

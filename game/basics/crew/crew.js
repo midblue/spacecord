@@ -1,9 +1,7 @@
 const addins = require(`./addins`)
 
-function spawn (user, guild) {
-  const id = user.id || user.user.id
+function spawn(user, guild) {
   const data = {
-    id,
     joined: Date.now(),
     stamina: 1,
     level: {
@@ -13,13 +11,13 @@ function spawn (user, guild) {
       // linguistics: 0,
       munitions: 0,
       legacy: 0,
-    }
+    },
   }
   liveify(data, guild)
   return data
 }
 
-function liveify (member, guild) {
+function liveify(member, guild) {
   member.guild = guild
   addins.forEach((addin) => addin(member))
 }

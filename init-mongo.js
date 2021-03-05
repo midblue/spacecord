@@ -1,6 +1,4 @@
-print(
-  `Start #################################################################`,
-)
+print(`Start #################################################################`)
 db = db.getSiblingDB(`spacecord`)
 db.createUser({
   user: `spacecord`,
@@ -25,9 +23,7 @@ db.createUser({
   ],
 })
 db.createCollection(`TESTASS`)
-print(
-  `END #################################################################`,
-)
+print(`END #################################################################`)
 
 // db.createCollection(`guilds`, {
 //   capped: false,

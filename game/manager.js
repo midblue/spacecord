@@ -105,7 +105,7 @@ module.exports = {
 
     // success
     this.guilds.push(newGuild)
-    log(`addGuild`, `Added guild to game`, newGuild.name)
+    log(`addGuild`, `Added guild to game`, newGuild.name, newGuild.id)
     // console.log(`newGuild`, newGuild)
     return {
       ok: true,
@@ -217,6 +217,7 @@ module.exports = {
     caches.liveify(cacheDataToSave)
     this.caches.push(cacheDataToSave)
   },
+
   deleteCache(cacheId) {
     db.caches.remove(cacheId)
     this.caches.splice(
@@ -241,6 +242,7 @@ module.exports = {
       channelId,
       context: this,
     })
+
     if (!newGuild) {
       return {
         ok: false,
@@ -249,9 +251,11 @@ module.exports = {
     }
     return this.addGuild(newGuild)
   },
+
   async guild(id) {
     return await this.getGuild(id)
   },
+
   verifyActiveGuilds(discordGuilds) {
     setTimeout(() => {
       this.guilds.forEach((g) => {
@@ -262,6 +266,7 @@ module.exports = {
       })
     }, 3000)
   },
+
   async activateGuild(id) {
     const existing = await db.guilds.get({ id })
     if (existing) {

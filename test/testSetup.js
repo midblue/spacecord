@@ -63,6 +63,11 @@ describe(`Database`, () => {
     expect(planet).to.have.property(`_id`)
     let cache = await models.Cache.findOne()
     expect(cache).to.have.property(`_id`)
+
+    // clean up
+    const collections = await mongoose.connection.db.listCollections().toArray()
+    for (let c of collections)
+      await mongoose.connection.collection(c.name).drop()
   })
 
   it(`should be able to initialize the game`, async () => {
@@ -80,8 +85,10 @@ describe(`Database`, () => {
     })
     await initDb({})
   })
+})
 
-  it(`should create a new guild when running bot.spawn()`, async () => {
+describe(`Guilds Model`, () => {
+  it(`should create a new guild when running game.spawn()`, async () => {
     const spawnAction = require(`../discord/commands/spawn`).action
     const bot = require(`../discord/bot`)
     await spawnAction({
@@ -93,44 +100,67 @@ describe(`Database`, () => {
     const createdGuild = await models.Guild.findOne({
       _id: msg.guild.id,
     })
-    assert(createdGuild.id === msg.guild.id)
+    assert(createdGuild)
   })
-})
 
-
-describe(`Guilds Model`, () => {
-  it(`should add a ship and guild to the database when creating a new guild, \
-      and the guild should have a reference to the shipId`, async () => {
-    const game = require(`../game/manager`)
-
-    game.spawn({ discordGuild: msg.guild, channelId: msg.channel.id })
+  it(`should also create a user, crewMember, and ship when creating a new guild, and all references should be correct`, async () => {
     const createdGuild = await models.Guild.findOne({
       _id: msg.guild.id,
     })
+    assert(createdGuild)
+    assert(createdGuild.id === msg.guild.id)
+    assert(Object.keys(createdGuild.members).length === 1)
+
     const createdShip = await models.Ship.findOne({
       guildId: msg.guild.id,
     })
-    assert(createdGuild.id === msg.guild.id)
+    assert(createdShip)
+    assert(createdShip.guildId === msg.guild.id)
     expect(createdGuild.shipIds).to.contain(createdShip.id)
 
+    const createdUser = await models.User.findOne({
+      _id: Object.keys(createdGuild.members)[0],
+    })
+    assert(createdUser)
+    assert(createdUser.memberships[msg.guild.id])
+    assert(
+      `${createdUser.memberships[msg.guild.id]}` ===
+        `${Object.values(createdGuild.members)[0]}`,
+    )
 
+    const createdCrewMember = await models.CrewMember.findOne({
+      _id: createdUser.memberships[msg.guild.id],
+    })
+    assert(createdCrewMember)
   })
 
   it(`should be able to spawn a new user and add a member to a guild`, async () => {
     const { add: addCrewMember } = require(`../db/mongo/crewMembers`)
-    const guild = await models.Guild.findOne({ _id: msg.guild.id, })
+    let guild = await models.Guild.findOne({ _id: msg.guild.id })
     assert(guild, `Guild exists`)
     const crewMember = await addCrewMember({
       guildId: guild.id,
-      userId: msg.author.id,
-      member: { stamina: 0.69 }
+      userId: `secondUserId`,
+      member: { stamina: 0.69 },
     })
     assert(crewMember, `Crew member was created`)
-    assert(crewMember.stamina === 0.69, `Crew member was initialized with very nice properties`)
-    const user = await models.User.findOne({ _id: msg.author.id, })
+    assert(
+      crewMember.stamina === 0.69,
+      `Crew member was initialized with very nice properties`,
+    )
+    guild = await models.Guild.findOne({ _id: msg.guild.id }) // get it again because it doesn't live update with the new crew member
+    const user = await models.User.findOne({ _id: `secondUserId` })
     assert(user, `User was created`)
-    assert(user.memberships[msg.guild.id] === crewMember.id, `User has link to crew member`)
-    assert(guild.members.find((m) => m === crewMember.id), `Ship has link to crew member`)
+
+    assert(
+      `${user.memberships[msg.guild.id]}` === `${crewMember.id}`,
+      `User has link to crew member`,
+    )
+
+    assert(
+      guild.members.secondUserId === crewMember.id,
+      `Guild has link to crew member`,
+    )
   })
 })
 
@@ -149,7 +179,7 @@ before(async () => {
     username,
     password,
   })
-  const collections = (await mongoose.connection.db.listCollections().toArray())
+  const collections = await mongoose.connection.db.listCollections().toArray()
   collections.forEach(
     async (c) => await mongoose.connection.collection(c.name).drop(),
   )
@@ -157,7 +187,7 @@ before(async () => {
 })
 
 after(async () => {
-  const collections = (await mongoose.connection.db.listCollections().toArray())
+  const collections = await mongoose.connection.db.listCollections().toArray()
   collections.forEach(
     async (c) => await mongoose.connection.collection(c.name).drop(),
   )

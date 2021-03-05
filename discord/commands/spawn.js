@@ -11,32 +11,29 @@ module.exports = {
     value: `Adds your server's ship into the game!`,
     emoji: `🏁`,
     category: `settings`,
-    priority: 90
+    priority: 90,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:r?e?spawn)$`, `gi`).exec(content)
   },
-  async action ({ msg, settings, client, authorIsAdmin }) {
+  async action({ msg, settings, client, authorIsAdmin }) {
     log(msg, `Spawn`, msg.guild.name)
 
     const res = await client.game.spawn({
       discordGuild: msg.guild,
-      channelId: msg.channel.id
+      channelId: msg.channel.id,
     })
     if (res.ok) {
       send(msg, res.message)
       const res2 = await res.guild.ship.addCrewMember(msg.author)
       send(msg, res2.message)
-    }
-    else if (res.guild.ship.status.dead) {
+    } else if (res.guild.ship.status.dead) {
       if (authorIsAdmin || res.guild.ship.captain === msg.author.id) {
         res.guild.ship.respawn(msg)
-      }
-      else
+      } else
         send(msg, `Only the captain or a server admin can respawn the ship.`)
-    }
-    else {
+    } else {
       send(msg, res.message)
     }
-  }
+  },
 }

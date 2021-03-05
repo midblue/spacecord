@@ -1,4 +1,4 @@
-const { Guild, Ship, CrewMember } = require(`./models`)
+const { CrewMember, User } = require(`./models`)
 const { get: getUser, add: addUser } = require(`./users`)
 const { get: getGuild } = require(`./guilds`)
 
@@ -19,6 +19,13 @@ module.exports = {
         `to add member`,
         member,
       )
+    if (guild.members[userId])
+      return console.log(
+        `Attempted to double add user`,
+        userId,
+        `to guild`,
+        guildId,
+      )
 
     let user = await getUser({ id: userId })
     if (!user) user = await addUser({ id: userId })
@@ -26,13 +33,17 @@ module.exports = {
       return console.log(`Attempted to double add`, userId, `to guild`, guildId)
 
     const crewMember = new CrewMember({ ...member, userId })
-    crewMember.save()
+    await crewMember.save()
 
-    guild.members.push(crewMember.id)
-    guild.save()
+    guild.members[userId] = `${crewMember.id}`
+    guild.markModified(`members`)
+    await guild.save()
 
-    user.memberships[guildId] = crewMember.id
-    user.save()
+    user.memberships[guildId] = `${crewMember.id}`
+    user.markModified(`memberships`)
+    await user.save()
+
+    return crewMember
   },
 
   async update({ id, memberData }) {

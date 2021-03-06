@@ -35,9 +35,9 @@ module.exports = (guild) => {
     }
 
     // remove base properties from items onboard
-    Object.keys(guild.ship.equipment || {}).forEach((equipmentType) => {
-      guildToSave.ship.equipment[equipmentType].forEach((part) => {
-        const itemData = equipmentData[equipmentType][part.id]
+    guildToSave.ship.equipment.forEach((e) => {
+      e.list.forEach((part) => {
+        const itemData = equipmentData[e.equipmentType][part.id]
         for (const prop in itemData) if (prop !== `id`) delete part[prop]
       })
     })
@@ -45,7 +45,7 @@ module.exports = (guild) => {
     guildToSave.ship.cargo = guild.ship.cargo
       .map((c) => {
         const baseCargo = { ...c }
-        for (const prop in cargoData[c.type]) delete baseCargo[prop]
+        for (const prop in cargoData[c.cargoType]) delete baseCargo[prop]
         return baseCargo
       })
       .filter((c) => c.amount > 0.000001)
@@ -71,7 +71,16 @@ module.exports = (guild) => {
   }
 
   guild.saveNewDataToDb = async () => {
-    await guild.save()
+    await guild.context.db.guilds.update({
+      id: guild.id,
+      updates: { ...guild },
+    })
+
+    await guild.context.db.ships.update({
+      id: guild.ship.id,
+      updates: { ...guild.ship },
+    })
+
     // const previousDiff = guild.previousDiff || {}
     // const currentDiff = guild.saveableData()
 

@@ -21,7 +21,12 @@ module.exports = {
           `Your server already has a ship! It's called '${guild.ship.name}'.`,
       },
       first: (guild) =>
-        `You find yourself aboard a discount ${guild.ship.equipment.chassis[0].displayName} dubbed '${guild.ship.name}' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
+        `You find yourself aboard a discount ${
+          guild.ship.equipment.find((e) => e.equipmentType === `chassis`)
+            .list[0].displayName
+        } dubbed '${
+          guild.ship.name
+        }' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
     },
     name: {
       change: (newName) =>
@@ -51,10 +56,10 @@ module.exports = {
         existing: (id) =>
           `%username%${id}% is already a crew member on this ship!`,
       },
-      first: (member, guild) =>
-        `Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain %username%${member.id}%, eh?" you chuckle. "I wonder how long that'll last?"`,
-      success: (member, guild) =>
-        `%username%${member.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
+      first: (user) =>
+        `Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain %username%${user.id}%, eh?" you chuckle. "I wonder how long that'll last?"`,
+      success: (user, guild) =>
+        `%username%${user.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
     stamina: {
       notEnough: (id, current, needed, untilNextGain) =>

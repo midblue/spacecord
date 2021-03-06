@@ -1,13 +1,14 @@
 const { Cache } = require(`./models`)
 const updateOptions = { new: true, omitUndefined: true }
+const mongoose = require(`mongoose`)
 
 module.exports = {
   async getAll() {
-    return await Cache.find({})
+    return await Cache.find({}).map((c) => c.toObject())
   },
 
   async add(data) {
-    const cache = new Cache({ ...data })
+    const cache = new Cache({ ...data, _id: `${mongoose.Types.ObjectId()}` })
     await cache.save()
     return cache
   },

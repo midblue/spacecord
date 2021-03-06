@@ -134,7 +134,7 @@ module.exports = {
     }
   },
 
-  async getGuild(id) {
+  async guild(id) {
     let thisGuild = this.guilds.find((g) => g.id === id) // check local
     if (!thisGuild) {
       thisGuild = await this.db.guilds.get({ id: id })
@@ -157,7 +157,6 @@ module.exports = {
     }
   },
 
-  /* eslint-disable */
   scanArea({ x, y, range, excludeIds = [], type }) {
     if (!Array.isArray(excludeIds)) excludeIds = [excludeIds]
     return {
@@ -184,7 +183,6 @@ module.exports = {
           : [],
     }
   },
-  /* eslint-enable */
 
   broadcast({
     x,
@@ -228,7 +226,7 @@ module.exports = {
   },
 
   async spawn({ discordGuild, channelId }) {
-    const existingGuildInDb = await this.getGuild(discordGuild.id)
+    const existingGuildInDb = await this.guild(discordGuild.id)
     if (existingGuildInDb.ok) {
       return {
         ...existingGuildInDb,
@@ -250,10 +248,6 @@ module.exports = {
       }
     }
     return this.addGuild(newGuild)
-  },
-
-  async guild(id) {
-    return await this.getGuild(id)
   },
 
   verifyActiveGuilds(discordGuilds) {

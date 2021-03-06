@@ -4,85 +4,116 @@ const mongoose = require(`mongoose`)
 // https://mongoosejs.com/docs/schematypes.html
 
 const schemas = {
-  Guild: mongoose.Schema({
-    _id: { type: String, alias: `id` },
-    active: { type: Boolean, default: true },
-    channel: String,
-    created: { type: Number, default: Date.now() },
-    faction: { color: String },
-    members: { type: mongoose.Mixed, default: {} },
-    name: String,
-    settings: { prefix: { type: String, default: `.` } },
-    shipIds: [String],
-  }),
-
-  Ship: mongoose.Schema({
-    guildId: String,
-    bearing: [Number],
-    captain: String,
-    cargo: [mongoose.Mixed],
-    credits: { type: Number, default: 0 },
-    equipment: { type: mongoose.Mixed },
-    launched: { type: Number, default: Date.now() },
-    location: [{ type: Number, default: 0 }],
-    name: String,
-    power: Number,
-    seen: { planets: [String] },
-    speed: Number,
-    status: { type: mongoose.Mixed },
-  }),
-
-  User: mongoose.Schema({
-    _id: { type: String, alias: `id` },
-    activeGuild: String,
-    memberships: { type: mongoose.Mixed, default: {} },
-  }),
-
-  CrewMember: mongoose.Schema({
-    userId: String,
-    joined: { type: Number, default: Date.now() },
-    stamina: Number,
-    level: {
-      type: Map,
-      of: Number,
+  Guild: mongoose.Schema(
+    {
+      _id: { type: String },
+      active: { type: Boolean, default: true },
+      channel: String,
+      created: { type: Number, default: Date.now() },
+      faction: { color: String },
+      members: [{ userId: String, crewMemberId: String }],
+      name: String,
+      settings: { prefix: { type: String, default: `.` } },
+      shipIds: [String],
     },
-    xp: {
-      type: Map,
-      of: Number,
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
     },
-  }),
+  ),
 
-  Cache: mongoose.Schema({
-    amount: Number,
-    created: Number,
-    location: Array,
-    type: String,
-  }),
+  Ship: mongoose.Schema(
+    {
+      _id: { type: String },
+      guildId: String,
+      bearing: [Number],
+      captain: String,
+      cargo: [{ cargoType: String, amount: Number }],
+      credits: { type: Number, default: 0 },
+      equipment: [
+        {
+          equipmentType: String,
+          list: [{ id: String, repair: Number, repaired: Number }],
+        },
+      ],
+      launched: { type: Number, default: Date.now() },
+      location: [{ type: Number, default: 0 }],
+      name: String,
+      power: Number,
+      seen: { planets: [String] },
+      speed: Number,
+      status: {
+        dead: Boolean,
+        docked: String,
+      },
+    },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
 
-  Planet: mongoose.Schema({ name: String }),
+  User: mongoose.Schema(
+    {
+      _id: { type: String },
+      activeGuild: String,
+      memberships: [{ guildId: String, crewMemberId: String }],
+    },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
+
+  CrewMember: mongoose.Schema(
+    {
+      _id: { type: String },
+      userId: String,
+      guildId: String,
+      joined: { type: Number, default: Date.now() },
+      stamina: Number,
+      level: [{ skill: String, level: Number }],
+      xp: [{ skill: String, level: Number }],
+    },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
+
+  Cache: mongoose.Schema(
+    {
+      _id: { type: String },
+      amount: Number,
+      created: Number,
+      location: Array,
+      type: String,
+    },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
+
+  Planet: mongoose.Schema(
+    { _id: { type: String }, name: String },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
 }
 
-schemas.Ship.virtual(`id`)
-  .get(function () {
-    return `${this._id}`
-  })
-  .set(function (id) {
-    this._id = id
-  })
-schemas.Cache.virtual(`id`)
-  .get(function () {
-    return `${this._id}`
-  })
-  .set(function (id) {
-    this._id = id
-  })
-schemas.CrewMember.virtual(`id`)
-  .get(function () {
-    return `${this._id}`
-  })
-  .set(function (id) {
-    this._id = id
-  })
+Object.values(schemas).forEach((s) =>
+  s
+    .virtual(`id`)
+    .get(function () {
+      return `${this._id}`
+    })
+    .set(function (id) {
+      this._id = `${id}`
+    }),
+)
 
 const models = {}
 Object.keys(schemas).forEach((schemaName) => {

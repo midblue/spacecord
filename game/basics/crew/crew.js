@@ -1,6 +1,6 @@
 const addins = require(`./addins`)
 
-function spawn(user, guild) {
+function spawn(guild) {
   const data = {
     joined: Date.now(),
     stamina: 1,

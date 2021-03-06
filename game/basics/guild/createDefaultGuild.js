@@ -18,70 +18,94 @@ module.exports = function ({ discordGuild, channelId }) {
     seen: { planets: [] },
     log: [],
     lastAttack: 0,
-    equipment: {
-      chassis: [
-        {
-          id: `starter`,
-          repaired: Date.now(),
-          repair: 0.9,
-        },
-      ],
-      engine: [
-        {
-          id: `basic1`,
-          repaired: Date.now(),
-          repair: 0.8,
-        },
-      ],
-      armor: [],
+    equipment: [
+      {
+        equipmentType: `chassis`,
+        list: [
+          {
+            id: `starter`,
+            repaired: Date.now(),
+            repair: 0.9,
+          },
+        ],
+      },
+      {
+        equipmentType: `engine`,
+        list: [
+          {
+            id: `basic1`,
+            repaired: Date.now(),
+            repair: 0.8,
+          },
+        ],
+      },
+      {
+        equipmentType: `armor`,
+        list: [],
+      },
       // {
       //   id: 'steelPlating',
       //   repaired: Date.now(),
       //   repair: 0.6,
       // },
-      weapon: [
-        {
-          id: `starter`,
-          repaired: Date.now(),
-          repair: 0.7,
-        },
-      ],
-      telemetry: [
-        {
-          id: `image1`,
-          repaired: Date.now(),
-          repair: 0.8,
-        },
-      ],
-      scanner: [
-        {
-          id: `basic1`,
-          repaired: Date.now(),
-          repair: 0.5,
-        },
-      ],
-      transceiver: [
-        {
-          id: `transceiver1`,
-          repaired: Date.now(),
-          repair: 0.5,
-        },
-      ],
-      battery: [
-        {
-          id: `battery1`,
-          repaired: Date.now(),
-          repair: 0.9,
-        },
-      ],
-    },
+      {
+        equipmentType: `weapon`,
+        list: [
+          {
+            id: `starter`,
+            repaired: Date.now(),
+            repair: 0.7,
+          },
+        ],
+      },
+      {
+        equipmentType: `telemetry`,
+        list: [
+          {
+            id: `image1`,
+            repaired: Date.now(),
+            repair: 0.8,
+          },
+        ],
+      },
+      {
+        equipmentType: `scanner`,
+        list: [
+          {
+            id: `basic1`,
+            repaired: Date.now(),
+            repair: 0.5,
+          },
+        ],
+      },
+      {
+        equipmentType: `transceiver`,
+        list: [
+          {
+            id: `transceiver1`,
+            repaired: Date.now(),
+            repair: 0.5,
+          },
+        ],
+      },
+      {
+        equipmentType: `battery`,
+        list: [
+          {
+            id: `battery1`,
+            repaired: Date.now(),
+            repair: 0.9,
+          },
+        ],
+      },
+    ],
     cargo: [
       {
-        type: `fuel`,
+        cargoType: `fuel`,
         amount: 8,
       },
       // {
-      //   type: 'food',
+      //   cargoType: 'food',
       //   amount: 2,
       // },
     ],

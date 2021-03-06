@@ -13,36 +13,33 @@ describe(`Database`, () => {
   })
 
   it(`should be able to add data to each model`, async () => {
-    try {
-      const testGuild = new models.Guild({ active: false, id: `testGuildId` })
-      await testGuild.save()
+    const guilds = require(`../db/mongo/guilds`)
+    await guilds.add({ id: msg.guild.id, data: { active: false } })
 
-      const testShip = new models.Ship({ energy: 5 })
-      await testShip.save()
+    const ships = require(`../db/mongo/ships`)
+    await ships.add({ guildId: msg.guild.id, data: { energy: 5 } })
 
-      const testUser = new models.User({
-        id: `testUserId`,
-        activeGuild: `testGuildId`,
-      })
-      await testUser.save()
+    const users = require(`../db/mongo/users`)
+    await users.add({ id: msg.author.id })
 
-      const testCrewMember = new models.CrewMember({ stamina: 0.5 })
-      await testCrewMember.save()
+    const crewMembers = require(`../db/mongo/crewMembers`)
+    await crewMembers.add({
+      guildId: msg.guild.id,
+      userId: msg.author.id,
+      member: { stamina: 0.5 },
+    })
 
-      const testCache = new models.Cache({ amount: 1 })
-      await testCache.save()
+    const caches = require(`../db/mongo/caches`)
+    await caches.add({ amount: 1 })
 
-      const testPlanet = new models.Planet({ name: `test` })
-      await testPlanet.save()
+    const planets = require(`../db/mongo/planets`)
+    await planets.add({ name: `test` })
 
-      assert(true)
-    } catch (e) {
-      assert.fail(e.message)
-    }
+    assert(true)
   })
 
   it(`should have guilds, caches, planets, ships, users, crewmembers collections`, async () => {
-    collections = (
+    const collections = (
       await mongoose.connection.db.listCollections().toArray()
     ).map((c) => c.name)
     expect(collections).to.include.all.members([
@@ -58,11 +55,11 @@ describe(`Database`, () => {
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
     const models = require(`../db/mongo/models`)
     let guild = await models.Guild.findOne()
-    expect(guild).to.have.property(`_id`)
+    expect(guild).to.have.property(`id`)
     let planet = await models.Planet.findOne()
-    expect(planet).to.have.property(`_id`)
+    expect(planet).to.have.property(`id`)
     let cache = await models.Cache.findOne()
-    expect(cache).to.have.property(`_id`)
+    expect(cache).to.have.property(`id`)
 
     // clean up
     const collections = await mongoose.connection.db.listCollections().toArray()
@@ -87,7 +84,7 @@ describe(`Database`, () => {
   })
 })
 
-describe(`Guilds Model`, () => {
+describe(`Base Data Initialization`, () => {
   it(`should create a new guild when running game.spawn()`, async () => {
     const spawnAction = require(`../discord/commands/spawn`).action
     const bot = require(`../discord/bot`)
@@ -109,7 +106,7 @@ describe(`Guilds Model`, () => {
     })
     assert(createdGuild)
     assert(createdGuild.id === msg.guild.id)
-    assert(Object.keys(createdGuild.members).length === 1)
+    expect(Object.keys(createdGuild.members).length).to.equal(1)
 
     const createdShip = await models.Ship.findOne({
       guildId: msg.guild.id,
@@ -119,48 +116,90 @@ describe(`Guilds Model`, () => {
     expect(createdGuild.shipIds).to.contain(createdShip.id)
 
     const createdUser = await models.User.findOne({
-      _id: Object.keys(createdGuild.members)[0],
+      _id: createdGuild.members[0].userId,
     })
     assert(createdUser)
-    assert(createdUser.memberships[msg.guild.id])
-    assert(
-      `${createdUser.memberships[msg.guild.id]}` ===
-        `${Object.values(createdGuild.members)[0]}`,
-    )
+    assert(createdUser.memberships.length)
+    assert(createdUser.memberships.find((m) => m.guildId === msg.guild.id))
 
     const createdCrewMember = await models.CrewMember.findOne({
-      _id: createdUser.memberships[msg.guild.id],
+      _id: createdUser.memberships.find((m) => m.guildId === msg.guild.id)
+        .crewMemberId,
     })
     assert(createdCrewMember)
+    assert(createdCrewMember.userId === createdUser.id)
   })
 
-  it(`should be able to spawn a new user and add a member to a guild`, async () => {
-    const { add: addCrewMember } = require(`../db/mongo/crewMembers`)
-    let guild = await models.Guild.findOne({ _id: msg.guild.id })
-    assert(guild, `Guild exists`)
-    const crewMember = await addCrewMember({
-      guildId: guild.id,
-      userId: `secondUserId`,
-      member: { stamina: 0.69 },
+  it(`should be able to spawn a new user and add a member to a guild, and all references should be correct`, async () => {
+    const game = require(`../game/manager`)
+    const gameGuild = (await game.guild(msg.guild.id)).guild
+
+    const { crewMember } = await gameGuild.ship.addCrewMember({
+      id: `secondUserId`,
+      nickname: `secondUser`,
     })
     assert(crewMember, `Crew member was created`)
-    assert(
-      crewMember.stamina === 0.69,
-      `Crew member was initialized with very nice properties`,
+    expect(crewMember.stamina).to.equal(
+      1,
+      `Crew member was initialized with default properties`,
     )
+
     guild = await models.Guild.findOne({ _id: msg.guild.id }) // get it again because it doesn't live update with the new crew member
+    expect(guild.members.length).to.equal(2, `Two crew members exist`)
+
     const user = await models.User.findOne({ _id: `secondUserId` })
     assert(user, `User was created`)
 
     assert(
-      `${user.memberships[msg.guild.id]}` === `${crewMember.id}`,
-      `User has link to crew member`,
+      user.memberships.find(
+        (m) => m.guildId === guild.id && m.crewMemberId === crewMember.id,
+      ),
+      `User has link to crew member and guild`,
     )
 
     assert(
-      guild.members.secondUserId === crewMember.id,
-      `Guild has link to crew member`,
+      guild.members.find((m) => m.userId === user.id).crewMemberId ===
+        crewMember.id,
+      `Guild has link to crew member and user`,
     )
+
+    assert(crewMember.userId === user.id)
+    assert(crewMember.guildId === guild.id)
+  })
+
+  it(`should have the correct properties saved on equipment and cargo`, async () => {
+    const game = require(`../game/manager`)
+    const gameGuild = (await game.guild(msg.guild.id)).guild
+
+    assert(gameGuild.ship.equipment[0])
+    expect(gameGuild.ship.equipment[0]).to.have.property(`equipmentType`)
+    expect(gameGuild.ship.equipment[0]).to.have.property(`list`)
+    expect(gameGuild.ship.equipment[0].list[0]).to.have.property(`id`)
+    expect(gameGuild.ship.equipment[0].list[0]).to.have.property(`repair`)
+    expect(gameGuild.ship.equipment[0].list[0]).to.have.property(`repaired`)
+    expect(gameGuild.ship.equipment[0].list[0]).to.have.property(`displayName`)
+
+    assert(gameGuild.ship.cargo[0])
+    expect(gameGuild.ship.cargo[0]).to.have.property(`cargoType`)
+    expect(gameGuild.ship.cargo[0]).to.have.property(`amount`)
+    expect(gameGuild.ship.cargo[0]).to.have.property(`emoji`)
+  })
+
+  it(`should be able to save data updates to the guild and ship`, async () => {
+    const game = require(`../game/manager`)
+    const gameGuild = (await game.guild(msg.guild.id)).guild
+
+    gameGuild.active = false
+    gameGuild.ship.status.dead = true
+
+    await gameGuild.saveNewDataToDb()
+    assert(`could save guild`)
+
+    const dbGuild = await models.Guild.findOne({ _id: gameGuild.id })
+    expect(dbGuild.active).to.equal(false)
+
+    const dbShip = await models.Ship.findOne({ _id: dbGuild.shipIds[0] })
+    expect(dbShip.status.dead).to.equal(true)
   })
 })
 

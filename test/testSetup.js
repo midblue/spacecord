@@ -84,7 +84,7 @@ describe(`Database`, () => {
   })
 })
 
-describe(`Base Data Initialization`, () => {
+describe(`Base Data Initialization & Updates`, () => {
   it(`should create a new guild when running game.spawn()`, async () => {
     const spawnAction = require(`../discord/commands/spawn`).action
     const bot = require(`../discord/bot`)
@@ -200,6 +200,23 @@ describe(`Base Data Initialization`, () => {
 
     const dbShip = await models.Ship.findOne({ _id: dbGuild.shipIds[0] })
     expect(dbShip.status.dead).to.equal(true)
+  })
+
+  it(`should be able to save data updates to the cargo and equipment`, async () => {
+    const game = require(`../game/manager`)
+    const gameGuild = (await game.guild(msg.guild.id)).guild
+
+    gameGuild.ship.cargo.find((c) => c.cargoType === `fuel`).amount = 69
+    gameGuild.ship.equipment.find(
+      (e) => e.equipmentType === `weapon`,
+    ).list[0].repair = 0.69
+    await gameGuild.saveNewDataToDb()
+
+    const dbShip = await models.Ship.findOne({ guildId: gameGuild.id })
+    expect(dbShip.cargo.find((c) => c.cargoType === `fuel`).amount).to.equal(69)
+    expect(
+      dbShip.equipment.find((e) => e.equipmentType === `weapon`).list[0].repair,
+    ).to.equal(0.69)
   })
 })
 

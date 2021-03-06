@@ -33,13 +33,9 @@ const kickedFromGuild = require(`./events/kickedFromGuild`)
 const addedToGuild = require(`./events/addedToGuild`)
 
 client.on(`error`, (e) => console.log(`Discord.js error:`, e.message))
-client.on(`ready`, async () => {
-  console.log(
-    `Logged in as ${client.user.tag} in ${
-      (await client.guilds.cache.array()).length
-    } guilds`,
-  )
-  client.user.setActivity(`.help`, { type: `LISTENING` })
+
+client.on(`raw`, async (event) => {
+  this.rawWatchers.forEach((handler) => handler(event))
 })
 
 // added to a server
@@ -55,18 +51,26 @@ client.login(process.env.DISCORD_TOKEN)
 
 module.exports = {
   init(gameController) {
-    client.game = gameController
+    if (client.readyAt) return
+    return new Promise((resolve) => {
+      client.game = gameController
 
-    client.on(`message`, async (msg) => {
-      if (!msg.author || msg.author.bot) return
-      if (!msg.guild || !msg.guild.available) return privateMessage(msg)
-      return guildMessage({ msg, client, game: gameController })
-    })
+      client.on(`message`, async (msg) => {
+        if (!msg.author || msg.author.bot) return
+        if (!msg.guild || !msg.guild.available) return privateMessage(msg)
+        return guildMessage({ msg, client, game: gameController })
+      })
 
-    client.on(`raw`, async (event) => {
-      this.rawWatchers.forEach((handler) => handler(event))
+      client.on(`ready`, async () => {
+        resolve()
+        console.log(
+          `Logged in as ${client.user.tag} in ${
+            (await client.guilds.cache.array()).length
+          } guilds`,
+        )
+        client.user.setActivity(`.help`, { type: `LISTENING` })
+      })
     })
-    client.isReady = true
   },
   client,
   rawWatchers: [],

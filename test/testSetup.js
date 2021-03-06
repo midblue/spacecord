@@ -7,6 +7,9 @@ const { init: initDb, db } = require(`../db/mongo/db`)
 const { msg } = require(`./tools/messages`)
 const models = require(`../db/mongo/models`)
 
+// * if we want tests to run silently, uncomment
+// console.log = () => {}
+
 describe(`Database`, () => {
   it(`should create a mongoose connection to mongo successfully`, async () => {
     assert(mongoose.connection.readyState === 1) // connected
@@ -66,21 +69,35 @@ describe(`Database`, () => {
     for (let c of collections)
       await mongoose.connection.collection(c.name).drop()
   })
+})
+
+describe(`Game Start`, () => {
+  it(`should be able to initialize the db`, async () => {
+    return new Promise(async (resolve) => {
+      const { runOnReady, init: initDb } = require(`../db/mongo/db`)
+      runOnReady(async () => {
+        assert(true, `Db is ready`)
+        resolve()
+      })
+      await initDb({})
+    })
+  })
 
   it(`should be able to initialize the game`, async () => {
-    const { runOnReady, init: initDb, db } = require(`../db/mongo/db`)
-    runOnReady(async () => {
-      assert(true, `Db is ready`)
+    const { db } = require(`../db/mongo/db`)
 
-      const game = require(`../game/manager`)
-      await game.init(db)
-      assert(game.isReady, `Game is ready`)
+    const game = require(`../game/manager`)
+    await game.init(db)
+    assert(game.isReady, `Game is ready`)
+  })
 
-      const bot = require(`../discord/bot`)
-      await bot.init(game)
-      assert(bot.client.isReady, `Bot is ready`)
-    })
-    await initDb({})
+  it(`should be able to initialize the discord bot & connect to discord`, async function () {
+    this.timeout(15000)
+    const game = require(`../game/manager`)
+
+    const bot = require(`../discord/bot`)
+    await bot.init(game)
+    assert(bot.client.readyAt, `Bot is ready`)
   })
 })
 
@@ -189,17 +206,17 @@ describe(`Base Data Initialization & Updates`, () => {
     const game = require(`../game/manager`)
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
-    gameGuild.active = false
-    gameGuild.ship.status.dead = true
+    gameGuild.name = `The Whizzard's Palace`
+    gameGuild.ship.status.docked = false
 
     await gameGuild.saveNewDataToDb()
     assert(`could save guild`)
 
     const dbGuild = await models.Guild.findOne({ _id: gameGuild.id })
-    expect(dbGuild.active).to.equal(false)
+    expect(dbGuild.name).to.equal(`The Whizzard's Palace`)
 
     const dbShip = await models.Ship.findOne({ _id: dbGuild.shipIds[0] })
-    expect(dbShip.status.dead).to.equal(true)
+    expect(dbShip.status.dead).to.equal(false)
   })
 
   it(`should be able to save data updates to the cargo and equipment`, async () => {
@@ -219,6 +236,18 @@ describe(`Base Data Initialization & Updates`, () => {
     ).to.equal(0.69)
   })
 })
+
+// describe(`Gameplay`, () => {
+//   it(`should x y z`, async () => {
+//     assert(true)
+//   })
+// })
+
+// describe(`Gameplay`, () => {
+//   it(`should x y z`, async () => {
+//     assert(true)
+//   })
+// })
 
 before(async () => {
   const mongoose = require(`mongoose`)

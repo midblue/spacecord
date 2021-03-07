@@ -18,6 +18,7 @@ module.exports = {
   },
 
   async update({ id, updates }) {
+    updates = { ...updates }
     const ship = await Ship.findOne({ _id: id })
     delete updates.id
     delete updates._id
@@ -26,5 +27,16 @@ module.exports = {
     await ship.save()
     // console.log(`ship update result`, ship)
     return ship
+  },
+
+  async remove(id) {
+    const res = await Ship.deleteOne(
+      { _id: id },
+      (e) => e && console.log(`ship delete error`, e),
+    )
+    return {
+      ok: res.deletedCount,
+      message: `Deleted ` + res.deletedCount + ` ship/s.`,
+    }
   },
 }

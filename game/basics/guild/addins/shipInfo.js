@@ -120,7 +120,7 @@ module.exports = (guild) => {
     const fields = []
     const actions = await guild.ship.getShipActions()
 
-    const fuel = guild.ship.cargo.find((c) => c.type === `fuel`).amount
+    const fuel = guild.ship.cargo.find((c) => c.cargoType === `fuel`).amount
 
     if (!guild.ship.status.docked) {
       fields.push({
@@ -216,8 +216,10 @@ module.exports = (guild) => {
     fields.push({
       name: `Chassis`,
       value:
-        guild.ship.equipment.chassis[0].emoji +
-        guild.ship.equipment.chassis[0].displayName,
+        guild.ship.equipment.find((e) => e.equipmentType === `chassis`).list[0]
+          .emoji +
+        guild.ship.equipment.find((e) => e.equipmentType === `chassis`).list[0]
+          .displayName,
     })
 
     const captain = guild.ship.captain
@@ -229,11 +231,9 @@ module.exports = (guild) => {
     fields.push({
       name: `👵🏽 Age`,
       value:
-        (
-          (Date.now() - guild.ship.launched) *
-          REAL_TIME_TO_GAME_TIME_MULTIPLIER *
-          TIME_UNIT_LONGS_MULTIPLIER
-        ).toFixed(2) +
+        ((Date.now() - guild.ship.launched) / TIME_UNIT_LONG_LENGTH).toFixed(
+          2,
+        ) +
         ` ` +
         TIME_UNIT_LONGS,
     })

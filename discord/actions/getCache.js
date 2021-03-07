@@ -24,7 +24,9 @@ module.exports = async ({ msg, guild, cache }) => {
   if (!getRes) return send(msg, getRes.message)
   if (cache.type === `credits`) guild.ship.credits += cache.amount
   else {
-    const existingStock = guild.ship.cargo.find((c) => c.type === cache.type)
+    const existingStock = guild.ship.cargo.find(
+      (c) => c.cargoType === cache.type,
+    )
     if (existingStock) existingStock.amount += cache.amount
     else {
       guild.ship.cargo.push({

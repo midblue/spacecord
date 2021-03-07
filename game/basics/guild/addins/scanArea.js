@@ -11,7 +11,9 @@ const getCache = require(`../../../../discord/actions/getCache`)
 module.exports = (guild) => {
   guild.ship.scanArea = async (eyesOnly) => {
     const messages = []
-    const telemetry = (guild.ship.equipment.telemetry || [])[0]
+    const telemetry = (guild.ship.equipment.find(
+      (e) => e.equipmentType === `telemetry`,
+    ).list || [])[0]
 
     let range = guild.ship.interactRadius()
 

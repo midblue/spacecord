@@ -1,8 +1,5 @@
 const send = require(`../actions/send`)
-const {
-  username,
-  applyCustomParams,
-} = require(`../botcommon`)
+const { username, applyCustomParams } = require(`../botcommon`)
 const defaultServerSettings = require(`../defaults/defaultServerSettings`)
 
 // * get all commands from files in this folder
@@ -23,12 +20,7 @@ fs.readdir(`./discord/commands`, (err, files) => {
 })
 
 module.exports = {
-  test: async ({
-    msg,
-    client,
-    predeterminedCommandTag,
-    props,
-  }) => {
+  test: async ({ msg, client, predeterminedCommandTag, props }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
     const game = client.game
     const author = msg.author
@@ -69,7 +61,7 @@ module.exports = {
           if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
-          if (ship.status.dead && !command.gameAdminsOnly) {
+          if (ship && ship.status.dead && !command.gameAdminsOnly) {
             return send(
               msg,
               `Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.`,
@@ -80,9 +72,7 @@ module.exports = {
         }
 
         const authorCrewMemberObject =
-          msg.guild &&
-          ship &&
-          ship.members.find((m) => m.id === msg.author.id)
+          msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
         if (!command.public && !authorCrewMemberObject) {
           return send(
             msg,
@@ -121,11 +111,11 @@ module.exports = {
         author.nickname = await username(msg, author.id)
 
         // in case the server changes their name, update it here
-        if (guild && msg.guild && msg.guild.name !== guild.guildName) {
-          guild.guildName = msg.guild.name
-          db.guild.update({
-            guildId: msg.guild.id,
-            updates: { guildName: msg.guild.name },
+        if (guild && msg.guild && msg.guild.name !== guild.name) {
+          guild.name = msg.guild.name
+          client.game.db.guild.update({
+            id: msg.guild.id,
+            updates: { name: msg.guild.name },
           })
         }
 

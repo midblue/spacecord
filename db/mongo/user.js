@@ -4,7 +4,7 @@ module.exports = {
   async add({ id }) {
     const user = new User({ id })
     await user.save()
-    console.log(`Added user to database: ${id}`)
+    // console.log(`Added user to database: ${id}`)
     return user
   },
 
@@ -13,7 +13,12 @@ module.exports = {
     if (user) return user.toObject()
   },
 
+  async getRaw({ id }) {
+    return await User.findOne({ _id: id })
+  },
+
   async update({ id, updates }) {
+    updates = { ...updates }
     const user = await User.findOne({ _id: id })
     delete updates.id
     delete updates._id

@@ -19,10 +19,10 @@ module.exports = (guild) => {
     const ship = guild.ship
     let ok = true
     let message
-    const food = ship.cargo.find((c) => c.type === `food`)
+    const food = ship.cargo.find((c) => c.cargoType === `food`)
     if (!food || !food.amount) {
       return {
-        ok: false
+        ok: false,
       }
     }
 
@@ -43,7 +43,7 @@ module.exports = (guild) => {
     return {
       ok,
       amountConsumed,
-      message
+      message,
     }
   }
 }

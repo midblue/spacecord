@@ -48,7 +48,7 @@ print(`END #################################################################`)
 // db.createCollection(`caches`, { capped: false })
 // db.createCollection(`planets`, { capped: false })
 
-// db.guilds.insert([
+// db.guild.insert([
 //   { "guild": 1, "prop": `a` },
 //   { "guild": 2, "prop": `a` },
 //   { "guild": 3, "prop": `b` },
@@ -56,7 +56,7 @@ print(`END #################################################################`)
 //   { "guild": 5 }
 // ])
 
-// db.caches.insert([
+// db.cache.insert([
 //   { "cache": 1 },
 //   { "cache": 2 },
 //   { "cache": 3 },

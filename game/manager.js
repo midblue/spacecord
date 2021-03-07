@@ -21,26 +21,21 @@ const coreLoop = require(`./core loop/`)
 module.exports = {
   async init(db) {
     this.db = db
-    // const demoGuild = await require(`./basics/guild/createDefaultGuild`)({
-    //   discordGuild: { name: `testGuild`, id: `testGuildId` },
-    //   channelId: `testChannel`
-    // })
 
-    // const guilds = await db.guilds.getAll()
-    // guilds.forEach((g) =>
-    //   this.loadExistingGuild(g))
-    // log(`init`, `Loaded ${this.guilds.length} guilds from db`)
+    const guilds = await db.guild.getAll()
+    guilds.forEach((g) => this.loadExistingGuild(g))
+    log(`init`, `Loaded ${this.guilds.length} guilds from db`)
 
-    // const caches = await db.caches.getAll()
-    // caches.forEach((c) => this.loadCache(c))
-    // log(`init`, `Loaded ${this.caches.length} caches from db`)
+    const caches = await db.cache.getAll()
+    caches.forEach((c) => this.loadCache(c))
+    log(`init`, `Loaded ${this.caches.length} caches from db`)
 
-    // this.planets = await spawnPlanets({ context: this.game })
-    // log(`init`, `Loaded ${this.planets.length} planets`)
+    this.planets = await spawnPlanets({ context: this.game })
+    log(`init`, `Loaded ${this.planets.length} planets`)
 
     this.isReady = true
     this.start()
-    log(`init`, `Init complete`)
+    log(`init`, `################## Game Init Complete ##################`)
   },
 
   // ---------------- Game Properties ----------------
@@ -127,17 +122,14 @@ module.exports = {
     }
     // success
     this.guilds.splice(existingGuildInGame, 1)
-    await db.guilds.remove(id)
-    return {
-      ok: true,
-      message: `deleted guild`,
-    }
+    const res = await this.db.guild.remove(id)
+    return res
   },
 
   async guild(id) {
     let thisGuild = this.guilds.find((g) => g.id === id) // check local
     if (!thisGuild) {
-      thisGuild = await this.db.guilds.get({ id: id })
+      thisGuild = await this.db.guild.get({ id: id })
       if (thisGuild) {
         liveify(thisGuild, this)
         this.guilds.push(thisGuild)
@@ -211,13 +203,13 @@ module.exports = {
 
   spawnCache(cacheData) {
     const cacheDataToSave = { ...cacheData, created: Date.now() }
-    db.caches.add({ ...cacheData, created: Date.now() })
+    db.cache.add({ ...cacheData, created: Date.now() })
     caches.liveify(cacheDataToSave)
     this.caches.push(cacheDataToSave)
   },
 
   deleteCache(cacheId) {
-    db.caches.remove(cacheId)
+    db.cache.remove(cacheId)
     this.caches.splice(
       this.caches.findIndex((c) => c.id === cacheId),
       1,
@@ -262,9 +254,9 @@ module.exports = {
   },
 
   async activateGuild(id) {
-    const existing = await db.guilds.get({ id })
+    const existing = await this.db.guild.get({ id })
     if (existing) {
-      await db.guilds.update({
+      await this.db.guild.update({
         id,
         updates: { active: true },
       })
@@ -276,7 +268,7 @@ module.exports = {
   },
   async deactivateGuild(id) {
     // intentionally not removing them from the game just so other players can still kill them
-    await db.guilds.update({
+    await this.db.guild.update({
       id,
       updates: { active: false },
     })

@@ -10,6 +10,7 @@
     "down": "docker-compose down",
     "hard-restart": "docker-compose down --remove-orphans --volumes && docker-compose up -d",
     "restart": "docker-compose down --remove-orphans && docker-compose up -d",
+    "rs": "docker-compose down --remove-orphans && docker-compose up",
     "l": "docker-compose logs --tail=200 --follow",
     "lint": "eslint . --ext .js --fix",
     "test": "mocha ./test/testSetup.js"

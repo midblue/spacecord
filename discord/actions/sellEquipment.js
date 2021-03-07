@@ -8,7 +8,12 @@ module.exports = async ({ msg, part, cost, guild }) => {
   msg.guild = msg.channel.guild
   log(msg, `Sell Equipment`, msg.channel.guild.name)
 
-  if (!guild.ship.equipment[part.type].find((p) => p === part)) return
+  if (
+    !guild.ship.equipment
+      .find((e) => e.equipmentType === part.type)
+      .list.find((p) => p === part)
+  )
+    return
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(

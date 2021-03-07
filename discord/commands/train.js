@@ -11,12 +11,12 @@ module.exports = {
     value: `Train your character's skills!`,
     emoji: `🏋️‍♂️`,
     category: `crew`,
-    priority: 69
+    priority: 69,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:t|train|xp)$`, `gi`).exec(content)
   },
-  async action ({ msg, guild, authorCrewMemberObject, author }) {
+  async action({ msg, guild, authorCrewMemberObject, author }) {
     log(msg, `Train`, msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
@@ -30,24 +30,25 @@ module.exports = {
       .slice(0, 10)
       .map((skill) => ({
         ...skill,
-        ...authorCrewMemberObject.skillLevelDetails(skill.name)
+        ...authorCrewMemberObject.skillLevelDetails(skill.name),
       }))
       .sort((a, b) => b.xp - a.xp)
 
     const trainableSkillsAsReactionOptions = trainableSkills.map((e) => ({
       emoji: e.emoji,
       label:
-        `**${capitalize(e.name)}**: **Level ${e.level}** (${e.levelProgress}/${
-          e.levelSize
-        }, ${(e.percentToLevel * 100).toFixed(0)}% to level ${e.level + 1}) ` +
-        usageTag(0, e.staminaRequired),
+        `**${capitalize(e.name)}**: **Level ${e.level}** (${Math.floor(
+          e.levelProgress,
+        )}/${e.levelSize}, ${(e.percentToLevel * 100).toFixed(0)}% to level ${
+          e.level + 1
+        }) ` + usageTag(0, e.staminaRequired),
 
       action: ({ msg, guild, user }) => {
         runGuildCommand({
           msg: msg,
-          commandTag: `train${capitalize(e.name)}`
+          commandTag: `train${capitalize(e.name)}`,
         })
-      }
+      },
     }))
 
     const sentMessage = (await send(msg, embed))[0]
@@ -58,8 +59,8 @@ module.exports = {
       guild,
       commandsLabel: `Training Options`,
       listeningType: `choice`,
-      respondeeFilter: (user) => user.id === msg.author.id
+      respondeeFilter: (user) => user.id === msg.author.id,
     })
     sentMessage.delete()
-  }
+  },
 }

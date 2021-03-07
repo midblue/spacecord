@@ -14,8 +14,7 @@ module.exports = (guild) => {
       .slice(0, count || 99999)
       .map((l) => {
         return {
-          timeUnitsAgo:
-            (Date.now() - l.time) * REAL_TIME_TO_GAME_TIME_MULTIPLIER,
+          timeUnitsAgo: Date.now() - l.time,
           text: l.text,
         }
       })

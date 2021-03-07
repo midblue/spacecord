@@ -12,12 +12,14 @@ module.exports = (guild) => {
     const message = []
     const ok = true
 
-    const scanner = guild.ship.equipment.scanner?.[0]
+    const scanner = guild.ship.equipment.find(
+      (e) => e.equipmentType === `scanner`,
+    ).list?.[0]
     if (!scanner) {
       return {
         fields,
         ok: false,
-        message: story.scanShip.noScanner()
+        message: story.scanShip.noScanner(),
       }
     }
 
@@ -26,7 +28,7 @@ module.exports = (guild) => {
       return {
         fields,
         ok: false,
-        message: powerRes.message
+        message: powerRes.message,
       }
     }
 
@@ -35,7 +37,7 @@ module.exports = (guild) => {
       return {
         fields,
         ok: false,
-        message: story.scanShip.repair()
+        message: story.scanShip.repair(),
       }
     }
 
@@ -48,16 +50,16 @@ module.exports = (guild) => {
       fields = scanRes.result
       fields.push({
         name: `🔍 Your Scanner`,
-        value: scanner.displayName
+        value: scanner.displayName,
       })
       fields.push({
         name: `⚡️Your Ship Power`,
-        value: guild.ship.power + ` ` + POWER_UNIT
+        value: guild.ship.power + ` ` + POWER_UNIT,
       })
     }
     const enemyTotalEngineeringLevel = otherShip.members.reduce(
       (total, m) => total + (m.level?.engineering || 0),
-      0
+      0,
     )
     if ((scanner.scanUndetectability || 0) < enemyTotalEngineeringLevel) {
       message.push(story.scanShip.ourScanDetected())
@@ -68,7 +70,7 @@ module.exports = (guild) => {
     return {
       ok: true,
       fields,
-      message
+      message,
     }
   }
 
@@ -78,23 +80,29 @@ module.exports = (guild) => {
     const dist = distance(...guild.ship.location, ...otherShip.location)
 
     if (
-      guild.ship.equipment.scanner &&
-      guild.ship.equipment.scanner[0] &&
-      dist <= guild.ship.equipment.scanner[0].range
+      guild.ship.equipment.find((e) => e.equipmentType === `scanner`) &&
+      guild.ship.equipment.find((e) => e.equipmentType === `scanner`).list[0] &&
+      dist <=
+        guild.ship.equipment.find((e) => e.equipmentType === `scanner`).list[0]
+          .range
     ) {
       actions.push({
         emoji: `🔍`,
         label:
           `Scan Ship ` +
-          usageTag(guild.ship.equipment.scanner[0].powerUse, `scanShip`),
-        async action ({ user, msg, guild }) {
+          usageTag(
+            guild.ship.equipment.find((e) => e.equipmentType === `scanner`)
+              .list[0].powerUse,
+            `scanShip`,
+          ),
+        async action({ user, msg, guild }) {
           await runGuildCommand({
             commandTag: `scanShip`,
             author: user,
             msg,
-            props: { otherShip, guild }
+            props: { otherShip, guild },
           })
-        }
+        },
       })
     }
 
@@ -102,9 +110,9 @@ module.exports = (guild) => {
       actions.push({
         emoji: `⚔️`,
         label: `Start Attack Vote ` + usageTag(0, `poll`),
-        async action ({ msg, guild }) {
+        async action({ msg, guild }) {
           attackShip({ msg, guild, otherShip })
-        }
+        },
       })
     }
 

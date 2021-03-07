@@ -1,21 +1,25 @@
 const story = require(`../../story/story`)
 const crewMember = require(`../../crew/crew`)
 const { log } = require(`../../../gamecommon`)
-const db = require(`../../../manager`).db
 
 module.exports = (guild) => {
   guild.ship.addCrewMember = async (discordUser) => {
     // first, check for a user object for this discord user
-    let user = await db.users.get({ id: discordUser.id })
+    let user = await guild.context.db.user.get({ id: discordUser.id })
 
     // make the user if they don't exist yet
-    if (!user) user = await db.users.add({ id: discordUser.id })
+    if (!user) user = await guild.context.db.user.add({ id: discordUser.id })
     else if (user.memberships.find((m) => m.guildId === guild.id))
-      return console.log(`Attempted to double add`, userId, `to guild`, guildId)
+      return console.log(
+        `Attempted to double add`,
+        user.id,
+        `to guild`,
+        guildId,
+      )
 
     // make the new member and save it to the DB
     const newMember = await crewMember.spawn(guild)
-    const addedCrewMember = await db.crewMembers.add({
+    const addedCrewMember = await guild.context.db.crewMember.add({
       guildId: guild.id,
       userId: user.id,
       member: newMember,
@@ -33,21 +37,6 @@ module.exports = (guild) => {
       }
     }
 
-    // link the new member to the user object
-    user.memberships.push({
-      guildId: guild.id,
-      crewMemberId: addedCrewMember.id,
-    })
-    await db.users.update({
-      id: user.id,
-      updates: { memberships: user.memberships },
-    })
-
-    // link the new member to the guild object
-    guild.members.push({ userId: user.id, crewMemberId: addedCrewMember.id })
-    await guild.saveNewDataToDb()
-    guild.ship.members.push(addedCrewMember)
-
     // success
     log(
       `addCrew`,
@@ -59,14 +48,30 @@ module.exports = (guild) => {
       guild.name,
     )
 
+    // link the new member to the user object
+    user.memberships.push({
+      guildId: guild.id,
+      crewMemberId: addedCrewMember.id,
+    })
+    await guild.context.db.user.update({
+      id: user.id,
+      updates: { memberships: user.memberships },
+    })
+
+    // link the new member to the guild object
+    guild.members.push({ userId: user.id, crewMemberId: addedCrewMember.id })
+    guild.ship.members.push(addedCrewMember)
+    console.log(`on add`, guild.ship.members)
     if (guild.ship.members.length === 1) {
-      guild.ship.captain = newMember.id
+      guild.ship.captain = user.id
       await guild.saveNewDataToDb()
       return {
         ok: true,
         message: [story.crew.add.first(user), story.prompts.startGame()],
       }
     }
+    await guild.saveNewDataToDb()
+
     return {
       ok: true,
       message: story.crew.add.success(user, guild),

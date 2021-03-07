@@ -1,6 +1,7 @@
 module.exports = (guild) => {
   guild.ship.interactRadius = () => {
-    return guild.ship.equipment.chassis[0].interactRadius
+    return guild.ship.equipment.find((e) => e.equipmentType === `chassis`)
+      .list[0].interactRadius
   }
 
   guild.ship.maxActionRadius = () => {
@@ -24,6 +25,9 @@ module.exports = (guild) => {
   }
 
   guild.ship.shipScanRadius = () => {
-    return guild.ship.equipment.scanner[0]?.range || 0
+    return (
+      guild.ship.equipment.find((e) => e.equipmentType === `scanner`).list[0]
+        ?.range || 0
+    )
   }
 }

@@ -1,10 +1,7 @@
 const story = require(`../../story/story`)
 const runYesNoVote = require(`../../../../discord/actions/runYesNoVote`)
 const allTransceivers = require(`../../equipment/transceiver`)
-const {
-  msToTimeString,
-  usageTag,
-} = require(`../../../../common`)
+const { msToTimeString, usageTag } = require(`../../../../common`)
 const staminaRequirements = require(`../../crew/staminaRequirements`)
 
 module.exports = (guild) => {
@@ -12,7 +9,9 @@ module.exports = (guild) => {
     const fields = []
     const actions = []
 
-    const equipment = guild.ship.equipment.transceiver[0]
+    const equipment = guild.ship.equipment.find(
+      (e) => e.equipmentType === `transceiver`,
+    ).list[0]
 
     let timeUntilCanBroadcast =
       (guild.lastBroadcast?.time || 0) +
@@ -24,8 +23,7 @@ module.exports = (guild) => {
       ...[
         {
           name: `Transceiver`,
-          value:
-            equipment.emoji + ` ` + equipment.displayName,
+          value: equipment.emoji + ` ` + equipment.displayName,
         },
         {
           name: `🔧 Repair`,
@@ -33,19 +31,14 @@ module.exports = (guild) => {
         },
         {
           name: `📶 Max Range`,
-          value:
-            equipment.range * equipment.repair +
-            ` ` +
-            DISTANCE_UNIT,
+          value: equipment.range * equipment.repair + ` ` + DISTANCE_UNIT,
         },
 
         {
           name: `🔋 Transceiver Status`,
           value:
             timeUntilCanBroadcast > 0
-              ? `Recharged in ${msToTimeString(
-                  timeUntilCanBroadcast,
-                )}`
+              ? `Recharged in ${msToTimeString(timeUntilCanBroadcast)}`
               : `Charged and ready!`,
         },
 
@@ -126,9 +119,7 @@ module.exports = (guild) => {
 
     baseBroadcastOptions.forEach((o) => {
       if (
-        (equipment.broadcastCapabilities || []).includes(
-          o.type,
-        ) &&
+        (equipment.broadcastCapabilities || []).includes(o.type) &&
         (o.type !== `faction` || guild.faction?.color)
       ) {
         actions.push({
@@ -136,10 +127,7 @@ module.exports = (guild) => {
           label:
             o.label +
             ` ` +
-            usageTag(
-              equipment.powerUse,
-              staminaRequirements.broadcast,
-            ),
+            usageTag(equipment.powerUse, staminaRequirements.broadcast),
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
@@ -147,9 +135,7 @@ module.exports = (guild) => {
               Date.now()
             ) {
               return guild.pushToGuild(
-                story.broadcast.tooSoon(
-                  equipment.displayName,
-                ),
+                story.broadcast.tooSoon(equipment.displayName),
                 msg,
               )
             }
@@ -159,62 +145,42 @@ module.exports = (guild) => {
               (m) => m.id === user.id,
             )
             if (!authorCrewMemberObject) {
-              return console.log(
-                `no user found in broadcast`,
-              )
+              return console.log(`no user found in broadcast`)
             }
-            const staminaRes = authorCrewMemberObject.useStamina(
-              `broadcast`,
-            )
+            const staminaRes = authorCrewMemberObject.useStamina(`broadcast`)
             if (!staminaRes.ok) {
-              return guild.pushToGuild(
-                staminaRes.message,
-                msg,
-              )
+              return guild.pushToGuild(staminaRes.message, msg)
             }
 
             const reallyDoIt = await runYesNoVote({
               pollType: `broadcast`,
               question: o.yesNoQuestion(user),
               description: `Broadcasts are amplified and clarified by the quality and repair of the ship's transceiver, as well as the combined \`engineering\` skills of \`✅ Yes\` voters.`, // \`linguistics\` and
-              minimumMemberPercent:
-                o.minimumMemberPercent || 0.1,
+              minimumMemberPercent: o.minimumMemberPercent || 0.1,
               yesStaminaRequirement: 1,
               msg,
               guild,
               cleanUp: false,
             })
             if (!reallyDoIt.ok) {
-              return guild.pushToGuild(
-                reallyDoIt.message,
-                msg,
-              )
+              return guild.pushToGuild(reallyDoIt.message, msg)
             }
             if (reallyDoIt.insufficientVotes) {
               // guild.ship.logEntry(o.insufficientLog(user))
-              return guild.pushToGuild(
-                story.vote.insufficientVotes(),
-                msg,
-              )
+              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
             }
             if (reallyDoIt.result === true) {
               const collectiveSkill = reallyDoIt.yesVoters.reduce(
                 (total, u) =>
                   total +
-                  ((guild.ship.members.find(
-                    (m) => m.id === u.id,
-                  )?.level?.linguistics || 0) +
-                    (guild.ship.members.find(
-                      (m) => m.id === u.id,
-                    )?.level?.engineering || 0)),
+                  ((guild.ship.members.find((m) => m.id === u.id)?.level
+                    ?.linguistics || 0) +
+                    (guild.ship.members.find((m) => m.id === u.id)?.level
+                      ?.engineering || 0)),
                 0,
               )
               guild.ship.logEntry(
-                o.successLog(
-                  user,
-                  reallyDoIt.voters.length,
-                  collectiveSkill,
-                ),
+                o.successLog(user, reallyDoIt.voters.length, collectiveSkill),
               )
               const {
                 biasedRange,
@@ -235,10 +201,7 @@ module.exports = (guild) => {
                 },
                 {
                   name: `Effective Range`,
-                  value:
-                    biasedRange.toFixed(2) +
-                    ` ` +
-                    DISTANCE_UNIT,
+                  value: biasedRange.toFixed(2) + ` ` + DISTANCE_UNIT,
                   inline: true,
                 },
                 {
@@ -255,10 +218,7 @@ module.exports = (guild) => {
               reallyDoIt.sentMessage.edit(reallyDoIt.embed)
             } else {
               // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
-              guild.pushToGuild(
-                story.broadcast.voteFailed(),
-                msg,
-              )
+              guild.pushToGuild(story.broadcast.voteFailed(), msg)
             }
           },
         })
@@ -284,16 +244,13 @@ module.exports = (guild) => {
     collectiveSkill,
   }) => {
     const powerRes = guild.ship.usePower(equipment.powerUse)
-    if (!powerRes.ok)
-      return guild.pushToGuild(powerRes.message, msg)
+    if (!powerRes.ok) return guild.pushToGuild(powerRes.message, msg)
 
     let skillMod = 0.5
     skillMod += Math.min(1, collectiveSkill / 40) // .5 to 1.5
-    const biasedRange =
-      equipment.range * skillMod * equipment.repair
+    const biasedRange = equipment.range * skillMod * equipment.repair
     const garbleAmount =
-      equipment.maxGarble / (collectiveSkill / 4) +
-      (1 - equipment.repair)
+      equipment.maxGarble / (collectiveSkill / 4) + (1 - equipment.repair)
 
     guild.context.broadcast({
       x: guild.ship.location[0],

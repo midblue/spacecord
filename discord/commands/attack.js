@@ -20,10 +20,7 @@ module.exports = {
     priority: 50,
   },
   test(content, settings) {
-    return new RegExp(
-      `^${settings.prefix}(?:att?ack?|a)$`,
-      `gi`,
-    ).exec(content)
+    return new RegExp(`^${settings.prefix}(?:att?ack?|a)$`, `gi`).exec(content)
   },
   async action({
     msg,
@@ -37,15 +34,16 @@ module.exports = {
   }) {
     log(msg, `Attack`, msg.guild.name)
 
-    if (!guild.ship.equipment.weapon?.length) {
+    if (
+      !guild.ship.equipment.find((e) => e.equipmentType === `weapon`)?.list
+        .length
+    ) {
       return send(msg, story.attack.noWeapon())
     }
     if (!guild.ship.canAttack()) {
       return send(
         msg,
-        story.attack.tooSoon(
-          msToTimeString(guild.ship.nextAttackInMs()),
-        ),
+        story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
       )
     }
 
@@ -64,35 +62,24 @@ module.exports = {
 
     const actions = []
 
-    interactableGuilds.forEach(
-      async (otherGuild, index) => {
-        const positionAndAngle = positionAndAngleDifference(
-          ...guild.ship.location,
-          ...otherGuild.ship.location,
-        )
-        const availableActions = guild.ship.getActionsOnOtherShip(
-          otherGuild.ship,
-        )
-        const attackAction = availableActions.find(
-          (a) => a.emoji === `⚔️`,
-        )
-        if (!attackAction) return
-        actions.push({
-          emoji: numberToEmoji(index + 1),
-          label: `${
-            otherGuild.ship.name
-          }: ${positionAndAngle.distance.toFixed(
-            2,
-          )} AU away at ${Math.round(
-            positionAndAngle.angle,
-          )} degrees`,
-          action: attackAction.action,
-        })
-      },
-    )
+    interactableGuilds.forEach(async (otherGuild, index) => {
+      const positionAndAngle = positionAndAngleDifference(
+        ...guild.ship.location,
+        ...otherGuild.ship.location,
+      )
+      const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
+      const attackAction = availableActions.find((a) => a.emoji === `⚔️`)
+      if (!attackAction) return
+      actions.push({
+        emoji: numberToEmoji(index + 1),
+        label: `${otherGuild.ship.name}: ${positionAndAngle.distance.toFixed(
+          2,
+        )} AU away at ${Math.round(positionAndAngle.angle)} degrees`,
+        action: attackAction.action,
+      })
+    })
 
-    if (actions.length === 0)
-      return send(msg, story.attack.noShips())
+    if (actions.length === 0) return send(msg, story.attack.noShips())
 
     if (actions.length === 1) {
       return actions[0].action({ user: author, msg, guild })

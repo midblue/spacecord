@@ -71,12 +71,12 @@ module.exports = (guild) => {
   }
 
   guild.saveNewDataToDb = async () => {
-    await guild.context.db.guilds.update({
+    await guild.context.db.guild.update({
       id: guild.id,
       updates: { ...guild },
     })
 
-    await guild.context.db.ships.update({
+    await guild.context.db.ship.update({
       id: guild.ship.id,
       updates: { ...guild.ship },
     })
@@ -141,7 +141,7 @@ module.exports = (guild) => {
     // if (
     //   object.keys(differencesWithGeneralizedArrays).length
     // ) {
-    //   await db.guilds.update({
+    //   await db.guild.update({
     //     id: guild.id,
     //     updates: differencesWithGeneralizedArrays,
     //   })

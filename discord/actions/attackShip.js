@@ -5,7 +5,7 @@ const {
   emojiToNumber,
   capitalize,
   msToTimeString,
-  distance
+  distance,
 } = require(`../../common`)
 const awaitReaction = require(`./awaitReaction`)
 const Discord = require(`discord.js-light`)
@@ -19,21 +19,27 @@ module.exports = async ({ msg, guild, otherShip }) => {
   if (!otherShip || guild.status.docked) return
 
   // ---------- check equipment
-  if (!guild.ship.equipment.weapon || guild.ship.equipment.weapon.length === 0) { return send(msg, story.attack.noWeapon()) }
-  if (!guild.ship.equipment.weapon.find((w) => w.repair > 0)) { return send(msg, story.attack.brokenWeapons()) }
+  const weapons = guild.ship.equipment.find((e) => e.equipmentType === `weapon`)
+    .list
+  if (!weapons || weapons.length === 0) {
+    return send(msg, story.attack.noWeapon())
+  }
+  if (!weapons.find((w) => w.repair > 0)) {
+    return send(msg, story.attack.brokenWeapons())
+  }
 
   // ---------- don't attack without a weapon off cooldown
   const usableWeapons = guild.ship.canAttack()
   if (!usableWeapons) {
     return send(
       msg,
-      story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs()))
+      story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
     )
   }
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in attackShip`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
@@ -50,20 +56,20 @@ module.exports = async ({ msg, guild, otherShip }) => {
         `${w.emoji} \`${w.displayName}\` - ${(
           w.hitPercent(
             distance(...guild.ship.location, ...otherShip.location),
-            otherShip
+            otherShip,
           ) * 100
         ).toFixed(0)}% base hit chance` +
         (w.requirements?.munitions
           ? ` (Cumulative total of \`${
-            allSkills.find((s) => s.name === `munitions`).emoji
-          }${w.requirements.munitions}\` in munitions required from voters)`
-          : ``)
+              allSkills.find((s) => s.name === `munitions`).emoji
+            }${w.requirements.munitions}\` in munitions required from voters)`
+          : ``),
     }))
     const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
       msg,
       guild,
       pollTitle: `Which weapon should we attack with?`,
-      reactions: weaponsAsReactionObjects
+      reactions: weaponsAsReactionObjects,
     })
     if (!pollMessage.deleted) pollMessage.delete()
     if (!winner) return
@@ -77,23 +83,23 @@ module.exports = async ({ msg, guild, otherShip }) => {
   }\` is estimated to have a \`${Math.round(
     weaponToUse.hitPercent(
       distance(...guild.ship.location, ...otherShip.location),
-      otherShip
-    ) * 100
+      otherShip,
+    ) * 100,
   )}%\` base chance of hitting, but the munitions skill of voters in this poll, as well as the enemy's piloting skills, will have a large impact.
 		
 ${
   weaponToUse.requirements?.munitions
     ? `The \`${weaponToUse.emoji} ${
-      weaponToUse.displayName
-    }\` requires a cumulative voter munitions level of \`${
-      allSkills.find((s) => s.name === `munitions`).emoji
-    }${weaponToUse.requirements.munitions}\` to fire.
+        weaponToUse.displayName
+      }\` requires a cumulative voter munitions level of \`${
+        allSkills.find((s) => s.name === `munitions`).emoji
+      }${weaponToUse.requirements.munitions}\` to fire.
 
 	`
     : ``
 }Vote with more collective ${
-  allSkills.find((s) => s.name === `munitions`).emoji
-}munitions skill, get closer, and repair your weapons to have a better shot!`
+    allSkills.find((s) => s.name === `munitions`).emoji
+  }munitions skill, get closer, and repair your weapons to have a better shot!`
 
   const {
     ok,
@@ -102,7 +108,7 @@ ${
     yesPercent,
     yesVoters,
     insufficientVotes,
-    sentMessage: voteMessage
+    sentMessage: voteMessage,
   } = await runYesNoVote({
     pollType: `attack`,
     embed: voteEmbed,
@@ -111,7 +117,7 @@ ${
     yesStaminaRequirement: 1,
     msg,
     guild,
-    cleanUp: false
+    cleanUp: false,
   })
   if (!ok) return send(msg, message)
 
@@ -131,15 +137,15 @@ ${
     (total, u) =>
       total +
       (guild.ship.members.find((m) => m.id === u.id)?.level?.munitions || 0),
-    0
+    0,
   )
   guild.ship.logEntry(
-    story.attack.votePassed(yesPercent, otherShip, collectiveMunitionsSkill)
+    story.attack.votePassed(yesPercent, otherShip, collectiveMunitionsSkill),
   )
   voteEmbed.description = story.attack.votePassed(
     yesPercent,
     otherShip,
-    collectiveMunitionsSkill
+    collectiveMunitionsSkill,
   )
   voteMessage.edit(voteEmbed)
 
@@ -148,7 +154,7 @@ ${
     voteEmbed.description = story.attack.tooLowMunitionsSkill(
       weaponToUse.requirements.munitions,
       collectiveMunitionsSkill,
-      weaponToUse
+      weaponToUse,
     )
     voteMessage.edit(voteEmbed)
     return
@@ -163,7 +169,7 @@ ${
     const res = guild.ship.attackShip({
       enemyShip: otherShip,
       weapon: weaponToUse,
-      collectiveMunitionsSkill
+      collectiveMunitionsSkill,
     })
     sentMessage = (await send(msg, res.message))[0]
     resultEmbed = res.message
@@ -187,6 +193,6 @@ ${
     msg: sentMessage,
     reactions: actions,
     embed: resultEmbed,
-    guild
+    guild,
   })
 }

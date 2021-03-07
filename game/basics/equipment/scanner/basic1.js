@@ -7,7 +7,7 @@ module.exports = {
   requirements: { engineering: 4 },
   scanUndetectability: 50,
   durabilityLostOnUse: 0.01,
-  use (otherShip) {
+  use(otherShip) {
     const previousRepair = this.repair
     this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
     if (this.repair < 0) this.repair = 0
@@ -15,10 +15,12 @@ module.exports = {
     const repair = this.repair
 
     if (repair <= 0) {
-      if (previousRepair !== repair) { guild.ship.logEntry(story.repair.breakdown(this.displayName)) }
+      if (previousRepair !== repair) {
+        guild.ship.logEntry(story.repair.breakdown(this.displayName))
+      }
       return {
         ok: false,
-        message: story.repair.breakdown(this.displayName)
+        message: story.repair.breakdown(this.displayName),
       }
     }
 
@@ -27,28 +29,30 @@ module.exports = {
       result: [
         {
           name: `📛 Name`,
-          value: otherShip.name
+          value: otherShip.name,
         },
         {
           name: `Faction`,
           value:
-            otherShip.guild.faction.emoji + ` ` + otherShip.guild.faction.name
+            otherShip.guild.faction.emoji + ` ` + otherShip.guild.faction.name,
         },
         {
           name: `👨‍👩‍👦‍👦 Crew Members`,
-          value: otherShip.members.length
+          value: otherShip.members.length,
         },
         {
           name: `Chassis`,
           value:
-            otherShip.equipment.chassis[0].emoji +
-            otherShip.equipment.chassis[0].displayName
+            otherShip.equipment.find((e) => e.equipmentType === `chassis`)
+              .list[0].emoji +
+            otherShip.equipment.find((e) => e.equipmentType === `chassis`)
+              .list[0].displayName,
         },
         {
           name: `🇨🇭 Max HP`,
-          value: otherShip.maxHp()
-        }
-      ]
+          value: otherShip.maxHp(),
+        },
+      ],
     }
-  }
+  },
 }

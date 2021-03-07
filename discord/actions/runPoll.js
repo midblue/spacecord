@@ -103,7 +103,11 @@ module.exports = async ({
       if (!member) return false
       if (requirements) {
         for (const r in requirements) {
-          if ((member?.level?.[r] || 0) < requirements[r]) return false
+          if (
+            (member?.level?.find((l) => l.skill === r)?.level || 0) <
+            requirements[r]
+          )
+            return false
         }
       }
       return true

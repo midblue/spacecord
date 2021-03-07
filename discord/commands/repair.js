@@ -22,9 +22,9 @@ module.exports = {
 
     if (!equipment) {
       let allRepairableEquipment = []
-      for (const [eqType, eqArr] of Object.entries(guild.ship.equipment)) {
+      for (const [equipmentType, list] of guild.ship.equipment) {
         allRepairableEquipment.push(
-          ...eqArr.map((e, index) => ({ ...e, type: eqType, index })),
+          ...list.map((e, index) => ({ ...e, type: equipmentType, index })),
         )
       }
 

@@ -126,8 +126,15 @@ module.exports = async ({
         if (event.t === `MESSAGE_REACTION_ADD` && chosenReaction.requirements) {
           if (!member) return
           for (const r in chosenReaction.requirements) {
-            if ((member?.level?.[r] || 0) < chosenReaction.requirements[r]) {
-              console.log(member.id, userReactedWithEmoji)
+            if (
+              (member?.level?.find((l) => l.skill === r)?.level || 0) <
+              chosenReaction.requirements[r]
+            ) {
+              console.log(
+                `insufficient level to react`,
+                member.id,
+                userReactedWithEmoji,
+              )
               send(
                 msg,
                 story.action.doesNotMeetRequirements(

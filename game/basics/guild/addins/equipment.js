@@ -13,7 +13,8 @@ module.exports = (guild) => {
     let soldCredits = 0
     let soldPart
     if (equipmentTypes[part.type].singleton) {
-      soldPart = guild.ship.equipment[part.type][0]
+      soldPart = guild.ship.equipment.find((e) => e.equipmentType === part.type)
+        .list[0]
       if (soldPart) {
         soldCredits = Math.round(
           soldPart.baseCost * 0.5 * (cost / part.baseCost),
@@ -28,10 +29,17 @@ module.exports = (guild) => {
     part.repaired = Date.now()
 
     if (equipmentTypes[part.type].singleton) {
-      guild.ship.equipment[part.type] = [part]
+      guild.ship.equipment.find((e) => e.equipmentType === part.type).list = [
+        part,
+      ]
     } else {
-      if (!guild.ship.equipment[part.type]) guild.ship.equipment[part.type] = []
-      guild.ship.equipment[part.type].push(part)
+      if (!guild.ship.equipment.find((e) => e.equipmentType === part.type).list)
+        guild.ship.equipment.find(
+          (e) => e.equipmentType === part.type,
+        ).list = []
+      guild.ship.equipment
+        .find((e) => e.equipmentType === part.type)
+        .list.push(part)
     }
 
     return { soldCredits, soldPart }
@@ -39,7 +47,9 @@ module.exports = (guild) => {
 
   guild.ship.removePart = (part, cost) => {
     guild.ship.credits += cost
-    guild.ship.equipment[part.type].splice((p) => p === part, 1)
+    guild.ship.equipment
+      .find((e) => e.equipmentType === part.type)
+      .list.splice((p) => p === part, 1)
   }
 
   guild.ship.equipmentInfo = (type) => {
@@ -47,16 +57,18 @@ module.exports = (guild) => {
     const actions = []
 
     let index = 1
-    Object.keys(guild.ship.equipment)
-      .sort((a, b) => a - b)
-      .filter((k) => (type ? k === type : true))
-      .forEach((eqType) => {
-        guild.ship.equipment[eqType]
+    guild.ship.equipment
+      .sort((a, b) => a.equipmentType - b.equipmentType)
+      .filter((k) => (type ? k.equipmentType === type : true))
+      .forEach(({ equipmentType, list }) => {
+        list
           .sort((a, b) => a.displayName - b.displayName)
           .forEach((e) => {
             actions.push({
               emoji: numberToEmoji(index),
-              label: `${e.emoji} \`${e.displayName}\` (${capitalize(eqType)})`,
+              label: `${e.emoji} \`${e.displayName}\` (${capitalize(
+                equipmentType,
+              )})`,
               equipment: e,
               action: async ({ user, msg }) => {
                 await runGuildCommand({
@@ -82,8 +94,9 @@ module.exports = (guild) => {
     const actions = []
 
     let index = 1
-    guild.ship.equipment.weapon
-      .sort((a, b) => a.displayName - b.displayName)
+    guild.ship.equipment
+      .find((e) => e.equipmentType === `weapon`)
+      .list.sort((a, b) => a.displayName - b.displayName)
       .forEach((w) => {
         const timeUntilReady =
           (w.lastAttack || 0) + w.rechargeTime * STEP_INTERVAL - Date.now()

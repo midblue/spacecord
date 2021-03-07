@@ -1,10 +1,10 @@
 const mongoose = require(`mongoose`)
 const routes = {
-  guilds: require(`./guilds`),
-  caches: require(`./caches`),
-  ships: require(`./ships`),
-  users: require(`./users`),
-  crewMembers: require(`./crewMembers`),
+  guild: require(`./guild`),
+  cache: require(`./cache`),
+  ship: require(`./ship`),
+  user: require(`./user`),
+  crewMember: require(`./crewMember`),
 }
 let ready = false
 const toRun = []

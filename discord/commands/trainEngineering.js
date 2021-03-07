@@ -17,11 +17,10 @@ module.exports = {
     msg,
     author,
     guild,
-    ship,
     authorCrewMemberObject,
     staminaRequired,
   }) {
-    //  log(msg, "Train Engineering", msg.guild.name);
+    log(msg, `Train Engineering`, msg.guild.name)
 
     // ---------- use stamina
     const member =

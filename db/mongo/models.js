@@ -73,7 +73,7 @@ const schemas = {
       joined: { type: Number, default: Date.now() },
       stamina: Number,
       level: [{ skill: String, level: Number }],
-      xp: [{ skill: String, level: Number }],
+      xp: [{ skill: String, xp: Number }],
     },
     {
       toObject: { virtuals: true },

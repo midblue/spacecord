@@ -18,10 +18,12 @@ module.exports = (guild) => {
   }
 
   guild.ship.maxPower = () => {
-    return guild.ship.equipment.battery.reduce(
-      (total, battery) => battery.capacity * battery.repair + total,
-      0,
-    )
+    return guild.ship.equipment
+      .find((e) => e.equipmentType === `battery`)
+      .list.reduce(
+        (total, battery) => battery.capacity * battery.repair + total,
+        0,
+      )
   }
 
   guild.ship.addPower = (generateResult) => {

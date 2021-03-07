@@ -1,16 +1,14 @@
 const levelNumbers = require(`../levels`)
 const story = require(`../../story/story`)
-const game = require(`../../../manager`)
 const { log, allSkills } = require(`../../../gamecommon`)
 
 module.exports = (member) => {
   member.getTrainableSkills = async () => {
     const trainableSkills = [
       ...allSkills.map((s) => {
-        const memberSkill = member.level[s.name] || 0
-        const staminaRequired = member.staminaRequiredFor(
-          s.name,
-        )
+        const memberSkill =
+          member.level.find((l) => l.skill === s.name)?.level || 0
+        const staminaRequired = member.staminaRequiredFor(s.name)
         return { ...s, memberSkill, staminaRequired }
       }),
     ]
@@ -18,7 +16,9 @@ module.exports = (member) => {
   }
 
   member.staminaRequiredFor = (skill) => {
-    return Math.ceil(Math.sqrt(member.level[skill] || 1))
+    return Math.ceil(
+      Math.sqrt(member.level.find((l) => l.skill === skill)?.level || 1),
+    )
   }
 
   member.train = (skill, successRatio, difficultyMod = 1) => {
@@ -32,14 +32,14 @@ module.exports = (member) => {
     const startLevel = baseline.level
     const startXp = baseline.xp
     const newXp = startXp + xpAmount
-    member.xp[skill] = newXp
+
+    const foundXpEntry = member.xp.find((x) => x.skill === skill)
+    if (!foundXpEntry) member.xp.push({ skill, xp: newXp })
+    else foundXpEntry.xp = newXp
 
     const result = member.skillLevelDetails(skill)
 
-    game.db.guilds.updateCrewMembers({
-      id: member.guild.id,
-      members: member.guild.saveableMembers(),
-    })
+    member.saveNewDataToDb()
 
     return {
       ok: true,
@@ -59,30 +59,33 @@ module.exports = (member) => {
   }
 
   member.skillLevelDetails = (skill) => {
-    if (!member.level) member.level = {}
-    if (!member.xp) member.xp = {}
+    if (!member.level) member.level = []
+    if (!member.xp) member.xp = []
 
-    let xp = member.xp?.[skill] || 0
+    let xp = member.xp.find((x) => x.skill === skill)?.xp || 0
     if (!xp) {
       xp =
-        (member.level?.[skill] || 0) === 0
+        (member.level.find((l) => l.skill === skill)?.level || 0) === 0
           ? 0
-          : levelNumbers[member.level[skill] - 1] || 0
-      member.xp[skill] = xp
+          : levelNumbers[
+              member.level.find((l) => l.skill === skill)?.level - 1
+            ] || 0
+      const foundXpEntry = member.xp.find((x) => x.skill === skill)
+      if (!foundXpEntry) member.xp.push({ skill, xp })
+      else foundXpEntry.xp = xp
     }
 
     const level = levelNumbers.findIndex((ln) => ln > xp)
-    member.level[skill] = level
+    const foundLevelEntry = member.level.find((l) => l.skill === skill)
+    if (foundLevelEntry) foundLevelEntry.level = level
+    else member.level.push({ skill, level })
 
     const totalLevelXp = levelNumbers[level] || 0
-    const levelSize =
-      levelNumbers[level] - (levelNumbers[level - 1] || 0)
+    const levelSize = levelNumbers[level] - (levelNumbers[level - 1] || 0)
     const toNextLevel = totalLevelXp - xp
-    const levelProgress =
-      xp - (levelNumbers[level - 1] || 0)
+    const levelProgress = xp - (levelNumbers[level - 1] || 0)
     const percentToLevel = levelProgress / levelSize || 0
-    const overallPercentToLevel =
-      xp / levelNumbers[level] || 0
+    const overallPercentToLevel = xp / levelNumbers[level] || 0
 
     const data = {
       xp,
@@ -98,9 +101,6 @@ module.exports = (member) => {
   }
 
   member.totalLevel = () => {
-    return Object.values(member.level).reduce(
-      (total, curr) => curr + total,
-      0,
-    )
+    return member.level.reduce((total, { level }) => level + total, 0)
   }
 }

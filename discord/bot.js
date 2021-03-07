@@ -34,10 +34,6 @@ const addedToGuild = require(`./events/addedToGuild`)
 
 client.on(`error`, (e) => console.log(`Discord.js error:`, e.message))
 
-client.on(`raw`, async (event) => {
-  this.rawWatchers.forEach((handler) => handler(event))
-})
-
 // added to a server
 client.on(`guildCreate`, addedToGuild)
 
@@ -61,6 +57,10 @@ module.exports = {
         return guildMessage({ msg, client, game: gameController })
       })
 
+      client.on(`raw`, async (event) => {
+        this.rawWatchers.forEach((handler) => handler(event))
+      })
+
       client.on(`ready`, async () => {
         resolve()
         console.log(
@@ -68,6 +68,7 @@ module.exports = {
             (await client.guilds.cache.array()).length
           } guilds`,
         )
+
         client.user.setActivity(`.help`, { type: `LISTENING` })
       })
     })

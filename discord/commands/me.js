@@ -4,12 +4,11 @@ const {
   numberToEmoji,
   capitalize,
   percentToTextBars,
-  msToTimeString
+  msToTimeString,
 } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
-
 
 module.exports = {
   tag: `me`, // this is also the 'train' command
@@ -17,19 +16,14 @@ module.exports = {
     value: `See your stats and take actions.`,
     emoji: `💁‍♂️`,
     category: `crew`,
-    priority: 70
+    priority: 70,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:me|stamina|aboutme)$`, `gi`).exec(
-      content
+      content,
     )
   },
-  async action ({
-    msg,
-    guild,
-    authorCrewMemberObject,
-    author
-  }) {
+  async action({ msg, guild, authorCrewMemberObject, author }) {
     log(msg, `Me`, msg.guild.name)
 
     const embed = new Discord.MessageEmbed()
@@ -37,15 +31,14 @@ module.exports = {
       .setTitle(`${author.nickname}'s Stats`)
 
     const userAge =
-      ((Date.now() - (authorCrewMemberObject.joined || Date.now())) *
-        REAL_TIME_TO_GAME_TIME_MULTIPLIER) /
-      TIME_UNIT_SHORTS_PER_LONG
+      (Date.now() - (authorCrewMemberObject.joined || Date.now())) /
+      TIME_UNIT_LONG_LENGTH
     embed.fields.push(
       ...[
         {
           name: `👵🏽 Age`,
           value: userAge.toFixed(2) + ` ` + TIME_UNIT_LONGS,
-          inline: true
+          inline: true,
         },
         {
           name: `💪 Stamina`,
@@ -55,20 +48,22 @@ module.exports = {
               Math.round(
                 (authorCrewMemberObject.stamina || 0) *
                   authorCrewMemberObject.maxStamina() *
-                  10
+                  10,
               ) / 10
             }/${Math.round(authorCrewMemberObject.maxStamina() * 10) / 10}`,
-          inline: true
+          inline: true,
         },
         {
           name: `🛌 Stamina Gain`,
           value: `\`+ 💪${
             Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
-          }\` stamina/ship ${TIME_UNIT}
-(Next day is in ${msToTimeString(guild.context.timeUntilNextTick())})`,
-          inline: true
-        }
-      ]
+          }\` stamina/${TIME_UNIT}
+(Next ${TIME_UNIT} in \`${msToTimeString(
+            guild.context.timeUntilNextTick(),
+          )}\`)`,
+          inline: true,
+        },
+      ],
     )
 
     // skills section
@@ -80,7 +75,7 @@ module.exports = {
       .slice(0, 10)
       .map((skill) => ({
         ...skill,
-        ...authorCrewMemberObject.skillLevelDetails(skill.name)
+        ...authorCrewMemberObject.skillLevelDetails(skill.name),
       }))
       .sort((a, b) => b.xp - a.xp)
 
@@ -90,7 +85,7 @@ module.exports = {
         .map((e) => {
           return `${e.emoji} **${capitalize(e.name)}**: Level ${e.level}`
         })
-        .join(`\n`)
+        .join(`\n`),
     }
     embed.fields.push(trainableSkillsField)
 
@@ -98,10 +93,13 @@ module.exports = {
       {
         emoji: `🏋️‍♂️`,
         label: `Train your skills`,
-        action: async ({ user, }) => {
-          runGuildCommand({ msg: { ...msg, author: user }, commandTag: `train` })
-        }
-      }
+        action: async ({ user }) => {
+          runGuildCommand({
+            msg: { ...msg, author: user },
+            commandTag: `train`,
+          })
+        },
+      },
     ]
 
     const sentMessage = (await send(msg, embed))[0]
@@ -109,7 +107,7 @@ module.exports = {
       msg: sentMessage,
       reactions: reactions,
       embed,
-      guild
+      guild,
     })
-  }
+  },
 }

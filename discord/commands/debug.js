@@ -138,7 +138,9 @@ module.exports = {
           } catch (e) {
             return `invalid amount: ` + amount
           }
-          const existingCargo = guild.ship.cargo.find((c) => c.type === type)
+          const existingCargo = guild.ship.cargo.find(
+            (c) => c.cargoType === type,
+          )
           if (existingCargo) existingCargo.amount = amount
           else guild.ship.cargo.push({ type, amount })
           return `set ` + type + ` amount to ` + amount

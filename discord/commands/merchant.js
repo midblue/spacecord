@@ -97,7 +97,7 @@ module.exports = {
             0,
             cost,
           )}/${WEIGHT_UNIT} (You have ${
-            guild.ship.cargo.find((c) => c.type === type)?.amount || 0
+            guild.ship.cargo.find((c) => c.cargoType === type)?.amount || 0
           } ${WEIGHT_UNITS})`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
@@ -306,7 +306,7 @@ module.exports = {
             0,
             cost,
           )}/${WEIGHT_UNIT} (You have ${
-            guild.ship.cargo.find((c) => c.type === type)?.amount || 0
+            guild.ship.cargo.find((c) => c.cargoType === type)?.amount || 0
           } ${WEIGHT_UNITS})`,
           action: ({ user, msg, guild }) => {
             runGuildCommand({
@@ -370,7 +370,7 @@ module.exports = {
       )
 
       const canSell = Math.floor(
-        guild.ship.cargo.find((c) => c.type === type).amount,
+        guild.ship.cargo.find((c) => c.cargoType === type).amount,
       )
       const amountsAsReactions = []
       if (canSell > 1) {

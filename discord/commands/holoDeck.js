@@ -10,10 +10,9 @@ module.exports = {
   tag: `holoDeck`,
   documentation: false,
   test(content, settings) {
-    return new RegExp(
-      `^${settings.prefix}(?:holodeck|holo)$`,
-      `gi`,
-    ).exec(content)
+    return new RegExp(`^${settings.prefix}(?:holodeck|holo)$`, `gi`).exec(
+      content,
+    )
   },
   async action({ msg, guild }) {
     log(msg, `Holo Deck`, msg.guild.name)
@@ -54,11 +53,13 @@ module.exports = {
           label:
             `Scan Area ` +
             usageTag(
-              guild.ship.equipment.telemetry[0].powerUse,
+              guild.ship.equipment.find((e) => e.equipmentType === `telemetry`)
+                .list[0].powerUse,
               `scan`,
             ),
-          requirements:
-            guild.ship.equipment.telemetry[0].requirements,
+          requirements: guild.ship.equipment.find(
+            (e) => e.equipmentType === `telemetry`,
+          ).list[0].requirements,
           async action({ msg }) {
             await runGuildCommand({
               msg,

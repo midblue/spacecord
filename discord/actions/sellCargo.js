@@ -10,7 +10,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   msg.guild = msg.channel.guild
   log(msg, `Sell Cargo`, msg.channel.guild.name)
 
-  const heldCargo = guild.ship.cargo.find((c) => c.type === type)
+  const heldCargo = guild.ship.cargo.find((c) => c.cargoType === type)
   if (!heldCargo || !heldCargo.amount) return
   const cargoData = cargo[type]
 

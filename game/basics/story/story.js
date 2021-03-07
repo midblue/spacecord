@@ -245,9 +245,11 @@ module.exports = {
         .join(`and `)}to use that. You have${Object.keys(requirements)
         .map(
           (r) =>
-            ` level \`${member?.level?.[r] || 0}\` in \`${
-              allSkills.find((s) => s.name === r).emoji
-            }${capitalize(r)}\` `,
+            ` level \`${
+              member?.level?.find((l) => l.skill === r)?.level || 0
+            }\` in \`${allSkills.find((s) => s.name === r).emoji}${capitalize(
+              r,
+            )}\` `,
         )
         .join(`and`)}.`,
   },

@@ -5,7 +5,7 @@ const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
 const { init: initDb, db } = require(`../db/mongo/db`)
 const { msg } = require(`./tools/messages`)
-const models = require(`../db/mongo/models`)
+const models = require(`../db/mongo/model`)
 
 // * if we want tests to run silently, uncomment
 // console.log = () => {}
@@ -16,26 +16,26 @@ describe(`Database`, () => {
   })
 
   it(`should be able to add data to each model`, async () => {
-    const guilds = require(`../db/mongo/guilds`)
+    const guilds = require(`../db/mongo/guild`)
     await guilds.add({ id: msg.guild.id, data: { active: false } })
 
-    const ships = require(`../db/mongo/ships`)
+    const ships = require(`../db/mongo/ship`)
     await ships.add({ guildId: msg.guild.id, data: { energy: 5 } })
 
-    const users = require(`../db/mongo/users`)
+    const users = require(`../db/mongo/user`)
     await users.add({ id: msg.author.id })
 
-    const crewMembers = require(`../db/mongo/crewMembers`)
+    const crewMembers = require(`../db/mongo/crewMember`)
     await crewMembers.add({
       guildId: msg.guild.id,
       userId: msg.author.id,
       member: { stamina: 0.5 },
     })
 
-    const caches = require(`../db/mongo/caches`)
+    const caches = require(`../db/mongo/cache`)
     await caches.add({ amount: 1 })
 
-    const planets = require(`../db/mongo/planets`)
+    const planets = require(`../db/mongo/planet`)
     await planets.add({ name: `test` })
 
     assert(true)
@@ -56,7 +56,7 @@ describe(`Database`, () => {
   })
 
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
-    const models = require(`../db/mongo/models`)
+    const models = require(`../db/mongo/model`)
     let guild = await models.Guild.findOne()
     expect(guild).to.have.property(`id`)
     let planet = await models.Planet.findOne()
@@ -133,7 +133,7 @@ describe(`Base Data Initialization & Updates`, () => {
     expect(createdGuild.shipIds).to.contain(createdShip.id)
 
     const createdUser = await models.User.findOne({
-      _id: createdGuild.members[0].userId,
+      _id: createdGuild.members[0].id,
     })
     assert(createdUser)
     assert(createdUser.memberships.length)
@@ -144,7 +144,7 @@ describe(`Base Data Initialization & Updates`, () => {
         .crewMemberId,
     })
     assert(createdCrewMember)
-    assert(createdCrewMember.userId === createdUser.id)
+    assert(createdCrewMember.id === createdUser.id)
   })
 
   it(`should be able to spawn a new user and add a member to a guild, and all references should be correct`, async () => {
@@ -175,12 +175,12 @@ describe(`Base Data Initialization & Updates`, () => {
     )
 
     assert(
-      guild.members.find((m) => m.userId === user.id).crewMemberId ===
+      guild.members.find((m) => m.id === user.id).crewMemberId ===
         crewMember.id,
       `Guild has link to crew member and user`,
     )
 
-    assert(crewMember.userId === user.id)
+    assert(crewMember.id === user.id)
     assert(crewMember.guildId === guild.id)
   })
 

@@ -8,33 +8,35 @@ const enemyNonVotingAdjustment = 0.8
 
 module.exports = (guild) => {
   guild.ship.canAttack = () => {
-    if (!guild.ship.equipment.weapon.length)
+    if (!guild.ship.find((e) => e.equipmentType === `weapon`).list.length)
       return false
-    const canAttackWeapons = guild.ship.equipment.weapon.filter(
-      (w) =>
-        w.repair > 0 &&
-        (w.lastAttack || 0) <
-          Date.now() - (w.rechargeTime || 1) * STEP_INTERVAL
-    )
-    if (!canAttackWeapons.length)
-      return false
+    const canAttackWeapons = guild.ship
+      .find((e) => e.equipmentType === `weapon`)
+      .list.filter(
+        (w) =>
+          w.repair > 0 &&
+          (w.lastAttack || 0) <
+            Date.now() - (w.rechargeTime || 1) * STEP_INTERVAL,
+      )
+    if (!canAttackWeapons.length) return false
     return canAttackWeapons
   }
   guild.ship.nextAttackInMs = () => {
     return Math.max(
       0,
-      guild.ship.equipment.weapon.reduce(
-        (lowest, w) =>
-          Math.min(lowest, (w.rechargeTime || 1) * STEP_INTERVAL) -
-          (Date.now() - (w.lastAttack || 0)),
-        0
-      )
+      guild.ship.equipment
+        .find((e) => e.equipmentType === `weapon`)
+        .list.reduce(
+          (lowest, w) =>
+            Math.min(lowest, (w.rechargeTime || 1) * STEP_INTERVAL) -
+            (Date.now() - (w.lastAttack || 0)),
+          0,
+        ),
     )
   }
 
   guild.ship.checkForDeath = () => {
-    if (guild.ship.status.dead)
-      return true
+    if (guild.ship.status.dead) return true
     const dead = guild.ship.currentHp() < 0.0001
     if (dead) {
       guild.ship.status.dead = true
@@ -48,9 +50,11 @@ module.exports = (guild) => {
     enemyShip,
     weapon,
     target,
-    collectiveMunitionsSkill
+    collectiveMunitionsSkill,
   }) => {
-    if (enemyShip.status.docked) { return { ok: false, message: story.attack.docked(enemyShip) } }
+    if (enemyShip.status.docked) {
+      return { ok: false, message: story.attack.docked(enemyShip) }
+    }
 
     weapon.lastAttack = Date.now()
 
@@ -58,12 +62,12 @@ module.exports = (guild) => {
 
     const attackDistance = distance(
       ...guild.ship.location,
-      ...enemyShip.location
+      ...enemyShip.location,
     )
     const enemyTotalPilotingLevel =
       enemyShip.members.reduce(
         (total, m) => total + m.level?.piloting || 0,
-        0
+        0,
       ) * enemyNonVotingAdjustment
     const advantage = collectiveMunitionsSkill - enemyTotalPilotingLevel
     const randomizedAdvantage = advantage + advantage * (Math.random() - 0.5) // adjusts it from .5 to 1.5 of the advantage
@@ -94,29 +98,28 @@ module.exports = (guild) => {
       {
         name: `Weapon`,
         value: weapon.emoji + ` ` + weapon.displayName,
-        inline: true
+        inline: true,
       },
       {
         name: `Range`,
         value: attackDistance.toFixed(3) + ` ` + DISTANCE_UNIT,
-        inline: true
+        inline: true,
       },
       {
         name: `Base Hit %`,
         value: Math.round(adjustedAccuracy * 100) + `%`,
-        inline: true
+        inline: true,
       },
       {
         name: `Total Munitions Skill`,
         value: collectiveMunitionsSkill,
-        inline: true
-      }
+        inline: true,
+      },
     ]
 
     // durability loss
     weapon.repair -= weapon.durabilityLostOnUse
-    if (weapon.repair < 0)
-      weapon.repair = 0
+    if (weapon.repair < 0) weapon.repair = 0
 
     // miss
     if (!didHit) {
@@ -127,18 +130,18 @@ module.exports = (guild) => {
         attacker: guild.ship,
         weapon,
         attackDistance,
-        advantageAccuracyMultiplier
+        advantageAccuracyMultiplier,
       })
 
       outputEmbed.setColor(FAILURE_COLOR)
       outputEmbed.description = story.attack.miss(
         weapon,
         accuracyTarget - finalAccuracy < 0.1,
-        advantageAccuracyMultiplier
+        advantageAccuracyMultiplier,
       )
       return {
         ok: false,
-        message: outputEmbed
+        message: outputEmbed,
       }
     }
 
@@ -165,7 +168,7 @@ module.exports = (guild) => {
     const {
       damageTaken,
       totalDamageTaken,
-      destroyedShip
+      destroyedShip,
     } = enemyShip.takeDamage({
       targetEquipment: target,
       damage: finalDamage,
@@ -173,7 +176,7 @@ module.exports = (guild) => {
       weapon,
       attackDistance,
       advantageDamageMultiplier,
-      advantageAccuracyMultiplier
+      advantageAccuracyMultiplier,
     })
 
     outputEmbed.setColor(SUCCESS_COLOR)
@@ -181,7 +184,7 @@ module.exports = (guild) => {
       weapon,
       advantageDamageMultiplier,
       totalDamageTaken,
-      destroyedShip
+      destroyedShip,
     )
 
     outputEmbed.fields.push(
@@ -197,16 +200,16 @@ module.exports = (guild) => {
                   d.negated
                     ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
                     : ``
-                }${d.wasDisabled ? ` (**Disabled!**)` : ``}`
+                }${d.wasDisabled ? ` (**Disabled!**)` : ``}`,
             )
-            .join(`\n`)
-        }
-      ]
+            .join(`\n`),
+        },
+      ],
     )
 
     return {
       ok: true,
-      message: outputEmbed
+      message: outputEmbed,
     }
   }
 
@@ -218,33 +221,32 @@ module.exports = (guild) => {
     weapon,
     attackDistance,
     advantageDamageMultiplier,
-    advantageAccuracyMultiplier
+    advantageAccuracyMultiplier,
   }) => {
     const ship = guild.ship
 
     const outputEmbed = new Discord.MessageEmbed().setColor(
-      miss ? SUCCESS_COLOR : FAILURE_COLOR
+      miss ? SUCCESS_COLOR : FAILURE_COLOR,
     )
     outputEmbed.setTitle(
       miss
         ? `Dodged an Attack From ${attacker.name}!`
-        : `Hit by an Attack From ${attacker.name}!`
+        : `Hit by an Attack From ${attacker.name}!`,
     )
 
     outputEmbed.fields = [
       {
         name: `Attack Weapon`,
         value: weapon.emoji + ` ` + weapon.displayName,
-        inline: true
+        inline: true,
       },
       {
         name: `Attack Range`,
         value: attackDistance.toFixed(3) + ` ` + DISTANCE_UNIT,
-        inline: true
-      }
+        inline: true,
+      },
     ]
-    if (!miss)
-      outputEmbed.footer = story.defend.advice()
+    if (!miss) outputEmbed.footer = story.defend.advice()
 
     const damageTaken = []
     let damageRemaining = damage
@@ -252,9 +254,11 @@ module.exports = (guild) => {
 
     if (!miss) {
       // deal damage to armor
-      let unbrokenArmor = ship.equipment.armor.filter((a) => a.repair)
+      let unbrokenArmor = ship.equipment
+        .find((e) => e.equipmentType === `armor`)
+        .list.filter((a) => a.repair)
       let randomUnbrokenArmor =
-			unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
+        unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
       const newUnbrokenFilter = (a) => a !== randomUnbrokenArmor
       while (damageRemaining && randomUnbrokenArmor) {
         if (
@@ -266,7 +270,7 @@ module.exports = (guild) => {
           const previousRepair = randomUnbrokenArmor.repair
           const blockedByArmor = Math.min(
             armorHp / randomUnbrokenArmor.damageToArmorMultiplier,
-            damageRemaining
+            damageRemaining,
           )
           damageRemaining -= blockedByArmor
           const damageToArmor =
@@ -274,8 +278,7 @@ module.exports = (guild) => {
           const damageToArmorAsPercent =
             damageToArmor / randomUnbrokenArmor.baseHp
           randomUnbrokenArmor.repair -= damageToArmorAsPercent
-          if (randomUnbrokenArmor.repair <= 0)
-            randomUnbrokenArmor.repair = 0
+          if (randomUnbrokenArmor.repair <= 0) randomUnbrokenArmor.repair = 0
           damageTaken.push({
             equipment: randomUnbrokenArmor,
             damage:
@@ -285,7 +288,7 @@ module.exports = (guild) => {
               blockedByArmor -
               (previousRepair - randomUnbrokenArmor.repair) *
                 randomUnbrokenArmor.baseHp,
-            wasDisabled: randomUnbrokenArmor.repair === 0
+            wasDisabled: randomUnbrokenArmor.repair === 0,
           })
         }
 
@@ -301,11 +304,11 @@ module.exports = (guild) => {
           targetEquipment && targetEquipment.repair ? targetEquipment : null
         if (!target) {
           let allUnbrokenEquipmentAsArray = []
-          Object.values(guild.ship.equipment).forEach((eqArray) =>
-            allUnbrokenEquipmentAsArray.push(...eqArray)
+          guild.ship.equipment.forEach(({ list }) =>
+            allUnbrokenEquipmentAsArray.push(...{ list }),
           )
           allUnbrokenEquipmentAsArray = allUnbrokenEquipmentAsArray.filter(
-            (e) => e.repair && e.baseHp
+            (e) => e.repair && e.baseHp,
           )
           target =
             allUnbrokenEquipmentAsArray[
@@ -316,19 +319,16 @@ module.exports = (guild) => {
         const damageToEquipmentAsPercent = damageRemaining / target.baseHp
 
         target.repair -= damageToEquipmentAsPercent
-        if (target.repair <= 0)
-          target.repair = 0
-        if (target.onTakeDamage)
-          target.onTakeDamage(guild)
+        if (target.repair <= 0) target.repair = 0
+        if (target.onTakeDamage) target.onTakeDamage(guild)
         damageDealt = (previousEqRepair - target.repair) * target.baseHp
         damageRemaining -= damageDealt
-        if (damageRemaining < 0.000001)
-          damageRemaining = 0
+        if (damageRemaining < 0.000001) damageRemaining = 0
 
         damageTaken.push({
           equipment: target,
           damage: damageDealt,
-          wasDisabled: target.repair === 0
+          wasDisabled: target.repair === 0,
         })
       }
 
@@ -342,7 +342,7 @@ module.exports = (guild) => {
           {
             name: `Damage Taken`,
             value: Math.round(totalDamageTaken * 10) / 10,
-            inline: true
+            inline: true,
           },
           {
             name: `Ship Health`,
@@ -350,7 +350,7 @@ module.exports = (guild) => {
               percentToTextBars(currentHp / maxHp) +
               `\n` +
               `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`,
-            inline: true
+            inline: true,
           },
           {
             name: `Damage Breakdown`,
@@ -362,32 +362,34 @@ module.exports = (guild) => {
                       d.equipment.displayName
                     } ${percentToTextBars(d.equipment.repair)}
  ↳ ${Math.round(d.damage * 10) / 10} damage (${
-  Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
+                      Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
                       10
-}/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
-  d.negated
-    ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-    : ``
-}${d.wasDisabled ? ` (**Disabled!**)` : ``}`
+                    }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
+                      d.negated
+                        ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
+                        : ``
+                    }${d.wasDisabled ? ` (**Disabled!**)` : ``}`,
                 )
-                .join(`\n`) || `No damage taken.`
-          }
-        ]
+                .join(`\n`) || `No damage taken.`,
+          },
+        ],
       )
     }
 
     outputEmbed.description = miss
       ? story.defend.miss(attacker, weapon, advantageAccuracyMultiplier)
       : story.defend.hit(
-        attacker,
-        weapon,
-        advantageDamageMultiplier,
-        totalDamageTaken
-      )
+          attacker,
+          weapon,
+          advantageDamageMultiplier,
+          totalDamageTaken,
+        )
     guild.ship.logEntry(outputEmbed.description)
 
     let reactions
-    if (attacker.name !== `God`) { reactions = guild.ship.getActionsOnOtherShip(attacker) }
+    if (attacker.name !== `God`) {
+      reactions = guild.ship.getActionsOnOtherShip(attacker)
+    }
 
     // notify
     guild.pushToGuild(outputEmbed, null, reactions)
@@ -399,7 +401,7 @@ module.exports = (guild) => {
     return {
       damageTaken,
       totalDamageTaken,
-      destroyedShip
+      destroyedShip,
     }
   }
 }

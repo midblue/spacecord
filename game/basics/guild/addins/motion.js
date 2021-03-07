@@ -19,7 +19,10 @@ module.exports = (guild) => {
   guild.ship.fuelUsePerTick = () => {
     const fuelUseMod = 0.1
     return (
-      (guild.ship.equipment.engine || []).reduce((total, engine) => {
+      (
+        guild.ship.equipment.find((e) => e.equipmentType === `engine`).list ||
+        []
+      ).reduce((total, engine) => {
         return total + (engine.fuelUse || 0) * (guild.ship.speed || 0)
       }, 0) * fuelUseMod
     )
@@ -54,10 +57,9 @@ module.exports = (guild) => {
   guild.ship.getAvailableSpeedLevels = () => {
     const availableSpeedLevels = []
 
-    const bestShipSpeedLevels = guild.ship.equipment.engine.reduce(
-      (max, engine) => Math.max(max, engine.powerLevels || 0),
-      2,
-    )
+    const bestShipSpeedLevels = guild.ship.equipment
+      .find((e) => e.equipmentType === `engine`)
+      .list.reduce((max, engine) => Math.max(max, engine.powerLevels || 0), 2)
 
     availableSpeedLevels.push({ emoji: `🔟`, speed: 1 })
     if (bestShipSpeedLevels > 1) {
@@ -97,10 +99,9 @@ module.exports = (guild) => {
   guild.ship.getAvailableDirections = () => {
     const availableDirections = []
 
-    const bestShipDirections = guild.ship.equipment.engine.reduce(
-      (max, engine) => Math.max(max, engine.directions || 0),
-      4,
-    )
+    const bestShipDirections = guild.ship.equipment
+      .find((e) => e.equipmentType === `engine`)
+      .list.reduce((max, engine) => Math.max(max, engine.directions || 0), 4)
 
     if (bestShipDirections === 3) {
       return [
@@ -138,7 +139,7 @@ module.exports = (guild) => {
   guild.ship.move = (useFuel = true, coordinates) => {
     const ship = guild.ship
 
-    const fuel = ship.cargo.find((c) => c.type === `fuel`)
+    const fuel = ship.cargo.find((c) => c.cargoType === `fuel`)
     if (!fuel.amount && useFuel) {
       return { ok: false }
     }
@@ -198,11 +199,13 @@ module.exports = (guild) => {
     }
 
     if (!ship.status.stranded) {
-      guild.ship.equipment.engine.forEach((engine) => {
-        // durability loss
-        engine.repair -= engine.durabilityLostOnUse * (guild.ship.speed || 0)
-        if (engine.repair < 0) engine.repair = 0
-      })
+      guild.ship.equipment
+        .find((e) => e.equipmentType === `engine`)
+        .list.forEach((engine) => {
+          // durability loss
+          engine.repair -= engine.durabilityLostOnUse * (guild.ship.speed || 0)
+          if (engine.repair < 0) engine.repair = 0
+        })
     }
 
     return {
@@ -219,10 +222,9 @@ module.exports = (guild) => {
   }
 
   guild.ship.maxSpeed = () => {
-    const rawMaxSpeed = guild.ship.equipment.engine.reduce(
-      (total, engine) => engine.maxSpeed + total,
-      0,
-    )
+    const rawMaxSpeed = guild.ship.equipment
+      .find((e) => e.equipmentType === `engine`)
+      .list.reduce((total, engine) => engine.maxSpeed + total, 0)
 
     let percentOfMaxShipWeight =
       guild.ship.getTotalWeight() / guild.ship.maxWeight()

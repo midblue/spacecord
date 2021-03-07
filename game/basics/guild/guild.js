@@ -7,7 +7,7 @@ const memberLiveify = require(`../crew/crew`).liveify
 
 async function spawn({ db, discordGuild, channelId, context }) {
   let guild
-  guild = await db.guilds.get({ id: discordGuild.id })
+  guild = await db.guild.get({ id: discordGuild.id })
   if (guild) {
     if (guild.banned) return false // todo implement
     liveify(guild, context)
@@ -15,7 +15,7 @@ async function spawn({ db, discordGuild, channelId, context }) {
   }
 
   guild = createDefaultGuild({ discordGuild, channelId })
-  const addedGuild = await db.guilds.add({
+  const addedGuild = await db.guild.add({
     id: discordGuild.id,
     data: guild,
   })

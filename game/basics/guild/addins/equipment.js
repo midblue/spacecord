@@ -99,15 +99,15 @@ module.exports = (guild) => {
       .list.sort((a, b) => a.displayName - b.displayName)
       .forEach((w) => {
         const timeUntilReady =
-          (w.lastAttack || 0) + w.rechargeTime * STEP_INTERVAL - Date.now()
+          (w.lastAttack || 0) + w.rechargeTime * TICK_INTERVAL - Date.now()
         fields.push({
           name: `${numberToEmoji(index)} ${w.emoji} \`${w.displayName}\``,
           value:
             (timeUntilReady > 0
               ? `・ **⏱ Recharges in ${msToTimeString(timeUntilReady)}**`
               : `・ **✅ Ready to Fire** (⏱ ${msToTimeString(
-                  w.rechargeTime * STEP_INTERVAL,
-                )} cooldown)`) +
+                w.rechargeTime * TICK_INTERVAL,
+              )} cooldown)`) +
             `\n` +
             `・ 🔧 ${Math.round(w.repair * 1000) / 10}% Repair` +
             `\n` +
@@ -115,8 +115,7 @@ module.exports = (guild) => {
             `\n` +
             `・ 💥 Damage: ${Math.round(w.currentDamage() * 10) / 10}` +
             `\n` +
-            `・ 🎲 Current Hit Chance: ${
-              Math.round(w.hitPercent() * 1000) / 10
+            `・ 🎲 Current Hit Chance: ${Math.round(w.hitPercent() * 1000) / 10
             }% at ${w.range / 2} ${DISTANCE_UNIT}`,
         })
         actions.push({
@@ -145,8 +144,7 @@ module.exports = (guild) => {
         value:
           percentToTextBars(e.repair) +
           `\n` +
-          `${Math.round(e.repair * e.baseHp * 10) / 10}/${
-            Math.round(e.baseHp * 10) / 10
+          `${Math.round(e.repair * e.baseHp * 10) / 10}/${Math.round(e.baseHp * 10) / 10
           } HP`,
       })
     }
@@ -261,7 +259,7 @@ module.exports = (guild) => {
     if (e.rechargeTime !== undefined) {
       fields.push({
         name: `⏱ Cooldown`,
-        value: msToTimeString(e.rechargeTime * STEP_INTERVAL) + ` (real-time)`,
+        value: msToTimeString(e.rechargeTime * TICK_INTERVAL) + ` (real-time)`,
       })
     }
 

@@ -2,7 +2,7 @@ const { log } = require(`../gamecommon`)
 
 const cargo = require(`../basics/cargo`)
 
-const cacheExpirationTime = STEP_INTERVAL * 500
+const cacheExpirationTime = TICK_INTERVAL * 500
 let loopInterval
 
 module.exports = {
@@ -12,12 +12,12 @@ module.exports = {
 
     if (loopInterval) clearInterval(loopInterval)
     loopInterval = setInterval(async () => {
-      console.log(``)
-      log(``, `============= NEW GAME STEP =============`)
+      // console.log(``)
+      // log(``, `============= NEW GAME STEP =============`)
       await this.update()
-      log(``, `============= END GAME STEP =============`)
-      console.log(``)
-    }, STEP_INTERVAL)
+      // log(``, `============= END GAME STEP =============`)
+      // console.log(``)
+    }, TICK_INTERVAL)
   },
 
   async update() {
@@ -28,37 +28,37 @@ module.exports = {
       await guild.stepUpdate()
     })
     await Promise.all(updates)
-    log(`update`, `Updated all ${this.guilds.length} ships`)
+    // log(`update`, `Updated all ${this.guilds.length} ships`)
 
-    // expire old caches
-    const cacheCutoff = Date.now() - cacheExpirationTime
-    let deletedCacheCount = 0
-    this.caches.forEach((cache) => {
-      if (
-        cache.created < cacheCutoff &&
-        this.caches.length > this.gameDiameter() / 2
-      ) {
-        this.deleteCache(cache.id)
-        deletedCacheCount++
-      }
-    })
-    if (deletedCacheCount) {
-      log(`update`, `Removed ${deletedCacheCount} expired caches`)
-    }
+    // // expire old caches
+    // const cacheCutoff = Date.now() - cacheExpirationTime
+    // let deletedCacheCount = 0
+    // this.caches.forEach((cache) => {
+    //   if (
+    //     cache.created < cacheCutoff &&
+    //     this.caches.length > this.gameDiameter() / 2
+    //   ) {
+    //     this.deleteCache(cache.id)
+    //     deletedCacheCount++
+    //   }
+    // })
+    // if (deletedCacheCount) {
+    //   log(`update`, `Removed ${deletedCacheCount} expired caches`)
+    // }
 
-    // spawn caches randomly
-    if (this.caches.length <= this.gameDiameter() / 2 && Math.random() > 0.9) {
-      const amount = Math.ceil(Math.random() * 40 + 3)
-      this.spawnCache({
-        location: [
-          Math.random() * this.gameDiameter() - this.gameDiameter() / 2,
-          Math.random() * this.gameDiameter() - this.gameDiameter() / 2,
-        ],
-        type: Object.keys(cargo)[
-          Math.floor(Math.random() * Object.keys(cargo).length)
-        ],
-        amount: amount,
-      })
-    }
+    // // spawn caches randomly
+    // if (this.caches.length <= this.gameDiameter() / 2 && Math.random() > 0.9) {
+    //   const amount = Math.ceil(Math.random() * 40 + 3)
+    //   this.spawnCache({
+    //     location: [
+    //       math.random() * this.gameDiameter() - this.gameDiameter() / 2,
+    //       math.random() * this.gameDiameter() - this.gameDiameter() / 2,
+    //     ],
+    //     type: Object.keys(cargo)[
+    //       math.floor(Math.random() * Object.keys(cargo).length)
+    //     ],
+    //     amount: amount,
+    //   })
+    // }
   },
 }

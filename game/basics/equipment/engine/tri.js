@@ -4,7 +4,7 @@ module.exports = {
   baseHp: 15,
   weight: 100,
   baseCost: 333,
-  maxSpeed: 2,
+  maxThrust: 2,
   fuelUse: 1,
   directions: 3,
   powerLevels: 2,

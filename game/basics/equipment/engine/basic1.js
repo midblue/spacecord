@@ -4,7 +4,7 @@ module.exports = {
   displayName: `Sparkler 1000`,
   baseCost: 100,
   baseHp: 15,
-  maxSpeed: 0.3,
+  maxThrust: 0.3,
   weight: 50,
   fuelUse: 0.8,
   directions: 4,

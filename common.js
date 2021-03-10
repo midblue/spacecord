@@ -48,7 +48,7 @@ module.exports = {
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
-        (pointY - centerY) * (pointY - centerY) <
+      (pointY - centerY) * (pointY - centerY) <
       radius * radius
     )
   },
@@ -129,6 +129,8 @@ module.exports = {
   captainTag: `\`👩‍✈️Captain\``,
   distance,
   angle,
+  getUnitVector,
+  degreesToUnitVector,
 }
 
 function bearingToRadians(bearing) {
@@ -187,6 +189,16 @@ function arrayMove(arr, oldIndex, newIndex) {
     }
   }
   arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0])
+}
+
+function degreesToUnitVector(degrees) {
+  let rad = (Math.PI * degrees) / 180
+  let r = 0.5
+  return [r * Math.cos(rad), r * Math.sin(rad)]
+}
+
+function getUnitVector(thisBody, thatBody) {
+  return degreesToUnitVector(angle(...thisBody.location, ...thatBody.location))
 }
 
 const possibleRandomCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,   `

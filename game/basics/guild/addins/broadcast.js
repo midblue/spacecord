@@ -15,7 +15,7 @@ module.exports = (guild) => {
 
     let timeUntilCanBroadcast =
       (guild.lastBroadcast?.time || 0) +
-      equipment.rechargeTime * STEP_INTERVAL -
+      equipment.rechargeTime * TICK_INTERVAL -
       Date.now()
     if (timeUntilCanBroadcast < 0) timeUntilCanBroadcast = 0
 
@@ -131,7 +131,7 @@ module.exports = (guild) => {
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
-                equipment.rechargeTime * STEP_INTERVAL >
+              equipment.rechargeTime * TICK_INTERVAL >
               Date.now()
             ) {
               return guild.pushToGuild(

@@ -6,6 +6,7 @@ const defaults = {
   repairDifficulty: 1,
   durabilityLostOnUse: 0.005,
   baseCost: 200,
+  maxThrust: 1,
 }
 
 // * get all exports from files in this folder

@@ -34,15 +34,15 @@ module.exports = async function (
       // const embed = new Discord.MessageEmbed()
       //   .setColor(APP_COLOR)
       //   .setDescription(textEl)
+      const sendableTarget = msgOrChannelOrUser.channel
+        ? msgOrChannelOrUser.channel
+        : msgOrChannelOrUser.send
+        ? msgOrChannelOrUser
+        : msgOrChannelOrUser.author
       sentMessages.push(
-        await (msgOrChannelOrUser.channel
-          ? msgOrChannelOrUser.channel
-          : msgOrChannelOrUser
-        )
-          .send(textEl)
-          .catch((err) => {
-            console.error(`Failed to send!`, err.message)
-          }),
+        await sendableTarget.send(textEl).catch((err) => {
+          console.error(`Failed to send!`, err.message)
+        }),
       )
     }
   }

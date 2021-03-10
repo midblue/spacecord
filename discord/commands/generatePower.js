@@ -1,11 +1,12 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const awaitReactionCancelable = require(`../actions/awaitReactionCancelable`)
 const { numberToEmoji } = require(`../../common`)
 
 module.exports = {
   tag: `generatePower`,
+  pm: true,
   documentation: {
     name: `generatepower`,
     value: `Hop on the treadmill to make some power for the ship!`,
@@ -18,7 +19,7 @@ module.exports = {
     )
   },
   async action({ msg, settings, authorCrewMemberObject, guild }) {
-    log(msg, `Generate Power`, msg.guild.name)
+    log(msg, `Generate Power`, msg.guild?.name)
 
     // ---------- use stamina
     const member =
@@ -90,7 +91,7 @@ module.exports = {
 
     const endGame = async () => {
       cancelAwaitResponse()
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
 
       const matches = []
       for (let row of currentLayout) {

@@ -16,6 +16,7 @@ module.exports = async ({
   minimumMemberPercent,
   weightByLevelType,
   msg,
+  sentMessage,
   respondeeFilter,
   guild,
 }) => {
@@ -79,8 +80,8 @@ module.exports = async ({
   let remainingTime = time
   let done = false
 
-  const sentMessages = await send(msg, embed)
-  const sentMessage = sentMessages[sentMessages.length - 1]
+  if (!sentMessage) sentMessage = (await send(msg, embed))[0]
+  else sentMessage.edit(embed)
 
   const embedUpdateInterval = setInterval(() => {
     if (done === true) return clearInterval(embedUpdateInterval)

@@ -1,12 +1,13 @@
 const { usageTag } = require(`../../common`)
 const send = require(`../actions/send`)
-const { log, username } = require(`../botcommon`)
+const { log, username, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
 const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `crewQuarters`,
+  pm: true,
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:crew|crews?quarters?)$`,
@@ -14,7 +15,7 @@ module.exports = {
     ).exec(content)
   },
   async action({ msg, guild }) {
-    log(msg, `Crew`, msg.guild.name)
+    log(msg, `Crew`, msg.guild?.name)
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`👨‍👩‍👧‍👧 Crew Quarters`)
@@ -57,6 +58,6 @@ module.exports = {
       guild,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   },
 }

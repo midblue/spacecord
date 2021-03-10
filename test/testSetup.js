@@ -207,7 +207,7 @@ describe(`Base Data Initialization & Updates`, () => {
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
     gameGuild.name = `The Whizzard's Palace`
-    gameGuild.ship.status.docked = false
+    gameGuild.ship.status.docked = ``
 
     await gameGuild.saveNewDataToDb()
     assert(`could save guild`)
@@ -216,7 +216,7 @@ describe(`Base Data Initialization & Updates`, () => {
     expect(dbGuild.name).to.equal(`The Whizzard's Palace`)
 
     const dbShip = await models.Ship.findOne({ _id: dbGuild.shipIds[0] })
-    expect(dbShip.status.dead).to.equal(false)
+    expect(dbShip.status.dead).to.equal(``)
   })
 
   it(`should be able to save data updates to the cargo and equipment`, async () => {

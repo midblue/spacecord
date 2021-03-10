@@ -5,19 +5,20 @@ const Discord = require(`discord.js-light`)
 
 module.exports = {
   tag: `ship`,
+  pm: true,
   documentation: {
     value: `High-level overview of the ship's status and ship-related actions.`,
     emoji: `🚀`,
     category: `ship`,
-    priority: 80
+    priority: 80,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:s|ship|status)$`, `gi`).exec(
-      content
+      content,
     )
   },
-  async action ({ msg, guild }) {
-    log(msg, `Ship`, msg.guild.name)
+  async action({ msg, guild }) {
+    log(msg, `Ship`, msg.guild?.name)
 
     const status = await guild.ship.statusReport()
     const embed = new Discord.MessageEmbed()
@@ -31,7 +32,7 @@ module.exports = {
       msg: sentMessage,
       reactions: status.actions,
       embed,
-      guild
+      guild,
     })
-  }
+  },
 }

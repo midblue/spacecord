@@ -1,11 +1,12 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const { numberToEmoji, capitalize, usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `repair`,
+  pm: true,
   documentation: {
     value: `Repair parts of the ship.`,
     emoji: `🛠`,
@@ -18,7 +19,7 @@ module.exports = {
     )
   },
   async action({ msg, settings, guild, equipment, authorCrewMemberObject }) {
-    log(msg, `Repair`, msg.guild.name)
+    log(msg, `Repair`, msg.guild?.name)
 
     if (!equipment) {
       let allRepairableEquipment = []
@@ -75,7 +76,7 @@ module.exports = {
         embed,
         guild,
       })
-      sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else {
       // -------- use stamina
       const member =

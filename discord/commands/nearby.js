@@ -10,14 +10,13 @@ const awaitReaction = require(`../actions/awaitReaction`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
 const Discord = require(`discord.js-light`)
 const story = require(`../../game/basics/story/story`)
-const {
-  interact,
-} = require(`../../game/basics/story/story`)
+const { interact } = require(`../../game/basics/story/story`)
 const getCache = require(`../actions/getCache`)
 const land = require(`../actions/land`)
 
 module.exports = {
   tag: `nearby`,
+  pm: true,
   documentation: {
     name: `nearby`,
     value: `Inspect and interact with nearby ships, planets, etc.`,
@@ -38,8 +37,7 @@ module.exports = {
       return runGuildCommand({ msg, commandTag: `planet` })
     }
 
-    if (filter && filter !== `guilds`)
-      interactableGuilds = []
+    if (filter && filter !== `guilds`) interactableGuilds = []
     if (interactableGuilds === undefined) {
       interactableGuilds =
         !filter || filter === `guilds`
@@ -96,9 +94,7 @@ module.exports = {
           emoji: numberToEmoji(index + 1),
           label:
             cache.amount.toFixed(2) +
-            (cache.type === `credits`
-              ? ``
-              : ` ` + WEIGHT_UNITS + ` of`) +
+            (cache.type === `credits` ? `` : ` ` + WEIGHT_UNITS + ` of`) +
             ` ` +
             cache.emoji +
             cache.displayName,
@@ -175,11 +171,7 @@ module.exports = {
       const availableActions = [
         {
           emoji: `🛬`,
-          label:
-            `Vote to land on ` +
-            planet.name +
-            ` ` +
-            usageTag(0, `land`),
+          label: `Vote to land on ` + planet.name + ` ` + usageTag(0, `land`),
           action: ({ user, msg }) => {
             land({ msg, user, planet, guild })
           },
@@ -187,8 +179,7 @@ module.exports = {
       ]
 
       const sentMessages = await send(msg, embed)
-      const sentMessage =
-        sentMessages[sentMessages.length - 1]
+      const sentMessage = sentMessages[sentMessages.length - 1]
       await awaitReaction({
         msg: sentMessage,
         reactions: availableActions,
@@ -215,13 +206,10 @@ module.exports = {
               )} degrees.`,
         )
 
-      const availableActions = guild.ship.getActionsOnOtherShip(
-        otherGuild.ship,
-      )
+      const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
 
       const sentMessages = await send(msg, embed)
-      const sentMessage =
-        sentMessages[sentMessages.length - 1]
+      const sentMessage = sentMessages[sentMessages.length - 1]
       await awaitReaction({
         msg: sentMessage,
         reactions: availableActions,

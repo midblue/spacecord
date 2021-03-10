@@ -46,7 +46,6 @@ module.exports = (member) => {
       message: silent
         ? ``
         : story.xp.add.success(
-            member.id,
             skill,
             xpAmount,
             result.level,

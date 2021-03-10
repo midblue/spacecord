@@ -1,12 +1,13 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const { capitalize, usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
-  tag: `train`, // this is also the 'train' command
+  tag: `train`,
+  pm: true,
   documentation: {
     value: `Train your character's skills!`,
     emoji: `🏋️‍♂️`,
@@ -17,7 +18,7 @@ module.exports = {
     return new RegExp(`^${settings.prefix}(?:t|train|xp)$`, `gi`).exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, author }) {
-    log(msg, `Train`, msg.guild.name)
+    log(msg, `Train`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -61,6 +62,6 @@ module.exports = {
       listeningType: `choice`,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   },
 }

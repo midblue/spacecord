@@ -26,6 +26,7 @@ fs.readdir(`./discord/commands`, (err, files) => {
 
 module.exports = {
   tag: `help`,
+  pm: true,
   public: true,
   noShip: true,
   documentation: {

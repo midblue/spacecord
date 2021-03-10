@@ -7,6 +7,7 @@ const { usageTag } = require(`../../common`)
 
 module.exports = {
   tag: `scanArea`,
+  pm: true,
   documentation: {
     name: `scan`,
     value: `Scan the ship's surroundings.`,
@@ -20,7 +21,7 @@ module.exports = {
     )
   },
   async action({ msg, settings, client, guild, ship }) {
-    log(msg, `Scan Area`, msg.guild.name)
+    log(msg, `Scan Area`, msg.guild?.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(

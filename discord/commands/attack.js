@@ -12,6 +12,7 @@ const story = require(`../../game/basics/story/story`)
 
 module.exports = {
   tag: `attack`,
+  pm: true,
   documentation: {
     name: `attack`,
     value: `Choose a nearby ship to attack.`,
@@ -32,7 +33,7 @@ module.exports = {
     author,
     interactableGuilds,
   }) {
-    log(msg, `Attack`, msg.guild.name)
+    log(msg, `Attack`, msg.guild?.name)
 
     if (
       !guild.ship.equipment.find((e) => e.equipmentType === `weapon`)?.list

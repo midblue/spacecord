@@ -17,12 +17,12 @@ module.exports = {
   },
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:speed|speedup|slowdown|accelerate|decelerate|accel|decel|thrust|go|move|forward)$`,
+      `^${settings.prefix}(?:speed|speedup|slowdown|accelerate|decelerate|accel|decel|thrust|forward)$`,
       `gi`,
     ).exec(content)
   },
   async action({ msg, author, guild, ship, requirements }) {
-    log(msg, `Speed Vote`, msg.guild.name)
+    log(msg, `Speed Vote`, msg.guild?.name)
 
     // ---------- use stamina
     const authorCrewMemberObject = guild.ship.members.find(

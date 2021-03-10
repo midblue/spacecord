@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { username, applyCustomParams } = require(`../botcommon`)
+const { username, applyCustomParams, canEdit } = require(`../botcommon`)
 const defaultServerSettings = require(`../defaults/defaultServerSettings`)
 
 // * get all commands from files in this folder
@@ -23,7 +23,7 @@ module.exports = {
   test: async ({ msg, client, predeterminedCommandTag, props }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
     const game = client.game
-    const author = msg.author
+    const pm = !msg.channel || msg.channel.type === `dm`
 
     for (const command of commands) {
       // * run test to see if command triggers
@@ -34,6 +34,11 @@ module.exports = {
           (await command.test(msg.content, settings)))
 
       if (match) {
+        let authorIsCaptain = false
+        let authorIsAdmin = false
+        let requirements
+        let guild, ship
+
         if (command.gameAdminsOnly) {
           if (
             ![`244651135984467968`, `395634705120100367`].includes(
@@ -44,7 +49,33 @@ module.exports = {
           }
         }
 
-        let authorIsAdmin = false
+        if (pm && !command.pm && !command.pmOnly)
+          return send(
+            msg,
+            `That command cannot be run via private messages. Trying using it in your ship's server!`,
+          )
+
+        if (pm && !command.public) {
+          const currentGuildId = (
+            (await client.game.db.user.get({
+              id: msg.author.id,
+            })) || {}
+          ).activeGuild
+          if (!currentGuildId)
+            return send(
+              msg,
+              `You need to join a server's ship before you can run that command. Use \`.join\` in a server with the game to join their crew.`,
+            )
+          const foundDiscordGuild = (await game.guild(currentGuildId)).guild
+          if (!foundDiscordGuild)
+            return send(
+              msg,
+              `You need to join a server's ship before you can run that command. Use \`.join\` in a server with the game to join their crew.`,
+            )
+          guild = foundDiscordGuild
+          ship = foundDiscordGuild?.ship
+        }
+
         if (msg.guild && command.admin) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
@@ -54,25 +85,30 @@ module.exports = {
           }
         }
 
-        let authorIsCaptain = false
-        let ship, guild
-        if (!command.noShip) {
+        if (!command.noShip && !guild) {
           const res = await game.guild(msg.guild?.id || msg.channel?.guild?.id)
           if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
-          if (ship && ship.status.dead && !command.gameAdminsOnly) {
+        }
+        if (!command.noShip) {
+          if (
+            guild?.ship &&
+            guild.ship.status.dead &&
+            !command.gameAdminsOnly
+          ) {
             return send(
               msg,
               `Your ship has been destroyed! Please pause for a moment of silence until your captain gathers the courage to start again.`,
             )
           }
-          const captain = ship && ship.captain
+          const captain = guild?.ship && guild?.ship?.captain
           if (captain) authorIsCaptain = msg.author.id === captain
         }
 
         const authorCrewMemberObject =
-          msg.guild && ship && ship.members.find((m) => m.id === msg.author.id)
+          guild?.ship &&
+          guild.ship?.members?.find((m) => m.id === msg.author.id)
         if (!command.public && !authorCrewMemberObject) {
           return send(
             msg,
@@ -83,7 +119,7 @@ module.exports = {
         if (
           command.captain &&
           !authorIsAdmin &&
-          ship?.captain &&
+          guild.ship?.captain &&
           msg.author.id !== ship.captain
         ) {
           return send(
@@ -95,9 +131,9 @@ module.exports = {
           )
         }
 
-        let requirements
         if (command.equipmentType) {
-          const requirementsResponse = ship.getRequirements(
+          // todo unneeded? modifiable?
+          const requirementsResponse = guild.ship.getRequirements(
             command.equipmentType,
             settings,
             authorCrewMemberObject,
@@ -108,7 +144,12 @@ module.exports = {
           requirements = requirementsResponse.requirements
         }
 
-        author.nickname = await username(msg, author.id)
+        msg.author.nickname = await username(
+          msg,
+          msg.author.id,
+          guild?.id,
+          client,
+        )
 
         // in case the server changes their name, update it here
         if (guild && msg.guild && msg.guild.name !== guild.name) {
@@ -119,7 +160,27 @@ module.exports = {
           })
         }
 
-        // if (msg.delete) msg.delete()
+        // in case a user's active guild needs updating, update it here
+        if (guild && msg.guild) {
+          const memberInfo = guild.members.find(
+            (m) => m.userId === msg.author.id,
+          )
+          const user =
+            memberInfo &&
+            (await client.game.db.user.get({
+              id: memberInfo.userId,
+            }))
+          if (user && user.activeGuild !== msg.guild.id) {
+            console.log(`Updating user active guild`)
+            user.activeGuild = msg.guild.id
+            guild.context.db.user.update({
+              id: user.id,
+              updates: { activeGuild: user.activeGuild },
+            })
+          }
+        }
+
+        if (command.pmOnly && (await canEdit(msg))) msg.delete()
 
         // * execute command
         await command.action({
@@ -132,9 +193,10 @@ module.exports = {
           authorIsCaptain,
           authorCrewMemberObject,
           requirements,
-          author,
+          author: msg.author,
           client,
           game,
+          canEdit,
           ...props,
         })
       }

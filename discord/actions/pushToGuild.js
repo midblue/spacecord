@@ -4,15 +4,9 @@ const { client } = require(`../bot`)
 const awaitReaction = require(`./awaitReaction`)
 const { guild } = require(`../../game/manager`)
 
-module.exports = async ({
-  id,
-  channelId,
-  message,
-  msg,
-  reactions,
-}) => {
+module.exports = async ({ id, channelId, message, msg, reactions }) => {
   let sentMessage
-  if (msg) sentMessage = (await send(msg, message))[0]
+  if (msg && msg.guild) sentMessage = (await send(msg, message))[0]
   else {
     // console.log(id, channelId)
     const discordGuild = await client.guilds.fetch(id)
@@ -25,9 +19,9 @@ module.exports = async ({
         channelId,
       )
     }
-    const discordChannel = await discordGuild.channels.fetch(
-      channelId,
-    )
+
+    if (!channelId) channelId = (await client.game.guild(id))?.guild?.channel
+    const discordChannel = await discordGuild.channels.fetch(channelId)
     if (!discordChannel) {
       return log(
         discordGuild,

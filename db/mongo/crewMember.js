@@ -8,19 +8,21 @@ module.exports = {
       _id: id,
     })
     if (!crewMember) return
-    crewMember.crewMemberId = crewMember.id
-    crewMember.id = crewMember.userId // * this is for general usage in the app — makes things easier to call them by their user id
-    return crewMember
+    return {
+      ...crewMember.toObject(), // * this is for general usage in the app — makes things easier to call them by their user id
+      crewMemberId: crewMember._id,
+      id: crewMember.userId,
+    }
   },
 
-  async getBy({ userId, guildId }) {
-    const user = await getUser({ id: userId })
-    if (!user) return console.log(`Failed to find user`, userId)
-    const crewMember = await CrewMember.findOne({
-      _id: user.memberships.find((m) => m.guildId === guildId).crewMemberId,
-    })
-    return crewMember
-  },
+  // async getBy({ userId, guildId }) {
+  //   const user = await getUser({ id: userId })
+  //   if (!user) return console.log(`Failed to find user`, userId)
+  //   const crewMember = await CrewMember.findOne({
+  //     _id: user.memberships.find((m) => m.guildId === guildId).crewMemberId,
+  //   })
+  //   return crewMember
+  // },
 
   async add({ guildId, userId, member }) {
     const crewMember = new CrewMember({
@@ -30,7 +32,11 @@ module.exports = {
       _id: `${mongoose.Types.ObjectId()}`,
     })
     await crewMember.save()
-    return crewMember
+    return {
+      ...crewMember.toObject(), // * this is for general usage in the app — makes things easier to call them by their user id
+      crewMemberId: crewMember._id,
+      id: crewMember.userId,
+    }
   },
 
   async update({ id, updates }) {
@@ -48,12 +54,18 @@ module.exports = {
   },
 
   async remove(id) {
+    console.log(`db: removing crewMember`, id)
     // remove from user, guild, and the crewmember object itself
     const crewMember = await CrewMember.findOne({
       _id: id,
     })
+    if (!crewMember)
+      return {
+        ok: false,
+        message: `Attempted to remove crew member that didn't exist: ` + id,
+      }
 
-    const user = await User.findOne({ _id: crewMember.id })
+    const user = await User.findOne({ _id: crewMember.userId })
     user.memberships.splice(
       user.memberships.findIndex((m) => m.crewMemberId === id),
       1,

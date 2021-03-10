@@ -128,19 +128,13 @@ module.exports = (guild) => {
         value: guild.ship.status.stranded
           ? `Out of Fuel!`
           : guild.ship.effectiveSpeed()
-          ? Math.round(guild.ship.effectiveSpeed() * 1000) / 1000 +
-            ` ` +
-            SPEED_UNIT
+          ? guild.ship.getSpeedString()
           : `Stopped`,
       })
 
       fields.push({
         name: `🧭 Bearing`,
-        value:
-          bearingToArrow(guild.ship.bearing) +
-          ` ` +
-          bearingToDegrees(guild.ship.bearing).toFixed(0) +
-          ` degrees`,
+        value: guild.ship.getDirectionString(),
       })
     } else {
       const dockedPlanet = guild.context.planets.find(
@@ -172,15 +166,7 @@ module.exports = (guild) => {
 
     fields.push({
       name: `⛽️ Fuel`,
-      value:
-        fuel.toFixed(1) +
-        ` ` +
-        WEIGHT_UNITS +
-        (guild.ship.effectiveSpeed()
-          ? `\n(${Math.floor(
-              fuel / guild.ship.fuelUsePerTick(),
-            )} ${TIME_UNITS} at\ncurrent speed)`
-          : ``),
+      value: fuel.toFixed(1) + ` ` + WEIGHT_UNITS,
     })
 
     fields.push({

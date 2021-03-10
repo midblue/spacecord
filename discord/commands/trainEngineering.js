@@ -1,11 +1,12 @@
 const send = require(`../actions/send`)
-const { log, applyCustomParams } = require(`../botcommon`)
+const { log, applyCustomParams, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js`)
 // const runCountingTest = require(`../actions/runCountingTest`)
 const readyCheck = require(`../actions/readyCheck`)
 
 module.exports = {
   tag: `trainEngineering`,
+  pm: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -20,16 +21,15 @@ module.exports = {
     authorCrewMemberObject,
     staminaRequired,
   }) {
-    log(msg, `Train Engineering`, msg.guild.name)
+    log(msg, `Train Engineering`, msg.guild?.name)
 
     // ---------- use stamina
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
     if (!member) return console.log(`no user found in trainEng`)
-    if (!staminaRequired) {
+    if (!staminaRequired)
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`engineering`)
-    }
     const staminaRes = member.useStamina(staminaRequired)
     if (!staminaRes.ok) return send(msg, staminaRes.message)
 
@@ -106,11 +106,12 @@ and it needs labeled training data to improve its performance. The input data is
 
     const puzzleMessage = (await send(msg, mojcodeSnippet))[0]
 
-    setTimeout(() => {
-      if (!puzzleMessage.deleted) puzzleMessage.delete()
+    setTimeout(async () => {
+      if (await canEdit(puzzleMessage)) puzzleMessage.delete()
+      else puzzleMessage.edit(`\`Time's up! Make your guess!\``)
     }, time)
 
-    const handler = (receivedMessage) => {
+    const handler = async (receivedMessage) => {
       if (receivedMessage.author.id != msg.author.id) return
 
       const content = receivedMessage.content
@@ -119,22 +120,26 @@ and it needs labeled training data to improve its performance. The input data is
 
       clearTimeout(noInputTimeout)
 
-      if (!receivedMessage.deleted) receivedMessage.delete()
+      if (await canEdit(receivedMessage)) receivedMessage.delete()
       collector.stop()
       end(guess)
     }
 
     const collector = new Discord.MessageCollector(msg.channel, handler)
-    const noInputTimeout = setTimeout(() => {
-      if (!sentMessage.deleted) sentMessage.delete()
-      if (!puzzleMessage.deleted) puzzleMessage.delete()
+    const noInputTimeout = setTimeout(async () => {
+      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(puzzleMessage)) puzzleMessage.delete()
       collector.stop()
       end(0)
     }, 20 * 1000)
 
     const end = async (guess) => {
       const guessError = Math.abs(targetEmojiTotal - guess)
-      const successRatio = Math.max(0, 1 - guessError / targetEmojiTotal)
+      // anything less than .5 is 0, and xp scales linearly 0-100% from .5-1
+      const successRatio = Math.max(
+        (Math.max(0, 1 - guessError / targetEmojiTotal) - 0.5) / 0.5,
+        0,
+      )
 
       const res = authorCrewMemberObject.train(`engineering`, successRatio)
 
@@ -154,7 +159,8 @@ and it needs labeled training data to improve its performance. The input data is
       description += `${await applyCustomParams(msg, res.message)}`
 
       embed.setDescription(description)
-      sentMessage.edit(embed)
+      if (await canEdit(sentMessage)) sentMessage.edit(embed)
+      else send(msg, embed)
     }
   },
 }

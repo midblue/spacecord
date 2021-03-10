@@ -8,9 +8,12 @@ const enemyNonVotingAdjustment = 0.8
 
 module.exports = (guild) => {
   guild.ship.canAttack = () => {
-    if (!guild.ship.find((e) => e.equipmentType === `weapon`).list.length)
+    if (
+      !guild.ship.equipment.find((e) => e.equipmentType === `weapon`).list
+        .length
+    )
       return false
-    const canAttackWeapons = guild.ship
+    const canAttackWeapons = guild.ship.equipment
       .find((e) => e.equipmentType === `weapon`)
       .list.filter(
         (w) =>

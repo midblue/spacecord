@@ -4,23 +4,24 @@ const { log } = require(`../botcommon`)
 
 module.exports = {
   tag: `nextTick`,
+  pm: true,
   documentation: {
     name: `nexttick`,
     value: `Displays the time until the next game tick.`,
     emoji: `⏱`,
     category: `settings`,
-    priority: 10
+    priority: 10,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:next|tick|nexttick|nextday)$`,
-      `gi`
+      `gi`,
     ).exec(content)
   },
-  async action ({ msg, settings, game }) {
-    log(msg, `Next Tick`, msg.guild.name)
+  async action({ msg, settings, game }) {
+    log(msg, `Next Tick`, msg.guild?.name)
 
     const res = msToTimeString(game.timeUntilNextTick())
     send(msg, `${res} until the next ${TIME_UNIT}.`)
-  }
+  },
 }

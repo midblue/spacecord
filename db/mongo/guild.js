@@ -49,6 +49,7 @@ module.exports = {
   },
 
   async remove(id) {
+    console.log(`db: removing guild`, id)
     const guild = await Guild.findOne({ _id: id })
     for (let m of guild.members) await removeCrewMember(m.crewMemberId)
     for (let sId of guild.shipIds) await removeShip(sId)
@@ -80,6 +81,7 @@ module.exports = {
 async function getGuildObjectForGame(guild) {
   if (!guild) return
   if (guild.toObject) guild = guild.toObject()
+  // todo get these from getters
   const ship = await Ship.findOne({ _id: guild.shipIds[0] })
   if (ship) guild.ship = ship.toObject()
   else return guild

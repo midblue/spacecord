@@ -1,10 +1,6 @@
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 const story = require(`../../story/story`)
-const {
-  capitalize,
-  captainTag,
-  usageTag,
-} = require(`../../../../common`)
+const { capitalize, captainTag, usageTag } = require(`../../../../common`)
 const depart = require(`../../../../discord/actions/depart`)
 
 module.exports = (guild) => {
@@ -12,15 +8,9 @@ module.exports = (guild) => {
     guild.ship.status.docked = planet.name
     guild.ship.location = [...planet.location]
 
-    if (
-      planet.recharge &&
-      guild.ship.power < guild.ship.maxPower()
-    ) {
+    if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
-      setTimeout(
-        () => guild.pushToGuild(story.land.recharge(), msg),
-        1000,
-      ) // send after landing message
+      setTimeout(() => guild.pushToGuild(story.land.recharge(), msg), 1000) // send after landing message
     }
 
     const otherDockedShips = planet
@@ -46,12 +36,10 @@ module.exports = (guild) => {
       .getDockedShips()
       .filter((s) => s.id !== guild.id)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(
-        story.planet.otherShipLeave(guild.ship, planet),
-      ),
+      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
     )
 
-    guild.ship.status.docked = false
+    guild.ship.status.docked = ``
 
     runGuildCommand({
       commandTag: `ship`,
@@ -70,9 +58,7 @@ module.exports = (guild) => {
     fields.push({
       name: `📍 Location`,
       value:
-        planet.location
-          .map((l) => l.toFixed(2))
-          .join(`, `) +
+        planet.location.map((l) => l.toFixed(2)).join(`, `) +
         ` ` +
         DISTANCE_UNIT,
     })

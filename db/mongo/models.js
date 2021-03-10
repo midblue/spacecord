@@ -41,7 +41,6 @@ const schemas = {
       name: String,
       power: Number,
       seen: { planets: [String] },
-      speed: Number,
       status: {
         dead: Boolean,
         docked: String,

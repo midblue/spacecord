@@ -5,6 +5,8 @@ module.exports = {
   scan: 2,
   scanShip: 2,
   cache: 2,
+  go: 2,
   land: 3,
   depart: 3,
+  eBrake: 6,
 }

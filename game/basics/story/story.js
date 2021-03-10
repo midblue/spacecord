@@ -215,7 +215,6 @@ module.exports = {
     add: {
       missingUser: () => `Couldn't find the user to give experience!`,
       success: (
-        id,
         skill,
         xpAmount,
         level,
@@ -224,11 +223,11 @@ module.exports = {
         levelProgress,
         percentToLevel,
       ) =>
-        `%username%${id}% gains ${Math.round(xpAmount)} experience in \`${
+        `You gain ${Math.round(xpAmount)} experience in \`${
           allSkills.find((s) => s.name === skill).emoji
         }${capitalize(skill)}\`${
           didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
-        } %username%${id}% is \`${Math.round(levelProgress)}/${levelSize} (${(
+        } You're \`${Math.round(levelProgress)}/${levelSize} (${(
           percentToLevel * 100
         ).toFixed()}%)\` to \`Level ${level + 1}\`.`,
     },
@@ -404,6 +403,12 @@ module.exports = {
       goOOB: () =>
         `Your ship has left the realms of known space. There's nothing but the void to be found out here.`,
     },
+    docked: () =>
+      `Your ship is docked, and can't go anywhere until it leaves its bay.`,
+    thrust: (thrust, angle, guild, thruster) =>
+      `%username%${thruster.id}% added ${
+        Math.round(thrust * 100) / 100
+      } ${WEIGHT_UNITS} of thrust at an angle of ${angle} degrees. The ship is now going ${guild.ship.getSpeedString()} at ${guild.ship.getDirectionString()}. (previous was... )`,
     redirect: {
       success: (degrees, arrow, voteCount) =>
         `Your ship rotates to face ${arrow} ${degrees} degrees. (${voteCount} vote${
@@ -420,6 +425,8 @@ module.exports = {
           voteCount === 1 ? `` : `s`
         })`,
     },
+    eBrake: () =>
+      `The captain pulls a red lever, enabling a microsecond of gravitic statis on the ship. The crew collectively suffers severe vertigo for a moment, then reorients themselves. The ship has been brought to a complete halt.`,
   },
   land: {
     voteFailed: () => `The crew decides collectively not to land here.`,

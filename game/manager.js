@@ -30,7 +30,7 @@ module.exports = {
     caches.forEach((c) => this.loadCache(c))
     log(`init`, `Loaded ${this.caches.length} caches from db`)
 
-    this.planets = await spawnPlanets({ context: this.game })
+    this.planets = await spawnPlanets({ context: this })
     log(`init`, `Loaded ${this.planets.length} planets`)
 
     this.isReady = true

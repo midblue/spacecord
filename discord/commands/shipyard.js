@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const equipment = require(`../../game/basics/equipment/equipment`)
 const Discord = require(`discord.js-light`)
 const { capitalize, numberToEmoji, usageTag } = require(`../../common`)
@@ -11,6 +11,7 @@ const sellEquipment = require(`../actions/sellEquipment`)
 
 module.exports = {
   tag: `shipyard`,
+  pm: true,
   documentation: {
     name: `shipyard`,
     value: `Buy and sell equipment for your ship.`,
@@ -22,7 +23,7 @@ module.exports = {
     return new RegExp(`^${settings.prefix}(?:shipyard)$`, `gi`).exec(content)
   },
   async action({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
-    log(msg, `Shipyard`, msg.guild.name)
+    log(msg, `Shipyard`, msg.guild?.name)
 
     const planet = guild.context.planets.find(
       (p) => p.name === guild.ship.status.docked,
@@ -66,7 +67,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else if (buyOrSell === `buy` && !type) {
       let totalParts = 0
       const completeParts = {}
@@ -111,7 +112,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     }
     // otherwise, we already know what type to show
     else if (buyOrSell === `buy`) {
@@ -179,7 +180,7 @@ module.exports = {
           embed,
           guild,
         })
-        if (!sentMessage.deleted) sentMessage.delete()
+        if (await canEdit(sentMessage)) sentMessage.delete()
       })
     } else if (buyOrSell === `sell`) {
       const allSellableEquipment = []

@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
@@ -7,6 +7,7 @@ const { usageTag } = require(`../../common`)
 
 module.exports = {
   tag: `mainDeck`,
+  pm: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:main|maindeck)$`, `gi`).exec(
@@ -14,7 +15,7 @@ module.exports = {
     )
   },
   async action({ msg, guild }) {
-    log(msg, `Main Deck`, msg.guild.name)
+    log(msg, `Main Deck`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -83,6 +84,6 @@ module.exports = {
       guild,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   },
 }

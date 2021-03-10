@@ -5,6 +5,7 @@ const { game } = require(`../../game/manager`)
 
 module.exports = {
   tag: `debug`,
+  pm: true,
   documentation: false,
   gameAdminsOnly: true,
   public: true,
@@ -15,7 +16,7 @@ module.exports = {
     ).exec(content)
   },
   async action({ msg, match, settings, client, ship }) {
-    log(msg, `Debug: ` + match[1], msg.guild.name)
+    log(msg, `Debug: ` + match[1], msg.guild?.name || `PM`)
 
     const debugCommands = {
       game: {
@@ -89,7 +90,7 @@ module.exports = {
           } catch (e) {
             return `invalid coords: ` + x + ` ` + y
           }
-          const res = await guild.ship.move(false, [x, y])
+          const res = await guild.ship.move([x, y])
           if (res.message) guild.pushToGuild(res.message)
           return `moved ship.`
         },

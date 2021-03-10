@@ -7,28 +7,27 @@ const repair = require(`./repair`)
 
 module.exports = {
   tag: `equipment`,
+  pm: true,
   documentation: {
     value: `Stats on the ship's equipment.`,
     emoji: `🔩`,
-    category: `ship`
+    category: `ship`,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:equip|equipment|gear|items)$`,
-      `gi`
+      `gi`,
     ).exec(content)
   },
-  async action ({
+  async action({
     msg,
     settings,
-    game,
-    client,
     ship,
     guild,
     authorCrewMemberObject,
-    equipment
+    equipment,
   }) {
-    log(msg, `Equipment`, msg.guild.name)
+    log(msg, `Equipment`, msg.guild?.name)
 
     if (!equipment) {
       const embed = new Discord.MessageEmbed()
@@ -43,20 +42,19 @@ module.exports = {
         msg: sentMessage,
         reactions: equipmentActions,
         embed,
-        guild
+        guild,
       })
-    }
-    else {
+    } else {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(
           `${equipment.emoji} ${equipment.displayName} (${capitalize(
-            equipment.type
-          )})`
+            equipment.type,
+          )})`,
         )
         .setDescription(
           (equipment.repair === 0 ? `**🚨 BROKEN DOWN 🚨**\n` : ``) +
-            (equipment.description || ``)
+            (equipment.description || ``),
         )
 
       const fields = guild.ship.getEquipmentData(equipment)
@@ -67,8 +65,8 @@ module.exports = {
           emoji: `🔧`,
           action: ({ user, msg }) => {
             repair.action({ msg, settings, guild, ship, equipment })
-          }
-        }
+          },
+        },
       ]
 
       const sentMessage = (await send(msg, embed))[0]
@@ -76,8 +74,8 @@ module.exports = {
         msg: sentMessage,
         reactions: availableActions,
         embed,
-        guild
+        guild,
       })
     }
-  }
+  },
 }

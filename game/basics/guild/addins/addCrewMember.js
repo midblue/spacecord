@@ -9,13 +9,13 @@ module.exports = (guild) => {
 
     // make the user if they don't exist yet
     if (!user) user = await guild.context.db.user.add({ id: discordUser.id })
-    else if (user.memberships.find((m) => m.guildId === guild.id))
-      return console.log(
-        `Attempted to double add`,
-        user.id,
-        `to guild`,
-        guildId,
-      )
+    else if (user.memberships.find((m) => m.guildId === guild.id)) {
+      console.log(`Attempted to double add`, user.id, `to guild`, guild.id)
+      return {
+        ok: false,
+        message: story.crew.add.fail.existing(newMember.id),
+      }
+    }
 
     // make the new member and save it to the DB
     const newMember = await crewMember.spawn(guild)
@@ -24,6 +24,7 @@ module.exports = (guild) => {
       userId: user.id,
       member: newMember,
     })
+    crewMember.liveify(addedCrewMember, guild)
     if (!addedCrewMember) {
       log(
         `addCrew`,
@@ -53,15 +54,19 @@ module.exports = (guild) => {
       guildId: guild.id,
       crewMemberId: addedCrewMember.id,
     })
+    if (user.memberships.length === 1) user.activeGuild = guild.id
     await guild.context.db.user.update({
       id: user.id,
-      updates: { memberships: user.memberships },
+      updates: { memberships: user.memberships, activeGuild: user.activeGuild },
     })
 
     // link the new member to the guild object
-    guild.members.push({ userId: user.id, crewMemberId: addedCrewMember.id })
+    guild.members.push({
+      userId: user.id,
+      crewMemberId: addedCrewMember.crewMemberId,
+    })
     guild.ship.members.push(addedCrewMember)
-    console.log(`on add`, guild.ship.members)
+    // console.log(`on add`, guild.ship.members)
     if (guild.ship.members.length === 1) {
       guild.ship.captain = user.id
       await guild.saveNewDataToDb()

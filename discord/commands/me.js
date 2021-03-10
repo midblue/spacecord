@@ -11,7 +11,8 @@ const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
-  tag: `me`, // this is also the 'train' command
+  tag: `me`,
+  pmOnly: true,
   documentation: {
     value: `See your stats and take actions.`,
     emoji: `💁‍♂️`,
@@ -24,7 +25,7 @@ module.exports = {
     )
   },
   async action({ msg, guild, authorCrewMemberObject, author }) {
-    log(msg, `Me`, msg.guild.name)
+    log(msg, `Me`, guild.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -69,7 +70,6 @@ module.exports = {
     // skills section
 
     let trainableSkills = await authorCrewMemberObject.getTrainableSkills()
-    const trainingActionArguments = arguments[0]
 
     trainableSkills = trainableSkills
       .slice(0, 10)
@@ -102,7 +102,7 @@ module.exports = {
       },
     ]
 
-    const sentMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg.author, embed))[0]
     await awaitReaction({
       msg: sentMessage,
       reactions: reactions,

@@ -7,31 +7,26 @@ const story = require(`../../game/basics/story/story`)
 const manager = require(`../../game/manager`)
 
 module.exports = async ({ msg, guild, planet }) => {
-  log(msg, `Depart`, msg.guild.name)
+  log(msg, `Depart`, msg.guild?.name)
 
   if (!planet) {
-    planet = manager.planets.find(
-      (p) => p.name === guild.ship.status.docked
-    )
+    planet = manager.planets.find((p) => p.name === guild.ship.status.docked)
   }
-  if (!planet)
-    return
+  if (!planet) return
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
-  if (!authorCrewMemberObject)
-    return console.log(`no user found in depart`)
+  if (!authorCrewMemberObject) return console.log(`no user found in depart`)
   const staminaRes = authorCrewMemberObject.useStamina(`depart`)
-  if (!staminaRes.ok)
-    return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return send(msg, staminaRes.message)
 
   // ---------- vote on departing
   const voteEmbed = new Discord.MessageEmbed()
     .setColor(APP_COLOR)
     .setTitle(
-      `Depart from 🪐${planet.name}? | Vote started by ${msg.author.nickname}`
+      `Depart from 🪐${planet.name}? | Vote started by ${msg.author.nickname}`,
     )
 
   const {
@@ -40,16 +35,15 @@ module.exports = async ({ msg, guild, planet }) => {
     result,
     yesPercent,
     yesVoters,
-    sentMessage: voteMessage
+    sentMessage: voteMessage,
   } = await runYesNoVote({
     pollType: `depart`,
     embed: voteEmbed,
     msg,
     guild,
-    cleanUp: false
+    cleanUp: false,
   })
-  if (!ok)
-    return send(msg, message)
+  if (!ok) return send(msg, message)
 
   voteEmbed.fields = []
   if (!result) {
@@ -66,8 +60,7 @@ module.exports = async ({ msg, guild, planet }) => {
 
   // depart
   const res = guild.ship.depart({ planet, msg })
-  if (res.message)
-    voteEmbed.description += `\n\n` + res.message
+  if (res.message) voteEmbed.description += `\n\n` + res.message
 
   voteMessage.edit(voteEmbed)
 }

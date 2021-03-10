@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const { applyCustomParams } = require(`../botcommon`)
 const { allSkills } = require(`../../game/gamecommon`)
@@ -9,6 +9,7 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `trainMunitions`,
+  pm: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -17,7 +18,7 @@ module.exports = {
     ).exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, staminaRequired }) {
-    log(msg, `Train Munitions`, msg.guild.name)
+    log(msg, `Train Munitions`, msg.guild?.name)
 
     // ---------- use stamina
     const member =
@@ -116,7 +117,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
       user: authorCrewMemberObject,
     })
     if (!ready) {
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
       return
     }
 

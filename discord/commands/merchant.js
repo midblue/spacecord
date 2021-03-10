@@ -1,6 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
-const equipment = require(`../../game/basics/equipment/equipment`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const {
   capitalize,
@@ -10,15 +9,13 @@ const {
 } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
-const equipmentTypes = require(`../../game/basics/equipment/equipmentTypes`)
-const buyEquipment = require(`../actions/buyEquipment`)
-const sellEquipment = require(`../actions/sellEquipment`)
 const cargo = require(`../../game/basics/cargo`)
 const buyCargo = require(`../actions/buyCargo`)
 const sellCargo = require(`../actions/sellCargo`)
 
 module.exports = {
   tag: `merchant`,
+  pm: true,
   documentation: {
     name: `merchant`,
     value: `Buy and sell cargo.`,
@@ -32,7 +29,7 @@ module.exports = {
     )
   },
   async action({ msg, guild, buyOrSell, type, cost, amount }) {
-    log(msg, `Merchant`, msg.guild.name)
+    log(msg, `Merchant`, msg.guild?.name)
 
     const planet = guild.context.planets.find(
       (p) => p.name === guild.ship.status.docked,
@@ -76,7 +73,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else if (buyOrSell === `buy` && !type) {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Buy Goods`)
@@ -121,7 +118,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else if (buyOrSell === `buy`) {
       const embed = new Discord.MessageEmbed().setTitle(
         `Buy ${cargo[type].displayName} at ${usageTag(
@@ -280,7 +277,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else if (buyOrSell === `sell` && !type) {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Sell Goods`)
@@ -334,7 +331,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     } else if (buyOrSell === `sell`) {
       const embed = new Discord.MessageEmbed().setTitle(
         `Sell ${cargo[type].displayName} at ${usageTag(
@@ -495,7 +492,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (!sentMessage.deleted) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete()
     }
   },
 }

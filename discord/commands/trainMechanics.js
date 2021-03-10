@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const lunicode = require(`Lunicode`)
 const Fuse = require(`fuse.js`)
 const Discord = require(`discord.js-light`)
@@ -10,6 +10,7 @@ const readyCheck = require(`../actions/readyCheck`)
 
 module.exports = {
   tag: `trainMechanics`,
+  pm: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -18,7 +19,7 @@ module.exports = {
     ).exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, staminaRequired }) {
-    log(msg, `Train Mechanics`, msg.guild.name)
+    log(msg, `Train Mechanics`, msg.guild?.name)
 
     // ---------- use stamina
     const member =
@@ -134,8 +135,8 @@ module.exports = {
     // ------- end of game
     setTimeout(async () => {
       setTimeout(() => {
-        messagesToDelete.forEach((c) => {
-          if (!c.deleted) c.delete()
+        messagesToDelete.forEach(async (c) => {
+          if (await canEdit(c)) c.delete()
         })
       }, 500)
       collector.stop()

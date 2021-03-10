@@ -30,6 +30,7 @@ module.exports = {
   },
 
   async remove(id) {
+    console.log(`db: removing ship`, id)
     const res = await Ship.deleteOne(
       { _id: id },
       (e) => e && console.log(`ship delete error`, e),

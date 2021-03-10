@@ -1,7 +1,7 @@
 const story = require(`../../game/basics/story/story`)
 const send = require(`../actions/send`)
 const { client, rawWatchers } = require(`../bot`)
-const { username } = require(`../botcommon`)
+const { username, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 
 module.exports = async ({
@@ -59,7 +59,7 @@ module.exports = async ({
     const collectedReactions = []
 
     // ending function
-    const end = () => {
+    const end = async () => {
       if (ended) return
       ended = true
       rawWatchers.splice(rawWatchers.indexOf(eventHandler), 1)
@@ -74,7 +74,7 @@ module.exports = async ({
         }
         if (!msg.deleted && msg.edit && !canceled.isCanceled) msg.edit(embed)
       }
-      if (!msg.deleted && !canceled.isCanceled)
+      if ((await canEdit(msg)) && !canceled.isCanceled)
         msg.reactions.removeAll().catch((e) => {})
       resolve(collectedReactions)
     }
@@ -104,7 +104,11 @@ module.exports = async ({
       const member = (guild?.ship?.members || []).find((m) => m.id === user.id)
       if (!allowNonMembers && !member) return
 
-      if (removeUserReactions && !canceled.isCanceled) {
+      if (
+        removeUserReactions &&
+        !canceled.isCanceled &&
+        (await canEdit(message))
+      ) {
         const reaction = await new Discord.MessageReaction(client, data, msg)
         try {
           await reaction.users.remove(data.user_id)
@@ -179,7 +183,12 @@ module.exports = async ({
 
       msg.author = user
       if (!msg.author.nickname) {
-        msg.author.nickname = await username(msg, msg.author.id)
+        msg.author.nickname = await username(
+          msg,
+          msg.author.id,
+          guild.id,
+          client,
+        )
       }
       reactions
         .find((r) => r.emoji === userReactedWithEmoji)

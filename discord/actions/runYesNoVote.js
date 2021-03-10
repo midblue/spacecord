@@ -3,6 +3,7 @@ const runPoll = require(`./runPoll`)
 const Discord = require(`discord.js-light`)
 const manager = require(`../../game/manager`)
 const { usageTag } = require(`../../common`)
+const { canEdit } = require(`../botcommon`)
 
 module.exports = async ({
   pollType, // todo use type to make sure we don't have two of the same poll open at once
@@ -15,7 +16,7 @@ module.exports = async ({
   minimumMemberPercent,
   msg,
   guild,
-  cleanUp = true
+  cleanUp = true,
 }) => {
   if (!embed) embed = new Discord.MessageEmbed().setColor(APP_COLOR)
 
@@ -27,12 +28,12 @@ module.exports = async ({
       emoji: `✅`,
       label:
         `Yes` +
-        (yesStaminaRequirement ? ` ` + usageTag(0, yesStaminaRequirement) : ``)
+        (yesStaminaRequirement ? ` ` + usageTag(0, yesStaminaRequirement) : ``),
     },
     {
       emoji: `❌`,
-      label: `No`
-    }
+      label: `No`,
+    },
   ]
 
   const {
@@ -41,7 +42,7 @@ module.exports = async ({
     userReactions,
     sentMessage,
     insufficientVotes,
-    voters
+    voters,
   } = await runPoll({
     pollType,
     embed,
@@ -53,21 +54,23 @@ module.exports = async ({
       : null,
     minimumMemberPercent,
     msg,
-    guild
+    guild,
   })
 
   if (!ok) {
-    if (sentMessage && cleanUp && !sentMessage.deleted) sentMessage.delete()
+    if (sentMessage && cleanUp && (await canEdit(sentMessage)))
+      sentMessage.delete()
     return {
       ok,
-      message
+      message,
     }
   }
 
   if (!sentMessage.deleted) {
-    if (cleanUp) sentMessage.delete()
+    if (cleanUp && (await canEdit(sentMessage))) sentMessage.delete()
     else {
-      sentMessage.reactions.removeAll().catch((e) => {})
+      if (await canEdit(sentMessage))
+        sentMessage.reactions.removeAll().catch((e) => {})
       sentMessage.fields = []
     }
   }
@@ -90,6 +93,6 @@ module.exports = async ({
     yesVoters,
     noVoters,
     sentMessage,
-    embed
+    embed,
   }
 }

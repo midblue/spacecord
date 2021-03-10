@@ -6,7 +6,7 @@ const runYesNoVote = require(`./runYesNoVote`)
 const story = require(`../../game/basics/story/story`)
 
 module.exports = async ({ msg, guild, planet }) => {
-  log(msg, `Land`, msg.guild.name)
+  log(msg, `Land`, msg.guild?.name)
 
   // ---------- check if in range
   const inRange =

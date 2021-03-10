@@ -1,5 +1,5 @@
 const send = require(`./send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const { numberToEmoji } = require(`../../common`)
 const awaitReaction = require(`./awaitReaction`)
 const Discord = require(`discord.js-light`)
@@ -9,11 +9,11 @@ const story = require(`../../game/basics/story/story`)
 const cargoData = require(`../../game/basics/cargo`)
 
 module.exports = async ({ msg, guild }) => {
-  log(msg, `Jettison`, msg.guild.name)
+  log(msg, `Jettison`, msg.guild?.name)
 
   // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id
+    (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in jettison`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
@@ -24,7 +24,7 @@ module.exports = async ({ msg, guild }) => {
     actualCargo.push({
       type: `credits`,
       amount: guild.ship.credits,
-      ...cargoData.credits
+      ...cargoData.credits,
     })
   }
   let cargoToJettison
@@ -35,17 +35,18 @@ module.exports = async ({ msg, guild }) => {
     .setColor(APP_COLOR)
     .setTitle(`Jettison Vote Details`)
     .setDescription(
-      `Which cargo would you like to start a jettison vote about?`
+      `Which cargo would you like to start a jettison vote about?`,
     )
   const sentMessage = (await send(msg, detailsEmbed))[0]
 
   const getAmountToJettison = async (sentMessage) => {
-    sentMessage.reactions.removeAll().catch((e) => {})
+    if (await canEdit(sentMessage))
+      sentMessage.reactions.removeAll().catch((e) => {})
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
       `And how ${cargoToJettison.type === `credits` ? `many` : `much`} ${
         cargoToJettison.emoji
-      }${cargoToJettison.displayName} would you like to jettison?`
+      }${cargoToJettison.displayName} would you like to jettison?`,
     )
     sentMessage.edit(detailsEmbed)
 
@@ -58,7 +59,7 @@ module.exports = async ({ msg, guild }) => {
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1
           getMessageToAttach(msg)
-        }
+        },
       })
     }
 
@@ -69,7 +70,7 @@ module.exports = async ({ msg, guild }) => {
         action: ({ msg, emoji, user }) => {
           amountToJettison = 10
           getMessageToAttach(msg)
-        }
+        },
       })
     }
 
@@ -80,7 +81,7 @@ module.exports = async ({ msg, guild }) => {
         action: ({ msg, emoji, user }) => {
           amountToJettison = 100
           getMessageToAttach(msg)
-        }
+        },
       })
     }
 
@@ -91,7 +92,7 @@ module.exports = async ({ msg, guild }) => {
         action: ({ msg, emoji, user }) => {
           amountToJettison = 1000
           getMessageToAttach(msg)
-        }
+        },
       })
     }
 
@@ -103,7 +104,7 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji, user }) => {
         amountToJettison = amountPossessed
         getMessageToAttach(msg)
-      }
+      },
     })
 
     await awaitReaction({
@@ -111,17 +112,18 @@ module.exports = async ({ msg, guild }) => {
       reactions: amountsAsReactions,
       time: 60 * 1000,
       guild,
-      embed: detailsEmbed
+      embed: detailsEmbed,
     })
 
-    if (!sentMessage.deleted) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   }
 
   const getMessageToAttach = async (sentMessage) => {
-    sentMessage.reactions.removeAll().catch((e) => {})
+    if (await canEdit(sentMessage))
+      sentMessage.reactions.removeAll().catch((e) => {})
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
-      `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`
+      `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`,
     )
     sentMessage.edit(detailsEmbed)
 
@@ -131,7 +133,7 @@ module.exports = async ({ msg, guild }) => {
       label: `No message`,
       action: ({ msg, emoji, user }) => {
         finalJettisonVote(msg)
-      }
+      },
     })
     messageReactions.push({
       emoji: `🕊`,
@@ -139,10 +141,10 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji, user }) => {
         messageToAttach = {
           emoji: `🕊`,
-          message: story.jettison.message.peace()
+          message: story.jettison.message.peace(),
         }
         finalJettisonVote(msg)
-      }
+      },
     })
     messageReactions.push({
       emoji: `🎁`,
@@ -150,10 +152,10 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji, user }) => {
         messageToAttach = {
           emoji: `🎁`,
-          message: story.jettison.message.forYou()
+          message: story.jettison.message.forYou(),
         }
         finalJettisonVote(msg)
-      }
+      },
     })
     messageReactions.push({
       emoji: `⚖️`,
@@ -161,10 +163,10 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji, user }) => {
         messageToAttach = {
           emoji: `⚖️`,
-          message: story.jettison.message.nowYou()
+          message: story.jettison.message.nowYou(),
         }
         finalJettisonVote(msg)
-      }
+      },
     })
     messageReactions.push({
       emoji: `🤡`,
@@ -172,10 +174,10 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji, user }) => {
         messageToAttach = {
           emoji: `🤡`,
-          message: story.jettison.message.gotcha()
+          message: story.jettison.message.gotcha(),
         }
         finalJettisonVote(msg)
-      }
+      },
     })
 
     await awaitReaction({
@@ -183,21 +185,21 @@ module.exports = async ({ msg, guild }) => {
       reactions: messageReactions,
       time: 60 * 1000,
       guild,
-      embed: detailsEmbed
+      embed: detailsEmbed,
     })
 
-    if (!sentMessage.deleted) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   }
 
   const finalJettisonVote = async (sentMessage) => {
-    if (!sentMessage.deleted) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
 
     detailsEmbed.setTitle(
       `Jettison ${amountToJettison.toFixed(2)} ${
         cargoToJettison.type === `credits` ? `` : WEIGHT_UNITS + ` of`
       } ${cargoToJettison.emoji}${
         cargoToJettison.displayName
-      }? | Vote started by ${msg.author.nickname}`
+      }? | Vote started by ${msg.author.nickname}`,
     )
     detailsEmbed.description = messageToAttach
       ? `Cache will have the attached message: "${messageToAttach.emoji} ${messageToAttach.message}"`
@@ -210,7 +212,7 @@ module.exports = async ({ msg, guild }) => {
       minimumMemberPercent: 0.1,
       msg,
       guild,
-      cleanUp: false
+      cleanUp: false,
     })
     if (!voteResult.ok) return send(msg, voteResult.message)
     detailsEmbed.fields = []
@@ -230,8 +232,8 @@ module.exports = async ({ msg, guild }) => {
       story.jettison.votePassed(
         voteResult.yesPercent,
         cargoToJettison,
-        amountToJettison
-      )
+        amountToJettison,
+      ),
     )
 
     detailsEmbed.title = `Jettisoned ${amountToJettison.toFixed(2)} ${
@@ -241,7 +243,7 @@ module.exports = async ({ msg, guild }) => {
     detailsEmbed.description = story.jettison.votePassed(
       voteResult.yesPercent,
       cargoToJettison,
-      amountToJettison
+      amountToJettison,
     )
     voteResult.sentMessage.edit(detailsEmbed)
     guild.ship.jettison(cargoToJettison, amountToJettison, messageToAttach)
@@ -258,7 +260,7 @@ module.exports = async ({ msg, guild }) => {
       action: ({ msg, emoji }) => {
         cargoToJettison = actualCargo.find((c) => c.emoji === emoji)
         getAmountToJettison(msg)
-      }
+      },
     }))
 
     await awaitReaction({
@@ -266,9 +268,9 @@ module.exports = async ({ msg, guild }) => {
       reactions: cargoAsReactions,
       time: 60 * 1000,
       guild,
-      embed: detailsEmbed
+      embed: detailsEmbed,
     })
 
-    if (!sentMessage.deleted) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   }
 }

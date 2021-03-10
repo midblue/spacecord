@@ -1,5 +1,5 @@
 const send = require(`./send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const {
   numberToEmoji,
   emojiToNumber,
@@ -15,7 +15,7 @@ const runPoll = require(`./runPoll`)
 const { allSkills } = require(`../../game/gamecommon`)
 
 module.exports = async ({ msg, guild, otherShip }) => {
-  log(msg, `Attack Ship`, msg.guild.name)
+  log(msg, `Attack Ship`, msg.guild?.name)
   if (!otherShip || guild.status.docked) return
 
   // ---------- check equipment
@@ -71,7 +71,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
       pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects,
     })
-    if (!pollMessage.deleted) pollMessage.delete()
+    if (await canEdit(pollMessage)) pollMessage.delete()
     if (!winner) return
     weaponToUse = usableWeapons[emojiToNumber(winner) - 1]
   }

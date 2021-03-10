@@ -3,6 +3,7 @@ const { log } = require(`../botcommon`)
 
 module.exports = {
   tag: `trainPiloting`,
+  pm: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -11,7 +12,7 @@ module.exports = {
     ).exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, staminaRequired }) {
-    log(msg, `Train Piloting`, msg.guild.name)
+    log(msg, `Train Piloting`, msg.guild?.name)
 
     // ---------- use stamina
     const member =

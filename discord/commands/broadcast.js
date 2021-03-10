@@ -5,17 +5,18 @@ const Discord = require(`discord.js-light`)
 
 module.exports = {
   tag: `broadcast`,
+  pm: true,
   documentation: {
     value: `Send a broadcast to the area.`,
     emoji: `📣`,
     category: `interaction`,
-    priority: 60
+    priority: 60,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:broadcast|b)$`, `gi`).exec(content)
   },
-  async action ({ msg, guild, ship }) {
-    log(msg, `Broadcast`, msg.guild.name)
+  async action({ msg, guild, ship }) {
+    log(msg, `Broadcast`, msg.guild?.name)
 
     const broadcastRes = ship.broadcastOptions()
     if (!broadcastRes.ok) return send(msg, broadcastRes.message)
@@ -30,7 +31,7 @@ module.exports = {
       reactions: broadcastRes.actions,
       commandsLabel: `Start Broadcast Vote`,
       embed,
-      guild
+      guild,
     })
-  }
+  },
 }

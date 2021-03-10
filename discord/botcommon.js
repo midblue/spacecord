@@ -14,13 +14,30 @@ module.exports = {
         ` (${await username(msg)}) `,
     )
   },
+
+  async canEdit(msg) {
+    if (!msg || msg.deleted) {
+      msg.canEdit = false
+      return false
+    }
+    if (msg.canEdit === true || msg.canEdit === false) return msg.canEdit
+    if (!msg.guild) {
+      msg.canEdit = false
+      return false
+    }
+    const botRole = (await msg.guild.roles.fetch())
+      .array()
+      .find((r) => r.id === msg.guild.me.roles.highest.id)
+    msg.canEdit = botRole && botRole.permissions.has(`MANAGE_MESSAGES`)
+    return msg.canEdit
+  },
   username,
   getUserInGuildById,
   applyCustomParams,
 }
 
 async function getUserInGuildById(msgOrGuild, id) {
-  const guild = msgOrGuild.guild ? msgOrGuild.guild : msgOrGuild
+  let guild = msgOrGuild.guild ? msgOrGuild.guild : msgOrGuild
   try {
     const userInGuild = await guild.members.fetch({ user: id })
     return userInGuild
@@ -29,15 +46,24 @@ async function getUserInGuildById(msgOrGuild, id) {
   }
 }
 
-async function username(msgOrUserOrChannel, id) {
+async function username(msgOrUserOrChannel, id, guildId, client) {
   // console.log(msgOrUserOrChannel, id)
   let user
-  if (id && !msgOrUserOrChannel.username) {
+  if (id && !msgOrUserOrChannel.username && msgOrUserOrChannel.guild) {
+    // regular guild message
     user = (await getUserInGuildById(msgOrUserOrChannel.guild, id)) || {}
-  } else if (msgOrUserOrChannel.author) {
-    user = msgOrUserOrChannel.author
-  } else if (msgOrUserOrChannel.username) {
+  }
+  // else if (msgOrUserOrChannel.author) {
+  //   // what's the case here?
+  //   user = msgOrUserOrChannel.author
+  // }
+  else if (msgOrUserOrChannel.username) {
+    // user object
     user = msgOrUserOrChannel
+  } else if (id && guildId && client) {
+    // pm
+    const guild = await client.guilds.fetch(guildId)
+    user = (await getUserInGuildById(guild, id)) || {}
   }
   if (!user) return `System`
   return user.nickname || user.username || user.user.username || `Unknown User`

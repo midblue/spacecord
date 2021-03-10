@@ -25,7 +25,7 @@ module.exports = {
     delete updates.__v
     Object.keys(updates).forEach((key) => (user[key] = updates[key]))
     await user.save()
-    // console.log(`user update result`, user)
+    console.log(`user update result`, user)
     return user
   },
 }

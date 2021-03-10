@@ -10,15 +10,15 @@ module.exports = {
   documentation: {
     value: `See and edit the ship's cargo.`,
     emoji: `📦`,
-    category: `ship`
+    category: `ship`,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:cargo|c|jettison)$`, `gi`).exec(
-      content
+      content,
     )
   },
-  async action ({ msg, ship, guild }) {
-    log(msg, `Cargo`, msg.guild.name)
+  async action({ msg, ship, guild }) {
+    log(msg, `Cargo`, msg.guild?.name)
 
     const actualCargo = ship.cargo.filter((c) => c.amount > 0.0001)
     if (guild.ship.credits) {
@@ -26,18 +26,20 @@ module.exports = {
         type: `credits`,
         displayName: `Credits`,
         amount: guild.ship.credits,
-        emoji: `💳 `
+        emoji: `💳 `,
       })
     }
 
-    if (actualCargo.length === 0) { return send(msg, `Your ship currently has no cargo at all.`) }
+    if (actualCargo.length === 0) {
+      return send(msg, `Your ship currently has no cargo at all.`)
+    }
 
     const currentCargoString = actualCargo
       .map(
         (c) =>
           `${c.emoji} ${c.displayName}: ${
             c.type === `credits` ? Math.round(c.amount) : c.amount.toFixed(2)
-          } ${c.type === `credits` ? `` : WEIGHT_UNITS}`
+          } ${c.type === `credits` ? `` : WEIGHT_UNITS}`,
       )
       .join(`\n`)
 
@@ -52,11 +54,11 @@ module.exports = {
         label: `Vote to Jettison Cargo ` + usageTag(0, `poll`),
         action: async ({ msg, guild }) => {
           jettison({ msg, guild })
-        }
-      }
+        },
+      },
     ]
 
     const sentMessage = (await send(msg, embed))[0]
     awaitReaction({ msg: sentMessage, reactions, embed, guild })
-  }
+  },
 }

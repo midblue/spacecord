@@ -4,6 +4,7 @@ const Discord = require(`discord.js-light`)
 
 module.exports = {
   tag: `log`,
+  pm: true,
   // documentation: {
   //   name: `log`,
   //   value: `Consult the ship's log of events.`,
@@ -19,7 +20,7 @@ module.exports = {
     // ).exec(content)
   },
   async action({ msg, settings, client, ship }) {
-    log(msg, `Log`, msg.guild.name)
+    log(msg, `Log`, msg.guild?.name)
     const res = ship.getLog(10)
     const text = await applyCustomParams(msg, res.message)
     return send(msg, text)

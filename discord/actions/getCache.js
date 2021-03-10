@@ -1,14 +1,14 @@
 const send = require(`./send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const cargo = require(`../../game/basics/cargo`)
 
 module.exports = async ({ msg, guild, cache }) => {
-  log(msg, `Cache`, msg.guild.name)
+  log(msg, `Cache`, msg.guild?.name)
 
   if (!cache) return
 
   if (!guild.context.caches.find((c) => c.id === cache.id)) {
-    if (!msg.deleted) msg.delete()
+    if (await canEdit(msg)) msg.delete()
     return send(msg, `Ouch! That cache has already been snagged!`)
   }
 

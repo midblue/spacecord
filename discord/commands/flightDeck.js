@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const { usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
@@ -8,15 +8,15 @@ const depart = require(`../actions/depart`)
 
 module.exports = {
   tag: `flightDeck`,
+  pm: true,
   documentation: false,
   test(content, settings) {
-    return new RegExp(
-      `^${settings.prefix}(?:flightdeck|flight)$`,
-      `gi`,
-    ).exec(content)
+    return new RegExp(`^${settings.prefix}(?:flightdeck|flight)$`, `gi`).exec(
+      content,
+    )
   },
   async action({ msg, guild }) {
-    log(msg, `Flight Deck`, msg.guild.name)
+    log(msg, `Flight Deck`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
@@ -60,8 +60,7 @@ module.exports = {
       ...[
         {
           emoji: `🧭`,
-          label:
-            `Start Direction Vote ` + usageTag(0, `poll`),
+          label: `Start Direction Vote ` + usageTag(0, `poll`),
           action: ({ msg, guild }) => {
             runGuildCommand({ msg, commandTag: `direction` })
           },
@@ -85,6 +84,6 @@ module.exports = {
       commandsLabel: `Flight Commands`,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete()
   },
 }

@@ -1,5 +1,4 @@
-
-const { distance, getUnitVector } = require(`../common`)
+const { distance, getUnitVectorBetween } = require(`../common`)
 
 module.exports = {
   log(type = `Core`, ...text) {
@@ -40,9 +39,14 @@ module.exports = {
 
     r = distance(...thisBody.location, ...thatBody.location)
     let G = GRAVITATIONAL_CONSTANT
-    gravityForce = -G * m1 * m2 / (r ** 2)
-    vectorToThisBody = getUnitVector(thisBody, thatBody)
+    gravityForce = Math.min(
+      999999999,
+      Math.max(-999999999, (-G * m1 * m2) / r ** 2),
+    )
+    vectorToThisBody = getUnitVectorBetween(thisBody, thatBody)
 
-    return vectorToThisBody.map((i) => i * gravityForce)
-  }
+    return vectorToThisBody.map((i) =>
+      Math.min(0.5, Math.max(-0.5, i * gravityForce)),
+    )
+  },
 }

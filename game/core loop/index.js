@@ -3,7 +3,7 @@ const { log } = require(`../gamecommon`)
 const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = TICK_INTERVAL * 500
-let loopInterval
+let loopInterval, saveInterval
 
 module.exports = {
   async start() {
@@ -11,6 +11,7 @@ module.exports = {
     this.lastTick = Date.now()
 
     if (loopInterval) clearInterval(loopInterval)
+    if (saveInterval) clearInterval(saveInterval)
     loopInterval = setInterval(async () => {
       // console.log(``)
       // log(``, `============= NEW GAME STEP =============`)
@@ -18,6 +19,13 @@ module.exports = {
       // log(``, `============= END GAME STEP =============`)
       // console.log(``)
     }, TICK_INTERVAL)
+
+    saveInterval = setInterval(async () => {
+      console.log(``)
+      log(``, `============= SAVING GAME =============`)
+      await this.save()
+      console.log(``)
+    }, SAVE_INTERVAL)
   },
 
   async update() {
@@ -60,5 +68,12 @@ module.exports = {
     //     amount: amount,
     //   })
     // }
+  },
+
+  async save() {
+    const updates = this.guilds.map(async (guild) => {
+      await guild.saveNewDataToDb()
+    })
+    await Promise.all(updates)
   },
 }

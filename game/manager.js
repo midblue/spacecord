@@ -35,7 +35,7 @@ module.exports = {
 
     this.isReady = true
     this.start()
-    log(`init`, `################## Game Init Complete ##################`)
+    log(`init`, `================ Game Init Complete ================`)
   },
 
   // ---------------- Game Properties ----------------
@@ -153,25 +153,25 @@ module.exports = {
     if (!Array.isArray(excludeIds)) excludeIds = [excludeIds]
     return {
       guilds:
-        (!type || type === `guilds`)
+        !type || type === `guilds`
           ? this.guilds.filter(
-            (g) =>
-              !g.ship.status.dead &&
-              !excludeIds.includes(g.id) &&
-              pointIsInsideCircle(x, y, ...g.ship.location, range),
-          )
+              (g) =>
+                !g.ship.status.dead &&
+                !excludeIds.includes(g.id) &&
+                pointIsInsideCircle(x, y, ...g.ship.location, range),
+            )
           : [],
       planets:
-        (!type || type === `planets`)
+        !type || type === `planets`
           ? this.planets.filter((p) =>
-            pointIsInsideCircle(x, y, ...p.location, range),
-          )
+              pointIsInsideCircle(x, y, ...p.location, range),
+            )
           : [],
       caches:
-        (!type || type === `caches`)
+        !type || type === `caches`
           ? this.caches.filter((c) =>
-            pointIsInsideCircle(x, y, ...c.location, range),
-          )
+              pointIsInsideCircle(x, y, ...c.location, range),
+            )
           : [],
     }
   },

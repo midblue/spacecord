@@ -18,7 +18,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
     return console.log(`no user found in buyEquipment`)
   }
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
@@ -73,7 +73,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
 
   voteEmbed.description +=
     `\n\nYour ship is now carrying ${Math.round(
-      (guild.ship.getTotalWeight() / guild.ship.maxWeight()) * 100,
+      (guild.ship.getTotalMass() / guild.ship.maxMass()) * 100,
     )}% of its maximum capacity.` +
     (guild.ship.isOverburdened()
       ? `\nYou're overburdened! You won't be able to move until you drop or sell something.`

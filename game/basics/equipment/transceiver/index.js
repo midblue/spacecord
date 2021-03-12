@@ -1,13 +1,13 @@
 const defaults = {
   type: `transceiver`,
   description: ``,
-  weight: 50,
+  mass: 50,
   baseHp: 6,
   maxGarble: 0.8,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.1,
   baseCost: 120,
-  rechargeTime: 1 // tick
+  rechargeTime: 1, // tick
 }
 
 // * get all exports from files in this folder
@@ -19,7 +19,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`)
+      ...require(`./${file}`),
     }
   })
   // console.log(addins.length, 'addins', addins)

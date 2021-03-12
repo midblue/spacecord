@@ -25,7 +25,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `starter`,
             repaired: Date.now(),
-            repair: 0.9,
+            repair: 1,
           },
         ],
       },
@@ -35,7 +35,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `basic1`,
             repaired: Date.now(),
-            repair: 0.8,
+            repair: 1,
           },
         ],
       },
@@ -46,7 +46,7 @@ module.exports = function ({ discordGuild, channelId }) {
       // {
       //   id: 'steelPlating',
       //   repaired: Date.now(),
-      //   repair: 0.6,
+      //   repair: 1,
       // },
       {
         equipmentType: `weapon`,
@@ -54,7 +54,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `starter`,
             repaired: Date.now(),
-            repair: 0.7,
+            repair: 1,
           },
         ],
       },
@@ -64,7 +64,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `image1`,
             repaired: Date.now(),
-            repair: 0.8,
+            repair: 1,
           },
         ],
       },
@@ -74,7 +74,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `basic1`,
             repaired: Date.now(),
-            repair: 0.5,
+            repair: 1,
           },
         ],
       },
@@ -84,7 +84,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `transceiver1`,
             repaired: Date.now(),
-            repair: 0.5,
+            repair: 1,
           },
         ],
       },
@@ -94,7 +94,7 @@ module.exports = function ({ discordGuild, channelId }) {
           {
             id: `battery1`,
             repaired: Date.now(),
-            repair: 0.9,
+            repair: 1,
           },
         ],
       },
@@ -110,7 +110,8 @@ module.exports = function ({ discordGuild, channelId }) {
       // },
     ],
     location: [...planet.location],
-    bearing: [Math.random() - 0.5, Math.random() - 0.5],
+    pastLocations: [],
+    bearing: [0, 0],
     speed: 0,
   }
 

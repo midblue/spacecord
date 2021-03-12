@@ -62,12 +62,12 @@ module.exports = {
         `%username%${user.id}% emerges from a human growth pod. The crew of ${guild.ship.name} warmly welcomes them to their ranks, and points them toward the showers to wash all of the growth pod gunk off.`,
     },
     stamina: {
-      notEnough: (id, current, needed, untilNextGain) =>
+      notEnough: (id, current, needed) =>
         `%username%${id}%, you need 💪${Math.round(
           needed,
         )} stamina for that task, and you currently have 💪${
           Math.round(current * 10) / 10
-        }. You'll gain more in ${msToTimeString(untilNextGain)}`,
+        }.`,
     },
   },
   map: {
@@ -409,24 +409,10 @@ module.exports = {
       `%username%${thruster.id}% added ${
         Math.round(thrust * 100) / 100
       } ${WEIGHT_UNITS} of thrust at an angle of ${angle} degrees. The ship is now going ${guild.ship.getSpeedString()} at ${guild.ship.getDirectionString()}. (previous was... )`,
-    redirect: {
-      success: (degrees, arrow, voteCount) =>
-        `Your ship rotates to face ${arrow} ${degrees} degrees. (${voteCount} vote${
-          voteCount === 1 ? `` : `s`
-        })`,
-    },
-    adjustSpeed: {
-      success: (spedUp, newSpeed, speedPercent, voteCount) =>
-        `Tour ship ${
-          spedUp ? `speeds up` : `slows down`
-        } to ${newSpeed}${SPEED_UNIT}, which is ${Math.round(
-          speedPercent * 100,
-        )}% of its maximum power. (${voteCount} vote${
-          voteCount === 1 ? `` : `s`
-        })`,
-    },
-    eBrake: () =>
-      `The captain pulls a red lever, enabling a microsecond of gravitic statis on the ship. The crew collectively suffers severe vertigo for a moment, then reorients themselves. The ship has been brought to a complete halt.`,
+    overburdened: () =>
+      `Your ship is overburdened, and its engines won't have any effect on its vector. Get rid of some cargo (or equipment) to regain control!`,
+    eBrake: (id) =>
+      `Captain %username%${id}% pulls a red lever, enabling a microsecond of gravitic statis on the ship. The crew collectively suffers severe vertigo for a moment, then reorients themselves. The ship has been brought to a complete halt.`,
   },
   land: {
     voteFailed: () => `The crew decides collectively not to land here.`,

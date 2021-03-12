@@ -1,6 +1,6 @@
 const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
-const lunicode = require(`Lunicode`)
+const lunicode = require(`lunicode`)
 const Fuse = require(`fuse.js`)
 const Discord = require(`discord.js-light`)
 const { applyCustomParams } = require(`../botcommon`)
@@ -30,7 +30,7 @@ module.exports = {
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`mechanics`)
     }
     const staminaRes = member.useStamina(staminaRequired)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     const emoji = allSkills.find((s) => s.name === `mechanics`).emoji
 

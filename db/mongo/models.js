@@ -38,6 +38,7 @@ const schemas = {
       ],
       launched: { type: Number, default: Date.now() },
       location: [{ type: Number, default: 0 }],
+      pastLocations: [[Number]],
       name: String,
       power: Number,
       seen: { planets: [String] },

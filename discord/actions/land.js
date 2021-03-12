@@ -20,7 +20,7 @@ module.exports = async ({ msg, guild, planet }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in land`)
   const staminaRes = authorCrewMemberObject.useStamina(`land`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   // ---------- vote on landing
   const voteEmbed = new Discord.MessageEmbed()

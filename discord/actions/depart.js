@@ -1,10 +1,10 @@
 const send = require(`./send`)
 const { log } = require(`../botcommon`)
-const { distance, usageTag } = require(`../../common`)
 const Discord = require(`discord.js-light`)
 const runYesNoVote = require(`./runYesNoVote`)
 const story = require(`../../game/basics/story/story`)
 const manager = require(`../../game/manager`)
+const pushToGuild = require(`./pushToGuild`)
 
 module.exports = async ({ msg, guild, planet }) => {
   log(msg, `Depart`, msg.guild?.name)
@@ -20,7 +20,7 @@ module.exports = async ({ msg, guild, planet }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in depart`)
   const staminaRes = authorCrewMemberObject.useStamina(`depart`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   // ---------- vote on departing
   const voteEmbed = new Discord.MessageEmbed()
@@ -43,7 +43,7 @@ module.exports = async ({ msg, guild, planet }) => {
     guild,
     cleanUp: false,
   })
-  if (!ok) return send(msg, message)
+  if (!ok) return pushToGuild({ msg, message })
 
   voteEmbed.fields = []
   if (!result) {

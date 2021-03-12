@@ -7,14 +7,14 @@ module.exports = (member) => {
   }
 
   member.staminaGainPerTick = () => {
-    return Math.max(2, member.maxStamina() * 0.2)
+    return Math.max(2, member.maxStamina() * 0.2) / TICKS_PER_HOUR
   }
 
   member.gainStamina = (presetAmount) => {
     const gainAmount = presetAmount || member.staminaGainPerTick()
     const gainAmountAsPercent = gainAmount / member.maxStamina()
     member.stamina = (member.stamina || 0) + gainAmountAsPercent
-    if (member.stamina > 1) member.stamina = 1
+    if (!presetAmount && member.stamina > 1) member.stamina = 1
   }
 
   member.useStamina = (amount) => {
@@ -22,14 +22,15 @@ module.exports = (member) => {
 
     const currentMemberStamina = member.stamina * member.maxStamina()
     if (amount > currentMemberStamina) {
+      const message = story.crew.stamina.notEnough(
+        member.id,
+        currentMemberStamina,
+        amount,
+      )
+      member.message(message)
       return {
         ok: false,
-        message: story.crew.stamina.notEnough(
-          member.id,
-          currentMemberStamina,
-          amount,
-          member.guild.context.timeUntilNextTick(),
-        ),
+        message,
       }
     }
 

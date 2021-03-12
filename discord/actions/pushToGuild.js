@@ -5,10 +5,12 @@ const awaitReaction = require(`./awaitReaction`)
 const { guild } = require(`../../game/manager`)
 
 module.exports = async ({ id, channelId, message, msg, reactions }) => {
-  let sentMessage
-  if (msg && msg.guild) sentMessage = (await send(msg, message))[0]
+  let sentMessages
+  if (msg && msg.guild) sentMessages = await send(msg, message)
   else {
-    // console.log(id, channelId)
+    if (!id && msg.author.crewMemberObject)
+      id = msg.author.crewMemberObject.guildId
+    console.log(`pushtoguild`, id, channelId, message)
     const discordGuild = await client.guilds.fetch(id)
     if (!discordGuild) {
       return log(
@@ -32,16 +34,17 @@ module.exports = async ({ id, channelId, message, msg, reactions }) => {
       )
     }
     msg = discordChannel
-    sentMessage = (await send(msg, message))[0]
+    sentMessages = await send(msg, message)
   }
   if (reactions) {
     const gameGuildRes = await guild(id)
     if (!gameGuildRes.ok) return
     awaitReaction({
-      msg: sentMessage,
+      msg: sentMessages[0],
       reactions,
       embed: message,
       guild: gameGuildRes.guild,
     })
   }
+  return sentMessages
 }

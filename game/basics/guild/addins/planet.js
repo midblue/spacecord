@@ -7,6 +7,7 @@ module.exports = (guild) => {
   guild.ship.land = ({ planet, msg }) => {
     guild.ship.status.docked = planet.name
     guild.ship.location = [...planet.location]
+    guild.ship.bearing = [0, 0]
 
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
@@ -21,7 +22,6 @@ module.exports = (guild) => {
     )
 
     runGuildCommand({
-      msg,
       commandTag: `planet`,
       guild,
     })
@@ -43,7 +43,7 @@ module.exports = (guild) => {
 
     runGuildCommand({
       commandTag: `ship`,
-      msg,
+      guild,
       props: { guild },
     })
 

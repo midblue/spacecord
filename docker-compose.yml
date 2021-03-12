@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   node:
+    # build: .
     image: 'node:15.7.0'
     user: 'node'
     working_dir: /home/node/app
@@ -8,6 +9,7 @@ services:
       - 8080:8080
     volumes:
       - ./:/home/node/app
+      # - /home/node/app/node_modules
     command: 'npx nodemon index.js'
     environment:
       MONGODB_ADMINUSERNAME: spacecord

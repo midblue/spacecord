@@ -23,7 +23,7 @@ module.exports = {
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`piloting`)
     }
     const staminaRes = member.useStamina(staminaRequired)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     // pilotingMinigame({ msg, user: authorCrewMemberObject, guild })
   },

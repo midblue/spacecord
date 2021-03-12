@@ -31,7 +31,7 @@ module.exports = {
     if (!staminaRequired)
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`engineering`)
     const staminaRes = member.useStamina(staminaRequired)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     const emojiChoices = [
       `🚀`,

@@ -85,7 +85,7 @@ module.exports = {
       if (!member) return console.log(`no user found in repair`)
       const staminaRequired = guild.ship.repairStaminaCost(equipment)
       const staminaRes = member.useStamina(staminaRequired)
-      if (!staminaRes.ok) return send(msg, staminaRes.message)
+      if (!staminaRes.ok) return
 
       // --------- repair
       const res = guild.ship.repairEquipment({

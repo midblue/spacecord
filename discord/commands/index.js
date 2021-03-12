@@ -36,26 +36,26 @@ module.exports = {
       if (match) {
         let authorIsCaptain = false
         let authorIsAdmin = false
+        let authorIsGameAdmin = false
         let requirements
         let guild, ship
 
-        if (command.gameAdminsOnly) {
-          if (
-            ![`244651135984467968`, `395634705120100367`].includes(
-              msg.author.id,
-            )
-          ) {
-            return
-          }
+        msg.pm = pm
+
+        if (
+          [`244651135984467968`, `395634705120100367`].includes(msg.author?.id)
+        ) {
+          authorIsAdmin = true
+          authorIsGameAdmin = true
         }
+        if (command.gameAdminsOnly && !authorIsGameAdmin)
+          if (pm && !command.pm && !command.pmOnly)
+            return send(
+              msg,
+              `That command cannot be run via private messages. Trying using it in your ship's server!`,
+            )
 
-        if (pm && !command.pm && !command.pmOnly)
-          return send(
-            msg,
-            `That command cannot be run via private messages. Trying using it in your ship's server!`,
-          )
-
-        if (pm && !command.public) {
+        if (pm && (!command.public || command.tag === `debug`)) {
           const currentGuildId = (
             (await client.game.db.user.get({
               id: msg.author.id,
@@ -76,7 +76,12 @@ module.exports = {
           ship = foundDiscordGuild?.ship
         }
 
-        if (msg.guild && command.admin) {
+        if (
+          msg.guild &&
+          command.admin &&
+          !authorIsGameAdmin &&
+          !predeterminedCommandTag
+        ) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
           authorIsAdmin = member.permissions.has(`BAN_MEMBERS`)
@@ -85,13 +90,13 @@ module.exports = {
           }
         }
 
-        if (!command.noShip && !guild) {
+        if (!command.noShip && !guild && !predeterminedCommandTag) {
           const res = await game.guild(msg.guild?.id || msg.channel?.guild?.id)
           if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
         }
-        if (!command.noShip) {
+        if (!command.noShip && !predeterminedCommandTag) {
           if (
             guild?.ship &&
             guild.ship.status.dead &&
@@ -109,18 +114,24 @@ module.exports = {
         const authorCrewMemberObject =
           guild?.ship &&
           guild.ship?.members?.find((m) => m.id === msg.author.id)
-        if (!command.public && !authorCrewMemberObject) {
+        if (
+          !command.public &&
+          !authorCrewMemberObject &&
+          !predeterminedCommandTag
+        ) {
           return send(
             msg,
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
           )
         }
+        if (msg.author) msg.author.crewMemberObject = authorCrewMemberObject
 
         if (
           command.captain &&
           !authorIsAdmin &&
           guild.ship?.captain &&
-          msg.author.id !== ship.captain
+          msg.author.id !== ship.captain &&
+          !predeterminedCommandTag
         ) {
           return send(
             msg,
@@ -144,12 +155,13 @@ module.exports = {
           requirements = requirementsResponse.requirements
         }
 
-        msg.author.nickname = await username(
-          msg,
-          msg.author.id,
-          guild?.id,
-          client,
-        )
+        if (msg.author)
+          msg.author.nickname = await username(
+            msg,
+            msg.author.id,
+            guild?.id,
+            client,
+          )
 
         // in case the server changes their name, update it here
         if (guild && msg.guild && msg.guild.name !== guild.name) {

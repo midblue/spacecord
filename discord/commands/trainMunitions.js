@@ -29,7 +29,7 @@ module.exports = {
       staminaRequired = authorCrewMemberObject.staminaRequiredFor(`munitions`)
     }
     const staminaRes = member.useStamina(staminaRequired)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     const emoji = allSkills.find((s) => s.name === `munitions`).emoji
 

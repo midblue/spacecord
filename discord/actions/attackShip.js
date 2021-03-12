@@ -43,7 +43,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in attackShip`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   // ---------- pick a weapon to use
   let weaponToUse

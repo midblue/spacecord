@@ -1,4 +1,3 @@
-change "weight" to "mass"
 
 
 
@@ -19,20 +18,13 @@ skiffs
       recharge speed
       weapon
 
-gravity formula: -G*m1*m2 / r**2 = Fg
-
 **BUGS**
 * i can train for someone else from .me
 * cache not giving me the stuff
 * undefined undefined in cargo
 munitions can keep going after game over
 
-I feel like this should happen more in real-time rather than a fake "day" unit
-ticks should just be arbitrary but not represent "days"
-
-motion as amounts of thrust in any direction
 set trajectory to any planet
-captain has ebrake
 
 **MVP**
 actual minigames for piloting and repairing
@@ -199,7 +191,11 @@ horde alliance garbled chat
 
 only get 1 "action" per tick, but you can queue up actions
 
+I feel like this should happen more in real-time rather than a fake "day" unit
+ticks should just be arbitrary but not represent "days"
 
+motion as amounts of thrust in any direction
+captain has ebrake
 
 
 

@@ -36,7 +36,9 @@ module.exports = {
       this: {
         description: `this`,
         action: async () => {
-          const { guild, ok } = await client.game.guild(msg.guild.id)
+          const { guild, ok } = await client.game.guild(
+            msg.guild?.id || msg.author?.crewMemberObject?.guildId,
+          )
           if (!ok) return `no guild with id ` + id
           return JSON.stringify(guild.saveableData(), null, 2)
         },
@@ -48,10 +50,18 @@ module.exports = {
           return `ticked`
         },
       },
+      save: {
+        description: `save`,
+        action: async () => {
+          client.game.save()
+          return `saved`
+        },
+      },
       guild: {
         description: `guild <id>`,
         action: async (id) => {
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild, ok } = await client.game.guild(id)
           if (!ok) return `no guild with id ` + id
           return JSON.stringify(guild.saveableData(), null, 2)
@@ -70,7 +80,8 @@ module.exports = {
       delete: {
         description: `delete <id>`,
         action: async (id) => {
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const res = await client.game.removeGuild(id)
           return res
         },
@@ -81,7 +92,8 @@ module.exports = {
           let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
             str.replace(/\[\]/g, ``),
           )
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           try {
@@ -99,7 +111,8 @@ module.exports = {
         description: `power <id> <power>`,
         action: async (str) => {
           let [unused, id, power] = /^([^ ]+) (.*)$/.exec(str)
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           try {
@@ -115,7 +128,8 @@ module.exports = {
         description: `credits <id> <credits>`,
         action: async (str) => {
           let [unused, id, credits] = /^([^ ]+) (.*)$/.exec(str)
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           try {
@@ -131,7 +145,8 @@ module.exports = {
         description: `cargo <id> <type> <amount>`,
         action: async (str) => {
           let [unused, id, type, amount] = /^([^ ]+) ([^ ]*) ([^ ]*)$/.exec(str)
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           try {
@@ -151,7 +166,8 @@ module.exports = {
         description: `togglestatus <id> <statustype>`,
         action: async (str) => {
           let [unused, id, type] = /^([^ ]+) ([^ ]*)$/.exec(str)
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           const currStatus = guild.ship.status
@@ -163,7 +179,8 @@ module.exports = {
       stamina: {
         description: `stamina`,
         action: async () => {
-          const { guild, ok } = await client.game.guild(msg.guild.id)
+          const id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const { guild, ok } = await client.game.guild(id)
           if (!ok) return `no guild with id ` + id
           const member = guild.ship.members.find((m) => m.id === msg.author.id)
           if (!member) return `no member with id ` + msg.author.id
@@ -182,7 +199,9 @@ module.exports = {
             return `invalid amount: ` + amount
           }
           const member = (
-            await client.game.guild(msg.guild.id)
+            await client.game.guild(
+              msg.guild?.id || msg.author?.crewMemberObject?.guildId,
+            )
           ).guild.ship.members.find((m) => m.id === msg.author.id)
           if (!member) return `no member with id ` + msg.author.id
           member.stamina = amount / member.maxStamina()
@@ -193,7 +212,8 @@ module.exports = {
         description: `kill <id>`,
         action: async (str) => {
           let [unused, id] = /^([^ ]+)$/.exec(str)
-          if (id === `this`) id = msg.guild.id
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           guild.ship.takeDamage({

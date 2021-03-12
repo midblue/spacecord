@@ -2,7 +2,7 @@ const defaults = {
   type: `weapon`,
   description: ``,
   range: 2,
-  weight: 70,
+  mass: 70,
   baseHp: 20,
   durabilityLostOnUse: 0.03,
   accuracy: 0.3,

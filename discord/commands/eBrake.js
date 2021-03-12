@@ -26,12 +26,15 @@ module.exports = {
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
     if (!member) return console.log(`no user found in eBrake`)
-    if (!staminaRequired)
-      staminaRequired = authorCrewMemberObject.staminaRequiredFor(`eBrake`)
+    const staminaRequired = authorCrewMemberObject.staminaRequiredFor(`eBrake`)
     const staminaRes = member.useStamina(staminaRequired)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     guild.ship.hardStop()
-    return pushToGuild({ msg, id: guild.id, message: story.move.eBrake() }) // todo do this all over the place
+    return pushToGuild({
+      msg,
+      id: guild.id,
+      message: story.move.eBrake(msg.author.id),
+    }) // todo do this all over the place
   },
 }

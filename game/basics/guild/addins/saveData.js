@@ -42,6 +42,7 @@ module.exports = (guild) => {
       })
     })
 
+    // remove base properties from cargo
     guildToSave.ship.cargo = guild.ship.cargo
       .map((c) => {
         const baseCargo = { ...c }
@@ -49,12 +50,6 @@ module.exports = (guild) => {
         return baseCargo
       })
       .filter((c) => c.amount > 0.000001)
-
-    // remove base properties from cargo
-    guild.ship.cargo.map((c) => ({
-      ...cargoData[c.type],
-      ...c,
-    }))
 
     const dummyGuildObject = createDefaultGuild({
       discordGuild: { name: `asdf`, id: 1234 },

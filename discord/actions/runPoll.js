@@ -1,9 +1,11 @@
 const send = require(`./send`)
 const awaitReaction = require(`./awaitReaction`)
+const pushToGuild = require(`./pushToGuild`)
 const { msToTimeString, capitalize } = require(`../../common`)
 const generalStaminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
 const manager = require(`../../game/manager`)
 const Discord = require(`discord.js-light`)
+const story = require(`../../game/basics/story/story`)
 
 module.exports = async ({
   pollType,
@@ -80,7 +82,8 @@ module.exports = async ({
   let remainingTime = time
   let done = false
 
-  if (!sentMessage) sentMessage = (await send(msg, embed))[0]
+  if (!sentMessage)
+    sentMessage = (await pushToGuild({ msg, message: embed }))[0]
   else sentMessage.edit(embed)
 
   const embedUpdateInterval = setInterval(() => {
@@ -152,7 +155,16 @@ module.exports = async ({
       guildMembers
     ) {
       const member = guildMembers.find((m) => m.id === user.id)
-      if (!member.useStamina(generalStaminaRequirements[emoji]).ok) return // todo dm user and tell them their vote wasn't counted
+      if (!member.useStamina(generalStaminaRequirements[emoji]).ok) {
+        member.message(
+          story.crew.stamina.notEnough(
+            user.id,
+            member.stamina,
+            generalStaminaRequirements[emoji],
+          ),
+        ) // todo check that this works
+        return
+      }
     }
 
     userReactionCounts[user.id] = (userReactionCounts[user.id] || 0) + 1

@@ -4,7 +4,7 @@ const {
   bearingToDegrees,
   bearingToArrow,
   distance,
-  degreesToUnitVector
+  degreesToUnitVector,
 } = require(`../../../../common`)
 const { getGravityForceVector } = require(`../../../gamecommon`)
 
@@ -14,11 +14,11 @@ module.exports = (guild) => {
   //     .find((e) => e.equipmentType === `engine`)
   //     .list.reduce((total, engine) => engine.maxSpeed + total, 0)
 
-  //   let percentOfMaxShipWeight =
-  //     guild.ship.getTotalWeight() / guild.ship.maxWeight()
-  //   if (percentOfMaxShipWeight > 1) percentOfMaxShipWeight = 1
+  //   let percentOfMaxShipMass =
+  //     guild.ship.getTotalMass() / guild.ship.maxMass()
+  //   if (percentOfMaxShipMass > 1) percentOfMaxShipMass = 1
 
-  //   return rawMaxSpeed * (1 - percentOfMaxShipWeight)
+  //   return rawMaxSpeed * (1 - percentOfMaxShipMass)
   // }
 
   guild.ship.maxThrust = () => {
@@ -26,16 +26,16 @@ module.exports = (guild) => {
       .find((e) => e.equipmentType === `engine`)
       .list.reduce((total, engine) => engine.maxThrust + total, 0)
 
-    return rawMaxThrust * (1 - percentOfMaxShipWeight)
+    return rawMaxThrust
   }
 
   guild.ship.getThrustVector = ({ power, angle }) => {
     const thrustAngleVector = degreesToUnitVector(angle)
     const maxThrustFromEngines = guild.ship.maxThrust() // tons of force...?
 
-    const weightThrustMultiplier = 1
+    const massThrustMultiplier = 1
 
-    const thrustMagnitude = maxThrustFromEngines * power * weightThrustMultiplier
+    const thrustMagnitude = maxThrustFromEngines * power * massThrustMultiplier
 
     const thrustVector = [
       thrustAngleVector[0] * thrustMagnitude * -1,
@@ -54,11 +54,13 @@ module.exports = (guild) => {
     // if (!fuel.amount)
     //   return { ok: false, message: story.fuel.insufficient() }
 
-    const thrustVector = getThrustVector({ power, angle })
-    guild.ship.bearing[0] += thrustVector[0] / guild.ship.getTotalWeight()
-    guild.ship.bearing[1] += thrustVector[1] / guild.ship.getTotalWeight()
-    console.log(ship.bearing, thrustVector, guild.ship.getTotalWeight())
-    const thrustMagnitude = Math.sqrt(thrustVector[0] ** 2 + thrustVector[1] ** 2)
+    const thrustVector = guild.ship.getThrustVector({ power, angle })
+    guild.ship.bearing[0] += thrustVector[0] / guild.ship.getTotalMass()
+    guild.ship.bearing[1] += thrustVector[1] / guild.ship.getTotalMass()
+    // console.log(ship.bearing, thrustVector, guild.ship.getTotalMass())
+    const thrustMagnitude = Math.sqrt(
+      thrustVector[0] ** 2 + thrustVector[1] ** 2,
+    )
     // const thrustApplied = guild.ship.applyThrust({ power, angle })
     message.push(story.move.thrust(thrustMagnitude, angle, guild, thruster))
 
@@ -112,18 +114,9 @@ module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
     if (guild.ship.status.docked) return 0
 
-    console.log(
-      `effspd`,
-      guild.ship.bearing[0],
-      guild.ship.bearing[1],
-      Math.sqrt(
-        guild.ship.bearing[0] * guild.ship.bearing[0] +
-        guild.ship.bearing[1] * guild.ship.bearing[1],
-      ),
-    )
     return Math.sqrt(
       guild.ship.bearing[0] * guild.ship.bearing[0] +
-      guild.ship.bearing[1] * guild.ship.bearing[1],
+        guild.ship.bearing[1] * guild.ship.bearing[1],
     )
   }
 
@@ -159,28 +152,52 @@ module.exports = (guild) => {
       const b = ship.location[1] - coordinates[1]
       distanceToTravel = Math.sqrt(a * a + b * b)
       ship.location = coordinates
-    }
-    else {
-      let planetsInRange = guild.context.scanArea({
-        x: guild.ship.location[0],
-        y: guild.ship.location[1],
-        range: GRAVITY_RANGE,
-        type: `planets`,
-      }).planets.map((p) => ({ location: p.location, size: p.size, mass: 100 }))
+    } else {
+      let planetsInRange = guild.context
+        .scanArea({
+          x: guild.ship.location[0],
+          y: guild.ship.location[1],
+          range: GRAVITY_RANGE,
+          type: `planets`,
+        })
+        .planets.map((p) => ({
+          location: p.location,
+          size: p.size,
+          mass: 100000,
+        }))
 
+      console.log(``)
+      console.log(
+        `ship is at`,
+        ship.location,
+        `with bearing`,
+        ship.bearing,
+        `which has angle`,
+        (360 + (180 * bearingToRadians(ship.bearing)) / Math.PI) % 360,
+      )
       for (planet of planetsInRange) {
-        const gravityForceVector = getGravityForceVector(planet, { ...ship, mass: 5 })
+        const gravityForceVector = getGravityForceVector(planet, {
+          ...ship,
+          mass: 5,
+        })
 
-        ship.bearing[0] += gravityForceVector[0] / ship.getTotalWeight()
-        ship.bearing[1] += gravityForceVector[1] / ship.getTotalWeight()
-        console.log(planet, gravityForceVector, ship.bearing)
+        ship.bearing[0] += gravityForceVector[0] / ship.getTotalMass()
+        ship.bearing[1] += gravityForceVector[1] / ship.getTotalMass()
+        console.log(
+          `planet at`,
+          planet.location,
+          `has`,
+          gravityForceVector,
+          `effect on vector`,
+        )
       }
 
-      const newX =
-        currentLocation[0] + ship.bearing[0]
-      const newY =
-        currentLocation[1] + ship.bearing[1]
+      const newX = currentLocation[0] + ship.bearing[0]
+      const newY = currentLocation[1] + ship.bearing[1]
+      ship.pastLocations.push([...ship.location])
+      if (ship.pastLocations.length > 4000) ship.pastLocations.shift()
       ship.location = [newX, newY]
+      // console.log(ship.location, bearingToDegrees(ship.bearing))
     }
 
     // check if we discovered any new planets
@@ -216,11 +233,11 @@ module.exports = (guild) => {
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
-    return `${Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
-      } ${DISTANCE_UNIT}/hour`
+    return `${
+      Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
+    } ${DISTANCE_UNIT}/hour`
   }
 }
-
 
 // guild.ship.getAvailableSpeedLevels = () => {
 //   const availableSpeedLevels = []
@@ -344,14 +361,14 @@ module.exports = (guild) => {
 //   return availableDirections
 // }
 // function getShipSpeedFromAggregate(aggregate) {
-//   // aggregate is in form [{speed: 0..1, weight: Number}]
-//   const totalWeight = aggregate.reduce(
-//     (total, current) => (total += current.weight),
+//   // aggregate is in form [{speed: 0..1, mass: Number}]
+//   const totalMass = aggregate.reduce(
+//     (total, current) => (total += current.mass),
 //     0,
 //   )
 //   const speedNormalized = aggregate.reduce(
 //     (total, current) =>
-//       (total += current.speed * (current.weight / totalWeight)),
+//       (total += current.speed * (current.mass / totalMass)),
 //     0,
 //   )
 
@@ -363,20 +380,20 @@ module.exports = (guild) => {
 // }
 
 // function getShipDirectionFromAggregate(aggregate) {
-//   // aggregate is in form [{vector: [x, y], weight: 0..1}]
-//   const totalWeight = aggregate.reduce(
-//     (total, current) => (total += current.weight),
+//   // aggregate is in form [{vector: [x, y], mass: 0..1}]
+//   const totalMass = aggregate.reduce(
+//     (total, current) => (total += current.mass),
 //     0,
 //   )
 //   const xVector =
 //     aggregate.reduce(
-//       (total, current) => (total += current.vector[0] * current.weight),
+//       (total, current) => (total += current.vector[0] * current.mass),
 //       0,
-//     ) / totalWeight
+//     ) / totalMass
 //   const yVector =
 //     aggregate.reduce(
-//       (total, current) => (total += current.vector[1] * current.weight),
+//       (total, current) => (total += current.vector[1] * current.mass),
 //       0,
-//     ) / totalWeight
+//     ) / totalMass
 //   return [xVector, yVector]
 // }

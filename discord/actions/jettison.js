@@ -17,7 +17,7 @@ module.exports = async ({ msg, guild }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in jettison`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   const actualCargo = guild.ship.cargo.filter((c) => c.amount > 0.0001)
   if (guild.ship.credits) {

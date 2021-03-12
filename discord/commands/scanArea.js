@@ -29,7 +29,7 @@ module.exports = {
     )
     if (!authorCrewMemberObject) return console.log(`no user found in scanArea`)
     const staminaRes = authorCrewMemberObject.useStamina(`scan`)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
 
     const scanRes = await ship.scanArea()
     if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first

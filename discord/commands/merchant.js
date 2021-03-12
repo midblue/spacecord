@@ -134,15 +134,15 @@ module.exports = {
           inline: true,
         },
         {
-          name: `🎒 Ship Weight`,
+          name: `🎒 Ship Mass`,
           value:
             percentToTextBars(
-              guild.ship.getTotalWeight() / guild.ship.maxWeight(),
+              guild.ship.getTotalMass() / guild.ship.maxMass(),
             ) +
             `\n` +
-            Math.round(guild.ship.getTotalWeight()) +
+            Math.round(guild.ship.getTotalMass()) +
             `/` +
-            Math.round(guild.ship.maxWeight()) +
+            Math.round(guild.ship.maxMass()) +
             ` ` +
             WEIGHT_UNITS,
           inline: true,
@@ -347,15 +347,15 @@ module.exports = {
           inline: true,
         },
         {
-          name: `🎒 Ship Weight`,
+          name: `🎒 Ship Mass`,
           value:
             percentToTextBars(
-              guild.ship.getTotalWeight() / guild.ship.maxWeight(),
+              guild.ship.getTotalMass() / guild.ship.maxMass(),
             ) +
             `\n` +
-            Math.round(guild.ship.getTotalWeight()) +
+            Math.round(guild.ship.getTotalMass()) +
             `/` +
-            Math.round(guild.ship.maxWeight()) +
+            Math.round(guild.ship.maxMass()) +
             ` ` +
             WEIGHT_UNITS,
           inline: true,

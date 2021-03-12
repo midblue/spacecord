@@ -106,8 +106,8 @@ module.exports = (guild) => {
             (timeUntilReady > 0
               ? `・ **⏱ Recharges in ${msToTimeString(timeUntilReady)}**`
               : `・ **✅ Ready to Fire** (⏱ ${msToTimeString(
-                w.rechargeTime * TICK_INTERVAL,
-              )} cooldown)`) +
+                  w.rechargeTime * TICK_INTERVAL,
+                )} cooldown)`) +
             `\n` +
             `・ 🔧 ${Math.round(w.repair * 1000) / 10}% Repair` +
             `\n` +
@@ -115,7 +115,8 @@ module.exports = (guild) => {
             `\n` +
             `・ 💥 Damage: ${Math.round(w.currentDamage() * 10) / 10}` +
             `\n` +
-            `・ 🎲 Current Hit Chance: ${Math.round(w.hitPercent() * 1000) / 10
+            `・ 🎲 Current Hit Chance: ${
+              Math.round(w.hitPercent() * 1000) / 10
             }% at ${w.range / 2} ${DISTANCE_UNIT}`,
         })
         actions.push({
@@ -144,22 +145,23 @@ module.exports = (guild) => {
         value:
           percentToTextBars(e.repair) +
           `\n` +
-          `${Math.round(e.repair * e.baseHp * 10) / 10}/${Math.round(e.baseHp * 10) / 10
+          `${Math.round(e.repair * e.baseHp * 10) / 10}/${
+            Math.round(e.baseHp * 10) / 10
           } HP`,
       })
     }
 
-    if (e.weight) {
+    if (e.mass) {
       fields.push({
-        name: `🎒 Weight`,
-        value: `${Math.round(e.weight * 10) / 10} ${WEIGHT_UNITS}`,
+        name: `🎒 Mass`,
+        value: `${Math.round(e.mass * 10) / 10} ${WEIGHT_UNITS}`,
       })
     }
 
-    if (e.maxWeight) {
+    if (e.maxMass) {
       fields.push({
         name: `🎒 Carrying Capacity`,
-        value: `${Math.round(e.maxWeight * 10) / 10} ${WEIGHT_UNITS}`,
+        value: `${Math.round(e.maxMass * 10) / 10} ${WEIGHT_UNITS}`,
       })
     }
     if (e.agility) {

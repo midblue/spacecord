@@ -20,7 +20,7 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in sellCargo`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   const voteEmbed = new Discord.MessageEmbed()
   voteEmbed.setTitle(
@@ -67,11 +67,11 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
 
   voteEmbed.description =
     `You now have \`💳 ${Math.round(guild.ship.credits)}\` credits.` +
-    `\n\nShip weight is ` +
-    percentToTextBars(guild.ship.getTotalWeight() / guild.ship.maxWeight()) +
-    Math.round(guild.ship.getTotalWeight()) +
+    `\n\nShip mass is ` +
+    percentToTextBars(guild.ship.getTotalMass() / guild.ship.maxMass()) +
+    Math.round(guild.ship.getTotalMass()) +
     `/` +
-    Math.round(guild.ship.maxWeight()) +
+    Math.round(guild.ship.maxMass()) +
     ` ` +
     WEIGHT_UNITS
 

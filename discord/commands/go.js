@@ -1,12 +1,7 @@
-const { log, username, canEdit } = require(`../botcommon`)
-const { capitalize } = require(`../../common`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
-const runPoll = require(`../actions/runPoll`)
 const send = require(`../actions/send`)
-const { ship } = require(`../../game/basics/story/story`)
 const story = require(`../../game/basics/story/story`)
-
-const voteTime = process.env.DEV ? 10 * 1000 : GENERAL_VOTE_TIME
 
 module.exports = {
   tag: `speed`,
@@ -24,12 +19,16 @@ module.exports = {
   async action({ msg, author, guild, authorCrewMemberObject }) {
     log(msg, `Go`, msg.guild?.name)
 
-    if (guild.ship.status.docked) return send(msg, story.move.docked())
+    if (guild.ship.status.docked)
+      return authorCrewMemberObject.message(story.move.docked())
+
+    if (guild.ship.isOverburdened())
+      return authorCrewMemberObject.message(story.move.overburdened())
 
     // ---------- use stamina
     if (!authorCrewMemberObject) return console.log(`no user found in speed`)
     const staminaRes = authorCrewMemberObject.useStamina(`go`)
-    if (!staminaRes.ok) return send(msg, staminaRes.message)
+    if (!staminaRes.ok) return
     // const availableSpeedLevels = guild.ship.getAvailableSpeedLevels()
     // const availableDirections = guild.ship.getAvailableDirections()
 
@@ -38,7 +37,7 @@ module.exports = {
       .setTitle(`Go | ${author.nickname}`)
       .setDescription(
         `Adjust the ship's trajectory by firing the thrusters!
-Your power scales with ship's weight, as well as your piloting skill and legacy among the crew.
+Your power scales with your piloting skill and legacy among the crew, but lowers with ship mass.
 Fuel will be used in accordance with the amount of thrust you generate.
 
 This works by sending a message in the format \`<thrust %> <angle>\`.
@@ -47,9 +46,9 @@ This works by sending a message in the format \`<thrust %> <angle>\`.
 
 Example usage: \`50 275\`, \`100 12\`, etc.
 Send a message in that format to fire the thrusters!
-Be aware: the ship will go in the opposite direction that you fire in. That's how space works.
+Be aware: the ship will gain momentum in the opposite direction that you fire in.
 
-Current ship trajectory is ${guild.ship.getDirectionString()} degrees at ${guild.ship.getSpeedString()}`,
+🚀Current ship trajectory is 🧭${guild.ship.getDirectionString()} degrees at ⏩${guild.ship.getSpeedString()}`,
       )
 
     const sentMessage = (await authorCrewMemberObject.message(embed))[0]

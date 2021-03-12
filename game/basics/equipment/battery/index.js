@@ -1,14 +1,16 @@
 const defaults = {
   type: `battery`,
   description: ``,
-  weight: 80,
+  mass: 80,
   baseHp: 25,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.01,
   onTakeDamage: (guild) => {
-    if (guild.ship.power > guild.ship.maxPower()) { guild.ship.power = guild.ship.maxPower() }
+    if (guild.ship.power > guild.ship.maxPower()) {
+      guild.ship.power = guild.ship.maxPower()
+    }
   },
-  baseCost: 100
+  baseCost: 100,
 }
 
 // * get all exports from files in this folder
@@ -20,7 +22,7 @@ fs.readdir(__dirname, (err, files) => {
     addins[file.substring(0, file.length - 3)] = {
       id: file.substring(0, file.length - 3),
       ...defaults,
-      ...require(`./${file}`)
+      ...require(`./${file}`),
     }
   })
   // console.log(addins.length, 'addins', addins)

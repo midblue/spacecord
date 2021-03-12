@@ -9,17 +9,16 @@ module.exports = async ({
   author,
   props,
   msg,
+  guild,
 }) => {
   let fakeMsg
   if (!msg) {
+    if (guild) {
+      id = guild.id
+      channelId = guild.channel
+    }
     const discordGuild = await client.guilds.fetch(id)
-    const discordChannel = await discordGuild.channels.cache
-      .array()
-      .find(
-        (channel) =>
-          channel.type === `text` &&
-          channel.id === channelId,
-      )
+    const discordChannel = await discordGuild.channels.fetch(channelId)
     fakeMsg = {
       guild: discordGuild,
       channel: discordChannel,

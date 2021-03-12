@@ -15,9 +15,7 @@ module.exports = async function (
     else {
       message = `${message}` // some types (i.e. raw numbers) couldn't have 'indexOf' run on them. this makes everything a string.
       // * here, we also apply custom params we've built into our story text.
-      let remainingText = msgOrChannelOrUser.username // for now we ignore custom params for DMs
-        ? message
-        : await applyCustomParams(msgOrChannelOrUser, message)
+      let remainingText = await applyCustomParams(msgOrChannelOrUser, message)
       const surroundingCharactersToUse =
         remainingText.indexOf(`\``) === -1 ? surroundingCharacters : ``
       while (remainingText.length > 0) {

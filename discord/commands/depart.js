@@ -6,7 +6,7 @@ module.exports = {
   pm: true,
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:depart|leave|liftoff|blastoff)$`,
+      `^${settings.prefix}(?:depart|leave|liftoff|blastoff|takeoff)$`,
       `gi`,
     ).exec(content)
   },

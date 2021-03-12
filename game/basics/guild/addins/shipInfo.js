@@ -242,15 +242,13 @@ module.exports = (guild) => {
     })
 
     fields.push({
-      name: `🎒 Ship Weight`,
+      name: `🎒 Ship Mass`,
       value:
-        percentToTextBars(
-          guild.ship.getTotalWeight() / guild.ship.maxWeight(),
-        ) +
+        percentToTextBars(guild.ship.getTotalMass() / guild.ship.maxMass()) +
         `\n` +
-        Math.round(guild.ship.getTotalWeight()) +
+        Math.round(guild.ship.getTotalMass()) +
         `/` +
-        Math.round(guild.ship.maxWeight()) +
+        Math.round(guild.ship.maxMass()) +
         ` ` +
         WEIGHT_UNITS,
     })
@@ -264,7 +262,7 @@ module.exports = (guild) => {
         `/` +
         TIME_UNIT +
         `\n` +
-        `(At current weight)`,
+        `(At current mass)`,
     })
 
     actions.push({

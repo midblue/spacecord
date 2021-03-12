@@ -18,7 +18,7 @@ module.exports = async ({ msg, guild, cache }) => {
   )
   if (!authorCrewMemberObject) return console.log(`no user found in getCache`)
   const staminaRes = authorCrewMemberObject.useStamina(`cache`)
-  if (!staminaRes.ok) return send(msg, staminaRes.message)
+  if (!staminaRes.ok) return
 
   const getRes = guild.context.deleteCache(cache.id)
   if (!getRes) return send(msg, getRes.message)
@@ -55,7 +55,7 @@ module.exports = async ({ msg, guild, cache }) => {
       (cache.type === `credits`
         ? ``
         : `\nYour ship is now carrying ${Math.round(
-            (guild.ship.getTotalWeight() / guild.ship.maxWeight()) * 100,
+            (guild.ship.getTotalMass() / guild.ship.maxMass()) * 100,
           )}% of its maximum capacity.`) +
       (guild.ship.isOverburdened()
         ? `\nYou're overburdened! You won't be able to move until you drop or sell something.`

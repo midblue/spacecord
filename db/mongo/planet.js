@@ -1,4 +1,4 @@
-const { Planet } = require(`./model`)
+const { Planet } = require(`./models`)
 const mongoose = require(`mongoose`)
 
 module.exports = {

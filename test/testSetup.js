@@ -5,7 +5,7 @@ const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
 const { init: initDb, db } = require(`../db/mongo/db`)
 const { msg } = require(`./tools/messages`)
-const models = require(`../db/mongo/model`)
+const models = require(`../db/mongo/models`)
 
 // * if we want tests to run silently, uncomment
 // console.log = () => {}
@@ -56,7 +56,7 @@ describe(`Database`, () => {
   })
 
   it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
-    const models = require(`../db/mongo/model`)
+    const models = require(`../db/mongo/models`)
     let guild = await models.Guild.findOne()
     expect(guild).to.have.property(`id`)
     let planet = await models.Planet.findOne()
@@ -176,7 +176,7 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       guild.members.find((m) => m.id === user.id).crewMemberId ===
-        crewMember.id,
+      crewMember.id,
       `Guild has link to crew member and user`,
     )
 

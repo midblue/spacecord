@@ -1,9 +1,9 @@
 version: '3.7'
 services:
   node:
-    # build: .
-    image: 'node:15.7.0'
-    user: 'node'
+    image: xmadsen/node-chromium:0.1
+    #image: 'node:15.7.0'
+    #user: 'node'
     working_dir: /home/node/app
     ports:
       - 8080:8080

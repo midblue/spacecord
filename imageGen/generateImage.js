@@ -6,7 +6,7 @@ module.exports = async (templateName = `map`, data = {}) => {
   return await nodeHtmlToImage({
     html,
     type: `png`,
-    // puppeteerArgs: { args: [`--no-sandbox`], },
+    puppeteerArgs: { args: [`--no-sandbox`], executablePath: `/usr/bin/chromium-browser` },
     encoding: `buffer`,
   })
 }
@@ -25,7 +25,7 @@ module.exports = async (templateName = `map`, data = {}) => {
 //       { encoding: `utf8` },
 //       (err, data) => {
 //         let dataToSave = data
-        
+
 //         // done reading file
 
 //         // swap in imports

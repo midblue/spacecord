@@ -1,4 +1,5 @@
-
+.go assumes 100% power
+and works as `.go 270`
 
 
 skiffs for individual players to go off and do their own thing within a certain range of the main server ship

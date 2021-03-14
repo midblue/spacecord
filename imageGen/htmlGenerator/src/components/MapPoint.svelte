@@ -8,11 +8,14 @@
   // console.log({topPercent, leftPercent})
 </script>
 
-<div class="pointholder" style="--accent-color: {color}; --size: {size}px; left: {leftPercent}%; top: {topPercent}%; ">
+<div
+  class="pointholder"
+  style="--accent-color: {color}; --size: {size}px; left: {leftPercent}%; top: {topPercent}%; "
+>
   {#if label}
     <div class="label minilabel">{label}</div>
   {/if}
-  <div class="point" style="border-radius: {round ? '50%': '0'};"></div>
+  <div class="point" style="border-radius: {round ? '50%' : '0'};" />
 </div>
 
 <style>
@@ -22,9 +25,9 @@
   .label {
     position: absolute;
     left: 0;
-    top: .3em;
+    top: 0.3em;
     text-align: center;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateX(calc(-1 * var(--size) / 2));
     color: var(--accent-color);
   }
   .point {
@@ -32,7 +35,7 @@
     height: var(--size);
     background: var(--accent-color);
     position: absolute;
-    top: -2px;
-    left: -2px;
+    top: calc(-1 * var(--size) / 2);
+    left: calc(-1 * var(--size) / 2);
   }
 </style>

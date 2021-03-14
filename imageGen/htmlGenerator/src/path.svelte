@@ -13,9 +13,13 @@
     ...ship.pastLocations.map((l) => ({
       location: l,
       size: 2,
-      color: 'white',
+      color: 'rgba(255,255,255,.1)',
     })),
-    { name: ship.name + '\n(you)', location: ship.location, color: 'white' },
+    {
+      name: ship.name + '\n(you)',
+      location: ship.location,
+      color: 'white',
+    },
   ]
 
   let upperBound = pointsToShow.reduce(
@@ -61,13 +65,10 @@
   let auBetweenLines = 1
   while (auBetweenLines / displayDiameter < 0.15) auBetweenLines *= 2
 
-  console.log(pointsToShow)
-
   pointsToShow = pointsToShow.map((p) => {
     console.log(
-      'tp',
+      'point to show',
       (upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter,
-      leftBound,
       (p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter,
     )
 

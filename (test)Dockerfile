@@ -1,8 +1,0 @@
-FROM node:15.7.0
-
-WORKDIR /home/node/app
-
-COPY package.json .
-RUN npm install
-
-COPY . .

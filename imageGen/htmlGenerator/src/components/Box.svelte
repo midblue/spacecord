@@ -1,5 +1,5 @@
 <script>
-  export let label;
+  export let label
 </script>
 
 <div class="boxholder">
@@ -8,7 +8,7 @@
   {/if}
 
   <div class="box">
-    <slot></slot>
+    <slot />
   </div>
 </div>
 
@@ -18,20 +18,21 @@
   }
   .boxholder {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: var(--main-width);
+    height: var(--main-width);
     padding: 1rem;
     padding-top: 1.2rem;
   }
   .label {
     position: absolute;
     left: 1rem;
-    top: .4em;
+    top: 0.4em;
   }
   .box {
     position: relative;
     overflow: hidden;
     height: 100%;
+    width: 100%;
     border: 1px solid var(--ui);
   }
 </style>

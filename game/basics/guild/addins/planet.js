@@ -44,6 +44,7 @@ module.exports = (guild) => {
     runGuildCommand({
       commandTag: `ship`,
       guild,
+      author: msg.author,
       props: { guild },
     })
 

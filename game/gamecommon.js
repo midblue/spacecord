@@ -30,12 +30,12 @@ module.exports = {
     return 235 + 5 * skillLevel * minigameScore // yea some magic numbers sorry eslint
   },
 
-  getGravityForceVector(thisBody, thatBody) {
+  getGravityForceVectorOnThisBodyDueToThatBody(thisBody, thatBody) {
     if (!thisBody || !thatBody || !thisBody.mass || !thatBody.mass)
       return [0, 0]
 
-    const m1 = thisBody.mass
-    const m2 = thatBody.mass
+    const m1 = thisBody.mass || 0
+    const m2 = thatBody.mass || 0
 
     const r = distance(...thisBody.location, ...thatBody.location)
     const G = GRAVITATIONAL_CONSTANT
@@ -44,9 +44,10 @@ module.exports = {
       Math.max(-999999999, (-G * m1 * m2) / r ** 2),
     )
     const vectorToThisBody = getUnitVectorBetween(thisBody, thatBody)
-
-    return vectorToThisBody.map((i) =>
+    gravityForceVector = vectorToThisBody.map((i) =>
       Math.min(0.5, Math.max(-0.5, i * gravityForce)),
     )
+    console.log(gravityForceVector)
+    return gravityForceVector
   },
 }

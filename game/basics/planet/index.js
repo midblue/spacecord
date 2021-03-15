@@ -5,6 +5,7 @@ const defaults = () => ({
   location: [0, 0],
   color: `green`,
   size: 1,
+  mass: 1000000,
 })
 
 // * get all exports from files in this folder

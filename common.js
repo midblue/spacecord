@@ -48,7 +48,7 @@ module.exports = {
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
-        (pointY - centerY) * (pointY - centerY) <
+      (pointY - centerY) * (pointY - centerY) <
       radius * radius
     )
   },
@@ -198,7 +198,7 @@ function degreesToUnitVector(degrees) {
 }
 
 function getUnitVectorBetween(thisBody, thatBody) {
-  const angleBetween = angle(...thisBody.location, ...thatBody.location)
+  const angleBetween = angle(...thatBody.location, ...thisBody.location)
   return degreesToUnitVector(angleBetween)
 }
 

@@ -4,6 +4,7 @@ module.exports = (guild) => {
   }
 
   guild.ship.getTotalMass = () => {
+    if (guild.ship.debugMass) return guild.ship.debugMass
     const equipmentMass = guild.ship.equipment.reduce((t, { list }) => {
       const typeMass = list.reduce((total, eq) => total + (eq.mass || 0), 0)
       return t + typeMass

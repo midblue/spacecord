@@ -1,14 +1,13 @@
-require(`dotenv`).config()
-require(`../globalVariables`)
+
+const fs = require(`fs`)
+const path = require(`path`)
 const assert = require(`assert`)
 const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
-const { init: initDb, db } = require(`../db/mongo/db`)
 const { msg } = require(`./tools/messages`)
 const models = require(`../db/mongo/models`)
 
-// * if we want tests to run silently, uncomment
-// console.log = () => {}
+let outputToWriteToFile = []
 
 describe(`Database`, () => {
   it(`should create a mongoose connection to mongo successfully`, async () => {
@@ -177,7 +176,7 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       guild.members.find((m) => m.userId === user.id).crewMemberId ===
-        crewMember.crewMemberId,
+      crewMember.crewMemberId,
       `Guild has link to crew member and user`,
     )
 
@@ -250,35 +249,13 @@ describe(`Base Data Initialization & Updates`, () => {
 //   })
 // })
 
-before(async () => {
-  const mongoose = require(`mongoose`)
-  const hostname = `127.0.0.1`
-  const port = 27017
-  const dbName = `spacecord-test`
-  const username = encodeURIComponent(`testuser`)
-  const password = encodeURIComponent(`testpass`)
-
-  await initDb({
-    hostname,
-    port,
-    dbName,
-    username,
-    password,
-  })
-  const collections = await mongoose.connection.db.listCollections().toArray()
-  collections.forEach(
-    async (c) => await mongoose.connection.collection(c.name).drop(),
-  )
-  console.log(`    Made sure no collections exist before running tests.\n`)
+before(() => {
+  console.log = (...args) => {
+    outputToWriteToFile.push(args.map((a) => typeof a === `object` ? JSON.stringify(a, null, 2) : a))
+  }
 })
 
-after(async () => {
-  const collections = await mongoose.connection.db.listCollections().toArray()
-  collections.forEach(
-    async (c) => await mongoose.connection.collection(c.name).drop(),
+after(() => {
+  fs.writeFileSync(path.resolve(`./`, `test/output`, `setup.txt`), outputToWriteToFile.join(`\n`)
   )
-  console.log(`    Dropped test database collections.\n`)
-  await mongoose.disconnect()
-  console.log(`Disconnected from mongo.`)
-  setTimeout(() => process.exit(), 500) // was beating mocha's output lol
 })

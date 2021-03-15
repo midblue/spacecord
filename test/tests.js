@@ -8,7 +8,7 @@ const { init: initDb, db } = require(`../db/mongo/db`)
 // ******* test order ********
 
 require(`./testSetup.js`)
-// require(`./testMotion.js`)
+require(`./testMotion.js`)
 
 
 before(async () => {

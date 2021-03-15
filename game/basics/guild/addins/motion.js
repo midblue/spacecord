@@ -6,7 +6,7 @@ const {
   distance,
   degreesToUnitVector,
 } = require(`../../../../common`)
-const { getGravityForceVector } = require(`../../../gamecommon`)
+const { getGravityForceVectorOnThisBodyDueToThatBody } = require(`../../../gamecommon`)
 
 module.exports = (guild) => {
   // guild.ship.maxSpeed = () => {
@@ -114,7 +114,7 @@ module.exports = (guild) => {
 
     return Math.sqrt(
       guild.ship.bearing[0] * guild.ship.bearing[0] +
-        guild.ship.bearing[1] * guild.ship.bearing[1],
+      guild.ship.bearing[1] * guild.ship.bearing[1],
     )
   }
 
@@ -158,11 +158,7 @@ module.exports = (guild) => {
           range: GRAVITY_RANGE,
           type: `planets`,
         })
-        .planets.map((p) => ({
-          location: p.location,
-          size: p.size,
-          mass: 1000000,
-        }))
+        .planets
 
       // console.log(``)
       // console.log(
@@ -173,10 +169,11 @@ module.exports = (guild) => {
       //   `which has angle`,
       //   (360 + (180 * bearingToRadians(ship.bearing)) / Math.PI) % 360,
       // )
+      const shipMass = guild.ship.getTotalMass()
       for (planet of planetsInRange) {
-        const gravityForceVector = getGravityForceVector(planet, {
+        const gravityForceVector = getGravityForceVectorOnThisBodyDueToThatBody(planet, {
           ...ship,
-          mass: 5,
+          mass: shipMass,
         })
 
         ship.bearing[0] += gravityForceVector[0] / ship.getTotalMass()
@@ -231,9 +228,8 @@ module.exports = (guild) => {
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
-    return `${
-      Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
-    } ${DISTANCE_UNIT}/hour`
+    return `${Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
+      } ${DISTANCE_UNIT}/hour`
   }
 }
 

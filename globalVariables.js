@@ -28,6 +28,8 @@ TIME_UNIT_SHORTS_PER_LONG = TIME_UNIT_LONG_LENGTH / TICK_INTERVAL
 GRAVITY_RANGE = 8
 GRAVITATIONAL_CONSTANT = 6.6743 * 10 ** -11
 
+GRAV_TOLERANCE = 10 ** -9
+
 SLEEP = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms)

@@ -11,6 +11,5 @@ RUN apk add --no-cache \
       yarn
 
 WORKDIR /usr/src/app/
-RUN npm install
 
 CMD [ "npx", "nodemon", "index.js" ]

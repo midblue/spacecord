@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   node:
-    image: xmadsen/node-chromium:0.1
+    image: xmadsen/node-chromium:0.2
     #image: 'node:15.7.0'
     #user: 'node'
     working_dir: /home/node/app

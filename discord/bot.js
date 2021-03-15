@@ -67,8 +67,7 @@ module.exports = {
       client.on(`ready`, async () => {
         resolve()
         console.log(
-          `Logged in as ${client.user.tag} in ${
-            (await client.guilds.cache.array()).length
+          `Logged in as ${client.user.tag} in ${(await client.guilds.cache.array()).length
           } guilds`,
         )
 

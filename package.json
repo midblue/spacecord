@@ -13,11 +13,12 @@
     "rs": "docker-compose down --remove-orphans && docker-compose up",
     "l": "docker-compose logs --tail=200 --follow",
     "lint": "eslint . --ext .js --fix",
-    "test": "mocha ./test/testSetup.js"
+    "test": "mocha ./test/tests.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "almost-equal": "1.1.0",
     "bad-words": "^3.0.4",
     "bufferutil": "^4.0.3",
     "chai": "4.3.0",
@@ -30,7 +31,7 @@
     "mongoose": "5.11.18",
     "node-html-to-image": "^3.1.0",
     "nodemon": "^2.0.7",
-    "puppeteer": "6.0.0",
+    "puppeteer": "3.0.0",
     "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
   },

@@ -6,7 +6,7 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `planet`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     name: `planet`,
     value: `Planetside actions the ship can take.`,

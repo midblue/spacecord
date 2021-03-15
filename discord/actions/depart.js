@@ -4,7 +4,7 @@ const Discord = require(`discord.js-light`)
 const runYesNoVote = require(`./runYesNoVote`)
 const story = require(`../../game/basics/story/story`)
 const manager = require(`../../game/manager`)
-const pushToGuild = require(`./pushToGuild`)
+const message = require(`./pushToGuild`)
 
 module.exports = async ({ msg, guild, planet }) => {
   log(msg, `Depart`, msg.guild?.name)
@@ -43,7 +43,7 @@ module.exports = async ({ msg, guild, planet }) => {
     guild,
     cleanUp: false,
   })
-  if (!ok) return pushToGuild({ msg, message })
+  if (!ok) return message({ msg, message })
 
   voteEmbed.fields = []
   if (!result) {

@@ -59,7 +59,7 @@ module.exports = {
         angle,
         thruster: authorCrewMemberObject,
       })
-      guild.pushToGuild(res.message, msg)
+      guild.message(res.message, msg)
     }
 
     // const availableSpeedLevels = guild.ship.getAvailableSpeedLevels()

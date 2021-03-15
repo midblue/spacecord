@@ -11,14 +11,14 @@ module.exports = (guild) => {
 
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
-      setTimeout(() => guild.pushToGuild(story.land.recharge(), msg), 1000) // send after landing message
+      setTimeout(() => guild.message(story.land.recharge(), msg), 1000) // send after landing message
     }
 
     const otherDockedShips = planet
       .getDockedShips()
       .filter((s) => s.id !== guild.id)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLand(guild.ship)),
+      s.message(story.planet.otherShipLand(guild.ship)),
     )
 
     runGuildCommand({
@@ -36,7 +36,7 @@ module.exports = (guild) => {
       .getDockedShips()
       .filter((s) => s.id !== guild.id)
     otherDockedShips.forEach((s) =>
-      s.pushToGuild(story.planet.otherShipLeave(guild.ship, planet)),
+      s.message(story.planet.otherShipLeave(guild.ship, planet)),
     )
 
     guild.ship.status.docked = ``

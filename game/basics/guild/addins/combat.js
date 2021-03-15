@@ -19,7 +19,7 @@ module.exports = (guild) => {
         (w) =>
           w.repair > 0 &&
           (w.lastAttack || 0) <
-          Date.now() - (w.rechargeTime || 1) * TICK_INTERVAL,
+            Date.now() - (w.rechargeTime || 1) * TICK_INTERVAL,
       )
     if (!canAttackWeapons.length) return false
     return canAttackWeapons
@@ -43,7 +43,7 @@ module.exports = (guild) => {
     const dead = guild.ship.currentHp() < 0.0001
     if (dead) {
       guild.ship.status.dead = true
-      guild.pushToGuild(story.ship.die(guild.ship))
+      guild.message(story.ship.die(guild.ship))
       guild.ship.jettisonAll(0.8)
     }
     return dead
@@ -197,10 +197,12 @@ module.exports = (guild) => {
           value: damageTaken
             .map(
               (d) =>
-                `${d.equipment.emoji} ${d.equipment.displayName}: ${Math.round(d.damage * 10) / 10
-                } damage${d.negated
-                  ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                  : ``
+                `${d.equipment.emoji} ${d.equipment.displayName}: ${
+                  Math.round(d.damage * 10) / 10
+                } damage${
+                  d.negated
+                    ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
+                    : ``
                 }${d.wasDisabled ? ` (**Disabled!**)` : ``}`,
             )
             .join(`\n`),
@@ -288,7 +290,7 @@ module.exports = (guild) => {
             negated:
               blockedByArmor -
               (previousRepair - randomUnbrokenArmor.repair) *
-              randomUnbrokenArmor.baseHp,
+                randomUnbrokenArmor.baseHp,
             wasDisabled: randomUnbrokenArmor.repair === 0,
           })
         }
@@ -313,7 +315,7 @@ module.exports = (guild) => {
           )
           target =
             allUnbrokenEquipmentAsArray[
-            Math.floor(allUnbrokenEquipmentAsArray.length * Math.random())
+              Math.floor(allUnbrokenEquipmentAsArray.length * Math.random())
             ]
         }
         const previousEqRepair = target.repair
@@ -359,13 +361,16 @@ module.exports = (guild) => {
               damageTaken
                 .map(
                   (d) =>
-                    `${d.equipment.emoji} ${d.equipment.displayName
+                    `${d.equipment.emoji} ${
+                      d.equipment.displayName
                     } ${percentToTextBars(d.equipment.repair)}
- ↳ ${Math.round(d.damage * 10) / 10} damage (${Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
-                    10
-                    }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${d.negated
-                      ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
-                      : ``
+ ↳ ${Math.round(d.damage * 10) / 10} damage (${
+                      Math.round(d.equipment.repair * d.equipment.baseHp * 10) /
+                      10
+                    }/${Math.round(d.equipment.baseHp * 10) / 10} hp)${
+                      d.negated
+                        ? ` (${Math.round(d.negated * 10) / 10} damage negated)`
+                        : ``
                     }${d.wasDisabled ? ` (**Disabled!**)` : ``}`,
                 )
                 .join(`\n`) || `No damage taken.`,
@@ -377,11 +382,11 @@ module.exports = (guild) => {
     outputEmbed.description = miss
       ? story.defend.miss(attacker, weapon, advantageAccuracyMultiplier)
       : story.defend.hit(
-        attacker,
-        weapon,
-        advantageDamageMultiplier,
-        totalDamageTaken,
-      )
+          attacker,
+          weapon,
+          advantageDamageMultiplier,
+          totalDamageTaken,
+        )
     guild.ship.logEntry(outputEmbed.description)
 
     let reactions
@@ -390,7 +395,7 @@ module.exports = (guild) => {
     }
 
     // notify
-    guild.pushToGuild(outputEmbed, null, reactions)
+    guild.message(outputEmbed, null, reactions)
 
     const destroyedShip = guild.ship.checkForDeath()
 

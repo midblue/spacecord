@@ -1,6 +1,6 @@
 const send = require(`./send`)
 const awaitReaction = require(`./awaitReaction`)
-const pushToGuild = require(`./pushToGuild`)
+const message = require(`./pushToGuild`)
 const { msToTimeString, capitalize } = require(`../../common`)
 const generalStaminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
 const manager = require(`../../game/manager`)
@@ -82,8 +82,7 @@ module.exports = async ({
   let remainingTime = time
   let done = false
 
-  if (!sentMessage)
-    sentMessage = (await pushToGuild({ msg, message: embed }))[0]
+  if (!sentMessage) sentMessage = (await message({ msg, message: embed }))[0]
   else sentMessage.edit(embed)
 
   const embedUpdateInterval = setInterval(() => {

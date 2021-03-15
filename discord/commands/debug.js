@@ -103,7 +103,7 @@ module.exports = {
             return `invalid coords: ` + x + ` ` + y
           }
           const res = await guild.ship.move([x, y])
-          if (res.message) guild.pushToGuild(res.message)
+          if (res.message) guild.message(res.message)
           return `moved ship.`
         },
       },

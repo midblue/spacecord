@@ -1,7 +1,7 @@
 const story = require(`../../game/basics/story/story`)
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
-const pushToGuild = require(`../actions/pushToGuild`) // todo do this all over the place
+const message = require(`../actions/pushToGuild`) // todo do this all over the place
 
 module.exports = {
   tag: `eBrake`,
@@ -31,7 +31,7 @@ module.exports = {
     if (!staminaRes.ok) return
 
     guild.ship.hardStop()
-    return pushToGuild({
+    return message({
       msg,
       id: guild.id,
       message: story.move.eBrake(msg.author.id),

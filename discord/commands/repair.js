@@ -6,7 +6,7 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `repair`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     value: `Repair parts of the ship.`,
     emoji: `🛠`,

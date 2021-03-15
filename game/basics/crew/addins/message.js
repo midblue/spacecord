@@ -1,12 +1,12 @@
 const pushToUser = require(`../../../../discord/actions/pushToUser`)
 
 module.exports = (member) => {
-  member.message = async (message) => {
-    const sent = await pushToUser({
+  member.message = async (message, reactions) => {
+    return await pushToUser({
       userId: member.id,
-      guildId: member.guild.guildId,
+      guildId: member.guildId,
       message,
+      reactions,
     })
-    return sent
   }
 }

@@ -34,16 +34,16 @@ module.exports = {
     if (!thisBody || !thatBody || !thisBody.mass || !thatBody.mass)
       return [0, 0]
 
-    m1 = thisBody.mass
-    m2 = thatBody.mass
+    const m1 = thisBody.mass
+    const m2 = thatBody.mass
 
-    r = distance(...thisBody.location, ...thatBody.location)
-    let G = GRAVITATIONAL_CONSTANT
-    gravityForce = Math.min(
+    const r = distance(...thisBody.location, ...thatBody.location)
+    const G = GRAVITATIONAL_CONSTANT
+    const gravityForce = Math.min(
       999999999,
       Math.max(-999999999, (-G * m1 * m2) / r ** 2),
     )
-    vectorToThisBody = getUnitVectorBetween(thisBody, thatBody)
+    const vectorToThisBody = getUnitVectorBetween(thisBody, thatBody)
 
     return vectorToThisBody.map((i) =>
       Math.min(0.5, Math.max(-0.5, i * gravityForce)),

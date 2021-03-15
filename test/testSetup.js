@@ -133,7 +133,7 @@ describe(`Base Data Initialization & Updates`, () => {
     expect(createdGuild.shipIds).to.contain(createdShip.id)
 
     const createdUser = await models.User.findOne({
-      _id: createdGuild.members[0].id,
+      _id: createdGuild.members[0].userId,
     })
     assert(createdUser)
     assert(createdUser.memberships.length)
@@ -144,7 +144,7 @@ describe(`Base Data Initialization & Updates`, () => {
         .crewMemberId,
     })
     assert(createdCrewMember)
-    assert(createdCrewMember.id === createdUser.id)
+    assert(createdCrewMember.userId === createdUser.id)
   })
 
   it(`should be able to spawn a new user and add a member to a guild, and all references should be correct`, async () => {
@@ -169,14 +169,15 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       user.memberships.find(
-        (m) => m.guildId === guild.id && m.crewMemberId === crewMember.id,
+        (m) =>
+          m.guildId === guild.id && m.crewMemberId === crewMember.crewMemberId,
       ),
       `User has link to crew member and guild`,
     )
 
     assert(
-      guild.members.find((m) => m.id === user.id).crewMemberId ===
-      crewMember.id,
+      guild.members.find((m) => m.userId === user.id).crewMemberId ===
+        crewMember.crewMemberId,
       `Guild has link to crew member and user`,
     )
 
@@ -216,7 +217,7 @@ describe(`Base Data Initialization & Updates`, () => {
     expect(dbGuild.name).to.equal(`The Whizzard's Palace`)
 
     const dbShip = await models.Ship.findOne({ _id: dbGuild.shipIds[0] })
-    expect(dbShip.status.dead).to.equal(``)
+    expect(dbShip.status.docked).to.equal(``)
   })
 
   it(`should be able to save data updates to the cargo and equipment`, async () => {

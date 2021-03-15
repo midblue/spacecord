@@ -76,12 +76,7 @@ module.exports = {
           ship = foundDiscordGuild?.ship
         }
 
-        if (
-          msg.guild &&
-          command.admin &&
-          !authorIsGameAdmin &&
-          !predeterminedCommandTag
-        ) {
+        if (msg.guild && command.admin && !authorIsGameAdmin) {
           const member = await msg.guild.members.fetch(msg.author.id)
           if (member) msg.author = member
           authorIsAdmin = member.permissions.has(`BAN_MEMBERS`)
@@ -90,13 +85,13 @@ module.exports = {
           }
         }
 
-        if (!command.noShip && !guild && !predeterminedCommandTag) {
+        if (!command.noShip && !guild) {
           const res = await game.guild(msg.guild?.id || msg.channel?.guild?.id)
           if (!res.ok && !command.public) return send(msg, res.message)
           guild = res.guild
           ship = guild?.ship
         }
-        if (!command.noShip && !predeterminedCommandTag) {
+        if (!command.noShip) {
           if (
             guild?.ship &&
             guild.ship.status.dead &&
@@ -114,11 +109,7 @@ module.exports = {
         const authorCrewMemberObject =
           guild?.ship &&
           guild.ship?.members?.find((m) => m.id === msg.author.id)
-        if (
-          !command.public &&
-          !authorCrewMemberObject &&
-          !predeterminedCommandTag
-        ) {
+        if (!command.public && !authorCrewMemberObject) {
           return send(
             msg,
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
@@ -130,8 +121,7 @@ module.exports = {
           command.captain &&
           !authorIsAdmin &&
           guild.ship?.captain &&
-          msg.author.id !== ship.captain &&
-          !predeterminedCommandTag
+          msg.author.id !== ship.captain
         ) {
           return send(
             msg,

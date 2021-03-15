@@ -11,7 +11,7 @@ module.exports = (guild) => {
     const g = createDefault({ discordGuild: {} })
     liveify(g, guild.context)
     const newShip = g.ship
-    guild.pushToGuild(story.ship.respawn(oldShip, newShip), msg)
+    guild.message(story.ship.respawn(oldShip, newShip), msg)
     guild.ship = newShip
     g.ship.members = members
     g.ship.seen = seen

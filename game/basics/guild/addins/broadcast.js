@@ -131,10 +131,10 @@ module.exports = (guild) => {
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
-              equipment.rechargeTime * TICK_INTERVAL >
+                equipment.rechargeTime * TICK_INTERVAL >
               Date.now()
             ) {
-              return guild.pushToGuild(
+              return guild.message(
                 story.broadcast.tooSoon(equipment.displayName),
                 msg,
               )
@@ -149,7 +149,7 @@ module.exports = (guild) => {
             }
             const staminaRes = authorCrewMemberObject.useStamina(`broadcast`)
             if (!staminaRes.ok) {
-              return guild.pushToGuild(staminaRes.message, msg)
+              return guild.message(staminaRes.message, msg)
             }
 
             const reallyDoIt = await runYesNoVote({
@@ -163,11 +163,11 @@ module.exports = (guild) => {
               cleanUp: false,
             })
             if (!reallyDoIt.ok) {
-              return guild.pushToGuild(reallyDoIt.message, msg)
+              return guild.message(reallyDoIt.message, msg)
             }
             if (reallyDoIt.insufficientVotes) {
               // guild.ship.logEntry(o.insufficientLog(user))
-              return guild.pushToGuild(story.vote.insufficientVotes(), msg)
+              return guild.message(story.vote.insufficientVotes(), msg)
             }
             if (reallyDoIt.result === true) {
               const collectiveSkill = reallyDoIt.yesVoters.reduce(
@@ -218,7 +218,7 @@ module.exports = (guild) => {
               reallyDoIt.sentMessage.edit(reallyDoIt.embed)
             } else {
               // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
-              guild.pushToGuild(story.broadcast.voteFailed(), msg)
+              guild.message(story.broadcast.voteFailed(), msg)
             }
           },
         })
@@ -244,7 +244,7 @@ module.exports = (guild) => {
     collectiveSkill,
   }) => {
     const powerRes = guild.ship.usePower(equipment.powerUse)
-    if (!powerRes.ok) return guild.pushToGuild(powerRes.message, msg)
+    if (!powerRes.ok) return guild.message(powerRes.message, msg)
 
     let skillMod = 0.5
     skillMod += Math.min(1, collectiveSkill / 40) // .5 to 1.5

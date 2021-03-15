@@ -63,7 +63,7 @@ module.exports = (guild) => {
     )
     if ((scanner.scanUndetectability || 0) < enemyTotalEngineeringLevel) {
       message.push(story.scanShip.ourScanDetected())
-      otherShip.pushToGuild(story.scanShip.detected(didSucceed, scanner))
+      otherShip.message(story.scanShip.detected(didSucceed, scanner))
       otherShip.logEntry(story.scanShip.detected(didSucceed, scanner))
     }
 

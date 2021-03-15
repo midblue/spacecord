@@ -10,7 +10,6 @@ const postcss = require(`rollup-plugin-postcss`)
 
 module.exports = (templateName = `map`, data = {}) => {
   return new Promise(async (resolve) => {
-
     const input = `
     import '${__dirname}/src/main.css'
     import App from '${__dirname}/src/${templateName}.svelte'
@@ -19,7 +18,7 @@ module.exports = (templateName = `map`, data = {}) => {
       props: ${JSON.stringify(data)}
     })
     export default app`
-    
+
     const inputOptions = {
       input: `input`,
       plugins: [
@@ -27,31 +26,32 @@ module.exports = (templateName = `map`, data = {}) => {
         svelte(),
         rollupResolve({
           browser: true,
-          dedupe: (importee) => importee === `svelte` || importee.startsWith(`svelte/`),
-          extensions: [`.svelte`, `.mjs`, `.js`, `.json`, `.node`]
+          dedupe: (importee) =>
+            importee === `svelte` || importee.startsWith(`svelte/`),
+          extensions: [`.svelte`, `.mjs`, `.js`, `.json`, `.node`],
         }),
         commonjs(),
         svg(),
         postcss({ extensions: [`.css`] }),
         // terser()
-      ]
+      ],
     }
 
     const outputOptions = {
       format: `iife`,
       name: `ui`,
     }
-    
+
     let output
     try {
       const bundle = await rollup.rollup(inputOptions)
       output = (await bundle.generate(outputOptions)).output
+    } catch (e) {
+      console.log(e)
     }
-    catch (e) {}
 
     const code = output?.[0]?.code
-    if (!code)
-      return
+    if (!code) return
 
     const prependHTML = `<html>
     <head>
@@ -65,7 +65,8 @@ module.exports = (templateName = `map`, data = {}) => {
     </html>`
     const finalOutput = prependHTML + code + appendHTML
     resolve(finalOutput)
-    fs.writeFile(`${__dirname}/output/test.html`, finalOutput, () => {})
+    fs.writeFile(`${__dirname}/output/test.html`, finalOutput, (e) => {
+      if (e) console.log(e)
+    })
   })
 }
-

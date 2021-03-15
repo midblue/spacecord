@@ -32,10 +32,18 @@ module.exports = {
     if (!staminaRes.ok) return
 
     const scanRes = await ship.scanArea()
-    if (!scanRes.ok) return setTimeout(() => send(msg, scanRes.message), 1000) // waiting for out of power message to go first
+    if (!scanRes.ok)
+      return setTimeout(() => guild.message(scanRes.message), 1000) // waiting for out of power message to go first
 
-    if (scanRes.image)
-      await send(msg, new Discord.MessageAttachment(scanRes.map, `scan.png`))
+    if (scanRes.image) {
+      await guild.message(
+        new Discord.MessageAttachment(scanRes.map, `scan.png`),
+      )
+      if (msg.pm)
+        authorCrewMemberObject.message(
+          new Discord.MessageAttachment(scanRes.map, `scan.png`),
+        )
+    }
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       // .setTitle(scanRes.message)
@@ -52,13 +60,12 @@ module.exports = {
         value: scanRes.key.map((k) => `\`` + k + `\``).join(`, `),
       })
     }
-    embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })))
-    const sentMessage = (await send(msg, embed))[0]
-
-    if (scanRes.message) send(msg, scanRes.message)
+    embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })), {
+      name: `Scanned By`,
+      value: msg.author.username,
+    })
 
     const reactions = scanRes.actions || []
-
     if (scanRes.lowPower) {
       reactions.push({
         emoji: `🔌`,
@@ -67,7 +74,6 @@ module.exports = {
         },
       })
     }
-
     if (scanRes.repair <= 0.8) {
       reactions.push({
         emoji: `🔧`,
@@ -79,7 +85,6 @@ module.exports = {
         },
       })
     }
-
     reactions.push({
       emoji: `📡`,
       label: `Scan Again ` + usageTag(scanRes.equipment.powerUse, `scan`),
@@ -88,11 +93,19 @@ module.exports = {
       },
     })
 
-    await awaitReaction({
-      msg: sentMessage,
-      reactions,
-      embed,
-      guild,
-    })
+    await guild.message(embed, null, reactions)
+    if (msg.pm) authorCrewMemberObject.message(embed, reactions)
+
+    if (scanRes.message) {
+      guild.message(scanRes.message)
+      if (msg.pm) authorCrewMemberObject.message(scanRes.message)
+    }
+
+    // await awaitReaction({
+    //   msg: sentMessage,
+    //   reactions,
+    //   embed,
+    //   guild,
+    // })
   },
 }

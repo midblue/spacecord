@@ -4,7 +4,7 @@ module.exports = (guild) => {
   guild.stepUpdate = async (amount, notify = true) => {
     if (!guild.ship.status.docked) {
       const moveRes = guild.ship.move()
-      if (moveRes.message.length) guild.pushToGuild(moveRes.message)
+      if (moveRes.message.length) guild.message(moveRes.message)
     }
 
     guild.ship.members.forEach((m) => m.stepUpdate())

@@ -104,16 +104,16 @@ const schemas = {
   ),
 }
 
-Object.values(schemas).forEach((s) =>
-  s
-    .virtual(`id`)
-    .get(function () {
-      return `${this._id}`
-    })
-    .set(function (id) {
-      this._id = `${id}`
-    }),
-)
+// object.values(schemas).forEach((s) =>
+//   s
+//     .virtual(`id`)
+//     .get(function () {
+//       return `${this._id}`
+//     })
+//     .set(function (id) {
+//       this._id = `${id}`
+//     }),
+// )
 
 const models = {}
 Object.keys(schemas).forEach((schemaName) => {

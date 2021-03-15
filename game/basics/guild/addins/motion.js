@@ -48,11 +48,10 @@ module.exports = (guild) => {
   guild.ship.thrust = ({ power, angle, thruster }) => {
     let message = [],
       ok = true
-    // if (guild.ship.status.docked)
-    //   return { ok: false, message: story.move.docked() }
-    // const fuel = ship.cargo.find((c) => c.cargoType === `fuel`)
-    // if (!fuel.amount)
-    //   return { ok: false, message: story.fuel.insufficient() }
+    if (guild.ship.status.docked)
+      return { ok: false, message: story.move.docked() }
+    const fuel = guild.ship.cargo.find((c) => c.cargoType === `fuel`)
+    if (!fuel.amount) return { ok: false, message: story.fuel.insufficient() }
 
     const thrustVector = guild.ship.getThrustVector({ power, angle })
     guild.ship.bearing[0] += thrustVector[0] / guild.ship.getTotalMass()
@@ -61,12 +60,11 @@ module.exports = (guild) => {
     const thrustMagnitude = Math.sqrt(
       thrustVector[0] ** 2 + thrustVector[1] ** 2,
     )
-    // const thrustApplied = guild.ship.applyThrust({ power, angle })
     message.push(story.move.thrust(thrustMagnitude, angle, guild, thruster))
 
-    // const resourceRes = guild.ship.useMoveResources(power, thrustApplied)
-    // message.push(...resourceRes.message)
-    // ok = ok && resourceRes.ok
+    const resourceRes = guild.ship.useMoveResources(power, thrustMagnitude)
+    message.push(...resourceRes.message)
+    ok = ok && resourceRes.ok
 
     guild.saveNewDataToDb()
     return { message, ok }
@@ -82,7 +80,7 @@ module.exports = (guild) => {
       return total + (engine.fuelUse || 0)
     }, 0)
 
-    const fuel = ship.cargo.find((c) => c.cargoType === `fuel`)
+    const fuel = guild.ship.cargo.find((c) => c.cargoType === `fuel`)
     const fuelLoss = fuelUsePerUnitOfThrust * thrustApplied
 
     fuel.amount -= fuelLoss
@@ -92,7 +90,7 @@ module.exports = (guild) => {
       ok = false
       message.push(story.fuel.insufficient())
     } else {
-      ship.status.stranded = false
+      guild.ship.status.stranded = false
     }
 
     if (!guild.ship.status.stranded) {
@@ -163,18 +161,18 @@ module.exports = (guild) => {
         .planets.map((p) => ({
           location: p.location,
           size: p.size,
-          mass: 100000,
+          mass: 1000000,
         }))
 
-      console.log(``)
-      console.log(
-        `ship is at`,
-        ship.location,
-        `with bearing`,
-        ship.bearing,
-        `which has angle`,
-        (360 + (180 * bearingToRadians(ship.bearing)) / Math.PI) % 360,
-      )
+      // console.log(``)
+      // console.log(
+      //   `ship is at`,
+      //   ship.location,
+      //   `with bearing`,
+      //   ship.bearing,
+      //   `which has angle`,
+      //   (360 + (180 * bearingToRadians(ship.bearing)) / Math.PI) % 360,
+      // )
       for (planet of planetsInRange) {
         const gravityForceVector = getGravityForceVector(planet, {
           ...ship,
@@ -183,19 +181,19 @@ module.exports = (guild) => {
 
         ship.bearing[0] += gravityForceVector[0] / ship.getTotalMass()
         ship.bearing[1] += gravityForceVector[1] / ship.getTotalMass()
-        console.log(
-          `planet at`,
-          planet.location,
-          `has`,
-          gravityForceVector,
-          `effect on vector`,
-        )
+        // console.log(
+        //   `planet at`,
+        //   planet.location,
+        //   `has`,
+        //   gravityForceVector,
+        //   `effect on vector`,
+        // )
       }
 
       const newX = currentLocation[0] + ship.bearing[0]
       const newY = currentLocation[1] + ship.bearing[1]
       ship.pastLocations.push([...ship.location])
-      if (ship.pastLocations.length > 4000) ship.pastLocations.shift()
+      while (ship.pastLocations.length > 3000) ship.pastLocations.shift()
       ship.location = [newX, newY]
       // console.log(ship.location, bearingToDegrees(ship.bearing))
     }

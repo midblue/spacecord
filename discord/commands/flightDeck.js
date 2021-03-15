@@ -1,6 +1,6 @@
 const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
-const { usageTag } = require(`../../common`)
+const { usageTag, captainTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
@@ -59,17 +59,24 @@ module.exports = {
     reactions.push(
       ...[
         {
-          emoji: `🧭`,
-          label: `Start Direction Vote ` + usageTag(0, `poll`),
+          emoji: `🔥`,
+          label: `Fire Thrusters ` + usageTag(0, `thrust`),
           action: ({ msg, guild }) => {
-            runGuildCommand({ msg, commandTag: `direction` })
+            runGuildCommand({ msg, commandTag: `thrust` })
           },
         },
         {
-          emoji: `⏩`,
-          label: `Start Speed Vote ` + usageTag(0, `poll`),
+          emoji: `📈`,
+          label: `View Ship Path`,
           action: ({ msg, guild }) => {
-            runGuildCommand({ msg, commandTag: `speed` })
+            runGuildCommand({ msg, commandTag: `path` })
+          },
+        },
+        {
+          emoji: `🛑`,
+          label: `Emergency Brake ` + captainTag + ` ` + usageTag(0, `eBrake`),
+          action: ({ msg, guild, user }) => {
+            runGuildCommand({ msg, commandTag: `eBrake` })
           },
         },
       ],

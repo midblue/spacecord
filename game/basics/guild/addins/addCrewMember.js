@@ -52,7 +52,7 @@ module.exports = (guild) => {
     // link the new member to the user object
     user.memberships.push({
       guildId: guild.id,
-      crewMemberId: addedCrewMember.id,
+      crewMemberId: addedCrewMember.crewMemberId || addedCrewMember.id,
     })
     if (user.memberships.length === 1) user.activeGuild = guild.id
     await guild.context.db.user.update({

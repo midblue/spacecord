@@ -2,7 +2,7 @@ const { User } = require(`./models`)
 
 module.exports = {
   async add({ id }) {
-    const user = new User({ id })
+    const user = new User({ _id: id, id })
     await user.save()
     // console.log(`Added user to database: ${id}`)
     return user
@@ -25,7 +25,7 @@ module.exports = {
     delete updates.__v
     Object.keys(updates).forEach((key) => (user[key] = updates[key]))
     await user.save()
-    console.log(`user update result`, user)
+    // console.log(`user update result`, user)
     return user
   },
 }

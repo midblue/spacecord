@@ -6,7 +6,7 @@ const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
   tag: `weapons`,
-  pm: true,
+  pmOnly: true,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:weapons?|w)$`, `gi`).exec(content)
   },

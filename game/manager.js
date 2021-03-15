@@ -196,7 +196,7 @@ module.exports = {
       const dPercent = d / range
       const garb = garbleAmount * dPercent
       const m = message(...messageProps, garb)
-      g.pushToGuild(m)
+      g.message(m)
       g.ship.logEntry(m)
     })
   },

@@ -25,7 +25,9 @@ module.exports = async ({
 
     let ended = false
 
-    if (embed && typeof embed === `object`) {
+    if (embed && !embed.addFields) embed = false
+
+    if (embed) {
       if ((reactions && reactions.length) || listeningType) {
         embed.setFooter(
           `Listening for ${
@@ -104,15 +106,12 @@ module.exports = async ({
       const member = (guild?.ship?.members || []).find((m) => m.id === user.id)
       if (!allowNonMembers && !member) return
 
-      if (
-        removeUserReactions &&
-        !canceled.isCanceled &&
-        (await canEdit(message))
-      ) {
+      if (removeUserReactions && !canceled.isCanceled) {
         const reaction = await new Discord.MessageReaction(client, data, msg)
-        try {
-          await reaction.users.remove(data.user_id)
-        } catch (e) {}
+        if (await canEdit(message))
+          try {
+            await reaction.users.remove(data.user_id)
+          } catch (e) {}
       }
 
       const userReactedWithEmoji = data.emoji.id

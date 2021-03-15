@@ -10,7 +10,7 @@ module.exports = async ({ id, channelId, message, msg, reactions }) => {
   else {
     if (!id && msg.author.crewMemberObject)
       id = msg.author.crewMemberObject.guildId
-    console.log(`pushtoguild`, id, channelId, message)
+    // console.log(`pushtoguild`, id, channelId, message)
     const discordGuild = await client.guilds.fetch(id)
     if (!discordGuild) {
       return log(

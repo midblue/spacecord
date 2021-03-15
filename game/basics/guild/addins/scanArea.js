@@ -124,10 +124,6 @@ You see ${
           POWER_UNIT +
           ` used`,
       },
-      {
-        name: `⏱ Next Update`,
-        value: `${Math.ceil(guild.context.timeUntilNextTick() / 1000 / 60)}m`,
-      },
     ]
 
     const lowPower = telemetry.powerUse * 2 > guild.ship.power

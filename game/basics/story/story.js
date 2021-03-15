@@ -406,9 +406,9 @@ module.exports = {
     docked: () =>
       `Your ship is docked, and can't go anywhere until it leaves its bay.`,
     thrust: (thrust, angle, guild, thruster) =>
-      `%username%${thruster.id}% added ${
+      `%username%${thruster.id}% added \`${
         Math.round(thrust * 100) / 100
-      } ${WEIGHT_UNITS} of thrust at an angle of ${angle} degrees. The ship is now going ${guild.ship.getSpeedString()} at ${guild.ship.getDirectionString()}. (previous was... )`,
+      } ${WEIGHT_UNITS}\` of thrust at an angle of \`${angle} degrees\`.\nThe ship is now going \`${guild.ship.getSpeedString()}\` at ${guild.ship.getDirectionString()}. (previous was... )`,
     overburdened: () =>
       `Your ship is overburdened, and its engines won't have any effect on its vector. Get rid of some cargo (or equipment) to regain control!`,
     eBrake: (id) =>

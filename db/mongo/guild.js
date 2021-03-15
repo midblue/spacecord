@@ -26,7 +26,7 @@ module.exports = {
       data: data.ship,
       guildId: id,
     })
-    const guild = new Guild({ ...data, id, shipIds: [ship.id] })
+    const guild = new Guild({ ...data, _id: id, id, shipIds: [ship._id] })
     await guild.save()
     const fullGuild = await this.get({ id })
     // console.log(`Added guild and ship to database: ${id}`, guild, ship)

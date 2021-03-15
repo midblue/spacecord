@@ -1,19 +1,24 @@
 <script>
   import Box from './components/Box.svelte'
   import MapPoint from './components/MapPoint.svelte'
-  import MapCircle from './components/MapCircle.svelte'
-  import Starfield from './components/Starfield.svelte'
+  import MapPath from './components/MapPath.svelte'
+  import MapDistanceCircles from './components/MapDistanceCircles.svelte'
 
   export let ship
   export let planets
 
   const edgeBuffer = 0.3
 
-  let pointsToShow = [
+  let pathPoints = [
     ...ship.pastLocations.map((l) => ({
       location: l,
-      size: 2,
-      color: 'rgba(255,255,255,.1)',
+    })),
+  ]
+  let entityPoints = [
+    ...planets.map((p) => ({
+      name: p.name,
+      location: p.location,
+      color: p.validColor || p.color,
     })),
     {
       name: ship.name + '\n(you)',
@@ -22,29 +27,21 @@
     },
   ]
 
-  let upperBound = pointsToShow.reduce(
+  let upperBound = pathPoints.reduce(
     (max, p) => Math.max(p.location[1], max),
     -999999999999,
   )
-  let rightBound = pointsToShow.reduce(
+  let rightBound = pathPoints.reduce(
     (max, p) => Math.max(p.location[0], max),
     -999999999999,
   )
-  let lowerBound = pointsToShow.reduce(
+  let lowerBound = pathPoints.reduce(
     (min, p) => Math.min(p.location[1], min),
     999999999999,
   )
-  let leftBound = pointsToShow.reduce(
+  let leftBound = pathPoints.reduce(
     (min, p) => Math.min(p.location[0], min),
     999999999999,
-  )
-
-  pointsToShow.push(
-    ...planets.map((p) => ({
-      name: p.name,
-      location: p.location,
-      color: p.validColor || p.color,
-    })),
   )
 
   const heightDiff = Math.abs(upperBound - lowerBound)
@@ -62,50 +59,43 @@
   const bufferDistance = diameter * edgeBuffer
   const displayDiameter = diameter + bufferDistance
 
-  let auBetweenLines = 1
-  while (auBetweenLines / displayDiameter < 0.15) auBetweenLines *= 2
+  pathPoints = pathPoints.map((p) => ({
+    ...p,
+    label: p.name,
+    topPercent:
+      ((upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter) *
+      100,
+    leftPercent:
+      ((p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter) *
+      100,
+  }))
 
-  pointsToShow = pointsToShow.map((p) => {
-    console.log(
-      'point to show',
-      (upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter,
-      (p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter,
-    )
+  entityPoints = entityPoints.map((p) => ({
+    ...p,
+    label: p.name,
+    topPercent:
+      ((upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter) *
+      100,
+    leftPercent:
+      ((p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter) *
+      100,
+  }))
 
-    return {
-      ...p,
-      label: p.name,
-      topPercent:
-        ((upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter) *
-        100,
-      leftPercent:
-        ((p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter) *
-        100,
-    }
-  })
-
-  const shipPoint = pointsToShow[pointsToShow.length - 1]
-
-  const circlesToShow = []
-  for (let i = 1; i < 7; i++) {
-    circlesToShow.push({
-      topPercent: shipPoint.topPercent,
-      leftPercent: shipPoint.leftPercent,
-      radiusPercent: (auBetweenLines / displayDiameter) * i * 100,
-      label: auBetweenLines * i + 'AU',
-    })
-  }
-
-  console.log({ upperBound, lowerBound, rightBound, leftBound })
+  const shipPoint = entityPoints[entityPoints.length - 1]
 </script>
 
 <!-- <Starfield /> -->
 <div style="--ui: #ccc; --bg: #222;">
   <Box label={'Recent Ship Path'}>
-    {#each circlesToShow as c}
-      <MapCircle {...c} />
-    {/each}
-    {#each pointsToShow as p}
+    <MapDistanceCircles centerPoint={shipPoint} {displayDiameter} />
+    <MapPath
+      {pathPoints}
+      {upperBound}
+      {leftBound}
+      {bufferDistance}
+      {displayDiameter}
+    />
+    {#each entityPoints as p}
       <MapPoint {...p} />
     {/each}
   </Box>

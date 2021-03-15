@@ -15,7 +15,7 @@ module.exports = {
     priority: 69,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:t|train|xp)$`, `gi`).exec(content)
+    return new RegExp(`^${settings.prefix}(?:train|xp)$`, `gi`).exec(content)
   },
   async action({ msg, guild, authorCrewMemberObject, author }) {
     log(msg, `Train`, msg.guild?.name)

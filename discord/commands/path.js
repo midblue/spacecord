@@ -7,7 +7,7 @@ module.exports = {
   tag: `path`,
   pm: true,
   documentation: {
-    name: `map`,
+    name: `path`,
     value: `The ship's recent path`,
     emoji: `📈`,
     category: `ship`,

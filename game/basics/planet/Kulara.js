@@ -1,5 +1,5 @@
 module.exports = {
-  location: [5, -8],
+  location: [4.2, -8.7],
   color: `cumin-colored`,
-  validColor: `#a2895e`
+  validColor: `#a2895e`,
 }

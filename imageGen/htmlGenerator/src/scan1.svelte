@@ -97,7 +97,16 @@
 
 <Starfield />
 <div style="--ui: #fd0; --bg: #210;">
-  <Box label="Area Scan">
+  <Box
+    label="Area Scan"
+    label2={`[${Math.round((center[0] + range) * 1000) / 1000}, ${
+      Math.round((center[1] - range) * 1000) / 1000
+    }]`}
+    label3={`[${Math.round((center[0] - range) * 1000) / 1000}, ${
+      Math.round((center[1] + range) * 1000) / 1000
+    }]`}
+    label4={repair < 1 ? `Needs_Repair` : ''}
+  >
     <div style="transform: rotate({rotateAmount}deg);">
       {#each circlesToShow as c}
         <MapCircle {...c} />

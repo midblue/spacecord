@@ -43,7 +43,7 @@ module.exports = async ({ msg, guild, planet }) => {
     guild,
     cleanUp: false,
   })
-  if (!ok) return message({ msg, message })
+  if (!ok) return guild.message({ msg, message })
 
   voteEmbed.fields = []
   if (!result) {

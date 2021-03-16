@@ -9,44 +9,36 @@ Logged in as j's test bot#8561 in 2 guilds
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
 > guildStatus     |,Unable to find guild in db:,605053799404666880
 > addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'HMS Invader' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Cain' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
 > addCrew         |,Added new crew member,secondUserId,for user,secondUserId,to guild,Test Guild
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 [
   -6.398462504318929e-21,
   -0.00010449482265047829
 ]
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 [
   0.0016685749999999998,
   -2.0434150328872946e-19
 ]
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 [
   -1.0217075164436473e-19,
   0.0016685749999999998
 ]
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'HMS Invader'.```
+Test sent message:,```Your server already has a ship! It's called 'Cain'.```
 [
   0.0005899303487091715,
-  0.0005899303487091716
-]
-calculated:,[
-  0.0005899303487091715,
-  0.0005899303487091716
-]
-expected:,[
-  0.0005899303487091716,
   0.0005899303487091716
 ]

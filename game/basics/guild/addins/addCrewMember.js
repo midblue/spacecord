@@ -13,7 +13,7 @@ module.exports = (guild) => {
       console.log(`Attempted to double add`, user.id, `to guild`, guild.id)
       return {
         ok: false,
-        message: story.crew.add.fail.existing(newMember.id),
+        message: story.crew.add.fail.existing(discordUser.id),
       }
     }
 

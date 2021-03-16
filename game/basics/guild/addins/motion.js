@@ -6,7 +6,9 @@ const {
   distance,
   degreesToUnitVector,
 } = require(`../../../../common`)
-const { getGravityForceVectorOnThisBodyDueToThatBody } = require(`../../../gamecommon`)
+const {
+  getGravityForceVectorOnThisBodyDueToThatBody,
+} = require(`../../../gamecommon`)
 
 module.exports = (guild) => {
   // guild.ship.maxSpeed = () => {
@@ -114,7 +116,7 @@ module.exports = (guild) => {
 
     return Math.sqrt(
       guild.ship.bearing[0] * guild.ship.bearing[0] +
-      guild.ship.bearing[1] * guild.ship.bearing[1],
+        guild.ship.bearing[1] * guild.ship.bearing[1],
     )
   }
 
@@ -151,14 +153,12 @@ module.exports = (guild) => {
       distanceToTravel = Math.sqrt(a * a + b * b)
       ship.location = coordinates
     } else {
-      let planetsInRange = guild.context
-        .scanArea({
-          x: guild.ship.location[0],
-          y: guild.ship.location[1],
-          range: GRAVITY_RANGE,
-          type: `planets`,
-        })
-        .planets
+      let planetsInRange = guild.context.scanArea({
+        x: guild.ship.location[0],
+        y: guild.ship.location[1],
+        range: GRAVITY_RANGE,
+        type: `planets`,
+      }).planets
 
       // console.log(``)
       // console.log(
@@ -171,13 +171,16 @@ module.exports = (guild) => {
       // )
       const shipMass = guild.ship.getTotalMass()
       for (planet of planetsInRange) {
-        const gravityForceVector = getGravityForceVectorOnThisBodyDueToThatBody(planet, {
-          ...ship,
-          mass: shipMass,
-        })
+        const gravityForceVector = getGravityForceVectorOnThisBodyDueToThatBody(
+          {
+            ...ship,
+            mass: shipMass,
+          },
+          planet,
+        )
 
-        ship.bearing[0] += gravityForceVector[0] / ship.getTotalMass()
-        ship.bearing[1] += gravityForceVector[1] / ship.getTotalMass()
+        ship.bearing[0] += gravityForceVector[0]
+        ship.bearing[1] += gravityForceVector[1]
         // console.log(
         //   `planet at`,
         //   planet.location,
@@ -228,8 +231,9 @@ module.exports = (guild) => {
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
-    return `${Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
-      } ${DISTANCE_UNIT}/hour`
+    return `${
+      Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 1000) / 1000
+    } ${DISTANCE_UNIT}/hour`
   }
 }
 

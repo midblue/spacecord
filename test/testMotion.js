@@ -1,11 +1,14 @@
 
 const fs = require(`fs`)
 const path = require(`path`)
-const assert = require(`assert`)
 const { expect } = require(`chai`)
+const chai = require(`chai`)
+const chaiAlmost = require(`chai-almost`)
+
+chai.use(chaiAlmost())
+
 const { addShip } = require(`./tools/utils`)
 const { getGravityForceVectorOnThisBodyDueToThatBody } = require(`../game/gamecommon`)
-const almostEqual = require(`almost-equal`)
 
 let outputToWriteToFile = []
 
@@ -26,17 +29,7 @@ describe(`Gravity`, async () => {
       debugMass: 1000,
       bearing: [0, 0]
     })
-    // test roughly equal
 
-    // assertionError: expected [ Array(2) ] to deeply equal [ -0.001668575, 0 ]
-    //       + expected - actual
-
-    //        [
-    //       -  -1.0217075164436473e-19
-    //       -  0.0016685749999999998
-    //       +  -0.001668575
-    //       +  0
-    //        ]
     expect(getGravityForceVectorOnThisBodyDueToThatBody(testShip, testPlanet)).to.deep.equal([0, 0])
   })
 
@@ -112,9 +105,7 @@ describe(`Gravity`, async () => {
 
     expectedForceVector = [GRAVITATIONAL_CONSTANT * testPlanet.mass * testShip.getTotalMass() / (2 ** 2), 0]
 
-    assert(almostEqual(forceVectorOnShip[0], expectedForceVector[0], GRAV_TOLERANCE))
-    assert(almostEqual(forceVectorOnShip[1], expectedForceVector[1], GRAV_TOLERANCE))
-
+    expect(forceVectorOnShip).to.be.deep.almost(expectedForceVector)
   })
 
   it(`should have the correct vector pointing from thatBody to thisBody between two objects in vertical line`, async () => {
@@ -145,9 +136,7 @@ describe(`Gravity`, async () => {
 
     expectedForceVector = [0, GRAVITATIONAL_CONSTANT * testPlanet.mass * testShip.getTotalMass() / (2 ** 2)]
 
-    assert(almostEqual(forceVectorOnShip[0], expectedForceVector[0], GRAV_TOLERANCE))
-    assert(almostEqual(forceVectorOnShip[1], expectedForceVector[1], GRAV_TOLERANCE))
-
+    expect(forceVectorOnShip).to.be.deep.almost(expectedForceVector)
   })
 
   it(`should have the correct vector pointing from thatBody to thisBody between two objects on 45-degree diagonal line`, async () => {
@@ -178,11 +167,8 @@ describe(`Gravity`, async () => {
 
     expectedMagnitude = GRAVITATIONAL_CONSTANT * testPlanet.mass * testShip.getTotalMass() / ((2 * Math.sqrt(2)) ** 2)
     expectedForceVector = [expectedMagnitude / Math.sqrt(2), expectedMagnitude / Math.sqrt(2)]
-    console.log(`calculated:`, forceVectorOnShip)
-    console.log(`expected:`, expectedForceVector)
-    assert(almostEqual(forceVectorOnShip[0], expectedForceVector[0], GRAV_TOLERANCE))
-    assert(almostEqual(forceVectorOnShip[1], expectedForceVector[1], GRAV_TOLERANCE))
 
+    expect(forceVectorOnShip).to.be.deep.almost(expectedForceVector)
   })
 
 

@@ -18,10 +18,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "almost-equal": "1.1.0",
     "bad-words": "^3.0.4",
     "bufferutil": "^4.0.3",
     "chai": "4.3.0",
+    "chai-almost": "1.0.1",
     "discord.js-light": "^3.5.2",
     "dotenv": "^8.2.0",
     "erlpack": "github:discord/erlpack",

@@ -1,5 +1,6 @@
 GAME_TITLE = `Spacecord (Title TBD)`
 INVITE_LINK = `https://discord.com/api/oauth2/authorize?client_id=${process.env.BOT_ID}&permissions=268561472&scope=bot`
+
 APP_COLOR = `#00bbff`
 SUCCESS_COLOR = `#00ff55`
 FAILURE_COLOR = `#ff0000`
@@ -27,7 +28,6 @@ TIME_UNIT_SHORTS_PER_LONG = TIME_UNIT_LONG_LENGTH / TICK_INTERVAL
 
 GRAVITY_RANGE = 8
 GRAVITATIONAL_CONSTANT = 6.6743 * 10 ** -11
-
 GRAV_TOLERANCE = 10 ** -9
 
 SLEEP = (ms) =>

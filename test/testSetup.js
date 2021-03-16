@@ -1,4 +1,3 @@
-
 const fs = require(`fs`)
 const path = require(`path`)
 const assert = require(`assert`)
@@ -176,7 +175,7 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       guild.members.find((m) => m.userId === user.id).crewMemberId ===
-      crewMember.crewMemberId,
+        crewMember.crewMemberId,
       `Guild has link to crew member and user`,
     )
 
@@ -251,11 +250,15 @@ describe(`Base Data Initialization & Updates`, () => {
 
 before(() => {
   console.log = (...args) => {
-    outputToWriteToFile.push(args.map((a) => typeof a === `object` ? JSON.stringify(a, null, 2) : a))
+    outputToWriteToFile.push(
+      args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
+    )
   }
 })
 
 after(() => {
-  fs.writeFileSync(path.resolve(`./`, `test/output`, `setup.txt`), outputToWriteToFile.join(`\n`)
+  fs.writeFileSync(
+    path.resolve(`./`, `test/output`, `setup.txt`),
+    outputToWriteToFile.join(`\n`),
   )
 })

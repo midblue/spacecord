@@ -1,7 +1,7 @@
 const defaults = {
   type: `armor`,
   description: ``,
-  mass: 150,
+  mass: 2000,
   baseHp: 50,
   damageToArmorMultiplier: 0.5,
   armorCoverage: 0.5,

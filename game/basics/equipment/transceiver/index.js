@@ -1,7 +1,7 @@
 const defaults = {
   type: `transceiver`,
   description: ``,
-  mass: 50,
+  mass: 100,
   baseHp: 6,
   maxGarble: 0.8,
   repairDifficulty: 1,

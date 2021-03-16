@@ -107,6 +107,41 @@ module.exports = {
           return `moved ship.`
         },
       },
+      move: {
+        description: `move <guild id> <x>,<y>`,
+        action: async (str) => {
+          let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
+            str.replace(/\[\]/g, ``),
+          )
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const { guild } = await client.game.guild(id)
+          if (!guild) return `no guild found for ` + id
+          try {
+            x = parseFloat(x)
+            y = parseFloat(y)
+          } catch (e) {
+            return `invalid coords: ` + x + ` ` + y
+          }
+          const res = await guild.ship.move([x, y])
+          if (res.message) guild.message(res.message)
+          return `moved ship.`
+        },
+      },
+      clearpath: {
+        description: `clearpath <guild id>`,
+        action: async (str) => {
+          let [unused, id, x, y] = /^ ?([^ ]+)$/.exec(
+            str.replace(/\[\]/g, ``),
+          )
+          if (id === `this`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const { guild } = await client.game.guild(id)
+          if (!guild) return `no guild found for ` + id
+          guild.ship.pastLocations = []
+          return `cleared path.`
+        },
+      },
       power: {
         description: `power <id> <power>`,
         action: async (str) => {

@@ -1,7 +1,7 @@
 const defaults = {
   type: `battery`,
   description: ``,
-  mass: 80,
+  mass: 1000,
   baseHp: 25,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.01,

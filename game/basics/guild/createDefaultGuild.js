@@ -102,11 +102,11 @@ module.exports = function ({ discordGuild, channelId }) {
     cargo: [
       {
         cargoType: `fuel`,
-        amount: 8,
+        amount: 4000,
       },
       // {
       //   cargoType: 'food',
-      //   amount: 2,
+      //   amount: 2000,
       // },
     ],
     location: [...planet.location],

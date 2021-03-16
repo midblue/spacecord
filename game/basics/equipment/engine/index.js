@@ -1,7 +1,7 @@
 const defaults = {
   type: `engine`,
   description: ``,
-  mass: 150,
+  mass: 1000,
   baseHp: 30,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.005,

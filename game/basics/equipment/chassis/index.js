@@ -2,11 +2,11 @@ const defaults = {
   type: `chassis`,
   baseCost: 2000,
   interactRadius: 1,
-  mass: 150,
+  mass: 10000,
   baseHp: 40,
   repairDifficulty: 1,
   agility: 0.5,
-  maxMass: 1000,
+  maxMass: 25000,
   emoji: `🚀`,
 }
 

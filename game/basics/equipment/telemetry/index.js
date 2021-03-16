@@ -1,7 +1,7 @@
 const defaults = {
   type: `telemetry`,
   description: ``,
-  mass: 30,
+  mass: 700,
   baseHp: 10,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.02,

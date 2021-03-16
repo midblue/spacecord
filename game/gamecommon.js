@@ -37,17 +37,17 @@ module.exports = {
     const m1 = thisBody.mass || 0
     const m2 = thatBody.mass || 0
 
-    const r = distance(...thisBody.location, ...thatBody.location)
+    const r = distance(...thisBody.location, ...thatBody.location) * KM_PER_AU * M_PER_KM
     const G = GRAVITATIONAL_CONSTANT
     const gravityForce = Math.min(
       999999999,
       Math.max(-999999999, (-G * m1 * m2) / r ** 2),
     )
     const vectorToThisBody = getUnitVectorBetween(thisBody, thatBody)
-    gravityForceVector = vectorToThisBody.map((i) =>
-      Math.min(0.5, Math.max(-0.5, i * gravityForce)),
-    )
-    console.log(gravityForceVector)
-    return gravityForceVector
+    console.log(`vectorToThisBody`, vectorToThisBody)
+    gravityForceVector = vectorToThisBody.map((i) => i * gravityForce)
+
+    console.log(`gravityForceVector`, gravityForceVector)
+    return gravityForceVector // kg * m / second == N
   },
 }

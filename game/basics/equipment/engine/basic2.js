@@ -4,7 +4,7 @@ module.exports = {
   displayName: `Sparkler 2000`,
   baseHp: 20,
   maxThrust: 0.5,
-  mass: 80,
+  mass: 800,
   fuelUse: 0.9,
   directions: 4,
   powerLevels: 2,

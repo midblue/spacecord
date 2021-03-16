@@ -1,7 +1,7 @@
 const defaults = {
   type: `scanner`,
   description: ``,
-  mass: 40,
+  mass: 200,
   baseHp: 10,
   range: 1.5,
   repairDifficulty: 1,

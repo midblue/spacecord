@@ -21,11 +21,9 @@ module.exports = {
           `Your server already has a ship! It's called '${guild.ship.name}'.`,
       },
       first: (guild) =>
-        `You find yourself aboard a discount ${
-          guild.ship.equipment.find((e) => e.equipmentType === `chassis`)
-            .list[0].displayName
-        } dubbed '${
-          guild.ship.name
+        `You find yourself aboard a discount ${guild.ship.equipment.find((e) => e.equipmentType === `chassis`)
+          .list[0].displayName
+        } dubbed '${guild.ship.name
         }' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.`,
     },
     name: {
@@ -41,12 +39,9 @@ module.exports = {
     respawn: (oldShip, newShip) =>
       `Your escape pod crash landed on ${capitalize(
         newShip.status.docked,
-      )}. It took some time, but the whole crew worked manual labor in the locals' fields in exchange for enough credits to buy an extremely basic ship.\n\nWith determined expressions on their faces, the crew that once proudly served aboard ${
-        oldShip.name
-      } clamber into their stations aboard their new ship, ${
-        newShip.name
-      }. Weathered hands grasp familiar instruments as the experienced crew find their places in their new home. It's cramped, but everyone is cautiously optimistic that this ship will shepard them through to a fresh start.\n\n%username%${
-        oldShip.captain
+      )}. It took some time, but the whole crew worked manual labor in the locals' fields in exchange for enough credits to buy an extremely basic ship.\n\nWith determined expressions on their faces, the crew that once proudly served aboard ${oldShip.name
+      } clamber into their stations aboard their new ship, ${newShip.name
+      }. Weathered hands grasp familiar instruments as the experienced crew find their places in their new home. It's cramped, but everyone is cautiously optimistic that this ship will shepard them through to a fresh start.\n\n%username%${oldShip.captain
       }% takes their place at the helm as the ship powers up for the first time.\n\nYou look up once again to see the vast sky above you.\nWhat's next, captain? What's next, crew?`,
   },
   crew: {
@@ -65,8 +60,7 @@ module.exports = {
       notEnough: (id, current, needed) =>
         `%username%${id}%, you need 💪${Math.round(
           needed,
-        )} stamina for that task, and you currently have 💪${
-          Math.round(current * 10) / 10
+        )} stamina for that task, and you currently have 💪${Math.round(current * 10) / 10
         }.`,
     },
   },
@@ -80,10 +74,8 @@ module.exports = {
     repair: () =>
       `You start to scan the ship, but your scanner whines to a halt mid-scan. Maybe repairing would help?`,
     detected: (didSucceed, scanner) =>
-      `Your engineers have managed to detect that a nearby craft has ${
-        didSucceed ? `scanned` : `attempted to scan`
-      } you with a ${scanner.displayName}${
-        didSucceed ? `` : `, but failed to get any information`
+      `Your engineers have managed to detect that a nearby craft has ${didSucceed ? `scanned` : `attempted to scan`
+      } you with a ${scanner.displayName}${didSucceed ? `` : `, but failed to get any information`
       }.`,
     ourScanDetected: () => `Your scan was detected by the other ship.`,
   },
@@ -113,10 +105,8 @@ module.exports = {
       `The crew decides collectively that broadcasting isn't the smartest move right now. A few sighs of relief are heard around the bridge.`,
     location: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `You key in a few commands and listen as your ship's ${
-          equipment.displayName
-        } begins to hum. Your location has been broadcast to any ship within ${
-          Math.round(effectiveRange * 10) / 10
+        `You key in a few commands and listen as your ship's ${equipment.displayName
+        } begins to hum. Your location has been broadcast to any ship within ${Math.round(effectiveRange * 10) / 10
         } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
           yesPercent * 100,
         )}% of voters agreed)`,
@@ -130,10 +120,8 @@ module.exports = {
     },
     distress: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `You key in a few commands and listen as your ship's ${
-          equipment.displayName
-        } begins to hum. A distress signal has been broadcast to any ship within ${
-          Math.round(effectiveRange * 10) / 10
+        `You key in a few commands and listen as your ship's ${equipment.displayName
+        } begins to hum. A distress signal has been broadcast to any ship within ${Math.round(effectiveRange * 10) / 10
         } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
           yesPercent * 100,
         )}% of voters agreed)`,
@@ -147,10 +135,8 @@ module.exports = {
     },
     surrender: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `You command your ship's ${
-          equipment.displayName
-        } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${
-          Math.round(effectiveRange * 10) / 10
+        `You command your ship's ${equipment.displayName
+        } to raise the proverbial white flag. A signal of your ship's surrender has been broadcast to any ship within ${Math.round(effectiveRange * 10) / 10
         } ${DISTANCE_UNIT}. This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
           yesPercent * 100,
         )}% of voters agreed)`,
@@ -162,14 +148,10 @@ module.exports = {
     },
     faction: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `You hit the big ${
-          ship.faction.color
-        } button on your control panel. Your ship's ${
-          equipment.displayName
-        } vibrates in time with your faction's anthem. A rallying cry for ${
-          ship.faction.emoji
-        }${ship.faction.name} echoes across space to any ship within ${
-          Math.round(effectiveRange * 10) / 10
+        `You hit the big ${ship.faction.color
+        } button on your control panel. Your ship's ${equipment.displayName
+        } vibrates in time with your faction's anthem. A rallying cry for ${ship.faction.emoji
+        }${ship.faction.name} echoes across space to any ship within ${Math.round(effectiveRange * 10) / 10
         } ${DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
           yesPercent * 100,
         )}% of voters agreed)`,
@@ -181,10 +163,8 @@ module.exports = {
     },
     attack: {
       send: ({ ship, equipment, powerUse, yesPercent, effectiveRange }) =>
-        `You hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${
-          equipment.displayName
-        } broadcasts your avarice. An attack signal makes its way to any ship within ${
-          Math.round(effectiveRange * 10) / 10
+        `You hit the button on your control panel marked with a skull and crossbones. You grin as your ship's ${equipment.displayName
+        } broadcasts your avarice. An attack signal makes its way to any ship within ${Math.round(effectiveRange * 10) / 10
         } ${DISTANCE_UNIT}! This action uses ⚡️${powerUse} ${POWER_UNIT} of power. (${Math.round(
           yesPercent * 100,
         )}% of voters agreed)`,
@@ -199,8 +179,7 @@ module.exports = {
     votePassed: (yesPercent, cargo, amount) =>
       `You hit the trash-can-shaped button on your controls. You watch out of the window as ${amount.toFixed(
         2,
-      )} ${WEIGHT_UNITS} of ${
-        cargo.displayName
+      )} ${WEIGHT_UNITS} of ${cargo.displayName
       } goes drifting off into space. (${Math.round(
         yesPercent * 100,
       )}% of voters agreed)`,
@@ -223,10 +202,8 @@ module.exports = {
         levelProgress,
         percentToLevel,
       ) =>
-        `You gain ${Math.round(xpAmount)} experience in \`${
-          allSkills.find((s) => s.name === skill).emoji
-        }${capitalize(skill)}\`${
-          didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
+        `You gain ${Math.round(xpAmount)} experience in \`${allSkills.find((s) => s.name === skill).emoji
+        }${capitalize(skill)}\`${didLevelUp ? `, leveling up to \`Level ${level}\`! 🎉🎊` : `.`
         } You're \`${Math.round(levelProgress)}/${levelSize} (${(
           percentToLevel * 100
         ).toFixed()}%)\` to \`Level ${level + 1}\`.`,
@@ -237,20 +214,18 @@ module.exports = {
       `%username%${member.id}%, you need at least ${Object.keys(requirements)
         .map(
           (r) =>
-            `level \`${requirements[r]}\` in \`${
-              allSkills.find((s) => s.name === r).emoji
+            `level \`${requirements[r]}\` in \`${allSkills.find((s) => s.name === r).emoji
             }${capitalize(r)}\` `,
         )
         .join(`and `)}to use that. You have${Object.keys(requirements)
-        .map(
-          (r) =>
-            ` level \`${
-              member?.level?.find((l) => l.skill === r)?.level || 0
-            }\` in \`${allSkills.find((s) => s.name === r).emoji}${capitalize(
-              r,
-            )}\` `,
-        )
-        .join(`and`)}.`,
+          .map(
+            (r) =>
+              ` level \`${member?.level?.find((l) => l.skill === r)?.level || 0
+              }\` in \`${allSkills.find((s) => s.name === r).emoji}${capitalize(
+                r,
+              )}\` `,
+          )
+          .join(`and`)}.`,
   },
   buy: {
     notEnoughMoney: () =>
@@ -259,24 +234,19 @@ module.exports = {
       voteFailed: (part, cost) =>
         `The crew decides collectively not to buy a ${part.emoji}${part.displayName} for \`💳 ${cost}\` credits.`,
       votePassed: (part, cost) =>
-        `You bought a brand new ${part.emoji} ${
-          part.displayName
-        }! It cost you \`💳 ${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${
-          part.type === `chassis`
-            ? `all of your equipment in it.`
-            : `it in its housing.`
+        `You bought a brand new ${part.emoji} ${part.displayName
+        }! It cost you \`💳 ${cost}\` credits, but it looks very nice and shiny as your crew gets to work installing ${part.type === `chassis`
+          ? `all of your equipment in it.`
+          : `it in its housing.`
         }`,
     },
     cargo: {
       voteFailed: (cargo, amount, cost) =>
-        `The crew decides collectively not to buy ${amount} ${
-          amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
-        } of ${cargo.emoji}${
-          cargo.displayName
+        `The crew decides collectively not to buy ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName
         } for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
-        `You bought ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
-          cargo.emoji
+        `You bought ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${cargo.emoji
         }${cargo.displayName} for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
     },
   },
@@ -289,14 +259,11 @@ module.exports = {
     },
     cargo: {
       voteFailed: (cargo, amount, cost) =>
-        `The crew decides collectively not to sell ${amount} ${
-          amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
-        } of ${cargo.emoji}${
-          cargo.displayName
+        `The crew decides collectively not to sell ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS
+        } of ${cargo.emoji}${cargo.displayName
         } for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
       votePassed: (cargo, amount, cost) =>
-        `You sold ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${
-          cargo.emoji
+        `You sold ${amount} ${amount === 1 ? WEIGHT_UNIT : WEIGHT_UNITS} of ${cargo.emoji
         }${cargo.displayName} for \`💳 ${cost}\` credits per ${WEIGHT_UNIT}.`,
     },
   },
@@ -331,12 +298,9 @@ module.exports = {
     brokenWeapons: () =>
       `All of your weapons are too damaged to attack with! Repair them first!`,
     tooLowMunitionsSkill: (required, current, weapon) =>
-      `Voters' collective munitions skill (\`${
-        allSkills.find((s) => s.name === `munitions`).emoji
-      }${current}\`), is too low to operate the ${weapon.emoji} ${
-        weapon.displayName
-      } (requires \`${
-        allSkills.find((s) => s.name === `munitions`).emoji
+      `Voters' collective munitions skill (\`${allSkills.find((s) => s.name === `munitions`).emoji
+      }${current}\`), is too low to operate the ${weapon.emoji} ${weapon.displayName
+      } (requires \`${allSkills.find((s) => s.name === `munitions`).emoji
       }${required}\`).`,
     docked: (enemyShip) =>
       `Just as you train your sights on the enemy, they manage to slip inside the protective field of ${capitalize(
@@ -345,52 +309,42 @@ module.exports = {
     votePassed: (yesPercent, otherShip, collectiveMunitionsSkill) =>
       `${Math.round(
         yesPercent * 100,
-      )}% of the available crew members agree to launch an attack against ${
-        otherShip.name
+      )}% of the available crew members agree to launch an attack against ${otherShip.name
       }! The participating crew members take their places at their battle stations with a collective munitions skill of \`${collectiveMunitionsSkill}\`.`,
     outOfRange: () =>
       `By the time you got your weapons ready, the other ship had moved out of range! You'll have to catch up to attack them.`,
     miss: (weapon, wasClose, accuracyMultiplier) =>
-      `The attack from your ${weapon.emoji} ${weapon.displayName} misses${
-        wasClose ? ` by a hair's breadth` : ``
-      }! ${
-        accuracyMultiplier > 1
-          ? `Even though our munitions experts were in peak condition, it wasn't enough.`
-          : accuracyMultiplier < 1
+      `The attack from your ${weapon.emoji} ${weapon.displayName} misses${wasClose ? ` by a hair's breadth` : ``
+      }! ${accuracyMultiplier > 1
+        ? `Even though our munitions experts were in peak condition, it wasn't enough.`
+        : accuracyMultiplier < 1
           ? `The opposition's pilots are better than expected, and due to some brilliant flying, the attack bore wide.`
           : `All those watching from the bridge confirm: it was a lucky dodge by the enemy.`
       }`,
     hit: (weapon, advantageDamageMultiplier, totalDamageDealt, destroyedShip) =>
-      `Your ${weapon.emoji} ${weapon.displayName} hits the enemy, dealing ${
-        Math.round(totalDamageDealt * 10) / 10
-      } damage${
-        advantageDamageMultiplier > 1
-          ? `, a critical hit!`
-          : advantageDamageMultiplier < 1
+      `Your ${weapon.emoji} ${weapon.displayName} hits the enemy, dealing ${Math.round(totalDamageDealt * 10) / 10
+      } damage${advantageDamageMultiplier > 1
+        ? `, a critical hit!`
+        : advantageDamageMultiplier < 1
           ? ` in a glancing blow.`
           : `.`
       }${destroyedShip ? ` You destroyed their ship!` : ``}`,
   },
   defend: {
     miss: (attacker, weapon, accuracyMultiplier) =>
-      `A ${weapon.emoji} ${
-        weapon.displayName
-      } attack whizzes past your craft, coming from the ship ${
-        attacker.name
-      }. ${
-        accuracyMultiplier > 1
-          ? `They appear to be expert shots, and you wonder how long you can stay lucky...`
-          : accuracyMultiplier < 1
+      `A ${weapon.emoji} ${weapon.displayName
+      } attack whizzes past your craft, coming from the ship ${attacker.name
+      }. ${accuracyMultiplier > 1
+        ? `They appear to be expert shots, and you wonder how long you can stay lucky...`
+        : accuracyMultiplier < 1
           ? `Thanks to the quick action of your pilots, the shot went fairly wide.`
           : `It looks like a tight battle is unfolding.`
       }`,
     hit: (attacker, weapon, advantageDamageMultiplier, totalDamageTaken) =>
-      `The ${weapon.emoji} ${weapon.displayName} of ${
-        attacker.name
-      } hits your ship for ${Math.round(totalDamageTaken * 10) / 10} damage${
-        advantageDamageMultiplier > 1
-          ? ` in a critical hit!`
-          : advantageDamageMultiplier < 1
+      `The ${weapon.emoji} ${weapon.displayName} of ${attacker.name
+      } hits your ship for ${Math.round(totalDamageTaken * 10) / 10} damage${advantageDamageMultiplier > 1
+        ? ` in a critical hit!`
+        : advantageDamageMultiplier < 1
           ? ` in a glancing blow.`
           : `.`
       }`,
@@ -405,10 +359,9 @@ module.exports = {
     },
     docked: () =>
       `Your ship is docked, and can't go anywhere until it leaves its bay.`,
-    thrust: (thrust, angle, guild, thruster) =>
-      `%username%${thruster.id}% added \`${
-        Math.round(thrust * 100) / 100
-      } ${WEIGHT_UNITS}\` of thrust at an angle of \`${angle} degrees\`.\nThe ship is now going \`${guild.ship.getSpeedString()}\` at ${guild.ship.getDirectionString()}. (previous was... )`,
+    thrust: (thrust, angle, guild, thruster, previousSpeedString, previousDirectionString) =>
+      `%username%${thruster.id}% added \`${Math.round(thrust * 100) / 100
+      } ${WEIGHT_UNITS}•m/s\` of thrust at an angle of \`${angle} degrees\`.\nThe ship is now going \`${guild.ship.getSpeedString()}\` at ${guild.ship.getDirectionString()}. (Previously \`${previousSpeedString}\` at ${previousDirectionString})`,
     overburdened: () =>
       `Your ship is overburdened, and its engines won't have any effect on its vector. Get rid of some cargo (or equipment) to regain control!`,
     eBrake: (id) =>
@@ -421,10 +374,8 @@ module.exports = {
         yesPercent * 100,
       )}% of voters agreed)`,
     generalPlanet: (ship, planet) =>
-      `The landing gear extends as ${ship.name} approaches the ${
-        planet.color
-      } surface of ${
-        planet.name
+      `The landing gear extends as ${ship.name} approaches the ${planet.color
+      } surface of ${planet.name
       }. You touch down on the launchpad at ${Math.ceil(
         Math.random() * 23,
       )}:00, and the crew descends the extended gangplank, ready to stretch their legs amongst the locals at the spaceport.`,
@@ -438,8 +389,7 @@ module.exports = {
         yesPercent * 100,
       )}% of voters agreed)`,
     depart: (planet) =>
-      `Your crew packs aboard the ship as the engines heat up. Clouds of smoke hide the launchpad as you lift off from ${
-        planet.name
+      `Your crew packs aboard the ship as the engines heat up. Clouds of smoke hide the launchpad as you lift off from ${planet.name
       } at ${Math.ceil(Math.random() * 23)}:00 sharp.`,
   },
   log: {
@@ -451,8 +401,7 @@ module.exports = {
   },
   discovery: {
     planet: (planet) =>
-      `You've discovered 🪐${planet.name}, a ${planet.getSizeDescriptor()} ${
-        planet.color
+      `You've discovered 🪐${planet.name}, a ${planet.getSizeDescriptor()} ${planet.color
       } planet located at [${planet.location.join(
         `, `,
       )}] ${DISTANCE_UNIT}. It has been added to your galaxy map. Congratulations!`,

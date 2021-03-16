@@ -1,5 +1,5 @@
 module.exports = {
-  validColor: '#47a967',
+  validColor: `#47a967`,
   recharge: true,
   shipyard: {
     chassis: [`starter`, `shipA`, `hauler`],

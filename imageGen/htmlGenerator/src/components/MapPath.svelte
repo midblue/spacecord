@@ -14,7 +14,7 @@
       location: l.location ? l.location : l,
       size: 2,
       color: `rgba(${colorRgb},${
-        fade ? (0.1 * index) / pathPoints.length : 0.15
+        fade ? 0.2 * (index / pathPoints.length) : 0.15
       })`,
     })),
   ]

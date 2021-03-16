@@ -5,7 +5,8 @@ const defaults = () => ({
   location: [0, 0],
   color: `green`,
   size: 1,
-  mass: 1000000,
+  mass: 5.974e24, // kg
+  radius: 6371 // km
 })
 
 // * get all exports from files in this folder

@@ -1,7 +1,7 @@
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 const {
-  bearingToDegrees,
-  bearingToArrow,
+  velocityToDegrees,
+  velocityToArrow,
   percentToTextBars,
   distance,
 } = require(`../../../../common`)
@@ -41,19 +41,17 @@ module.exports = (guild) => {
       if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
       messages.push(
         preMessage +
-          ` you look out out the window. 
+        ` you look out out the window. 
 You can see for about ${range} ${DISTANCE_UNIT}.
-You see ${
-            thingsFoundCount
-              ? thingsFoundCount +
-                ` unidentifiable thing${
-                  thingsFoundCount === 1 ? `` : `s`
-                } out there in the dark.`
-              : `nothing but the inky void of space.`
-          }` +
-          (haveEnoughPower || eyesOnly
-            ? ``
-            : `\nMaybe you should think about generating some power.`),
+You see ${thingsFoundCount
+          ? thingsFoundCount +
+          ` unidentifiable thing${thingsFoundCount === 1 ? `` : `s`
+          } out there in the dark.`
+          : `nothing but the inky void of space.`
+        }` +
+        (haveEnoughPower || eyesOnly
+          ? ``
+          : `\nMaybe you should think about generating some power.`),
       )
       return {
         ok: false,
@@ -96,11 +94,11 @@ You see ${
       //     : `Stopped`,
       // },
       // {
-      //   name: `🧭 Our Bearing`,
+      //   name: `🧭 Our Velocity`,
       //   value:
-      //     bearingToArrow(guild.ship.bearing) +
+      //     velocityToArrow(guild.ship.velocity) +
       //     ` ` +
-      //     bearingToDegrees(guild.ship.bearing).toFixed(0) +
+      //     velocityToDegrees(guild.ship.velocity).toFixed(0) +
       //     ` degrees`,
       // },
       // {

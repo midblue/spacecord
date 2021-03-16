@@ -111,7 +111,7 @@ module.exports = function ({ discordGuild, channelId }) {
     ],
     location: [...planet.location],
     pastLocations: [],
-    bearing: [0, 0],
+    velocity: [0, 0],
     speed: 0,
   }
 

@@ -26,7 +26,7 @@ const schemas = {
     {
       _id: { type: String },
       guildId: String,
-      bearing: [Number],
+      velocity: [Number],
       captain: String,
       cargo: [{ cargoType: String, amount: Number }],
       credits: { type: Number, default: 0 },

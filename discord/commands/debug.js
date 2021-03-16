@@ -107,8 +107,8 @@ module.exports = {
           return `moved ship.`
         },
       },
-      move: {
-        description: `move <guild id> <x>,<y>`,
+      velocity: {
+        description: `velocity <guild id> <x>,<y>`,
         action: async (str) => {
           let [unused, id, x, y] = /^ ?([^ ]+) ([^ ,]+), ?([^ ,]+)$/.exec(
             str.replace(/\[\]/g, ``),
@@ -123,9 +123,8 @@ module.exports = {
           } catch (e) {
             return `invalid coords: ` + x + ` ` + y
           }
-          const res = await guild.ship.move([x, y])
-          if (res.message) guild.message(res.message)
-          return `moved ship.`
+          guild.ship.velocity = [x, y]
+          return `set velocity.`
         },
       },
       clearpath: {

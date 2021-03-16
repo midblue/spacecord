@@ -117,7 +117,7 @@ stats for servers
 	shields
 	fuel
 	location (x, y, z, area name)
-	bearing
+	velocity
 	speed
 	food (number of players)
 		run out, and players get put into cryo-sleep until we can get more

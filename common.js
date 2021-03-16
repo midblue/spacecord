@@ -31,9 +31,9 @@ const numberEmojis = [
 ]
 
 module.exports = {
-  bearingToRadians,
-  bearingToDegrees,
-  bearingToArrow,
+  velocityToRadians,
+  velocityToDegrees,
+  velocityToArrow,
   percentToTextBars(percent, barCount = 10) {
     const bars = []
     for (let i = 0; i < 1; i += 1 / barCount) bars.push(i < percent ? `▓` : `░`)
@@ -133,15 +133,15 @@ module.exports = {
   degreesToUnitVector,
 }
 
-function bearingToRadians(bearing) {
-  const [x, y] = bearing
+function velocityToRadians(velocity) {
+  const [x, y] = velocity
   const angle = Math.atan2(y, x)
   return angle
   // let degrees = (180 * angle) / Math.PI //degrees
   // return (360 + Math.round(degrees)) % 360 //round number, avoid decimal fragments
 }
-function bearingToDegrees(bearing) {
-  const angle = bearingToRadians(bearing)
+function velocityToDegrees(velocity) {
+  const angle = velocityToRadians(velocity)
   const degrees = (180 * angle) / Math.PI // degrees
   return (360 + Math.round(degrees)) % 360 // round number, avoid decimal fragments
 }
@@ -155,8 +155,8 @@ const directionArrows = [
   `:arrow_down:`,
   `:arrow_lower_right:`,
 ] // ['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
-function bearingToArrow(bearing) {
-  const normalizedAngle = ((bearingToDegrees(bearing) + 45 / 2) % 360) / 360
+function velocityToArrow(velocity) {
+  const normalizedAngle = ((velocityToDegrees(velocity) + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)
   return directionArrows[arrayIndex]
 }

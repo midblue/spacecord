@@ -1,8 +1,8 @@
 const story = require(`../../story/story`)
 const {
-  bearingToRadians,
-  bearingToDegrees,
-  bearingToArrow,
+  velocityToRadians,
+  velocityToDegrees,
+  velocityToArrow,
   distance,
   degreesToUnitVector,
 } = require(`../../../../common`)
@@ -56,9 +56,9 @@ module.exports = (guild) => {
       prevDirectionString = guild.ship.getDirectionString()
 
     const velocityFromThrustVector = guild.ship.getVelocityFromThrustVector({ power, angle })
-    guild.ship.bearing[0] += velocityFromThrustVector[0] / guild.ship.getTotalMass()
-    guild.ship.bearing[1] += velocityFromThrustVector[1] / guild.ship.getTotalMass()
-    // console.log(ship.bearing, velocityFromThrustVector, guild.ship.getTotalMass())
+    guild.ship.velocity[0] += velocityFromThrustVector[0] / guild.ship.getTotalMass()
+    guild.ship.velocity[1] += velocityFromThrustVector[1] / guild.ship.getTotalMass()
+    // console.log(ship.velocity, velocityFromThrustVector, guild.ship.getTotalMass())
     const velocityFromThrustMagnitude = Math.sqrt(
       velocityFromThrustVector[0] ** 2 + velocityFromThrustVector[1] ** 2,
     )
@@ -115,8 +115,8 @@ module.exports = (guild) => {
     if (guild.ship.status.docked) return 0
 
     return Math.sqrt(
-      guild.ship.bearing[0] * guild.ship.bearing[0] +
-      guild.ship.bearing[1] * guild.ship.bearing[1],
+      guild.ship.velocity[0] * guild.ship.velocity[0] +
+      guild.ship.velocity[1] * guild.ship.velocity[1],
     )
   }
 
@@ -127,7 +127,7 @@ module.exports = (guild) => {
   }
 
   guild.ship.hardStop = () => {
-    guild.ship.bearing = [0, 0]
+    guild.ship.velocity = [0, 0]
     guild.saveNewDataToDb()
   }
 
@@ -163,10 +163,10 @@ module.exports = (guild) => {
       // console.log(
       //   `ship is at`,
       //   ship.location,
-      //   `with bearing`,
-      //   ship.bearing,
+      //   `with velocity`,
+      //   ship.velocity,
       //   `which has angle`,
-      //   (360 + (180 * bearingToRadians(ship.bearing)) / Math.PI) % 360,
+      //   (360 + (180 * velocityToRadians(ship.velocity)) / Math.PI) % 360,
       // )
       const shipMass = guild.ship.getTotalMass()
       for (planet of planetsInRange) {
@@ -178,8 +178,8 @@ module.exports = (guild) => {
           planet,
         )
 
-        ship.bearing[0] += gravityForceVector[0] / shipMass / KM_PER_AU / M_PER_KM
-        ship.bearing[1] += gravityForceVector[1] / shipMass / KM_PER_AU / M_PER_KM
+        ship.velocity[0] += gravityForceVector[0] / shipMass / KM_PER_AU / M_PER_KM
+        ship.velocity[1] += gravityForceVector[1] / shipMass / KM_PER_AU / M_PER_KM
         console.log(
           `planet at`,
           planet.location,
@@ -190,8 +190,8 @@ module.exports = (guild) => {
         )
       }
 
-      const newX = currentLocation[0] + ship.bearing[0]
-      const newY = currentLocation[1] + ship.bearing[1]
+      const newX = currentLocation[0] + ship.velocity[0]
+      const newY = currentLocation[1] + ship.velocity[1]
       ship.location = [newX, newY]
 
       // const previousLocation = ship.pastLocations[ship.pastLocations.length - 1]
@@ -199,7 +199,7 @@ module.exports = (guild) => {
       ship.pastLocations.push([...ship.location])
       while (ship.pastLocations.length > 200) ship.pastLocations.shift()
       // }
-      // console.log(ship.location, bearingToDegrees(ship.bearing))
+      // console.log(ship.location, velocityToDegrees(ship.velocity))
     }
 
     // check if we discovered any new planets
@@ -230,8 +230,8 @@ module.exports = (guild) => {
   }
 
   guild.ship.getDirectionString = () => {
-    const arrow = bearingToArrow(guild.ship.bearing)
-    const degrees = bearingToDegrees(guild.ship.bearing)
+    const arrow = velocityToArrow(guild.ship.velocity)
+    const degrees = velocityToDegrees(guild.ship.velocity)
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
@@ -318,11 +318,11 @@ module.exports = (guild) => {
 //     return { ok: false }
 //   }
 //   const directionVector = getShipDirectionFromAggregate(aggregate)
-//   // const previousBearing = guild.ship.bearing
-//   guild.ship.bearing = directionVector
+//   // const previousVelocity = guild.ship.velocity
+//   guild.ship.velocity = directionVector
 //   guild.saveNewDataToDb()
-//   const arrow = bearingToArrow(directionVector)
-//   const degrees = bearingToDegrees(directionVector)
+//   const arrow = velocityToArrow(directionVector)
+//   const degrees = velocityToDegrees(directionVector)
 //   guild.ship.logEntry(
 //     story.move.redirect.success(degrees, arrow, aggregate.length),
 //   )

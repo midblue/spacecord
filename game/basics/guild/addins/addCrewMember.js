@@ -69,13 +69,13 @@ module.exports = (guild) => {
     // console.log(`on add`, guild.ship.members)
     if (guild.ship.members.length === 1) {
       guild.ship.captain = user.id
-      await guild.saveNewDataToDb()
+      await guild.saveToDb()
       return {
         ok: true,
         message: [story.crew.add.first(user), story.prompts.startGame()],
       }
     }
-    await guild.saveNewDataToDb()
+    await guild.saveToDb()
 
     return {
       ok: true,

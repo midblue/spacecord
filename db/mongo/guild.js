@@ -57,7 +57,6 @@ module.exports = {
       { _id: id },
       (e) => e && console.log(`guild delete error`, e),
     )
-    console.log(res)
     return {
       ok: res.ok,
       message: `Deleted ` + (res.ok ? 1 : 0) + ` guild/s.`,

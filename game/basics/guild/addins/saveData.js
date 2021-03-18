@@ -65,7 +65,7 @@ module.exports = (guild) => {
     return guildToSave
   }
 
-  guild.saveNewDataToDb = async () => {
+  guild.saveToDb = async () => {
     await guild.context.db.guild.update({
       id: guild.id,
       updates: { ...guild },

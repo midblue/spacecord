@@ -208,7 +208,7 @@ describe(`Base Data Initialization & Updates`, () => {
     gameGuild.name = `The Whizzard's Palace`
     gameGuild.ship.status.docked = ``
 
-    await gameGuild.saveNewDataToDb()
+    await gameGuild.save()
     assert(`could save guild`)
 
     const dbGuild = await models.Guild.findOne({ _id: gameGuild.id })
@@ -226,7 +226,7 @@ describe(`Base Data Initialization & Updates`, () => {
     gameGuild.ship.equipment.find(
       (e) => e.equipmentType === `weapon`,
     ).list[0].repair = 0.69
-    await gameGuild.saveNewDataToDb()
+    await gameGuild.save()
 
     const dbShip = await models.Ship.findOne({ guildId: gameGuild.id })
     expect(dbShip.cargo.find((c) => c.cargoType === `fuel`).amount).to.equal(69)

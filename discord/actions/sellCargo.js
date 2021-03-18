@@ -45,12 +45,12 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteResult.sentMessage.edit(voteEmbed)
+    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
     return
   }
   if (!voteResult.result) {
     voteEmbed.description = story.sell.cargo.voteFailed(cargoData, amount, cost)
-    voteResult.sentMessage.edit(voteEmbed)
+    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
     return
   }
 
@@ -75,5 +75,5 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     ` ` +
     WEIGHT_UNITS
 
-  voteResult.sentMessage.edit(voteEmbed)
+  voteResult.sentMessage.edit(voteEmbed).catch(console.log)
 }

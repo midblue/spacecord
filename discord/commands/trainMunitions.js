@@ -117,7 +117,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
       user: authorCrewMemberObject,
     })
     if (!ready) {
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
       return
     }
 
@@ -140,7 +140,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         inline: true,
       },
     ]
-    await sentMessage.edit(embed)
+    await sentMessage.edit(embed).catch(console.log)
 
     // update remaining time
     let startTime = Date.now()
@@ -158,7 +158,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         embed.fields = []
         end()
       }
-      if (!sentMessage.deleted) sentMessage.edit(embed)
+      if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
     }, 5000)
 
     // ------- update board view
@@ -181,7 +181,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         .join(`\n`)
         .replace(/🚢/gi, `◼️`)
       embed.description = `\`\`\`` + outputBoardString + `\`\`\``
-      if (!sentMessage.deleted) sentMessage.edit(embed)
+      if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
     }
 
     // ------- take shot
@@ -208,7 +208,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
 
     // ------- start game
     updateBoardView()
-    if (!sentMessage.deleted) sentMessage.edit(embed)
+    if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
     const reactions = [
       {
         emoji: `◀`,
@@ -278,7 +278,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
       embed.description += `\n**${Math.round(percent * 1000) / 10}% hit**
 
 Result: ${await applyCustomParams(msg, res.message)}`
-      sentMessage.edit(embed)
+      sentMessage.edit(embed).catch(console.log)
     }
     // ------- end of game
     setTimeout(end, time)

@@ -84,6 +84,6 @@ module.exports = {
       guild,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

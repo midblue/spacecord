@@ -1,5 +1,5 @@
 module.exports = (member) => {
-  member.saveNewDataToDb = () => {
+  member.save = () => {
     member.guild.context.db.crewMember.update({
       id: member.crewMemberId,
       updates: { ...member },

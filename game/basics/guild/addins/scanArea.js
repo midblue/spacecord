@@ -41,17 +41,19 @@ module.exports = (guild) => {
       if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
       messages.push(
         preMessage +
-        ` you look out out the window. 
+          ` you look out out the window. 
 You can see for about ${range} ${DISTANCE_UNIT}.
-You see ${thingsFoundCount
-          ? thingsFoundCount +
-          ` unidentifiable thing${thingsFoundCount === 1 ? `` : `s`
-          } out there in the dark.`
-          : `nothing but the inky void of space.`
-        }` +
-        (haveEnoughPower || eyesOnly
-          ? ``
-          : `\nMaybe you should think about generating some power.`),
+You see ${
+            thingsFoundCount
+              ? thingsFoundCount +
+                ` unidentifiable thing${
+                  thingsFoundCount === 1 ? `` : `s`
+                } out there in the dark.`
+              : `nothing but the inky void of space.`
+          }` +
+          (haveEnoughPower || eyesOnly
+            ? ``
+            : `\nMaybe you should think about generating some power.`),
       )
       return {
         ok: false,
@@ -74,6 +76,7 @@ You see ${thingsFoundCount
         guild.ship.logEntry(story.discovery.planet(planet))
         messages.push(story.discovery.planet(planet))
       }
+      await guild.saveToDb()
     }
 
     const telemetryResult = await telemetry.use({

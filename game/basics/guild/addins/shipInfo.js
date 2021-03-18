@@ -34,8 +34,8 @@ module.exports = (guild) => {
     }
     return (
       interactableThings.guilds.length +
-      interactableThings.planets.length +
-      interactableThings.caches.length >
+        interactableThings.planets.length +
+        interactableThings.caches.length >
       0
     )
   }
@@ -128,8 +128,8 @@ module.exports = (guild) => {
         value: guild.ship.status.stranded
           ? `Out of Fuel!`
           : guild.ship.effectiveSpeed()
-            ? guild.ship.getSpeedString()
-            : `Stopped`,
+          ? guild.ship.getSpeedString()
+          : `Stopped`,
       })
 
       fields.push({
@@ -149,9 +149,16 @@ module.exports = (guild) => {
     fields.push({
       name: `📍 Location`,
       value:
-        guild.ship.location.map((l) => Math.round(l * 1000) / 1000).join(`, `) +
+        guild.ship.location
+          .map((l) => Math.round(l * 100000) / 100000)
+          .join(`, `) +
         ` ` +
         DISTANCE_UNIT,
+    })
+
+    fields.push({
+      name: `⛽️ Fuel`,
+      value: fuel.toFixed(1) + ` ` + WEIGHT_UNITS,
     })
 
     const currentHp = guild.ship.currentHp()
@@ -162,11 +169,6 @@ module.exports = (guild) => {
         percentToTextBars(currentHp / maxHp) +
         `\n` +
         `${Math.round(currentHp)}/${Math.round(maxHp)} ${HEALTH_UNIT}`,
-    })
-
-    fields.push({
-      name: `⛽️ Fuel`,
-      value: fuel.toFixed(1) + ` ` + WEIGHT_UNITS,
     })
 
     fields.push({

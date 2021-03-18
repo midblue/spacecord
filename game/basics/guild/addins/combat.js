@@ -399,7 +399,7 @@ module.exports = (guild) => {
 
     const destroyedShip = guild.ship.checkForDeath()
 
-    guild.saveNewDataToDb()
+    guild.saveToDb()
 
     return {
       damageTaken,

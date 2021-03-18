@@ -16,7 +16,7 @@ module.exports = (guild) => {
     if (equipment.repair > 1) equipment.repair = 1
     equipment.repaired = Date.now()
 
-    guild.saveNewDataToDb()
+    guild.saveToDb()
     return {
       ok: true,
       message: story.repair.equipment.success(

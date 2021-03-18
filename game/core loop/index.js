@@ -72,7 +72,7 @@ module.exports = {
 
   async save() {
     const updates = this.guilds.map(async (guild) => {
-      await guild.saveNewDataToDb()
+      await guild.saveToDb()
     })
     await Promise.all(updates)
   },

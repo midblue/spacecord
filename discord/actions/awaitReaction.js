@@ -51,11 +51,11 @@ module.exports = async ({
         msg.edit &&
         !canceled.isCanceled
       )
-        msg.edit(embed)
+        msg.edit(embed).catch(console.log)
     }
 
     if (reactions && reactions.length && !msg.deleted && !canceled.isCanceled) {
-      for (const r of reactions) msg.react(r.emoji)
+      for (const r of reactions) msg.react(r.emoji).catch(console.log)
     }
 
     const collectedReactions = []
@@ -74,10 +74,11 @@ module.exports = async ({
           )
           if (fieldIndex) embed.fields.splice(fieldIndex, 1)
         }
-        if (!msg.deleted && msg.edit && !canceled.isCanceled) msg.edit(embed)
+        if (!msg.deleted && msg.edit && !canceled.isCanceled)
+          msg.edit(embed).catch(console.log)
       }
       if ((await canEdit(msg)) && !canceled.isCanceled)
-        msg.reactions.removeAll().catch((e) => {})
+        msg.reactions.removeAll().catch(console.log)
       resolve(collectedReactions)
     }
 
@@ -110,7 +111,7 @@ module.exports = async ({
         const reaction = await new Discord.MessageReaction(client, data, msg)
         if (await canEdit(message))
           try {
-            await reaction.users.remove(data.user_id)
+            await reaction.users.remove(data.user_id).catch(console.log)
           } catch (e) {}
       }
 

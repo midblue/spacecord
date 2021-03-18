@@ -86,12 +86,12 @@ module.exports = {
     const updateEmbed = () => {
       embed.fields.find((f) => f.id === `layout`).value = printLayout()
       embed.fields.find((f) => f.id === `rots`).value = rotationsLeft
-      sentMessage.edit(embed)
+      sentMessage.edit(embed).catch(console.log)
     }
 
     const endGame = async () => {
       cancelAwaitResponse()
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
 
       const matches = []
       for (let row of currentLayout) {

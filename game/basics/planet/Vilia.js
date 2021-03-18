@@ -1,5 +1,6 @@
 module.exports = {
-  location: [9, -2],
+  location: [0.9, -0.2],
   color: `ice-colored`,
-  validColor: `#c6dfe9`
+  validColor: `#c6dfe9`,
+  radius: 76371, // km
 }

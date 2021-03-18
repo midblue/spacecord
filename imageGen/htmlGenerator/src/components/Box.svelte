@@ -37,6 +37,9 @@
     height: var(--main-width);
     padding: 1.2rem;
   }
+  .box {
+    position: relative;
+  }
   .label {
     position: absolute;
     left: 1.2rem;

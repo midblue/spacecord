@@ -4,6 +4,7 @@ module.exports = {
   displayName: `Flamecaster`,
   mass: 800,
   accuracy: 1.2,
+  range: 0.1,
   damage: 25,
   damageType: `incendiary`,
   rechargeTime: 4,

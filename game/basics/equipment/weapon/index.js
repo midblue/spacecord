@@ -1,7 +1,7 @@
 const defaults = {
   type: `weapon`,
   description: ``,
-  range: 2,
+  range: 0.2,
   mass: 1000,
   baseHp: 20,
   durabilityLostOnUse: 0.03,
@@ -15,8 +15,8 @@ const defaults = {
       (1 - distance / this.range) *
       (enemyShip
         ? 1 -
-        enemyShip.equipment.find((e) => e.equipmentType === `chassis`).list[0]
-          .agility
+          enemyShip.equipment.find((e) => e.equipmentType === `chassis`).list[0]
+            .agility
         : 1)
     )
   },

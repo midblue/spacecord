@@ -76,7 +76,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else {
       // -------- use stamina
       const member =

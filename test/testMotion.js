@@ -115,7 +115,7 @@ describe(`Gravity`, async () => {
 
     expectedForceVector = [
       (GRAVITATIONAL_CONSTANT * testPlanet.mass * testShip.getTotalMass()) /
-      2 ** 2,
+        2 ** 2,
       0,
     ]
 
@@ -151,7 +151,7 @@ describe(`Gravity`, async () => {
     expectedForceVector = [
       0,
       (GRAVITATIONAL_CONSTANT * testPlanet.mass * testShip.getTotalMass()) /
-      2 ** 2,
+        2 ** 2,
     ]
 
     expect(forceVectorOnShip).to.be.deep.almost(expectedForceVector)

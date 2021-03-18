@@ -31,5 +31,6 @@ module.exports = async ({
     client,
     predeterminedCommandTag: commandTag,
     props,
+    system: !author,
   })
 }

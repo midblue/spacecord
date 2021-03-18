@@ -1,5 +1,5 @@
 module.exports = {
-  location: [-2, 0],
+  location: [-1.2, 0],
   color: `red`,
-  validColor: `#b44`
+  validColor: `#b44`,
 }

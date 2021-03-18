@@ -5,7 +5,7 @@
   export let color = 'white'
   export let size = 6
   export let round = false
-  // console.log({topPercent, leftPercent})
+  // console.log({ topPercent, leftPercent, size, round })
 </script>
 
 <div
@@ -27,7 +27,7 @@
     left: 0;
     top: 0.3em;
     text-align: center;
-    transform: translateX(-50%) translateX(calc(-1 * var(--size) / 2));
+    transform: translateX(-50%) translateY(calc(var(--size) / 2));
     color: var(--accent-color);
   }
   .point {

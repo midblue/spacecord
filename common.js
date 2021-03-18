@@ -48,7 +48,7 @@ module.exports = {
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
-      (pointY - centerY) * (pointY - centerY) <
+        (pointY - centerY) * (pointY - centerY) <
       radius * radius
     )
   },
@@ -131,6 +131,9 @@ module.exports = {
   angle,
   getUnitVectorBetween,
   degreesToUnitVector,
+  degreesToArrow,
+  radiansToDegrees,
+  degreesToRadians,
 }
 
 function velocityToRadians(velocity) {
@@ -155,18 +158,51 @@ const directionArrows = [
   `:arrow_down:`,
   `:arrow_lower_right:`,
 ] // ['→', '↗', '↑', '↖︎', '←', '↙', '↓', '↘︎']
-function velocityToArrow(velocity) {
-  const normalizedAngle = ((velocityToDegrees(velocity) + 45 / 2) % 360) / 360
+function radiansToDegrees(radians) {
+  return (180 * radians) / Math.PI
+}
+function degreesToRadians(degrees) {
+  return (degrees * Math.PI) / 180
+}
+function degreesToArrow(angle) {
+  const normalizedAngle = ((angle + 45 / 2) % 360) / 360
   const arrayIndex = Math.floor(normalizedAngle * directionArrows.length)
   return directionArrows[arrayIndex]
 }
+function velocityToArrow(velocity) {
+  return degreesToArrow(velocityToDegrees(velocity))
+}
 function distance(x1, y1, x2, y2) {
+  if (typeof x1 === `object` && x1.location) {
+    x2 = y1.location[0]
+    y2 = y1.location[1]
+    y1 = x1.location[1]
+    x1 = x1.location[0]
+  }
+  if (Array.isArray(x1) && Array.isArray(y1)) {
+    x2 = y1[0]
+    y2 = y1[1]
+    y1 = x1[1]
+    x1 = x1[0]
+  }
   const a = x1 - x2
   const b = y1 - y2
   return Math.sqrt(a * a + b * b)
 }
 function angle(x1, y1, x2, y2) {
-  return (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI
+  if (typeof x1 === `object` && x1.location) {
+    x2 = y1.location[0]
+    y2 = y1.location[1]
+    y1 = x1.location[1]
+    x1 = x1.location[0]
+  }
+  if (Array.isArray(x1) && Array.isArray(y1)) {
+    x2 = y1[0]
+    y2 = y1[1]
+    y1 = x1[1]
+    x1 = x1[0]
+  }
+  return ((Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI + 360) % 360
 }
 
 function powerTag(power) {

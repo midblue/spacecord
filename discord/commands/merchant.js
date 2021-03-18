@@ -73,7 +73,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `buy` && !type) {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Buy Goods`)
@@ -118,7 +118,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `buy`) {
       const embed = new Discord.MessageEmbed().setTitle(
         `Buy ${cargo[type].displayName} at ${usageTag(
@@ -277,7 +277,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `sell` && !type) {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Sell Goods`)
@@ -331,7 +331,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `sell`) {
       const embed = new Discord.MessageEmbed().setTitle(
         `Sell ${cargo[type].displayName} at ${usageTag(
@@ -492,7 +492,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     }
   },
 }

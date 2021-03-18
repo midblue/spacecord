@@ -1,88 +1,99 @@
 <script>
-	import Box from './components/Box.svelte';
-  import MapPoint from './components/MapPoint.svelte';
-  import MapCircle from './components/MapCircle.svelte';
-  import Starfield from './components/Starfield.svelte';
+  const KM_PER_AU = 149597900
 
-  export let ship;
-  export let planets;
+  import Box from './components/Box.svelte'
+  import MapPoint from './components/MapPoint.svelte'
+  import MapPlanet from './components/MapPlanet.svelte'
+  import MapDistanceCircles from './components/MapDistanceCircles.svelte'
+  import Starfield from './components/Starfield.svelte'
 
-  const edgeBuffer = .7
+  export let ship
+  export let planets
+
+  const edgeBuffer = 0.7
 
   let pointsToShow = [
-    ...planets.map(p => ({name: p.name, location: p.location, color: p.validColor || p.color})), 
-    {name: ship.name + '\n(you)', location: ship.location, color: 'white'}
+    ...planets.map((p) => ({
+      name: p.name,
+      location: p.location,
+      color: p.validColor || p.color,
+      radius: p.radius,
+    })),
+    { name: ship.name + '\n(you)', location: ship.location, color: 'white' },
   ]
 
-  let upperBound = pointsToShow.reduce((max,p) => Math.max((p.location[1]), max), -99999999)
-  let rightBound = pointsToShow.reduce((max,p) => Math.max((p.location[0]), max), -99999999)
-  let lowerBound = pointsToShow.reduce((min,p) => Math.min((p.location[1]), min), 99999999)
-  let leftBound = pointsToShow.reduce((min,p) => Math.min((p.location[0]), min), 99999999)
-
+  let upperBound = pointsToShow.reduce(
+    (max, p) => Math.max(p.location[1], max),
+    -99999999,
+  )
+  let rightBound = pointsToShow.reduce(
+    (max, p) => Math.max(p.location[0], max),
+    -99999999,
+  )
+  let lowerBound = pointsToShow.reduce(
+    (min, p) => Math.min(p.location[1], min),
+    99999999,
+  )
+  let leftBound = pointsToShow.reduce(
+    (min, p) => Math.min(p.location[0], min),
+    99999999,
+  )
 
   const heightDiff = Math.abs(upperBound - lowerBound)
   const widthDiff = Math.abs(rightBound - leftBound)
 
   const diameter = Math.max(heightDiff, widthDiff)
-  if (heightDiff !== diameter){
+  if (heightDiff !== diameter) {
     upperBound += (diameter - heightDiff) / 2
     lowerBound -= (diameter - heightDiff) / 2
   }
-  if (widthDiff !== diameter){
+  if (widthDiff !== diameter) {
     rightBound += (diameter - widthDiff) / 2
     leftBound -= (diameter - widthDiff) / 2
   }
-  const bufferDistance = diameter * edgeBuffer
+  const bufferDistance = diameter * edgeBuffer + 0.001
   const displayDiameter = diameter + bufferDistance
 
+  const pixelsPerKilometer = 600 / displayDiameter / KM_PER_AU
+
+  pointsToShow.forEach((p) => {
+    if (p.radius) p.size = Math.max(4, p.radius * 2 * pixelsPerKilometer)
+  })
+
   let auBetweenLines = 1
-  while (auBetweenLines/displayDiameter < 0.15) auBetweenLines *= 2
+  while (auBetweenLines / displayDiameter < 0.15) auBetweenLines *= 2
 
-  console.log(pointsToShow)
-
-  pointsToShow = pointsToShow.map(p => {
-
-    console.log('tp',
-      ((upperBound + bufferDistance / 2) - p.location[1])/displayDiameter, 
-      leftBound, 
-      (p.location[0] - (leftBound - bufferDistance / 2))/displayDiameter
+  pointsToShow = pointsToShow.map((p) => {
+    console.log(
+      'tp',
+      (upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter,
+      leftBound,
+      (p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter,
     )
 
     return {
-      ...p, 
+      ...p,
       label: p.name,
-      topPercent:((upperBound + bufferDistance / 2) - p.location[1])/displayDiameter * 100,
-      leftPercent: (p.location[0] - (leftBound - bufferDistance / 2))/displayDiameter * 100
+      topPercent:
+        ((upperBound + bufferDistance / 2 - p.location[1]) / displayDiameter) *
+        100,
+      leftPercent:
+        ((p.location[0] - (leftBound - bufferDistance / 2)) / displayDiameter) *
+        100,
     }
   })
 
   const shipPoint = pointsToShow[pointsToShow.length - 1]
-
-  const circlesToShow = []
-  for (let i = 1; i < 7; i++) {
-    circlesToShow.push({
-      topPercent: shipPoint.topPercent, 
-      leftPercent: shipPoint.leftPercent, 
-      radiusPercent: (auBetweenLines/displayDiameter) * i * 100,
-      label: auBetweenLines * i + 'AU'
-    })
-  }
-
-  console.log({upperBound,  lowerBound, rightBound, leftBound})
-  
 </script>
-
 
 <!-- <Starfield /> -->
 <Box label={'Discovered Planets'}>
-  {#each circlesToShow as c}
-    <MapCircle {...c} />
+  <MapDistanceCircles centerPoint={shipPoint} diameter={displayDiameter} />
+  {#each pointsToShow.filter((p) => p.radius) as p}
+    <MapPlanet {...p} />
   {/each}
-  {#each pointsToShow as p}
-    <MapPoint {...p} />
-  {/each}
+  <MapPoint {...shipPoint} />
 </Box>
-
 
 <style>
 </style>

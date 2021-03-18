@@ -59,7 +59,7 @@ module.exports = async ({
 
   if (!ok) {
     if (sentMessage && cleanUp && (await canEdit(sentMessage)))
-      sentMessage.delete()
+      sentMessage.delete().catch(console.log)
     return {
       ok,
       message,
@@ -67,10 +67,11 @@ module.exports = async ({
   }
 
   if (!sentMessage.deleted) {
-    if (cleanUp && (await canEdit(sentMessage))) sentMessage.delete()
+    if (cleanUp && (await canEdit(sentMessage)))
+      sentMessage.delete().catch(console.log)
     else {
       if (await canEdit(sentMessage))
-        sentMessage.reactions.removeAll().catch((e) => {})
+        sentMessage.reactions.removeAll().catch(console.log)
       sentMessage.fields = []
     }
   }

@@ -6,7 +6,7 @@ module.exports = {
   displayName: `Radiation Imprint Radar Mk.001`,
   baseHp: 15,
   powerUse: 2,
-  range: 3,
+  range: 0.3,
   needsRepairAt: 0.5,
   breakdownSeverity: 0.05,
   repairRequirements: { mechanics: 5 },

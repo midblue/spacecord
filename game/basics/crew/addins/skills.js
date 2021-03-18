@@ -39,7 +39,7 @@ module.exports = (member) => {
 
     const result = member.skillLevelDetails(skill)
 
-    member.saveNewDataToDb()
+    member.saveToDb()
 
     return {
       ok: true,

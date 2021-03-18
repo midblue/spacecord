@@ -1,7 +1,7 @@
 const defaults = {
   type: `chassis`,
   baseCost: 2000,
-  interactRadius: 1,
+  interactRadius: 0.1,
   mass: 10000,
   baseHp: 40,
   repairDifficulty: 1,

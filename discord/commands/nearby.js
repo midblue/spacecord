@@ -4,6 +4,7 @@ const {
   numberToEmoji,
   capitalize,
   positionAndAngleDifference,
+  degreesToArrow,
   usageTag,
 } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
@@ -159,13 +160,11 @@ module.exports = {
         .setColor(APP_COLOR)
         .setTitle(`🪐 ` + planet.name)
         .setDescription(
-          `A ${planet.getSizeDescriptor()} ${
-            planet.color
-          } planet ${positionAndAngle.distance.toFixed(
-            2,
-          )} AU away from you at an angle of ${Math.round(
+          `A ${planet.getSizeDescriptor()} ${planet.color} planet ${
+            Math.round(positionAndAngle.distance * 1000) / 1000
+          } AU away from you at an angle of ${degreesToArrow(
             positionAndAngle.angle,
-          )} degrees.`,
+          )}${Math.round(positionAndAngle.angle)} degrees.`,
         )
 
       const availableActions = [

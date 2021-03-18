@@ -4,7 +4,7 @@ module.exports = {
   displayName: `DFL`,
   mass: 600,
   accuracy: 3,
-  range: 5,
+  range: 1,
   damage: 2,
   rechargeTime: 0.7,
   damageType: `incendiary`,

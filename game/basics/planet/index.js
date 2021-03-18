@@ -4,9 +4,8 @@ const defaults = () => ({
   shipyard: {},
   location: [0, 0],
   color: `green`,
-  size: 1,
   mass: 5.974e24, // kg
-  radius: 6371 // km
+  radius: 6371, // km
 })
 
 // * get all exports from files in this folder
@@ -35,8 +34,8 @@ function liveify(planet, context) {
   planet.context = context
 
   planet.getSizeDescriptor = function () {
-    if (this.size > 5) return `large`
-    if (this.size < 2) return `small`
+    if (this.radius > 8500) return `large`
+    if (this.radius < 4000) return `small`
     return `normal-sized`
   }
 

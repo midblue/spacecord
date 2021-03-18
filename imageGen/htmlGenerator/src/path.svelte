@@ -1,6 +1,9 @@
 <script>
+  const KM_PER_AU = 149597900
+
   import Box from './components/Box.svelte'
   import MapPoint from './components/MapPoint.svelte'
+  import MapPlanet from './components/MapPlanet.svelte'
   import MapPath from './components/MapPath.svelte'
   import MapDistanceCircles from './components/MapDistanceCircles.svelte'
 
@@ -13,18 +16,6 @@
     ...ship.pastLocations.map((l) => ({
       location: l,
     })),
-  ]
-  let entityPoints = [
-    ...planets.map((p) => ({
-      name: p.name,
-      location: p.location,
-      color: p.validColor || p.color,
-    })),
-    {
-      name: ship.name + '\n(you)',
-      location: ship.location,
-      color: 'white',
-    },
   ]
 
   let upperBound = pathPoints.reduce(
@@ -56,8 +47,25 @@
     rightBound += (diameter - widthDiff) / 2
     leftBound -= (diameter - widthDiff) / 2
   }
-  const bufferDistance = diameter * edgeBuffer
+  const bufferDistance = diameter * edgeBuffer + 0.001 // to fix top-left-corner bugs
   const displayDiameter = diameter + bufferDistance
+
+  const pixelsPerKilometer = 542.41 / displayDiameter / KM_PER_AU
+
+  let entityPoints = [
+    ...planets.map((p) => ({
+      name: p.name,
+      size: Math.max(4, p.radius * 2 * pixelsPerKilometer),
+      location: p.location,
+      color: p.validColor || p.color,
+      type: 'planet',
+    })),
+    {
+      name: ship.name + '\n(you)',
+      location: ship.location,
+      color: 'white',
+    },
+  ]
 
   pathPoints = pathPoints.map((p) => ({
     ...p,
@@ -87,7 +95,7 @@
 <!-- <Starfield /> -->
 <div style="--ui: #ccc; --bg: #222;">
   <Box label={'Recent Ship Path'}>
-    <MapDistanceCircles centerPoint={shipPoint} {displayDiameter} />
+    <MapDistanceCircles centerPoint={shipPoint} diameter={displayDiameter} />
     <MapPath
       {pathPoints}
       {upperBound}
@@ -95,9 +103,10 @@
       {bufferDistance}
       {displayDiameter}
     />
-    {#each entityPoints as p}
-      <MapPoint {...p} />
+    {#each entityPoints.filter((p) => p.type === 'planet') as p}
+      <MapPlanet {...p} />
     {/each}
+    <MapPoint {...shipPoint} />
   </Box>
 </div>
 

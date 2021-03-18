@@ -7,22 +7,23 @@ module.exports = {
   displayName: `Emoji Radar v1`,
   baseHp: 15,
   powerUse: 2,
-  range: 5,
+  range: 4,
   needsRepairAt: 0.8,
   breakdownSeverity: 0.05,
   repairRequirements: { mechanics: 4 },
   requirements: { engineering: 6 },
-  use ({ scanResult, x, y }) {
+  use({ scanResult, x, y }) {
     const previousRepair = this.repair
     this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
-    if (this.repair < 0)
-      this.repair = 0
+    if (this.repair < 0) this.repair = 0
 
     const repair = this.repair
     const range = this.range
 
     if (repair <= 0) {
-      if (previousRepair !== repair) { guild.ship.logEntry(story.repair.breakdown(this.displayName)) }
+      if (previousRepair !== repair) {
+        guild.ship.logEntry(story.repair.breakdown(this.displayName))
+      }
       return {
         map: `
 *******************
@@ -34,7 +35,7 @@ module.exports = {
 *******************`,
         key: [],
         model: this.displayName,
-        repair
+        repair,
       }
     }
 
@@ -64,7 +65,7 @@ module.exports = {
       emptySpace,
       emptySpace,
       `🛸`,
-      `🪐`
+      `🪐`,
     ]
 
     const getChar = (base) =>
@@ -77,17 +78,17 @@ module.exports = {
 
     let row = []
     row.push(`┏`)
-    for (let rowIndex = 0; rowIndex < range * 4 + 4; rowIndex++)
-      row.push(`━`)
+    for (let rowIndex = 0; rowIndex < range * 4 + 4; rowIndex++) row.push(`━`)
     row.push(`┓`)
     grid.push(row)
 
     for (let rowIndex = 0; rowIndex < range * 2 + 1; rowIndex++) {
       const row = [`┃`]
-      for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++) { row.push(getChar(emptySpace)) }
+      for (let elIndex = 0; elIndex < range * 2 + 1; elIndex++) {
+        row.push(getChar(emptySpace))
+      }
 
-      if (rowIndex % 2)
-        row.push(`┠ ${Math.round(range - rowIndex + y)}`)
+      if (rowIndex % 2) row.push(`┠ ${Math.round(range - rowIndex + y)}`)
       else {
         row.push(`┃`)
       }
@@ -97,8 +98,7 @@ module.exports = {
 
     row = []
     row.push(`┗┯`)
-    for (let rowIndex = 0; rowIndex < range * 4 + 2; rowIndex++)
-      row.push(`━`)
+    for (let rowIndex = 0; rowIndex < range * 4 + 2; rowIndex++) row.push(`━`)
     row.push(`┯┛`)
     grid.push(row)
 
@@ -106,7 +106,7 @@ module.exports = {
     const leftLabel = `${Math.round(x - range)}`
     const rightLabel = `${Math.round(x + range)}`
     row.push(
-      leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ` `) + rightLabel
+      leftLabel.padEnd(range * 4 + 5 - rightLabel.length, ` `) + rightLabel,
     )
     grid.push(row)
 
@@ -142,16 +142,14 @@ module.exports = {
     let map = grid.map((row) => row.join(``)).join(`\n`)
 
     if (scanResult.guilds.length) {
-      map +=
-        `\n> SHIPS_FOUND=${scanResult.guilds
-          .map((g) => g.ship.name.replace(/ /g, `_`).toUpperCase())
-          .join(`,`)}`
+      map += `\n> SHIPS_FOUND=${scanResult.guilds
+        .map((g) => g.ship.name.replace(/ /g, `_`).toUpperCase())
+        .join(`,`)}`
     }
     if (scanResult.planets.length) {
-      map +=
-        `\n> PLANETS_FOUND=${scanResult.planets
-          .map((p) => p.name.replace(/ /g, `_`).toUpperCase())
-          .join(`,`)}`
+      map += `\n> PLANETS_FOUND=${scanResult.planets
+        .map((p) => p.name.replace(/ /g, `_`).toUpperCase())
+        .join(`,`)}`
     }
 
     const key = [`🚀 Us`]
@@ -171,7 +169,7 @@ module.exports = {
       key,
       model: this.displayName,
       repairMessage,
-      repair
+      repair,
     }
-  }
+  },
 }

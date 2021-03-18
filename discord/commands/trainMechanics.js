@@ -86,7 +86,7 @@ module.exports = {
     embed.description +=
       `\n\n**↓↓↓ Type these sentences! ↓↓↓**\n` +
       challengeTextInOneArray.join(`\n`)
-    await sentMessage.edit(embed)
+    await sentMessage.edit(embed).catch(console.log)
 
     // ------- define fuzzy search
     fuse = new Fuse(sentTextOptions, {
@@ -116,7 +116,7 @@ module.exports = {
         }
         messagesToDelete.push(receivedMessage)
         try {
-          receivedMessage.react(`👀`)
+          receivedMessage.react(`👀`).catch(console.log)
         } catch (e) {}
       }
     }
@@ -136,7 +136,7 @@ module.exports = {
     setTimeout(async () => {
       setTimeout(() => {
         messagesToDelete.forEach(async (c) => {
-          if (await canEdit(c)) c.delete()
+          if (await canEdit(c)) c.delete().catch(console.log)
         })
       }, 500)
       collector.stop()
@@ -178,7 +178,7 @@ module.exports = {
     
     Result: ${await applyCustomParams(msg, res.message)}`
 
-      sentMessage.edit(embed)
+      sentMessage.edit(embed).catch(console.log)
     }, time + gracePeriod)
   },
 }

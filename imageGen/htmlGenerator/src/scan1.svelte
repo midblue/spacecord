@@ -1,6 +1,7 @@
 <script>
   import Box from './components/Box.svelte'
   import MapPoint from './components/MapPoint.svelte'
+  import MapDistanceCircles from './components/MapDistanceCircles.svelte'
   import MapCircle from './components/MapCircle.svelte'
   import Starfield from './components/Starfield.svelte'
 
@@ -37,7 +38,7 @@
     ...planets.map((p) => ({
       color: getColor('green'),
       location: getLocation(p.location),
-      size: getSize(12),
+      radius: p.radius,
       round: getRound(true),
     })),
     ...caches.map((c) => ({
@@ -63,6 +64,12 @@
   let auBetweenLines = 1
   while (auBetweenLines / diameter < 0.15) auBetweenLines *= 2
 
+  const pixelsPerKilometer = 600 / diameter / 1.496e8
+  pointsToShow.forEach((p) => {
+    if (p.radius)
+      p.size = getSize(Math.max(4, p.radius * 2 * pixelsPerKilometer))
+  })
+
   pointsToShow = pointsToShow.map((p) => {
     return {
       ...p,
@@ -73,16 +80,6 @@
   })
 
   const shipPoint = pointsToShow[0]
-
-  const circlesToShow = []
-  for (let i = 1; i < 7; i++) {
-    circlesToShow.push({
-      topPercent: shipPoint.topPercent,
-      leftPercent: shipPoint.leftPercent,
-      radiusPercent: (auBetweenLines / diameter) * i * 100,
-      label: auBetweenLines * i + 'AU',
-    })
-  }
 
   const blackoutCircle = {
     topPercent: shipPoint.topPercent,
@@ -108,9 +105,7 @@
     label4={repair < 1 ? `Needs_Repair` : ''}
   >
     <div style="transform: rotate({rotateAmount}deg);">
-      {#each circlesToShow as c}
-        <MapCircle {...c} />
-      {/each}
+      <MapDistanceCircles centerPoint={shipPoint} {diameter} />
       <MapCircle {...blackoutCircle} />
       {#each pointsToShow as p}
         <MapPoint {...p} />

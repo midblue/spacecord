@@ -5,7 +5,7 @@ module.exports = {
   mass: 1400,
   accuracy: 0.7,
   damage: 25,
-  range: 1,
+  range: 0.2,
   rechargeTime: 2,
   damageType: `physical`,
   requirements: {

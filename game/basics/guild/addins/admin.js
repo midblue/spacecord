@@ -5,33 +5,33 @@ module.exports = (guild) => {
     if (isNaN(id) || !foundMember) {
       return {
         ok: false,
-        message: `No crew member found by the id ${id}. Right click the user and select 'Copy ID' to get their ID.`
+        message: `No crew member found by the id ${id}. Right click the user and select 'Copy ID' to get their ID.`,
       }
     }
 
     guild.ship.captain = id
-    await guild.saveNewDataToDb()
+    await guild.saveToDb()
     return {
       ok: true,
-      message: story.ship.captain.change(foundMember)
+      message: story.ship.captain.change(foundMember),
     }
   }
 
   guild.setChannel = async (id) => {
     guild.channel = id
-    await guild.saveNewDataToDb()
+    await guild.saveToDb()
     return {
       ok: true,
-      message: `Guild channel updated.`
+      message: `Guild channel updated.`,
     }
   }
 
   guild.ship.setName = async (newName) => {
     guild.ship.name = newName
-    await guild.saveNewDataToDb()
+    await guild.saveToDb()
     return {
       ok: true,
-      message: story.ship.name.change(newName)
+      message: story.ship.name.change(newName),
     }
   }
 }

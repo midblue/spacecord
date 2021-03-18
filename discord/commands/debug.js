@@ -28,7 +28,6 @@ module.exports = {
             planets: game.planets.length,
             caches: game.caches.length,
             startTime: game.startTime,
-            lastTick: game.lastTick,
           }
           return JSON.stringify(data, null, 2)
         },
@@ -104,6 +103,7 @@ module.exports = {
           }
           const res = await guild.ship.move([x, y])
           if (res.message) guild.message(res.message)
+          guild.saveToDb()
           return `moved ship.`
         },
       },
@@ -124,20 +124,18 @@ module.exports = {
             return `invalid coords: ` + x + ` ` + y
           }
           guild.ship.velocity = [x, y]
+          guild.saveToDb()
           return `set velocity.`
         },
       },
       clearpath: {
-        description: `clearpath <guild id>`,
+        description: `clearpath`,
         action: async (str) => {
-          let [unused, id, x, y] = /^ ?([^ ]+)$/.exec(
-            str.replace(/\[\]/g, ``),
-          )
-          if (id === `this`)
-            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
           const { guild } = await client.game.guild(id)
           if (!guild) return `no guild found for ` + id
           guild.ship.pastLocations = []
+          guild.saveToDb()
           return `cleared path.`
         },
       },
@@ -155,6 +153,7 @@ module.exports = {
             return `invalid power: ` + power
           }
           guild.ship.power = power
+          guild.saveToDb()
           return `set power to ` + power
         },
       },
@@ -172,6 +171,7 @@ module.exports = {
             return `invalid credits: ` + credits
           }
           guild.ship.credits = credits
+          guild.saveToDb()
           return `set credits to ` + credits
         },
       },
@@ -193,6 +193,7 @@ module.exports = {
           )
           if (existingCargo) existingCargo.amount = amount
           else guild.ship.cargo.push({ type, amount })
+          guild.saveToDb()
           return `set ` + type + ` amount to ` + amount
         },
       },
@@ -207,6 +208,7 @@ module.exports = {
           const currStatus = guild.ship.status
           const newStatus = !currStatus[type]
           currStatus[type] = newStatus
+          guild.saveToDb()
           return `set ` + type + ` to ` + newStatus
         },
       },
@@ -218,7 +220,8 @@ module.exports = {
           if (!ok) return `no guild with id ` + id
           const member = guild.ship.members.find((m) => m.id === msg.author.id)
           if (!member) return `no member with id ` + msg.author.id
-          member.stamina = 10
+          member.stamina = 100
+          guild.saveToDb()
           return `refilled your stamina`
         },
       },
@@ -239,6 +242,7 @@ module.exports = {
           ).guild.ship.members.find((m) => m.id === msg.author.id)
           if (!member) return `no member with id ` + msg.author.id
           member.stamina = amount / member.maxStamina()
+          guild.saveToDb()
           return `set stamina to ` + amount
         },
       },
@@ -261,6 +265,7 @@ module.exports = {
             advantageDamageMultiplier: 999999,
             advantageAccuracyMultiplier: 999999,
           })
+          guild.saveToDb()
           return `killed ` + id
         },
       },

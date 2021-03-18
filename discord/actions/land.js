@@ -49,7 +49,7 @@ module.exports = async ({ msg, guild, planet }) => {
   if (!result) {
     guild.ship.logEntry(story.land.voteFailed())
     voteEmbed.description = story.land.voteFailed()
-    voteMessage.edit(voteEmbed)
+    voteMessage.edit(voteEmbed).catch(console.log)
     return
   }
   // vote passed
@@ -59,8 +59,8 @@ module.exports = async ({ msg, guild, planet }) => {
   voteEmbed.description = story.land.votePassed(yesPercent, planet)
 
   // land
-  const res = guild.ship.land({ planet, msg })
+  const res = guild.ship.land({ planet })
   if (res.message) voteEmbed.description += `\n\n` + res.message
 
-  voteMessage.edit(voteEmbed)
+  voteMessage.edit(voteEmbed).catch(console.log)
 }

@@ -17,8 +17,7 @@ const coreLoop = require(`./core loop/`)
 // from discord types to game types, and vice versa.
 //
 //
-
-module.exports = {
+const game = {
   async init(db) {
     this.db = db
 
@@ -278,3 +277,21 @@ module.exports = {
     return this.update()
   },
 }
+
+// ------------------- handle process end ---------------
+// const exitHandler = async () => {
+//   const savePromises = game.guilds.map(async (g) => await g.save())
+//   log(`exitHandler`, `Saving ${savePromises.length} guilds...`)
+//   await Promise.all(savePromises)
+//   log(`exitHandler`, `Saved!`)
+//   process.exit()
+// }
+// // catches ctrl+c event
+// process.on(`SIGINT`, exitHandler)
+// // catches "kill pid" (for example: nodemon restart)
+// process.on(`SIGUSR1`, exitHandler)
+// // process.on(`SIGUSR2`, exitHandler)
+// // catches uncaught exceptions
+// process.on(`uncaughtException`, exitHandler)
+
+module.exports = game

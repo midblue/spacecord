@@ -215,7 +215,7 @@ module.exports = (guild) => {
               reallyDoIt.embed.title = `Broadcast Results`
               reallyDoIt.embed.description = message
               reallyDoIt.embed.fields = resultFields
-              reallyDoIt.sentMessage.edit(reallyDoIt.embed)
+              reallyDoIt.sentMessage.edit(reallyDoIt.embed).catch(console.log)
             } else {
               // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
               guild.message(story.broadcast.voteFailed(), msg)
@@ -262,7 +262,7 @@ module.exports = (guild) => {
       garbleAmount: garbleAmount,
     })
     guild.lastBroadcast = { time: Date.now() }
-    guild.saveNewDataToDb()
+    guild.saveToDb()
 
     // durability loss
     equipment.repair -= equipment.durabilityLostOnUse

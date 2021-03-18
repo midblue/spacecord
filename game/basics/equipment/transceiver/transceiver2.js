@@ -5,6 +5,6 @@ module.exports = {
   baseHp: 5,
   powerUse: 3,
   broadcastCapabilities: [`location`, `distress`, `surrender`, `faction`],
-  range: 25,
-  maxGarble: 0.85
+  range: 0.75,
+  maxGarble: 0.85,
 }

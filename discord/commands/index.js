@@ -20,7 +20,13 @@ fs.readdir(`./discord/commands`, (err, files) => {
 })
 
 module.exports = {
-  test: async ({ msg, client, predeterminedCommandTag, props }) => {
+  test: async ({
+    msg,
+    client,
+    predeterminedCommandTag,
+    props,
+    system = false,
+  }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
     const game = client.game
     const pm = !msg.channel || msg.channel.type === `dm`
@@ -34,9 +40,9 @@ module.exports = {
           (await command.test(msg.content, settings)))
 
       if (match) {
-        let authorIsCaptain = false
-        let authorIsAdmin = false
-        let authorIsGameAdmin = false
+        let authorIsCaptain = system
+        let authorIsAdmin = system
+        let authorIsGameAdmin = system
         let requirements
         let guild, ship
 
@@ -103,13 +109,14 @@ module.exports = {
             )
           }
           const captain = guild?.ship && guild?.ship?.captain
-          if (captain) authorIsCaptain = msg.author.id === captain
+          if (captain) authorIsCaptain = system || msg.author?.id === captain
         }
 
         const authorCrewMemberObject =
           guild?.ship &&
-          guild.ship?.members?.find((m) => m.id === msg.author.id)
-        if (!command.public && !authorCrewMemberObject) {
+          guild.ship?.members?.find((m) => m.id === msg.author?.id)
+        if (!system && !command.public && !authorCrewMemberObject) {
+          console.log(command.tag)
           return send(
             msg,
             `That command is only available to crew members. Use \`${settings.prefix}join\` to join the crew!`,
@@ -118,10 +125,11 @@ module.exports = {
         if (msg.author) msg.author.crewMemberObject = authorCrewMemberObject
 
         if (
+          !system &&
           command.captain &&
           !authorIsAdmin &&
           guild.ship?.captain &&
-          msg.author.id !== ship.captain
+          msg.author?.id !== ship.captain
         ) {
           return send(
             msg,
@@ -132,7 +140,7 @@ module.exports = {
           )
         }
 
-        if (command.equipmentType) {
+        if (!system && command.equipmentType) {
           // todo unneeded? modifiable?
           const requirementsResponse = guild.ship.getRequirements(
             command.equipmentType,
@@ -163,9 +171,9 @@ module.exports = {
         }
 
         // in case a user's active guild needs updating, update it here
-        if (guild && msg.guild) {
+        if (!system && guild && msg.guild) {
           const memberInfo = guild.members.find(
-            (m) => m.userId === msg.author.id,
+            (m) => m.userId === msg.author?.id,
           )
           const user =
             memberInfo &&
@@ -182,7 +190,8 @@ module.exports = {
           }
         }
 
-        if (command.pmOnly && (await canEdit(msg))) msg.delete()
+        if (command.pmOnly && (await canEdit(msg)))
+          msg.delete().catch(console.log)
 
         // * execute command
         await command.action({

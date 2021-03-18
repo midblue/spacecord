@@ -16,6 +16,6 @@ module.exports = (guild) => {
     g.ship.members = members
     g.ship.seen = seen
     g.ship.captain = captain
-    guild.saveNewDataToDb()
+    guild.saveToDb()
   }
 }

@@ -41,14 +41,14 @@ module.exports = async ({ msg, guild }) => {
 
   const getAmountToJettison = async (sentMessage) => {
     if (await canEdit(sentMessage))
-      sentMessage.reactions.removeAll().catch((e) => {})
+      sentMessage.reactions.removeAll().catch(console.log)
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
       `And how ${cargoToJettison.type === `credits` ? `many` : `much`} ${
         cargoToJettison.emoji
       }${cargoToJettison.displayName} would you like to jettison?`,
     )
-    sentMessage.edit(detailsEmbed)
+    sentMessage.edit(detailsEmbed).catch(console.log)
 
     const amountPossessed = cargoToJettison.amount
     const amountsAsReactions = []
@@ -115,12 +115,12 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   }
 
   const getMessageToAttach = async (sentMessage) => {
     if (await canEdit(sentMessage))
-      sentMessage.reactions.removeAll().catch((e) => {})
+      sentMessage.reactions.removeAll().catch(console.log)
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
       `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`,
@@ -188,11 +188,11 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   }
 
   const finalJettisonVote = async (sentMessage) => {
-    if (await canEdit(sentMessage)) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
 
     detailsEmbed.setTitle(
       `Jettison ${amountToJettison.toFixed(2)} ${
@@ -218,12 +218,12 @@ module.exports = async ({ msg, guild }) => {
     detailsEmbed.fields = []
     if (voteResult.insufficientVotes) {
       detailsEmbed.description = story.vote.insufficientVotes()
-      voteResult.sentMessage.edit(detailsEmbed)
+      voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
       return
     }
     if (!voteResult.result) {
       detailsEmbed.description = story.attack.voteFailed()
-      voteResult.sentMessage.edit(detailsEmbed)
+      voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
       return
     }
 
@@ -245,7 +245,7 @@ module.exports = async ({ msg, guild }) => {
       cargoToJettison,
       amountToJettison,
     )
-    voteResult.sentMessage.edit(detailsEmbed)
+    voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
     guild.ship.jettison(cargoToJettison, amountToJettison, messageToAttach)
   }
 
@@ -271,6 +271,6 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete()
+    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   }
 }

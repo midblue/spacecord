@@ -15,7 +15,7 @@ module.exports = function ({ discordGuild, channelId }) {
     },
     power: 5,
     members: [],
-    seen: { planets: [] },
+    seen: { planets: [planet.name] },
     log: [],
     lastAttack: 0,
     equipment: [
@@ -109,7 +109,10 @@ module.exports = function ({ discordGuild, channelId }) {
       //   amount: 2000,
       // },
     ],
-    location: [...planet.location],
+    location: [
+      planet.location[0],
+      planet.location[1] + planet.radius / KM_PER_AU,
+    ],
     pastLocations: [],
     velocity: [0, 0],
     speed: 0,

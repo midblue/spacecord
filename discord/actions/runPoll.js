@@ -83,7 +83,7 @@ module.exports = async ({
   let done = false
 
   if (!sentMessage) sentMessage = (await message({ msg, message: embed }))[0]
-  else sentMessage.edit(embed)
+  else sentMessage.edit(embed).catch(console.log)
 
   const embedUpdateInterval = setInterval(() => {
     if (done === true) return clearInterval(embedUpdateInterval)
@@ -97,7 +97,7 @@ module.exports = async ({
       clearInterval(embedUpdateInterval)
       done = true
     }
-    if (!sentMessage.deleted) sentMessage.edit(embed)
+    if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
   }, 5000)
 
   if (!respondeeFilter) {
@@ -134,7 +134,7 @@ module.exports = async ({
     embed.fields.findIndex((f) => f.id === `remainingTime`),
     1,
   )
-  if (!sentMessage.deleted) sentMessage.edit(embed)
+  if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
 
   const userReactionsToUse = {}
   const userReactionCounts = {}

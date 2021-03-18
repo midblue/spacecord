@@ -69,6 +69,7 @@ module.exports = {
     if (scanRes.lowPower) {
       reactions.push({
         emoji: `🔌`,
+        label: `Generate Power ` + usageTag(0, `generatePower`),
         action() {
           runGuildCommand({ msg, commandTag: `generatePower` })
         },

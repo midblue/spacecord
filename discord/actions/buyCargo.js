@@ -47,12 +47,12 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteResult.sentMessage.edit(voteEmbed)
+    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
     return
   }
   if (!voteResult.result) {
     voteEmbed.description = story.buy.cargo.voteFailed(cargo, amount, cost)
-    voteResult.sentMessage.edit(voteEmbed)
+    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
     return
   }
 
@@ -82,5 +82,5 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
       ? `\nYou're overburdened! You won't be able to move until you drop or sell something.`
       : ``)
 
-  voteResult.sentMessage.edit(voteEmbed)
+  voteResult.sentMessage.edit(voteEmbed).catch(console.log)
 }

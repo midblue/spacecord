@@ -107,8 +107,10 @@ and it needs labeled training data to improve its performance. The input data is
     const puzzleMessage = (await send(msg, mojcodeSnippet))[0]
 
     setTimeout(async () => {
-      if (await canEdit(puzzleMessage)) puzzleMessage.delete()
-      else puzzleMessage.edit(`\`Time's up! Make your guess!\``)
+      if (await canEdit(puzzleMessage))
+        puzzleMessage.delete().catch(console.log)
+      else
+        puzzleMessage.edit(`\`Time's up! Make your guess!\``).catch(console.log)
     }, time)
 
     const handler = async (receivedMessage) => {
@@ -120,15 +122,17 @@ and it needs labeled training data to improve its performance. The input data is
 
       clearTimeout(noInputTimeout)
 
-      if (await canEdit(receivedMessage)) receivedMessage.delete()
+      if (await canEdit(receivedMessage))
+        receivedMessage.delete().catch(console.log)
       collector.stop()
       end(guess)
     }
 
     const collector = new Discord.MessageCollector(msg.channel, handler)
     const noInputTimeout = setTimeout(async () => {
-      if (await canEdit(sentMessage)) sentMessage.delete()
-      if (await canEdit(puzzleMessage)) puzzleMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+      if (await canEdit(puzzleMessage))
+        puzzleMessage.delete().catch(console.log)
       collector.stop()
       end(0)
     }, 20 * 1000)
@@ -159,7 +163,7 @@ and it needs labeled training data to improve its performance. The input data is
       description += `${await applyCustomParams(msg, res.message)}`
 
       embed.setDescription(description)
-      if (await canEdit(sentMessage)) sentMessage.edit(embed)
+      if (await canEdit(sentMessage)) sentMessage.edit(embed).catch(console.log)
       else send(msg, embed)
     }
   },

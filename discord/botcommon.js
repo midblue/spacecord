@@ -16,7 +16,7 @@ module.exports = {
   },
 
   async canEdit(msg) {
-    if (!msg || msg.deleted) {
+    if (!msg || msg.deleted || !msg.delete) {
       msg.canEdit = false
       return false
     }

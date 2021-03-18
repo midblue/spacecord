@@ -1,18 +1,28 @@
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 const story = require(`../../story/story`)
-const { capitalize, captainTag, usageTag } = require(`../../../../common`)
+const {
+  capitalize,
+  captainTag,
+  usageTag,
+  getUnitVectorBetween,
+  angle,
+  degreesToUnitVector,
+} = require(`../../../../common`)
 const depart = require(`../../../../discord/actions/depart`)
 
 module.exports = (guild) => {
-  guild.ship.land = ({ planet, msg }) => {
+  guild.ship.land = ({ planet }) => {
     guild.ship.status.docked = planet.name
-    guild.ship.location = [...planet.location]
+    const unitVectorFromPlanetToShip = getUnitVectorBetween(planet, guild.ship),
+      landingLocation = unitVectorFromPlanetToShip.map((v) => v * planet.radius)
+    guild.ship.location = landingLocation
     guild.ship.velocity = [0, 0]
 
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
-      setTimeout(() => guild.message(story.land.recharge(), msg), 1000) // send after landing message
+      setTimeout(() => guild.message(story.land.recharge()), 1000) // send after landing message
     }
+    guild.saveToDb()
 
     const otherDockedShips = planet
       .getDockedShips()
@@ -40,6 +50,14 @@ module.exports = (guild) => {
     )
 
     guild.ship.status.docked = ``
+    const startLocation = [...guild.ship.location]
+    const vectorFromPlanet = degreesToUnitVector(angle(planet, guild.ship))
+    const boostAmount = 0.0001
+    guild.ship.location = [
+      startLocation[0] + vectorFromPlanet[0] * boostAmount,
+      startLocation[1] + vectorFromPlanet[1] * boostAmount,
+    ]
+    guild.saveToDb()
 
     runGuildCommand({
       commandTag: `ship`,

@@ -71,7 +71,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
       pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects,
     })
-    if (await canEdit(pollMessage)) pollMessage.delete()
+    if (await canEdit(pollMessage)) pollMessage.delete().catch(console.log)
     if (!winner) return
     weaponToUse = usableWeapons[emojiToNumber(winner) - 1]
   }
@@ -124,12 +124,12 @@ ${
   voteEmbed.fields = []
   if (insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteMessage.edit(voteEmbed)
+    voteMessage.edit(voteEmbed).catch(console.log)
     return
   }
   if (!result) {
     voteEmbed.description = story.attack.voteFailed()
-    voteMessage.edit(voteEmbed)
+    voteMessage.edit(voteEmbed).catch(console.log)
     return
   }
   // vote passed
@@ -147,7 +147,7 @@ ${
     otherShip,
     collectiveMunitionsSkill,
   )
-  voteMessage.edit(voteEmbed)
+  voteMessage.edit(voteEmbed).catch(console.log)
 
   // too much munitions skill required
   if ((weaponToUse.requirements?.munitions || 0) > collectiveMunitionsSkill) {
@@ -156,7 +156,7 @@ ${
       collectiveMunitionsSkill,
       weaponToUse,
     )
-    voteMessage.edit(voteEmbed)
+    voteMessage.edit(voteEmbed).catch(console.log)
     return
   }
 

@@ -1,6 +1,6 @@
 module.exports = {
   baseCost: 5000,
-  interactRadius: 0.7,
+  interactRadius: 0.03,
   agility: 0.05,
   maxMass: 80000,
   mass: 20000,

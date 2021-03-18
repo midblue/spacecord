@@ -67,7 +67,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `buy` && !type) {
       let totalParts = 0
       const completeParts = {}
@@ -112,7 +112,7 @@ module.exports = {
         embed,
         guild,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete()
+      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     }
     // otherwise, we already know what type to show
     else if (buyOrSell === `buy`) {
@@ -180,7 +180,7 @@ module.exports = {
           embed,
           guild,
         })
-        if (await canEdit(sentMessage)) sentMessage.delete()
+        if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
       })
     } else if (buyOrSell === `sell`) {
       const allSellableEquipment = []
@@ -219,7 +219,7 @@ module.exports = {
         embed,
         guild,
       })
-      sentMessage.delete()
+      sentMessage.delete().catch(console.log)
     }
   },
 }

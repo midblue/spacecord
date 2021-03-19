@@ -47,7 +47,7 @@
     rightBound += (diameter - widthDiff) / 2
     leftBound -= (diameter - widthDiff) / 2
   }
-  const bufferDistance = diameter * edgeBuffer + 0.001 // to fix top-left-corner bugs
+  const bufferDistance = diameter * edgeBuffer + 0.0001 // to fix top-left-corner bugs
   const displayDiameter = diameter + bufferDistance
 
   const pixelsPerKilometer = 542.41 / displayDiameter / KM_PER_AU

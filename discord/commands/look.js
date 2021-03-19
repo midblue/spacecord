@@ -1,5 +1,5 @@
 const send = require(`../actions/send`)
-const { log } = require(`../botcommon`)
+const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 
 module.exports = {
@@ -21,6 +21,7 @@ module.exports = {
     log(msg, `Look Around`, msg.guild?.name)
 
     const scanRes = await ship.scanArea(true) // eyesOnly = true
-    return send(msg, scanRes.message)
+    send(msg, scanRes.message)
+    if (await canEdit(msg)) msg.delete().catch(console.log)
   },
 }

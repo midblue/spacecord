@@ -1,4 +1,3 @@
-const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const { applyCustomParams } = require(`../botcommon`)
@@ -9,7 +8,7 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `trainMunitions`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -96,7 +95,7 @@ Use your 🧨 Shots to take down the practice dummies hidden in the inky blackne
 There are \`${
       targetSizes.length
     }\` enemy ships somewhere on the board with lengths ${targetSizes
-      .slice(0, targetSizes.length - 2)
+      .slice(0, targetSizes.length - 1)
       .map((s) => `\`${s}\``)
       .join(`, `)}, and \`${targetSizes[targetSizes.length - 1]}\`.
 Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.`
@@ -110,7 +109,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
     ]
 
     // ------- wait for them to say I'm Ready
-    const sentMessage = (await send(msg, embed))[0]
+    let sentMessage = (await authorCrewMemberObject.message(embed))[0]
     const ready = await readyCheck({
       msg: sentMessage,
       embed,
@@ -140,7 +139,7 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         inline: true,
       },
     ]
-    await sentMessage.edit(embed).catch(console.log)
+    sentMessage = (await authorCrewMemberObject.message(embed))[0]
 
     // update remaining time
     let startTime = Date.now()

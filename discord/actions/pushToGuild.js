@@ -4,7 +4,13 @@ const { client } = require(`../bot`)
 const awaitReaction = require(`./awaitReaction`)
 const manager = require(`../../game/manager`)
 
-module.exports = async ({ id, channelId, message, msg, reactions }) => {
+module.exports = async ({
+  id,
+  channelId,
+  message,
+  msg,
+  awaitReactionOptions,
+}) => {
   let sentMessages
   if (msg && msg.guild) sentMessages = await send(msg, message)
   else {
@@ -30,13 +36,13 @@ module.exports = async ({ id, channelId, message, msg, reactions }) => {
     msg = discordChannel
     sentMessages = await send(msg, message)
   }
-  if (reactions) {
+  if (awaitReactionOptions) {
     const gameGuildRes = await manager.guild(id)
     if (!gameGuildRes.ok) return
     awaitReaction({
-      msg: sentMessages[0],
-      reactions,
       embed: message,
+      ...awaitReactionOptions,
+      msg: msg || sentMessages[0],
       guild: gameGuildRes.guild,
     })
   }

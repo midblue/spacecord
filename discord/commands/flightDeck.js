@@ -8,14 +8,14 @@ const depart = require(`../actions/depart`)
 
 module.exports = {
   tag: `flightDeck`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:flightdeck|flight)$`, `gi`).exec(
       content,
     )
   },
-  async action({ msg, guild }) {
+  async action({ msg, guild, authorCrewMemberObject }) {
     log(msg, `Flight Deck`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
@@ -74,6 +74,13 @@ module.exports = {
         },
         {
           emoji: `🛑`,
+          label: `Stop ` + usageTag(0, `thrust`),
+          action: ({ msg, guild, user }) => {
+            runGuildCommand({ msg, commandTag: `stop` })
+          },
+        },
+        {
+          emoji: `🚷`,
           label: `Emergency Brake ` + captainTag + ` ` + usageTag(0, `eBrake`),
           action: ({ msg, guild, user }) => {
             runGuildCommand({ msg, commandTag: `eBrake` })
@@ -82,15 +89,10 @@ module.exports = {
       ],
     )
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    authorCrewMemberObject.message(embed, {
       reactions,
-      embed,
-      guild,
       commandsLabel: `Flight Commands`,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

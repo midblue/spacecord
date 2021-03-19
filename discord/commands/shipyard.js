@@ -11,7 +11,7 @@ const sellEquipment = require(`../actions/sellEquipment`)
 
 module.exports = {
   tag: `shipyard`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     name: `shipyard`,
     value: `Buy and sell equipment for your ship.`,
@@ -22,13 +22,23 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:shipyard)$`, `gi`).exec(content)
   },
-  async action({ msg, guild, settings, game, buyOrSell, type, parts = [] }) {
+  async action({
+    msg,
+    guild,
+    settings,
+    game,
+    buyOrSell,
+    type,
+    parts = [],
+    authorCrewMemberObject,
+  }) {
     log(msg, `Shipyard`, msg.guild?.name)
 
     const planet = guild.context.planets.find(
       (p) => p.name === guild.ship.status.docked,
     )
-    if (!planet) return send(msg, `Your ship isn't docked anywhere!`)
+    if (!planet)
+      return authorCrewMemberObject.message(`Your ship isn't docked anywhere!`)
 
     if (!buyOrSell) {
       const embed = new Discord.MessageEmbed()
@@ -60,14 +70,10 @@ module.exports = {
         },
       ]
 
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
+      authorCrewMemberObject.message(embed, {
         reactions: availableActions,
-        msg: sentMessage,
-        embed,
-        guild,
+        endOnReaction: true,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     } else if (buyOrSell === `buy` && !type) {
       let totalParts = 0
       const completeParts = {}
@@ -105,14 +111,10 @@ module.exports = {
         })
       })
 
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
+      authorCrewMemberObject.message(embed, {
         reactions: availableActions,
-        msg: sentMessage,
-        embed,
-        guild,
+        endOnReaction: true,
       })
-      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
     }
     // otherwise, we already know what type to show
     else if (buyOrSell === `buy`) {
@@ -173,14 +175,10 @@ module.exports = {
           })
         }
 
-        const sentMessage = (await send(msg, embed))[0]
-        await awaitReaction({
+        authorCrewMemberObject.message(embed, {
           reactions: availableActions,
-          msg: sentMessage,
-          embed,
-          guild,
+          endOnReaction: true,
         })
-        if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
       })
     } else if (buyOrSell === `sell`) {
       const allSellableEquipment = []
@@ -212,14 +210,10 @@ module.exports = {
         .setColor(APP_COLOR)
         .setTitle(`Which equipment would you like to sell?`)
 
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
-        msg: sentMessage,
+      authorCrewMemberObject.message(embed, {
         reactions: sellableActions,
-        embed,
-        guild,
+        endOnReaction: true,
       })
-      sentMessage.delete().catch(console.log)
     }
   },
 }

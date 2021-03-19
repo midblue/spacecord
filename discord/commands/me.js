@@ -103,7 +103,7 @@ module.exports = {
     ]
 
     const sentMessage = (await send(msg.author, embed))[0]
-    await awaitReaction({
+    awaitReaction({
       msg: sentMessage,
       reactions: reactions,
       embed,

@@ -20,7 +20,7 @@ module.exports = {
       `gi`,
     ).exec(content)
   },
-  async action({ msg, settings, client, guild }) {
+  async action({ msg, settings, client, guild, authorCrewMemberObject }) {
     log(msg, `Planet`, msg.guild?.name)
 
     if (!guild.ship.status.docked) {
@@ -31,8 +31,7 @@ module.exports = {
     )
     if (!dockedPlanet) {
       guild.ship.status.docked = ``
-      return send(
-        msg,
+      return authorCrewMemberObject.message(
         `Wait, what? The ship your planet is supposed to be docked at wasn't found. You're back in space now, floating along.`,
       )
     }
@@ -45,13 +44,9 @@ module.exports = {
       .setTitle(`🪐 ` + dockedPlanet.name)
       .addFields(fields.map((f) => ({ inline: true, ...f })))
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    authorCrewMemberObject.message(embed, {
       reactions: availableActions,
       actionProps: { planet: dockedPlanet },
-      embed,
-      guild,
     })
   },
 }

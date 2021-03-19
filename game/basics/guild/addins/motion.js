@@ -190,15 +190,15 @@ module.exports = (guild) => {
           break
         }
 
-        if (gravityForceVector.reduce((t, c) => t + Math.abs(c), 0) > 0.01)
-          console.log(
-            `planet ${planet.name} at`,
-            planet.location,
-            `has`,
-            gravityForceVector.map((v) => v / shipMass / KM_PER_AU / M_PER_KM),
-            `effect on ship at`,
-            ship.location,
-          )
+        // if (gravityForceVector.reduce((t, c) => t + Math.abs(c), 0) > 0.01)
+        //   console.log(
+        //     `planet ${planet.name} at`,
+        //     planet.location,
+        //     `has`,
+        //     gravityForceVector.map((v) => v / shipMass / KM_PER_AU / M_PER_KM),
+        //     `effect on ship at`,
+        //     ship.location,
+        //   )
       }
 
       const newX = currentLocation[0] + ship.velocity[0]

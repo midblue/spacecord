@@ -3,6 +3,7 @@ module.exports = {
   description: `Not so much high-tech as medieval-tech, this is a digital telescope mounted to your ship that can peer at nearby craft. It can't tell much about them, but it's at least reliable for determining the size and faction of other ships. Its one adantage is that it is very hard to detect.`,
   displayName: `Telescopic Inspector`,
   baseHp: 5,
+  mass: 50,
   powerUse: 1,
   requirements: { engineering: 4 },
   scanUndetectability: 50,

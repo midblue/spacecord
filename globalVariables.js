@@ -31,6 +31,7 @@ KM_PER_AU = 149597900
 GRAVITY_RANGE = 3
 GRAVITATIONAL_CONSTANT = 6.6743 * 10 ** -11
 GRAV_TOLERANCE = 10 ** -9
+LIGHTSPEED = 72.1935409205 // au per hour
 
 SLEEP = (ms) =>
   new Promise((resolve) => {

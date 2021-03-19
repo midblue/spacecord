@@ -1,7 +1,6 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const { checkUserInputForBadWords } = require(`../../common`)
-const Discord = require(`discord.js-light`)
 
 module.exports = {
   tag: `setShipName`,
@@ -10,15 +9,15 @@ module.exports = {
     name: `setshipname <ship name>`,
     value: `Sets your ship's name.`,
     emoji: `📛`,
-    priority: 80
+    priority: 80,
   },
-  test (content, settings) {
+  test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:setshipname|shipname) (.*)$`,
-      `gi`
+      `gi`,
     ).exec(content)
   },
-  async action ({ msg, match, settings, client, guild }) {
+  async action({ msg, match, settings, client, guild }) {
     log(msg, `Set Ship Name`, msg.channel.name)
     let name = match[1]
     name = name.replace(/(?:^<|>$)/gi, ``)
@@ -29,5 +28,5 @@ module.exports = {
     if (name === `God`) return send(msg, `That is a reserved name.`)
     const res = await guild.ship.setName(name)
     return send(msg, res.message)
-  }
+  },
 }

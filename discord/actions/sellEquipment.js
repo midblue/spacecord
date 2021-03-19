@@ -1,4 +1,3 @@
-const send = require(`./send`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const runYesNoVote = require(`./runYesNoVote`)
@@ -15,13 +14,13 @@ module.exports = async ({ msg, part, cost, guild }) => {
   )
     return
 
-  // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
   )
-  if (!authorCrewMemberObject) {
+  if (!authorCrewMemberObject)
     return console.log(`no user found in sellEquipment`)
-  }
+
+  // ---------- use vote caller stamina
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return
 
@@ -38,7 +37,7 @@ module.exports = async ({ msg, part, cost, guild }) => {
     guild,
     cleanUp: false,
   })
-  if (!voteResult.ok) return send(msg, voteResult.message)
+  if (!voteResult.ok) return guild.message(voteResult.message)
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()

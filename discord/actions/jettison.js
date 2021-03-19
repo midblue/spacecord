@@ -48,7 +48,9 @@ module.exports = async ({ msg, guild }) => {
         cargoToJettison.emoji
       }${cargoToJettison.displayName} would you like to jettison?`,
     )
-    sentMessage.edit(detailsEmbed).catch(console.log)
+    if (await canEdit(sentMessage))
+      sentMessage.edit(detailsEmbed).catch(console.log)
+    else sentMessage = (await send(msg, detailsEmbed))[0]
 
     const amountPossessed = cargoToJettison.amount
     const amountsAsReactions = []
@@ -125,7 +127,9 @@ module.exports = async ({ msg, guild }) => {
     detailsEmbed.setDescription(
       `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`,
     )
-    sentMessage.edit(detailsEmbed)
+    if (await canEdit(sentMessage))
+      sentMessage.edit(detailsEmbed).catch(console.log)
+    else sentMessage = (await send(msg, detailsEmbed))[0]
 
     const messageReactions = []
     messageReactions.push({

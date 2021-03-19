@@ -8,15 +8,16 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   msg.guild = msg.channel.guild
   log(msg, `Buy Equipment`, msg.channel.guild.name)
 
-  if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
-
-  // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
   )
-  if (!authorCrewMemberObject) {
+  if (!authorCrewMemberObject)
     return console.log(`no user found in buyEquipment`)
-  }
+
+  if (cost > guild.ship.credits)
+    return authorCrewMemberObject.message(story.buy.notEnoughMoney())
+
+  // ---------- use vote caller stamina
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return
 
@@ -39,7 +40,7 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
     guild,
     cleanUp: false,
   })
-  if (!voteResult.ok) return send(msg, voteResult.message)
+  if (!voteResult.ok) return guild.message(voteResult.message)
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
@@ -52,7 +53,8 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
     return
   }
 
-  if (cost > guild.ship.credits) return send(msg, story.buy.notEnoughMoney())
+  if (cost > guild.ship.credits)
+    return guild.message(story.buy.notEnoughMoney())
 
   // vote passed
   guild.ship.logEntry(story.buy.equipment.votePassed(part, cost))

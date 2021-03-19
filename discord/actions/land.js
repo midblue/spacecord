@@ -1,4 +1,3 @@
-const send = require(`./send`)
 const { log } = require(`../botcommon`)
 const { distance, usageTag } = require(`../../common`)
 const Discord = require(`discord.js-light`)
@@ -8,17 +7,19 @@ const story = require(`../../game/basics/story/story`)
 module.exports = async ({ msg, guild, planet }) => {
   log(msg, `Land`, msg.guild?.name)
 
-  // ---------- check if in range
-  const inRange =
-    distance(...guild.ship.location, ...planet.location) <=
-    guild.ship.interactRadius()
-  if (!inRange) return send(msg, `That planet isn't in range anymore!`)
-
-  // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in land`)
+
+  // ---------- check if in range
+  const inRange =
+    distance(...guild.ship.location, ...planet.location) <=
+    guild.ship.interactRadius()
+  if (!inRange)
+    return authorCrewMemberObject.message(`That planet isn't in range anymore!`)
+
+  // ---------- use vote caller stamina
   const staminaRes = authorCrewMemberObject.useStamina(`land`)
   if (!staminaRes.ok) return
 
@@ -43,7 +44,7 @@ module.exports = async ({ msg, guild, planet }) => {
     guild,
     cleanUp: false,
   })
-  if (!ok) return send(msg, message)
+  if (!ok) return guild.message(message)
 
   voteEmbed.fields = []
   if (!result) {

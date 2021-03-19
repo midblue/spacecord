@@ -4,7 +4,7 @@ const nearby = require(`./nearby`)
 
 module.exports = {
   tag: `cache`,
-  pm: true,
+  pmOnly: true,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:caches?)$`, `gi`).exec(content)
   },

@@ -21,8 +21,8 @@ module.exports = {
   },
   async action({ msg, settings, client, ship }) {
     log(msg, `Log`, msg.guild?.name)
-    const res = ship.getLog(10)
-    const text = await applyCustomParams(msg, res.message)
-    return send(msg, text)
+    // const res = ship.getLog(10)
+    // const text = await applyCustomParams(msg, res.message)
+    // return send(msg, text)
   },
 }

@@ -11,13 +11,12 @@ const awaitReaction = require(`../actions/awaitReaction`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
 const Discord = require(`discord.js-light`)
 const story = require(`../../game/basics/story/story`)
-const { interact } = require(`../../game/basics/story/story`)
 const getCache = require(`../actions/getCache`)
 const land = require(`../actions/land`)
 
 module.exports = {
   tag: `nearby`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     name: `nearby`,
     value: `Inspect and interact with nearby ships, planets, etc.`,
@@ -31,7 +30,13 @@ module.exports = {
       `gi`,
     ).exec(content)
   },
-  async action({ msg, guild, interactableGuilds, filter }) {
+  async action({
+    msg,
+    guild,
+    interactableGuilds,
+    filter,
+    authorCrewMemberObject,
+  }) {
     log(msg, `Nearby`, filter || `No Filter`)
 
     if (guild.ship.status.docked) {
@@ -77,7 +82,7 @@ module.exports = {
         interactablePlanets.length ===
       0
     ) {
-      return send(msg, story.interact.nothing())
+      return authorCrewMemberObject.message(story.interact.nothing())
     }
 
     if (interactableCaches.length) {
@@ -87,10 +92,6 @@ module.exports = {
 
       const availableActions = []
       interactableCaches.forEach(async (cache, index) => {
-        // const positionAndAngle = positionAndAngleDifference(
-        //   ...guild.ship.location,
-        //   ...cache.location,
-        // )
         availableActions.push({
           emoji: numberToEmoji(index + 1),
           label:
@@ -107,47 +108,10 @@ module.exports = {
             })
           },
         })
-        // const embed = new Discord.MessageEmbed()
-        //   .setColor(APP_COLOR)
-        //   .setTitle(
-        //     '📦 Cache: ' +
-        //       cache.amount.toFixed(2) +
-        //       (cache.type === 'credits'
-        //         ? ''
-        //         : ' ' + WEIGHT_UNITS + ' of') +
-        //       ' ' +
-        //       cache.emoji +
-        //       cache.displayName,
-        //   )
-        //   .setDescription(
-        //     `${positionAndAngle.distance.toFixed(
-        //       2,
-        //     )} AU away from you at an angle of ${Math.round(
-        //       positionAndAngle.angle,
-        //     )} degrees.`,
-        //   )
-
-        // const availableActions = [
-        //   {
-        //     emoji: '✋',
-        //     label: 'Grab the cache! ' + usageTag(0, 'cache'),
-        //     async action({ user, msg, guild }) {
-        //       getCache({
-        //         cache,
-        //         msg,
-        //         guild,
-        //       })
-        //     },
-        //   },
-        // ]
       })
-      const sentMessage = (await send(msg, cacheEmbed))[0]
-      awaitReaction({
-        commandsLabel: `Grab which cache?`,
-        msg: sentMessage,
+      authorCrewMemberObject.message(cacheEmbed, {
         reactions: availableActions,
-        embed: cacheEmbed,
-        guild,
+        commandsLabel: `Grab which cache?`,
       })
     }
 
@@ -177,14 +141,7 @@ module.exports = {
         },
       ]
 
-      const sentMessages = await send(msg, embed)
-      const sentMessage = sentMessages[sentMessages.length - 1]
-      await awaitReaction({
-        msg: sentMessage,
-        reactions: availableActions,
-        embed,
-        guild,
-      })
+      authorCrewMemberObject.message(embed, availableActions)
     })
 
     interactableGuilds.forEach(async (otherGuild) => {
@@ -207,14 +164,9 @@ module.exports = {
 
       const availableActions = guild.ship.getActionsOnOtherShip(otherGuild.ship)
 
-      const sentMessages = await send(msg, embed)
-      const sentMessage = sentMessages[sentMessages.length - 1]
-      await awaitReaction({
-        msg: sentMessage,
+      authorCrewMemberObject.message(embed, {
         reactions: availableActions,
         actionProps: { otherShip: otherGuild.ship },
-        embed,
-        guild,
       })
     })
   },

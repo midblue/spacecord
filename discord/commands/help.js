@@ -26,7 +26,7 @@ fs.readdir(`./discord/commands`, (err, files) => {
 
 module.exports = {
   tag: `help`,
-  pm: true,
+  pmOnly: true,
   public: true,
   noShip: true,
   documentation: {
@@ -239,7 +239,7 @@ Pick a category below to get info on specific commands or elements of the game.`
     //         inline: true,
     //       })),
     //   )
-    const sentMessage = (await send(msg, embed))[0]
+    const sentMessage = (await send(msg.author, embed))[0]
     awaitReaction({
       msg: sentMessage,
       embed,

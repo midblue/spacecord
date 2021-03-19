@@ -15,23 +15,20 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:broadcast|b)$`, `gi`).exec(content)
   },
-  async action({ msg, guild, ship }) {
+  async action({ msg, guild, authorCrewMemberObject, ship }) {
     log(msg, `Broadcast`, msg.guild?.name)
 
     const broadcastRes = ship.broadcastOptions()
-    if (!broadcastRes.ok) return send(msg, broadcastRes.message)
+    if (!broadcastRes.ok)
+      return authorCrewMemberObject.message(broadcastRes.message)
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`Broadcast`)
       .addFields(broadcastRes.fields.map((s) => ({ inline: true, ...s })))
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    await authorCrewMemberObject.message(embed, {
       reactions: broadcastRes.actions,
       commandsLabel: `Start Broadcast Vote`,
-      embed,
-      guild,
     })
   },
 }

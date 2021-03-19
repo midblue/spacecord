@@ -14,7 +14,9 @@ module.exports = (guild) => {
   guild.ship.land = ({ planet }) => {
     guild.ship.status.docked = planet.name
     const unitVectorFromPlanetToShip = getUnitVectorBetween(planet, guild.ship),
-      landingLocation = unitVectorFromPlanetToShip.map((v) => v * planet.radius)
+      landingLocation = unitVectorFromPlanetToShip.map(
+        (v) => (v * planet.radius) / KM_PER_AU,
+      )
     guild.ship.location = landingLocation
     guild.ship.velocity = [0, 0]
 
@@ -52,10 +54,15 @@ module.exports = (guild) => {
     guild.ship.status.docked = ``
     const startLocation = [...guild.ship.location]
     const vectorFromPlanet = degreesToUnitVector(angle(planet, guild.ship))
-    const boostAmount = 0.0001
+    const locationOffset = 0.0005
+    const boostAmount = 0.001
     guild.ship.location = [
-      startLocation[0] + vectorFromPlanet[0] * boostAmount,
-      startLocation[1] + vectorFromPlanet[1] * boostAmount,
+      startLocation[0] + vectorFromPlanet[0] * locationOffset,
+      startLocation[1] + vectorFromPlanet[1] * locationOffset,
+    ]
+    guild.ship.velocity = [
+      vectorFromPlanet[0] * boostAmount,
+      vectorFromPlanet[1] * boostAmount,
     ]
     guild.saveToDb()
 

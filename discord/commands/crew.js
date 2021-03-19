@@ -7,7 +7,7 @@ const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `crewQuarters`,
-  pm: true,
+  pmOnly: true,
   test(content, settings) {
     return new RegExp(
       `^${settings.prefix}(?:crew|crews?quarters?)$`,
@@ -49,15 +49,9 @@ module.exports = {
         },
       },
     ]
-
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    await send(embed, {
       reactions,
-      embed,
-      guild,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

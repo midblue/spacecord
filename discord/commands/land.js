@@ -5,7 +5,7 @@ const planet = require(`./planet`)
 
 module.exports = {
   tag: `land`,
-  pm: true,
+  pmOnly: true,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:land)$`, `gi`).exec(content)
   },

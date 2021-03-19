@@ -202,13 +202,13 @@ const game = {
 
   spawnCache(cacheData) {
     const cacheDataToSave = { ...cacheData, created: Date.now() }
-    db.cache.add({ ...cacheData, created: Date.now() })
+    this.db.cache.add({ ...cacheData, created: Date.now() })
     caches.liveify(cacheDataToSave)
     this.caches.push(cacheDataToSave)
   },
 
   deleteCache(cacheId) {
-    db.cache.remove(cacheId)
+    this.db.cache.remove(cacheId)
     this.caches.splice(
       this.caches.findIndex((c) => c.id === cacheId),
       1,

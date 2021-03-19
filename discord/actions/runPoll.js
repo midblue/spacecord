@@ -1,6 +1,5 @@
 const send = require(`./send`)
 const awaitReaction = require(`./awaitReaction`)
-const message = require(`./pushToGuild`)
 const { msToTimeString, capitalize } = require(`../../common`)
 const generalStaminaRequirements = require(`../../game/basics/crew/staminaRequirements`)
 const manager = require(`../../game/manager`)
@@ -23,7 +22,7 @@ module.exports = async ({
   guild,
 }) => {
   // make sure there's not another active poll of this type running
-  const thisGuild = guild || ((await manager.guild(msg.guild.id)) || {}).guild
+  const thisGuild = guild || ((await manager.guild(msg?.guild?.id)) || {}).guild
   if (!thisGuild) {
     return {
       ok: false,
@@ -82,7 +81,7 @@ module.exports = async ({
   let remainingTime = time
   let done = false
 
-  if (!sentMessage) sentMessage = (await message({ msg, message: embed }))[0]
+  if (!sentMessage) sentMessage = (await thisGuild.message(embed))[0]
   else sentMessage.edit(embed).catch(console.log)
 
   const embedUpdateInterval = setInterval(() => {
@@ -144,7 +143,7 @@ module.exports = async ({
 
   let guildMembers
   if (staminaRequirements) {
-    guildMembers = (await manager.guild(msg.guild.id)).guild?.ship?.members
+    guildMembers = thisGuild.ship?.members
   }
 
   gatheredReactions.forEach(({ user, emoji }) => {

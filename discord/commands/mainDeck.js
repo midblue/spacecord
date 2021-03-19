@@ -7,14 +7,14 @@ const { usageTag } = require(`../../common`)
 
 module.exports = {
   tag: `mainDeck`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:main|maindeck)$`, `gi`).exec(
       content,
     )
   },
-  async action({ msg, guild }) {
+  async action({ msg, guild, authorCrewMemberObject }) {
     log(msg, `Main Deck`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
@@ -76,14 +76,9 @@ module.exports = {
       // }
     ]
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    authorCrewMemberObject.message(embed, {
       reactions,
-      embed,
-      guild,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

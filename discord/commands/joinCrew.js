@@ -12,7 +12,7 @@ module.exports = {
     priority: 5,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:j|join)$`, `gi`).exec(content)
+    return new RegExp(`^${settings.prefix}(?:join)$`, `gi`).exec(content)
   },
   async action({ msg, settings, game, ship }) {
     log(msg, `Join Crew`, msg.guild?.name)

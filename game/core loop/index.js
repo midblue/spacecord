@@ -1,5 +1,4 @@
 const { log } = require(`../gamecommon`)
-
 const cargo = require(`../basics/cargo`)
 
 const cacheExpirationTime = TICK_INTERVAL * 500
@@ -13,11 +12,7 @@ module.exports = {
     if (loopInterval) clearInterval(loopInterval)
     if (saveInterval) clearInterval(saveInterval)
     loopInterval = setInterval(async () => {
-      // console.log(``)
-      // log(``, `============= NEW GAME STEP =============`)
       await this.update()
-      // log(``, `============= END GAME STEP =============`)
-      // console.log(``)
     }, TICK_INTERVAL)
 
     saveInterval = setInterval(async () => {
@@ -38,25 +33,25 @@ module.exports = {
     await Promise.all(updates)
     // log(`update`, `Updated all ${this.guilds.length} ships`)
 
-    // // expire old caches
-    // const cacheCutoff = Date.now() - cacheExpirationTime
-    // let deletedCacheCount = 0
-    // this.caches.forEach((cache) => {
-    //   if (
-    //     cache.created < cacheCutoff &&
-    //     this.caches.length > this.gameDiameter() / 2
-    //   ) {
-    //     this.deleteCache(cache.id)
-    //     deletedCacheCount++
-    //   }
-    // })
-    // if (deletedCacheCount) {
-    //   log(`update`, `Removed ${deletedCacheCount} expired caches`)
-    // }
+    // expire old caches
+    const cacheCutoff = Date.now() - cacheExpirationTime
+    let deletedCacheCount = 0
+    this.caches.forEach((cache) => {
+      if (
+        cache.created < cacheCutoff &&
+        this.caches.length > this.gameDiameter() / 2
+      ) {
+        this.deleteCache(cache.id)
+        deletedCacheCount++
+      }
+    })
+    if (deletedCacheCount) {
+      log(`update`, `Removed ${deletedCacheCount} expired caches`)
+    }
 
     // // spawn caches randomly
-    // if (this.caches.length <= this.gameDiameter() / 2 && Math.random() > 0.9) {
-    //   const amount = Math.ceil(Math.random() * 40 + 3)
+    // if (this.caches.length <= this.gameDiameter() / 2 && Math.random() < 0.0009) {
+    //   const amount = Math.ceil(Math.random() * 40 + 3) * 100
     //   this.spawnCache({
     //     location: [
     //       math.random() * this.gameDiameter() - this.gameDiameter() / 2,

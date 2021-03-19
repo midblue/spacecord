@@ -7,7 +7,7 @@ const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
   tag: `train`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     value: `Train your character's skills!`,
     emoji: `🏋️‍♂️`,
@@ -52,16 +52,11 @@ module.exports = {
       },
     }))
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    authorCrewMemberObject.message(embed, {
       reactions: trainableSkillsAsReactionOptions,
-      embed,
-      guild,
       commandsLabel: `Training Options`,
       listeningType: `choice`,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

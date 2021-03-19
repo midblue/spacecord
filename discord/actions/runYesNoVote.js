@@ -1,12 +1,10 @@
-const send = require(`./send`)
 const runPoll = require(`./runPoll`)
 const Discord = require(`discord.js-light`)
-const manager = require(`../../game/manager`)
 const { usageTag } = require(`../../common`)
 const { canEdit } = require(`../botcommon`)
 
 module.exports = async ({
-  pollType, // todo use type to make sure we don't have two of the same poll open at once
+  pollType,
   question,
   description,
   embed,

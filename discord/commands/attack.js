@@ -12,7 +12,7 @@ const story = require(`../../game/basics/story/story`)
 
 module.exports = {
   tag: `attack`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     name: `attack`,
     value: `Choose a nearby ship to attack.`,
@@ -42,8 +42,7 @@ module.exports = {
       return send(msg, story.attack.noWeapon())
     }
     if (!guild.ship.canAttack()) {
-      return send(
-        msg,
+      return authorCrewMemberObject.message(
         story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
       )
     }
@@ -80,19 +79,13 @@ module.exports = {
       })
     })
 
-    if (actions.length === 0) return send(msg, story.attack.noShips())
+    if (actions.length === 0)
+      return authorCrewMemberObject.message(story.attack.noShips())
 
     if (actions.length === 1) {
       return actions[0].action({ user: author, msg, guild })
     }
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
-      reactions: actions,
-      actionProps: {},
-      embed,
-      guild,
-    })
+    await authorCrewMemberObject.message(embed, actions)
   },
 }

@@ -7,6 +7,7 @@ const jettison = require(`../actions/jettison`)
 
 module.exports = {
   tag: `cargo`,
+  pmOnly: true,
   documentation: {
     value: `See and edit the ship's cargo.`,
     emoji: `📦`,
@@ -17,7 +18,7 @@ module.exports = {
       content,
     )
   },
-  async action({ msg, ship, guild }) {
+  async action({ msg, ship, authorCrewMemberObject, guild }) {
     log(msg, `Cargo`, msg.guild?.name)
 
     const actualCargo = ship.cargo.filter((c) => c.amount > 0.0001)
@@ -31,7 +32,9 @@ module.exports = {
     }
 
     if (actualCargo.length === 0) {
-      return send(msg, `Your ship currently has no cargo at all.`)
+      return authorCrewMemberObject.message(
+        `Your ship currently has no cargo at all.`,
+      )
     }
 
     const currentCargoString = actualCargo
@@ -58,7 +61,6 @@ module.exports = {
       },
     ]
 
-    const sentMessage = (await send(msg, embed))[0]
-    awaitReaction({ msg: sentMessage, reactions, embed, guild })
+    await authorCrewMemberObject.message(embed, reactions)
   },
 }

@@ -12,13 +12,13 @@ module.exports = async ({
   emoji,
   title,
   description,
-  commands
+  commands,
 }) => {
   log(msg, `Help/Page`, title)
 
   commands = commands.sort(
     (a, b) =>
-      (b?.documentation?.priority || 0) - (a?.documentation?.priority || 0)
+      (b?.documentation?.priority || 0) - (a?.documentation?.priority || 0),
   )
 
   const embed = new Discord.MessageEmbed()
@@ -31,68 +31,68 @@ module.exports = async ({
           settings?.prefix || defaultServerSettings.prefix
         }${c?.documentation?.name || c.tag}\``,
         value: c.documentation?.value || `Self-explanatory.`,
-        inline: true
-      }))
+        inline: true,
+      })),
     )
 
   if (emoji === `📖`) {
     embed.fields = [
       {
         name: `What is This Game, Anyway?`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Getting Started`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Managing the Ship`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Managing your Character`,
-        value: `tbd (skills, training, stamina)`
+        value: `tbd (skills, training, stamina)`,
       },
       {
         name: `Interacting With Other Ships`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Earning Credits`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Planets`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `Upgrading Your Ship`,
-        value: `tbd`
+        value: `tbd`,
       },
       {
         name: `"We Died! What Now?"`,
-        value: `tbd`
-      }
+        value: `tbd`,
+      },
     ]
   }
 
   const commandsAsReactions = commands
     .filter(
-      (c) => !c.documentation.name || c.documentation.name.indexOf(`<`) === -1
+      (c) => !c.documentation.name || c.documentation.name.indexOf(`<`) === -1,
     )
     .map((c) => {
       return {
         emoji: c.documentation.emoji,
         action: async () => {
           runGuildCommand({ msg, commandTag: c.tag })
-        }
+        },
       }
     })
   const sentMessage = (await send(msg, embed))[0]
   sentMessage.author = user
-  await awaitReaction({
+  awaitReaction({
     msg: sentMessage,
     reactions: commandsAsReactions,
-    allowNonMembers: true
+    allowNonMembers: true,
   })
 }

@@ -8,7 +8,7 @@ module.exports = {
   equipmentType: `engine`,
   pmOnly: true,
   documentation: {
-    value: `Starts a vote to set the ship's speed.`,
+    value: `Adds thrust to the ship`,
     emoji: `⏩`,
     category: `ship`,
     priority: 75,
@@ -51,7 +51,6 @@ module.exports = {
       power /= 100
 
       const thrustAmplification = 1 // todo use piloting etc to determine
-
       power *= thrustAmplification
 
       const res = await guild.ship.thrust({
@@ -59,12 +58,9 @@ module.exports = {
         angle,
         thruster: authorCrewMemberObject,
       })
-      guild.message(res.message, msg)
-    }
-
-    // const availableSpeedLevels = guild.ship.getAvailableSpeedLevels()
-    // const availableDirections = guild.ship.getAvailableDirections()
-    else {
+      if (!res.ok) authorCrewMemberObject.message(res.message)
+      else guild.message(res.message, msg)
+    } else {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
         .setTitle(`Thrust`)

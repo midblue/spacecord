@@ -1,4 +1,3 @@
-const send = require(`../actions/send`)
 const { log, applyCustomParams, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js`)
 // const runCountingTest = require(`../actions/runCountingTest`)
@@ -6,7 +5,7 @@ const readyCheck = require(`../actions/readyCheck`)
 
 module.exports = {
   tag: `trainEngineering`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -101,16 +100,15 @@ and it needs labeled training data to improve its performance. The input data is
       time / 1000,
     )} seconds** to study the mojcode.`
 
-    const sentMessage = (await send(msg, embed))[0]
+    const sentMessage = (await authorCrewMemberObject.message(embed))[0]
     await readyCheck({ msg: sentMessage, embed, user: authorCrewMemberObject })
 
-    const puzzleMessage = (await send(msg, mojcodeSnippet))[0]
+    const puzzleMessage = (
+      await authorCrewMemberObject.message(mojcodeSnippet)
+    )[0]
 
     setTimeout(async () => {
-      if (await canEdit(puzzleMessage))
-        puzzleMessage.delete().catch(console.log)
-      else
-        puzzleMessage.edit(`\`Time's up! Make your guess!\``).catch(console.log)
+      puzzleMessage.edit(`\`Time's up! Make your guess!\``).catch(console.log)
     }, time)
 
     const handler = async (receivedMessage) => {
@@ -139,6 +137,7 @@ and it needs labeled training data to improve its performance. The input data is
 
     const end = async (guess) => {
       const guessError = Math.abs(targetEmojiTotal - guess)
+
       // anything less than .5 is 0, and xp scales linearly 0-100% from .5-1
       const successRatio = Math.max(
         (Math.max(0, 1 - guessError / targetEmojiTotal) - 0.5) / 0.5,
@@ -149,7 +148,7 @@ and it needs labeled training data to improve its performance. The input data is
 
       description = ``
       if (successRatio === 1) {
-        description += `Excellent — You found all ${guess} ${targetEmoji} in the training data!\n`
+        description += `Excellent — You found all ${guess} \`${targetEmoji}\` in the training data!\n`
       } else if (successRatio > 0.8) {
         description += `Wow, you were close — You found ${guess} of ${targetEmojiTotal} ${targetEmoji} in the training data.\n`
       } else if (successRatio > 0.25) {
@@ -164,7 +163,7 @@ and it needs labeled training data to improve its performance. The input data is
 
       embed.setDescription(description)
       if (await canEdit(sentMessage)) sentMessage.edit(embed).catch(console.log)
-      else send(msg, embed)
+      else authorCrewMemberObject.message(embed)
     }
   },
 }

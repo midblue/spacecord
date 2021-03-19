@@ -2,7 +2,6 @@ const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const { numberToEmoji, capitalize, usageTag } = require(`../../common`)
-const awaitReaction = require(`../actions/awaitReaction`)
 
 module.exports = {
   tag: `repair`,
@@ -57,7 +56,7 @@ module.exports = {
             index: e.index,
             add: 1,
           }) // 1 = full repair
-          send(msg, res.message)
+          authorCrewMemberObject(res.message)
         },
       }))
 
@@ -69,14 +68,7 @@ module.exports = {
         embed.setTitle(`Repair`).setDescription(`No equipment needs repairing!`)
       }
 
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
-        msg: sentMessage,
-        reactions: equipmentAsReactionOptions,
-        embed,
-        guild,
-      })
-      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+      authorCrewMemberObject.message(embed, equipmentAsReactionOptions)
     } else {
       // -------- use stamina
       const member =
@@ -93,7 +85,7 @@ module.exports = {
         index: equipment.index,
         add: 1,
       }) // 1 = full repair
-      send(msg, res.message)
+      authorCrewMemberObject.message(res.message)
     }
   },
 }

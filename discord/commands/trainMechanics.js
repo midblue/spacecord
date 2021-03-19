@@ -1,4 +1,3 @@
-const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
 const lunicode = require(`lunicode`)
 const Fuse = require(`fuse.js`)
@@ -10,7 +9,7 @@ const readyCheck = require(`../actions/readyCheck`)
 
 module.exports = {
   tag: `trainMechanics`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -55,7 +54,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`${emoji} Mechanics Training | ${msg.author.nickname}`)
-      .setDescription(`When it comes to mechanics, speed and accuracy are paramount, as is teamwork. This training regimen has been specifically designed to boost your capabilities in all of the above.
+      .setDescription(`When it comes to mechanics, speed and accuracy are paramount. This training regimen has been specifically designed to boost your capabilities in these skills.
     
     Type as many sentences as fast as you can within the time limit!
     One line per message.
@@ -64,7 +63,7 @@ module.exports = {
     embed.description += `\n\n**You have ${(time / 1000).toFixed(0)} seconds.**`
 
     // ------- wait for them to say I'm Ready
-    const sentMessage = (await send(msg, embed))[0]
+    const sentMessage = (await authorCrewMemberObject.message(embed))[0]
     await readyCheck({ msg: sentMessage, embed, user: authorCrewMemberObject })
 
     // ------- get challenge text to use
@@ -129,7 +128,9 @@ module.exports = {
     )
 
     setTimeout(async () => {
-      messagesToDelete.push((await send(msg, `Time's up!`))[0])
+      messagesToDelete.push(
+        (await authorCrewMemberObject.message(`Time's up!`))[0],
+      )
     }, time)
 
     // ------- end of game
@@ -178,7 +179,7 @@ module.exports = {
     
     Result: ${await applyCustomParams(msg, res.message)}`
 
-      sentMessage.edit(embed).catch(console.log)
+      authorCrewMemberObject.message(embed)
     }, time + gracePeriod)
   },
 }

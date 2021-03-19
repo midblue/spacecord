@@ -4,18 +4,17 @@ const { usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)
 const Discord = require(`discord.js-light`)
 const runGuildCommand = require(`../actions/runGuildCommand`)
-const depart = require(`../actions/depart`)
 
 module.exports = {
   tag: `holoDeck`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:holodeck|holo)$`, `gi`).exec(
       content,
     )
   },
-  async action({ msg, guild }) {
+  async action({ msg, guild, authorCrewMemberObject }) {
     log(msg, `Holo Deck`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
@@ -91,15 +90,10 @@ module.exports = {
       ],
     )
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
+    authorCrewMemberObject.message(embed, {
       reactions,
-      embed,
-      guild,
       commandsLabel: `Holo Commands`,
       respondeeFilter: (user) => user.id === msg.author.id,
     })
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
   },
 }

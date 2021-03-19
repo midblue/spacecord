@@ -51,7 +51,7 @@
     rightBound += (diameter - widthDiff) / 2
     leftBound -= (diameter - widthDiff) / 2
   }
-  const bufferDistance = diameter * edgeBuffer + 0.001
+  const bufferDistance = diameter * edgeBuffer + 0.0001
   const displayDiameter = diameter + bufferDistance
 
   const pixelsPerKilometer = 600 / displayDiameter / KM_PER_AU

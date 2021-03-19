@@ -47,6 +47,7 @@ module.exports = async ({
       if (
         reactions &&
         reactions.length &&
+        msg &&
         !msg.deleted &&
         msg.edit &&
         !canceled.isCanceled
@@ -54,7 +55,13 @@ module.exports = async ({
         msg.edit(embed).catch(console.log)
     }
 
-    if (reactions && reactions.length && !msg.deleted && !canceled.isCanceled) {
+    if (
+      reactions &&
+      reactions.length &&
+      msg &&
+      !msg.deleted &&
+      !canceled.isCanceled
+    ) {
       for (const r of reactions) msg.react(r.emoji).catch(console.log)
     }
 
@@ -74,7 +81,7 @@ module.exports = async ({
           )
           if (fieldIndex) embed.fields.splice(fieldIndex, 1)
         }
-        if (!msg.deleted && msg.edit && !canceled.isCanceled)
+        if (msg && !msg.deleted && msg.edit && !canceled.isCanceled)
           msg.edit(embed).catch(console.log)
       }
       if ((await canEdit(msg)) && !canceled.isCanceled)
@@ -186,7 +193,7 @@ module.exports = async ({
         msg.author.nickname = await username(
           msg,
           msg.author.id,
-          guild.id,
+          guild?.id,
           client,
         )
       }

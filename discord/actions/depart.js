@@ -14,11 +14,12 @@ module.exports = async ({ msg, guild, planet }) => {
   }
   if (!planet) return
 
-  // ---------- use vote caller stamina
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
   )
   if (!authorCrewMemberObject) return console.log(`no user found in depart`)
+
+  // ---------- use vote caller stamina
   const staminaRes = authorCrewMemberObject.useStamina(`depart`)
   if (!staminaRes.ok) return
 
@@ -43,7 +44,7 @@ module.exports = async ({ msg, guild, planet }) => {
     guild,
     cleanUp: false,
   })
-  if (!ok) return guild.message({ msg, message })
+  if (!ok) return guild.message(message)
 
   voteEmbed.fields = []
   if (!result) {

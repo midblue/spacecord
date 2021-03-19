@@ -50,22 +50,6 @@ module.exports = {
       .setTitle(`Crew Rankings`)
       .addFields(rankings.map((s) => ({ ...s, inline: s.inline ?? true })))
 
-    const sentMessage = (await send(msg, embed))[0]
-
-    // const trainableSkillActions = allSkills.map((skill) => {
-    //   return {
-    //     emoji: skill.emoji,
-    //     action() {
-    //       runGuildCommand({ msg, commandTag: 'train' + capitalize(skill.name) })
-    //     },
-    //   }
-    // })
-    // await awaitReaction({
-    //   msg: sentMessage,
-    //   reactions: trainableSkillActions,
-    //   embed,
-    //   guild,
-    //   listeningType: 'training choice',
-    // })
+    send(msg, embed)
   },
 }

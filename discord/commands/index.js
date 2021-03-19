@@ -46,6 +46,7 @@ module.exports = {
         let requirements
         let guild, ship
 
+        if (!command.pm && !command.pmOnly && pm) return
         msg.pm = pm
 
         if (
@@ -190,7 +191,7 @@ module.exports = {
           }
         }
 
-        if (command.pmOnly && (await canEdit(msg)))
+        if ((command.pmOnly || command.delete) && (await canEdit(msg)))
           msg.delete().catch(console.log)
 
         // * execute command

@@ -1,4 +1,4 @@
-const send = require(`../actions/send`)
+const sendWithPlaceholder = require(`../actions/sendWithPlaceholder`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const generateImage = require(`../../imageGen/generateImage`)
@@ -22,9 +22,10 @@ module.exports = {
   async action({ msg, guild }) {
     log(msg, `Map`, msg.guild?.name)
 
-    const sentImage = (
-      await send(
-        msg,
+    sendWithPlaceholder(
+      `Loading map...`,
+      msg,
+      async () =>
         new Discord.MessageAttachment(
           await generateImage(`map`, {
             ship: guild.saveableData().ship,
@@ -34,10 +35,6 @@ module.exports = {
           }),
           `map.png`,
         ),
-      )
-    )[0]
-
-    // const res = guild.ship.getMap()
-    // return send(msg, res.message)
+    )
   },
 }

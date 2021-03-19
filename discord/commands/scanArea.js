@@ -8,6 +8,7 @@ const { usageTag } = require(`../../common`)
 module.exports = {
   tag: `scanArea`,
   pm: true,
+  delete: true,
   documentation: {
     name: `scan`,
     value: `Scan the ship's surroundings.`,
@@ -101,12 +102,5 @@ module.exports = {
       guild.message(scanRes.message)
       if (msg.pm) authorCrewMemberObject.message(scanRes.message)
     }
-
-    // await awaitReaction({
-    //   msg: sentMessage,
-    //   reactions,
-    //   embed,
-    //   guild,
-    // })
   },
 }

@@ -7,7 +7,7 @@ const repair = require(`./repair`)
 
 module.exports = {
   tag: `equipment`,
-  pm: true,
+  pmOnly: true,
   documentation: {
     value: `Stats on the ship's equipment.`,
     emoji: `🔩`,
@@ -34,16 +34,8 @@ module.exports = {
         .setColor(APP_COLOR)
         .setTitle(`${guild.ship.name} | Equipment`)
         .setDescription(`Which equipment would you like to see details on?`)
-
       const equipmentActions = guild.ship.equipmentInfo().actions
-
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
-        msg: sentMessage,
-        reactions: equipmentActions,
-        embed,
-        guild,
-      })
+      await authorCrewMemberObject.message(embed, equipmentActions)
     } else {
       const embed = new Discord.MessageEmbed()
         .setColor(APP_COLOR)
@@ -68,14 +60,7 @@ module.exports = {
           },
         },
       ]
-
-      const sentMessage = (await send(msg, embed))[0]
-      await awaitReaction({
-        msg: sentMessage,
-        reactions: availableActions,
-        embed,
-        guild,
-      })
+      await authorCrewMemberObject.message(embed, availableActions)
     }
   },
 }

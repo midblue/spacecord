@@ -18,30 +18,30 @@ module.exports = async ({ msg, guild, otherShip }) => {
   log(msg, `Attack Ship`, msg.guild?.name)
   if (!otherShip || guild.status.docked) return
 
+  const authorCrewMemberObject = guild.ship.members.find(
+    (m) => m.id === msg.author.id,
+  )
+  if (!authorCrewMemberObject) return console.log(`no user found in attackShip`)
+
   // ---------- check equipment
   const weapons = guild.ship.equipment.find((e) => e.equipmentType === `weapon`)
     .list
   if (!weapons || weapons.length === 0) {
-    return send(msg, story.attack.noWeapon())
+    return authorCrewMemberObject.message(story.attack.noWeapon())
   }
   if (!weapons.find((w) => w.repair > 0)) {
-    return send(msg, story.attack.brokenWeapons())
+    return authorCrewMemberObject.message(story.attack.brokenWeapons())
   }
 
   // ---------- don't attack without a weapon off cooldown
   const usableWeapons = guild.ship.canAttack()
   if (!usableWeapons) {
-    return send(
-      msg,
+    return instigatingCrewMember.message(
       story.attack.tooSoon(msToTimeString(guild.ship.nextAttackInMs())),
     )
   }
 
   // ---------- use vote caller stamina
-  const authorCrewMemberObject = guild.ship.members.find(
-    (m) => m.id === msg.author.id,
-  )
-  if (!authorCrewMemberObject) return console.log(`no user found in attackShip`)
   const staminaRes = authorCrewMemberObject.useStamina(`poll`)
   if (!staminaRes.ok) return
 
@@ -65,8 +65,7 @@ module.exports = async ({ msg, guild, otherShip }) => {
             }${w.requirements.munitions}\` in munitions required from voters)`
           : ``),
     }))
-    const { userReactions, sentMessage: pollMessage, winner } = await runPoll({
-      msg,
+    const { sentMessage: pollMessage, winner } = await runPoll({
       guild,
       pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects,
@@ -115,11 +114,10 @@ ${
     question: `Attack ${otherShip.name} with ${weaponToUse.emoji} ${weaponToUse.displayName}? | Vote started by ${msg.author.nickname}`,
     minimumMemberPercent: 0.1,
     yesStaminaRequirement: 1,
-    msg,
     guild,
     cleanUp: false,
   })
-  if (!ok) return send(msg, message)
+  if (!ok) return guild.message(message)
 
   voteEmbed.fields = []
   if (insufficientVotes) {
@@ -166,13 +164,13 @@ ${
   // if there are no targets that your scanner can detect, then just go ahead and just attack anywhere
   if (!targets.length) {
     // ---------- do an attack
-    const res = guild.ship.attackShip({
+    const attackRes = guild.ship.attackShip({
       enemyShip: otherShip,
       weapon: weaponToUse,
       collectiveMunitionsSkill,
     })
-    sentMessage = (await send(msg, res.message))[0]
-    resultEmbed = res.message
+    sentMessage = (await guild.message(attackRes.message))[0]
+    resultEmbed = attackRes.message
   }
 
   // ---------- pick a place to attack
@@ -189,7 +187,7 @@ ${
 
   // ---------- options from now
   const actions = guild.ship.getActionsOnOtherShip(otherShip)
-  await awaitReaction({
+  awaitReaction({
     msg: sentMessage,
     reactions: actions,
     embed: resultEmbed,

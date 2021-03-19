@@ -10,7 +10,7 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:weapons?|w)$`, `gi`).exec(content)
   },
-  async action({ msg, settings, ship, guild }) {
+  async action({ msg, settings, ship, guild, authorCrewMemberObject }) {
     log(msg, `Equipment`, msg.guild?.name)
 
     const embed = new Discord.MessageEmbed()
@@ -31,12 +31,6 @@ module.exports = {
         props: { equipment: weaponData.actions[0].equipment },
       })
 
-    const sentMessage = (await send(msg, embed))[0]
-    await awaitReaction({
-      msg: sentMessage,
-      reactions: weaponData.actions,
-      embed,
-      guild,
-    })
+    authorCrewMemberObject.message(embed, weaponData.actions)
   },
 }

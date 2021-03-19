@@ -7,6 +7,7 @@ const { ship } = require(`../../game/basics/story/story`)
 module.exports = {
   tag: `path`,
   pm: true,
+  delete: true,
   documentation: {
     name: `path`,
     value: `The ship's recent path`,
@@ -23,9 +24,10 @@ module.exports = {
   async action({ msg, guild }) {
     log(msg, `Path`, msg.guild?.name)
 
-    const sentImage = (
-      await send(
-        msg,
+    await sendWithPlaceholder(
+      `Loading path...`,
+      msg,
+      async () =>
         new Discord.MessageAttachment(
           await generateImage(`path`, {
             ship: {
@@ -38,10 +40,6 @@ module.exports = {
           }),
           `path.png`,
         ),
-      )
-    )[0]
-
-    // const res = guild.ship.getMap()
-    // return send(msg, res.message)
+    )
   },
 }

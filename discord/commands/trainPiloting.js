@@ -3,7 +3,7 @@ const { log } = require(`../botcommon`)
 
 module.exports = {
   tag: `trainPiloting`,
-  pm: true,
+  pmOnly: true,
   documentation: false,
   test(content, settings) {
     return new RegExp(
@@ -25,6 +25,6 @@ module.exports = {
     const staminaRes = member.useStamina(staminaRequired)
     if (!staminaRes.ok) return
 
-    // pilotingMinigame({ msg, user: authorCrewMemberObject, guild })
+    const a = 1 // lul
   },
 }

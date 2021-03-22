@@ -28,7 +28,7 @@ var ui = (function () {
     }
   }
 
-  var css_248z = ":root {\n  --main-width: 750px;\n  --main-height: var(--main-width);\n\n  --text-size: 24px;\n  --text-size-small: calc(var(--text-size) * 0.75);\n  --text-size-tiny: calc(var(--text-size) * 0.6);\n\n  --font-stack: 'Avenir', monospace;\n\n  --bg: #001100;\n  --bg-rgb: 0, 17, 0;\n\n  --ui: #0f0;\n}\n\nhtml {\n  font-family: var(--font-stack);\n  font-size: var(--text-size);\n  line-height: 1;\n}\n\nbody {\n  width: var(--main-width);\n  height: var(--main-height);\n  margin: 0;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  background: var(--bg);\n  color: var(--ui);\n}\n\n* {\n  box-sizing: border-box;\n}\n\n.minilabel {\n  font-weight: bold;\n  text-transform: uppercase;\n  font-size: var(--text-size-small);\n}\n";
+  var css_248z = ":root {\n  --main-width: 750px;\n  --main-height: var(--main-width);\n\n  --text-size: 24px;\n  --text-size-small: calc(var(--text-size) * 0.75);\n  --text-size-tiny: calc(var(--text-size) * 0.6);\n\n  --font-stack: 'Avenir', monospace;\n\n  --bg: #001100;\n  --bg-rgb: 0, 17, 0;\n\n  --ui: #0f0;\n}\n\nhtml {\n  font-family: var(--font-stack);\n  font-size: var(--text-size);\n  line-height: 1;\n}\n\nbody {\n  width: var(--main-width);\n  height: var(--main-height);\n  margin: 0;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  background: var(--bg);\n  color: var(--ui);\n}\n\n* {\n  box-sizing: border-box;\n}\n\n.minilabel {\n  font-weight: bold;\n  text-transform: uppercase;\n  font-size: var(--text-size-small);\n}\n\n.sub {\n  font-size: 0.85em;\n  opacity: 0.7;\n}\n";
   styleInject(css_248z);
 
   function noop() { }

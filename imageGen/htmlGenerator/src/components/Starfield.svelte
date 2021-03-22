@@ -18,7 +18,7 @@
     for (let i = 0; i < stars; i++) {
       let x = Math.random() * canvas.offsetWidth
       let y = Math.random() * canvas.offsetHeight
-      ctx.fillStyle = 'rgba(255,255,255,.7)' //color
+      ctx.fillStyle = 'rgba(255,255,255,.4)' //color
       const size = Math.random() > 0.3 ? 1 : 2
       ctx.fillRect(x, y, size, size)
     }

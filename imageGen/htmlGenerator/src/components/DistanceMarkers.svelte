@@ -5,6 +5,8 @@
     scale = value
   })
 
+  const FLAT_SCALE = 100
+
   export let top, left, width, height
 
   let horizontalMarkersToDraw = [],
@@ -43,16 +45,16 @@
       y1={y}
       y2={y}
       stroke={'white'}
-      stroke-width={0.002 / scale}
+      stroke-width={(0.002 * FLAT_SCALE) / scale}
     />
     <text
       x={left + width * 0.003}
       y={y - height * 0.01}
       text-anchor="left"
-      font-size={0.022 / scale}
+      font-size={(0.022 * FLAT_SCALE) / scale}
       fill={'white'}
     >
-      {Math.round(y * roundFactor) / roundFactor}
+      {Math.round((y / FLAT_SCALE) * roundFactor) / roundFactor}
     </text>
   {/each}
 
@@ -63,21 +65,25 @@
       y1={top}
       y2={top + height}
       stroke={'white'}
-      stroke-width={0.002 / scale}
+      stroke-width={(0.002 * FLAT_SCALE) / scale}
     />
     <text
       x={x + width * 0.003}
       y={top + height * 0.016}
       text-anchor="left"
-      font-size={0.022 / scale}
+      font-size={(0.022 * FLAT_SCALE) / scale}
       fill={'white'}
     >
-      {Math.round(x * roundFactor) / roundFactor}
+      {Math.round((x / FLAT_SCALE) * roundFactor) / roundFactor}
     </text>
   {/each}
 </g>
 
 <style>
+  g {
+    z-index: 1;
+    position: relative;
+  }
   line {
     opacity: 0.1;
   }

@@ -1,6 +1,16 @@
 <script>
   import { onMount } from 'svelte'
-  import { scale as scaleStore } from './js/stores.js'
+  import {
+    scale as scaleStore,
+    updateMs as updateMsStore,
+    view as viewStore,
+  } from './js/stores.js'
+  let updateMs
+  updateMsStore.subscribe((value) => (updateMs = value))
+  let view
+  viewStore.subscribe((value) => (view = value))
+
+  const FLAT_SCALE = 100
 
   // get game data periodically -------------------------------------------
 
@@ -13,7 +23,7 @@
   }
   onMount(getGameData)
 
-  setInterval(getGameData, 1 * 1000)
+  setInterval(getGameData, updateMs)
 
   // -------------------------------------------
 
@@ -22,20 +32,22 @@
   const KM_PER_AU = 149597900
 
   import Starfield from './components/Starfield.svelte'
+  import PopOver from './components/PopOver.svelte'
 
-  import Point from './components/Point.svelte'
+  import Planet from './components/Planet.svelte'
+  import Ship from './components/Ship.svelte'
+  import Cache from './components/Cache.svelte'
+  import AttackRemnant from './components/AttackRemnant.svelte'
   import Path from './components/Path.svelte'
   import DistanceMarkers from './components/DistanceMarkers.svelte'
 
-  let maxView = { left: 0, top: 0, width: 1, height: 1 },
-    view = { left: 0, top: 0, width: 0, height: 0 }
+  let maxView = { left: 0, top: 0, width: 1, height: 1 }
   let svgElement
   let ships = [],
     trails = [],
     planets = [],
     caches = [],
     attackRemnants = [],
-    displayDiameter = 0,
     points = []
 
   function redraw(data) {
@@ -45,27 +57,38 @@
     attackRemnants = data.attackRemnants
 
     points = [
-      ...ships.map((el) => ({
-        location: el.location,
-        name: el.name,
-      })),
       ...planets.map((el) => ({
+        type: 'planet',
         location: el.location,
         radius: el.radius / KM_PER_AU,
+        minSize: 0.01,
         color: el.validColor || el.color,
         name: el.name,
+        z: 2,
       })),
       ...caches.map((el) => ({
+        type: 'cache',
         location: el.location,
         color: 'yellow',
+        z: 3,
+      })),
+      ...ships.map((el) => ({
+        type: 'ship',
+        location: el.location,
+        name: el.name,
+        z: 4,
+        shipData: el,
       })),
       ...attackRemnants.map((el) => ({
+        type: 'attackRemnant',
         location: el.location,
+        z: 5,
       })),
     ]
     points.forEach((el) => (el.location[1] *= -1)) // flip y values since svg counts up from the top down
 
     const maxes = common.getMaxes(points.map((p) => p.location))
+    Object.keys(maxes).forEach((k) => (maxes[k] *= FLAT_SCALE))
 
     const windowAspectRatio = window.innerWidth / window.innerHeight
 
@@ -92,7 +115,7 @@
       maxView.width = maxView.height * windowAspectRatio
     }
 
-    if (view.width === 0) view = { ...maxView }
+    if (view.width === 0) viewStore.set({ ...maxView })
 
     trails = ships.map((s) => [
       ...s.pastLocations.map((l) => [l[0], l[1] * -1]),
@@ -124,12 +147,12 @@
       const dx = dw * -1 * mx
       const dy = dh * -1 * my
 
-      view = {
+      viewStore.set({
         left: view.left + dx,
         top: view.top + dy,
         width: view.width + dw,
         height: view.height + dh,
-      }
+      })
       scaleStore.set(maxView.width / view.width)
     }
 
@@ -144,8 +167,13 @@
       endPoint = [e.x, e.y]
       const dx = ((startPoint[0] - endPoint[0]) / elBCR.width) * view.width
       const dy = ((startPoint[1] - endPoint[1]) / elBCR.height) * view.height
-      view.left += dx
-      view.top += dy
+
+      viewStore.set({
+        left: view.left + dx,
+        top: view.top + dy,
+        width: view.width,
+        height: view.height,
+      })
       startPoint = [e.x, e.y]
     }
 
@@ -160,18 +188,33 @@
 </script>
 
 <Starfield />
+<PopOver />
 <div class="holder">
   <svg
     bind:this={svgElement}
     viewBox="{view.left} {view.top} {view.width} {view.height}"
   >
-    {#each trails as trail}
-      <Path points={trail} colorRgb="255, 200, 0" />
-    {/each}
-    {#each points as point}
-      <Point {...point} />
-    {/each}
     <DistanceMarkers {...view} />
+
+    {#each points.filter((p) => p.type === 'planet') as point}
+      <Planet {...point} />
+    {/each}
+
+    {#each points.filter((p) => p.type === 'ship') as point}
+      <Ship {...point} />
+    {/each}
+
+    {#each points.filter((p) => p.type === 'cache') as point}
+      <Cache {...point} />
+    {/each}
+
+    {#each points.filter((p) => p.type === 'attackRemnant') as point}
+      <AttackRemnant {...point} />
+    {/each}
+
+    {#each trails as trail}
+      <Path points={trail} z={3} />
+    {/each}
   </svg>
 </div>
 

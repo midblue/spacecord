@@ -42,3 +42,8 @@ body {
   text-transform: uppercase;
   font-size: var(--text-size-small);
 }
+
+.sub {
+  font-size: 0.85em;
+  opacity: 0.7;
+}

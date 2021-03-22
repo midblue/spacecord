@@ -3,23 +3,25 @@
   let scale
   scaleStore.subscribe((value) => (scale = value))
 
+  const FLAT_SCALE = 100
+
   export let location, radius, color, label
 </script>
 
 <circle
-  cx={location[0]}
-  cy={location[1]}
+  cx={location[0] * FLAT_SCALE}
+  cy={location[1] * FLAT_SCALE}
   r={radius}
   stroke={color || 'white'}
-  stroke-width={0.001 / scale}
+  stroke-width={(0.001 * FLAT_SCALE) / scale}
   fill="none"
 />
 {#if label}
   <text
-    x={location[0]}
-    y={location[1] + radius * -1}
+    x={location[0] * FLAT_SCALE}
+    y={location[1] * FLAT_SCALE + radius * FLAT_SCALE * -1}
     text-anchor="middle"
-    font-size={0.165 / scale + '%'}
+    font-size={(0.165 * FLAT_SCALE) / scale + '%'}
     fill={color || 'white'}
   >
     {label}

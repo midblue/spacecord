@@ -74,6 +74,8 @@ module.exports = (guild) => {
     message.push(...resourceRes.message)
     ok = ok && resourceRes.ok
 
+    guild.ship.pastLocations.push([...ship.location])
+
     guild.saveToDb()
     return { message, ok }
   }
@@ -206,7 +208,7 @@ module.exports = (guild) => {
       ship.location = [newX, newY]
 
       guild.ship.moveCount = (guild.ship.moveCount || 0) + 1
-      if (guild.ship.moveCount % 50 === 0) {
+      if (guild.ship.moveCount % 120 === 0) {
         guild.ship.moveCount = 0
         ship.pastLocations.push([...ship.location])
         while (ship.pastLocations.length > 100) ship.pastLocations.shift()

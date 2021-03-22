@@ -3,7 +3,7 @@ const defaults = {
   description: ``,
   mass: 200,
   baseHp: 10,
-  range: 1.5,
+  range: 0.2,
   repairDifficulty: 1,
   durabilityLostOnUse: 0.04,
   baseCost: 30,

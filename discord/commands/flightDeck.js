@@ -81,7 +81,11 @@ module.exports = {
         },
         {
           emoji: `🚷`,
-          label: `Emergency Brake ` + captainTag + ` ` + usageTag(0, `eBrake`),
+          label:
+            `Emergency Brake ` +
+            captainTag +
+            ` ` +
+            usageTag(`eBrake`, `eBrake`),
           action: ({ msg, guild, user }) => {
             runGuildCommand({ msg, commandTag: `eBrake` })
           },

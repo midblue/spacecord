@@ -41,7 +41,7 @@ module.exports = {
         new Discord.MessageAttachment(scanRes.map, `scan.png`),
       )
       if (msg.pm)
-        authorCrewMemberObject.message(
+        await authorCrewMemberObject.message(
           new Discord.MessageAttachment(scanRes.map, `scan.png`),
         )
     }
@@ -64,6 +64,7 @@ module.exports = {
     embed.addFields(...scanRes.data.map((d) => ({ ...d, inline: true })), {
       name: `Scanned By`,
       value: msg.author.username,
+      inline: true,
     })
 
     const reactions = scanRes.actions || []
@@ -95,7 +96,7 @@ module.exports = {
       },
     })
 
-    await guild.message(embed, null, reactions)
+    guild.message(embed, null, reactions)
     if (msg.pm) authorCrewMemberObject.message(embed, reactions)
 
     if (scanRes.message) {

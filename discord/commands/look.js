@@ -22,6 +22,10 @@ module.exports = {
 
     const scanRes = await ship.scanArea(true) // eyesOnly = true
     send(msg, scanRes.message)
-    if (await canEdit(msg)) msg.delete().catch(console.log)
+    if (await canEdit(msg))
+      msg.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
   },
 }

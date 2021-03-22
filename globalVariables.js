@@ -1,4 +1,4 @@
-GAME_TITLE = `Spacecord (Title TBD)`
+GAME_TITLE = `◢🆂🅿🅲◣` // `𝕾𝖕𝖆𝖈𝖊 𝕵𝖆𝖒` `ƧPΛᄃΣ BΛЯ`
 INVITE_LINK = `https://discord.com/api/oauth2/authorize?client_id=${process.env.BOT_ID}&permissions=268561472&scope=bot`
 
 APP_COLOR = `#00bbff`
@@ -7,10 +7,12 @@ FAILURE_COLOR = `#ff0000`
 
 TICK_INTERVAL = 1000
 TICKS_PER_HOUR = (60 * 60 * 1000) / TICK_INTERVAL
-SAVE_INTERVAL = 20 * 60 * 1000
+MEDIUM_INTERVAL = TICK_INTERVAL * 60
+SLOW_INTERVAL = TICK_INTERVAL * 60 * 20
+
 GENERAL_RESPONSE_TIME = 2 * 60 * 1000
 GENERAL_VOTE_TIME = 10 * 1000
-// gENERAL_VOTE_TIME = 5*60*1000
+// GENERAL_VOTE_TIME = 5*60*1000
 
 POWER_UNIT = `GWh`
 DISTANCE_UNIT = `AU`
@@ -31,7 +33,7 @@ KM_PER_AU = 149597900
 GRAVITY_RANGE = 3
 GRAVITATIONAL_CONSTANT = 6.6743 * 10 ** -11
 GRAV_TOLERANCE = 10 ** -9
-LIGHTSPEED = 72.1935409205 // au per hour
+LIGHTSPEED = 72.1935409205 // AU per hour
 
 SLEEP = (ms) =>
   new Promise((resolve) => {

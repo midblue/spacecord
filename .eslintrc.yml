@@ -5,6 +5,7 @@ env:
 extends: 'eslint:recommended'
 ignorePatterns:
   - '*.svelte'
+  - 'imageGen/htmlGenerator/templates/*.js'
 # overrides:
 #   -
 #     files:
@@ -42,9 +43,7 @@ rules:
     # - stroustrup
     # - allowSingleLine: true
   camelcase: error
-  capitalized-comments:
-    - error
-    - never
+  capitalized-comments: 'off'
   class-methods-use-this: error
   comma-dangle: 'off'
   comma-spacing:
@@ -113,9 +112,7 @@ rules:
   max-params: 'off'
   max-statements: 'off'
   max-statements-per-line: 'off'
-  multiline-comment-style:
-    - error
-    - separate-lines
+  multiline-comment-style: 'off'
   multiline-ternary:
     - error
     - always-multiline

@@ -57,7 +57,7 @@ module.exports = async ({
         minimumMemberPercent * 100,
       )}%\` of the crew (\`${minimumMembersMustVote}\` member${
         minimumMembersMustVote === 1 ? `` : `s`
-      }) must vote for this vote to be valid.`,
+      }) must vote for this vote to be valid. @here`,
     })
   }
 
@@ -82,7 +82,11 @@ module.exports = async ({
   let done = false
 
   if (!sentMessage) sentMessage = (await thisGuild.message(embed))[0]
-  else sentMessage.edit(embed).catch(console.log)
+  else
+    sentMessage.edit(embed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
 
   const embedUpdateInterval = setInterval(() => {
     if (done === true) return clearInterval(embedUpdateInterval)
@@ -96,7 +100,11 @@ module.exports = async ({
       clearInterval(embedUpdateInterval)
       done = true
     }
-    if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
+    if (!sentMessage.deleted)
+      sentMessage.edit(embed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
   }, 5000)
 
   if (!respondeeFilter) {
@@ -133,7 +141,11 @@ module.exports = async ({
     embed.fields.findIndex((f) => f.id === `remainingTime`),
     1,
   )
-  if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
+  if (!sentMessage.deleted)
+    sentMessage.edit(embed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
 
   const userReactionsToUse = {}
   const userReactionCounts = {}

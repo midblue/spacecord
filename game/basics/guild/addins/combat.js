@@ -142,6 +142,23 @@ module.exports = (guild) => {
         accuracyTarget - finalAccuracy < 0.1,
         advantageAccuracyMultiplier,
       )
+
+      guild.context.attackRemnants.push({
+        time: Date.now(),
+        attacker: {
+          name: guild.ship.name,
+          shipId: guild.ship.id,
+          location: [...guild.ship.location],
+        },
+        weaponId: weapon.id,
+        didHit: false,
+        defender: {
+          name: enemyShip.name,
+          shipId: enemyShip.id,
+          location: [...enemyShip.location],
+        },
+      })
+
       return {
         ok: false,
         message: outputEmbed,
@@ -210,6 +227,24 @@ module.exports = (guild) => {
       ],
     )
 
+    guild.context.attackRemnants.push({
+      time: Date.now(),
+      attacker: {
+        name: guild.ship.name,
+        shipId: guild.ship.id,
+        location: [...guild.ship.location],
+      },
+      weaponId: weapon.id,
+      didHit,
+      damage: totalDamageTaken,
+      destroyedShip,
+      defender: {
+        name: enemyShip.name,
+        shipId: enemyShip.id,
+        location: [...enemyShip.location],
+      },
+    })
+
     return {
       ok: true,
       message: outputEmbed,
@@ -233,8 +268,8 @@ module.exports = (guild) => {
     )
     outputEmbed.setTitle(
       miss
-        ? `Dodged an Attack From ${attacker.name}!`
-        : `Hit by an Attack From ${attacker.name}!`,
+        ? `Dodged an Attack From 🚀${attacker.name}!`
+        : `Hit by an Attack From 🚀${attacker.name}!`,
     )
 
     outputEmbed.fields = [

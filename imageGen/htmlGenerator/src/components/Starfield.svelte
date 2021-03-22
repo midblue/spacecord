@@ -1,33 +1,35 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte'
+  let width = 0,
+    height = 0
 
-  onMount(() => {
-    const canvas = document.getElementById("starfield"),
-      ctx = canvas.getContext("2d"),
-      stars = 100
-      // ,
-      // color = getComputedStyle(document.documentElement)
-      //   .getPropertyValue('--ui')
+  onMount(async () => {
+    const canvas = document.getElementById('starfield'),
+      ctx = canvas.getContext('2d')
+    // ,
+    // color = getComputedStyle(document.documentElement)
+    //   .getPropertyValue('--ui')
+
+    width = window.innerWidth
+    height = window.innerHeight
+    const stars = Math.round(innerWidth / 3)
+    await tick()
+
     for (let i = 0; i < stars; i++) {
       let x = Math.random() * canvas.offsetWidth
       let y = Math.random() * canvas.offsetHeight
-      ctx.fillStyle = 'white' //color
-      const size = Math.random() > .3 ? 1:2
-      ctx.fillRect(x,y,size,size)
+      ctx.fillStyle = 'rgba(255,255,255,.7)' //color
+      const size = Math.random() > 0.3 ? 1 : 2
+      ctx.fillRect(x, y, size, size)
     }
-    // ctx.fillStyle ='white'
-    // ctx.font = '20px monospace';
-    // ctx.fillText(name, 10, 50);
   })
 </script>
 
-
-<canvas id="starfield" width="600" height="600"></canvas>
-
+<canvas id="starfield" {width} {height} />
 
 <style>
   canvas {
-    background: black; 
+    background: black;
     /* var(--bg); */
     position: absolute;
     z-index: 0;

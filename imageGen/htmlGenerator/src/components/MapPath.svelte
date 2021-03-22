@@ -17,7 +17,7 @@
     ...pathPoints.map((l, index) => ({
       location: l.location ? l.location : l,
       color: `rgba(${colorRgb},${
-        fade ? 0.2 * (index / pathPoints.length) : 0.15
+        fade ? 0.5 * (index / pathPoints.length) : 0.15
       })`,
     })),
   ]
@@ -68,6 +68,6 @@
   }
 
   svg path {
-    stroke-width: 1.5;
+    stroke-width: 1;
   }
 </style>

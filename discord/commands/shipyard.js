@@ -119,7 +119,7 @@ module.exports = {
     // otherwise, we already know what type to show
     else if (buyOrSell === `buy`) {
       parts.forEach(async (part, index) => {
-        const cost = part.baseCost * planet.shipyardPriceMultiplier
+        const cost = Math.round(part.baseCost * planet.shipyardPriceMultiplier)
         const tooExpensive = cost > guild.ship.credits
         let alreadyOwned = false
         if (equipmentTypes[type].singleton) {

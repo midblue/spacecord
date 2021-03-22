@@ -44,6 +44,10 @@ function liveify(planet, context) {
       (g) => g.ship?.status?.docked === this.name,
     )
   }
+
+  planet.saveableData = function () {
+    return JSON.parse(JSON.stringify({ ...this, context: null }))
+  }
 }
 
 module.exports = { spawnAll, naiveList: planets }

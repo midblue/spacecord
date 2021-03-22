@@ -15,7 +15,7 @@ module.exports = {
   },
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:g|go|t|thrust|boost)(?: <?([\\d.]+)>?(?:,? <?([\\d.]+)%?>?)?)?$`,
+      `^${settings.prefix}(?:g|go|t|thrust|boost)(?: ?<?([\\d.]+)>?(?:,? <?([\\d.]+)%?>?)?)?$`,
       `gi`,
     ).exec(content)
   },

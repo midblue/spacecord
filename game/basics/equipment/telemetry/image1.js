@@ -6,7 +6,7 @@ module.exports = {
   displayName: `Radiation Imprint Radar Mk.001`,
   baseHp: 15,
   powerUse: 2,
-  range: 0.3,
+  range: 0.25,
   needsRepairAt: 0.5,
   breakdownSeverity: 0.05,
   repairRequirements: { mechanics: 5 },
@@ -36,10 +36,12 @@ module.exports = {
         repair,
       }
     }
-
     const map = await generateImage(`scan1`, {
       range,
       ship: guild.saveableData().ship,
+      attackRadius: guild.ship.attackRadius(),
+      interactRadius: guild.ship.interactRadius(),
+      scanRadius: guild.ship.shipScanRadius(),
       planets: scanResult.planets.map((p) => ({ ...p, context: undefined })),
       ships: scanResult.guilds.map((g) => g.saveableData().ship),
       caches: scanResult.caches,

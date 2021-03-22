@@ -11,12 +11,19 @@
   // console.log({topPercent, leftPercent, radiusPercent})
 </script>
 
-<div class="circleholder {blackout ? 'blackout' : ''}" style="--accent-color: {color}; --diameter: {radiusPercent * 2}%; --stroke: {strokeWidth}px; --opacity:{opacity}; left: {leftPercent}%; top: {topPercent}%;">
+<div
+  class="circleholder {blackout ? 'blackout' : ''}"
+  style="--accent-color: {color}; --diameter: {radiusPercent *
+    2 *
+    100}%; --stroke: {strokeWidth}px; --opacity:{opacity}; left: {leftPercent}%; top: {topPercent}%;"
+>
   {#if label}
-    <div class="label minilabel" style="">{label}</div>
+    {#if radiusPercent > 0.1}
+      <div class="label minilabel" style="">{label}</div>
+    {/if}
     <div class="label minilabel top" style="">{label}</div>
   {/if}
-  <div class="circle" style="opacity: {blackout ? 1 : opacity};"></div>
+  <div class="circle" style="opacity: {blackout ? 1 : opacity};" />
 </div>
 
 <style>
@@ -24,20 +31,21 @@
     position: absolute;
     width: var(--diameter);
     height: var(--diameter);
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
   }
   .label {
     position: absolute;
     left: 50%;
-    bottom: -.5em;
+    bottom: -0.5em;
     transform: translateX(-50%);
     color: var(--accent-color);
     opacity: 1;
-    opacity: calc(var(--opacity) * 2);
+    opacity: calc(var(--opacity) * 1.5);
+    font-size: var(--text-size-tiny);
   }
   .label.top {
     bottom: auto;
-    top: -.5em;
+    top: -0.5em;
   }
   .circle {
     border-radius: 50%;

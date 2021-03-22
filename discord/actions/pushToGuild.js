@@ -33,7 +33,7 @@ module.exports = async ({
         channelId,
       )
     }
-    msg = discordChannel
+    msg = { guild: discordGuild, channel: discordChannel }
     sentMessages = await send(msg, message)
   }
   if (awaitReactionOptions) {
@@ -42,7 +42,7 @@ module.exports = async ({
     awaitReaction({
       embed: message,
       ...awaitReactionOptions,
-      msg: msg || sentMessages[0],
+      msg: sentMessages[0],
       guild: gameGuildRes.guild,
     })
   }

@@ -116,7 +116,11 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
       user: authorCrewMemberObject,
     })
     if (!ready) {
-      if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+      if (await canEdit(sentMessage))
+        sentMessage.delete().catch((e) => {
+          console.trace()
+          console.log(e)
+        })
       return
     }
 
@@ -157,7 +161,11 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         embed.fields = []
         end()
       }
-      if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
+      if (!sentMessage.deleted)
+        sentMessage.edit(embed).catch((e) => {
+          console.trace()
+          console.log(e)
+        })
     }, 5000)
 
     // ------- update board view
@@ -180,7 +188,11 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
         .join(`\n`)
         .replace(/🚢/gi, `◼️`)
       embed.description = `\`\`\`` + outputBoardString + `\`\`\``
-      if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
+      if (!sentMessage.deleted)
+        sentMessage.edit(embed).catch((e) => {
+          console.trace()
+          console.log(e)
+        })
     }
 
     // ------- take shot
@@ -207,7 +219,11 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
 
     // ------- start game
     updateBoardView()
-    if (!sentMessage.deleted) sentMessage.edit(embed).catch(console.log)
+    if (!sentMessage.deleted)
+      sentMessage.edit(embed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     const reactions = [
       {
         emoji: `◀`,
@@ -277,7 +293,10 @@ Position your target reticle with \`🔼🔽◀▶️\`, and fire with \`🧨\`.
       embed.description += `\n**${Math.round(percent * 1000) / 10}% hit**
 
 Result: ${await applyCustomParams(msg, res.message)}`
-      sentMessage.edit(embed).catch(console.log)
+      sentMessage.edit(embed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     }
     // ------- end of game
     setTimeout(end, time)

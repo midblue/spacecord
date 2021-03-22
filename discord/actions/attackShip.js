@@ -16,7 +16,7 @@ const { allSkills } = require(`../../game/gamecommon`)
 
 module.exports = async ({ msg, guild, otherShip }) => {
   log(msg, `Attack Ship`, msg.guild?.name)
-  if (!otherShip || guild.status.docked) return
+  if (!otherShip || guild.ship.status.docked) return
 
   const authorCrewMemberObject = guild.ship.members.find(
     (m) => m.id === msg.author.id,
@@ -70,7 +70,11 @@ module.exports = async ({ msg, guild, otherShip }) => {
       pollTitle: `Which weapon should we attack with?`,
       reactions: weaponsAsReactionObjects,
     })
-    if (await canEdit(pollMessage)) pollMessage.delete().catch(console.log)
+    if (await canEdit(pollMessage))
+      pollMessage.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     if (!winner) return
     weaponToUse = usableWeapons[emojiToNumber(winner) - 1]
   }
@@ -122,19 +126,30 @@ ${
   voteEmbed.fields = []
   if (insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteMessage.edit(voteEmbed).catch(console.log)
+    voteMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
   if (!result) {
     voteEmbed.description = story.attack.voteFailed()
-    voteMessage.edit(voteEmbed).catch(console.log)
+    voteMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
+
   // vote passed
   const collectiveMunitionsSkill = yesVoters.reduce(
     (total, u) =>
       total +
-      (guild.ship.members.find((m) => m.id === u.id)?.level?.munitions || 0),
+      (
+        guild.ship.members
+          .find((m) => m.id === u.id)
+          ?.level?.find((l) => l.skill === `munitions`) || 0
+      )?.level,
     0,
   )
   guild.ship.logEntry(
@@ -145,7 +160,10 @@ ${
     otherShip,
     collectiveMunitionsSkill,
   )
-  voteMessage.edit(voteEmbed).catch(console.log)
+  voteMessage.edit(voteEmbed).catch((e) => {
+    console.trace()
+    console.log(e)
+  })
 
   // too much munitions skill required
   if ((weaponToUse.requirements?.munitions || 0) > collectiveMunitionsSkill) {
@@ -154,7 +172,10 @@ ${
       collectiveMunitionsSkill,
       weaponToUse,
     )
-    voteMessage.edit(voteEmbed).catch(console.log)
+    voteMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
 
@@ -172,6 +193,7 @@ ${
     sentMessage = (await guild.message(attackRes.message))[0]
     resultEmbed = attackRes.message
   }
+  console.log(sentMessage, `addadasad1111`)
 
   // ---------- pick a place to attack
   // todo

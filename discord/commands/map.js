@@ -1,4 +1,4 @@
-const sendWithPlaceholder = require(`../actions/sendWithPlaceholder`)
+const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const generateImage = require(`../../imageGen/generateImage`)
@@ -6,6 +6,7 @@ const generateImage = require(`../../imageGen/generateImage`)
 module.exports = {
   tag: `map`,
   pm: true,
+  delete: true,
   documentation: {
     name: `map`,
     value: `The ship's map of its discoveries.`,
@@ -22,19 +23,17 @@ module.exports = {
   async action({ msg, guild }) {
     log(msg, `Map`, msg.guild?.name)
 
-    sendWithPlaceholder(
-      `Loading map...`,
+    send(
       msg,
-      async () =>
-        new Discord.MessageAttachment(
-          await generateImage(`map`, {
-            ship: guild.saveableData().ship,
-            planets: guild.context.planets
-              .filter((p) => guild.ship.seen.planets.includes(p.name))
-              .map((p) => ({ ...p, context: undefined })),
-          }),
-          `map.png`,
-        ),
+      new Discord.MessageAttachment(
+        await generateImage(`map`, {
+          ship: guild.saveableData().ship,
+          planets: guild.context.planets
+            .filter((p) => guild.ship.seen.planets.includes(p.name))
+            .map((p) => ({ ...p, context: undefined })),
+        }),
+        `map.png`,
+      ),
     )
   },
 }

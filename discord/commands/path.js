@@ -24,22 +24,20 @@ module.exports = {
   async action({ msg, guild }) {
     log(msg, `Path`, msg.guild?.name)
 
-    await sendWithPlaceholder(
-      `Loading path...`,
+    await send(
       msg,
-      async () =>
-        new Discord.MessageAttachment(
-          await generateImage(`path`, {
-            ship: {
-              ...guild.saveableData().ship,
-              pastLocations: [...guild.ship.pastLocations, guild.ship.location],
-            },
-            planets: guild.context.planets
-              .filter((p) => guild.ship.seen.planets.includes(p.name))
-              .map((p) => ({ ...p, context: undefined })),
-          }),
-          `path.png`,
-        ),
+      new Discord.MessageAttachment(
+        await generateImage(`path`, {
+          ship: {
+            ...guild.saveableData().ship,
+            pastLocations: [...guild.ship.pastLocations, guild.ship.location],
+          },
+          planets: guild.context.planets
+            .filter((p) => guild.ship.seen.planets.includes(p.name))
+            .map((p) => ({ ...p, context: undefined })),
+        }),
+        `path.png`,
+      ),
     )
   },
 }

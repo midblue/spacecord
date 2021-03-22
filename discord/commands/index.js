@@ -171,6 +171,14 @@ module.exports = {
           })
         }
 
+        // set bot nickname to reflect the ship name
+        if (
+          ship &&
+          msg.guild &&
+          msg.guild.me.nickname !== `${ship.name} ${GAME_TITLE}`
+        )
+          msg.guild.me.setNickname(`${ship.name} ${GAME_TITLE}`)
+
         // in case a user's active guild needs updating, update it here
         if (!system && guild && msg.guild) {
           const memberInfo = guild.members.find(
@@ -191,8 +199,15 @@ module.exports = {
           }
         }
 
-        if ((command.pmOnly || command.delete) && (await canEdit(msg)))
-          msg.delete().catch(console.log)
+        if (
+          (command.pmOnly || command.delete) &&
+          !system &&
+          (await canEdit(msg))
+        )
+          msg.delete().catch((e) => {
+            console.trace()
+            console.log(e)
+          })
 
         // * execute command
         await command.action({

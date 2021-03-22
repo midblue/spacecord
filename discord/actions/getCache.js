@@ -13,7 +13,11 @@ module.exports = async ({ msg, guild, cache }) => {
   if (!authorCrewMemberObject) return console.log(`no user found in getCache`)
 
   if (!guild.context.caches.find((c) => c.id === cache.id)) {
-    if (await canEdit(msg)) msg.delete().catch(console.log)
+    if (await canEdit(msg))
+      msg.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     return authorCrewMemberObject.message(
       `Ouch! That cache has already been snagged!`,
     )

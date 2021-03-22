@@ -45,8 +45,6 @@ client.on(`guildDelete`, kickedFromGuild)
 
 client.login(process.env.DISCORD_TOKEN)
 
-// todo use CHANGE_NICKNAME permission to put ship name as nickname?
-
 module.exports = {
   init(gameController) {
     if (client.readyAt) return
@@ -67,7 +65,8 @@ module.exports = {
       client.on(`ready`, async () => {
         resolve()
         console.log(
-          `Logged in as ${client.user.tag} in ${(await client.guilds.cache.array()).length
+          `Logged in as ${client.user.tag} in ${
+            (await client.guilds.cache.array()).length
           } guilds`,
         )
 

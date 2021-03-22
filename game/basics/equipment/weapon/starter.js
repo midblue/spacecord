@@ -8,6 +8,6 @@ module.exports = {
   damage: 5,
   damageType: `electric`,
   requirements: {
-    munitions: 5,
+    munitions: 2,
   },
 }

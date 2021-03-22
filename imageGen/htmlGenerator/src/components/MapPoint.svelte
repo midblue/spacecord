@@ -4,38 +4,49 @@
   export let label
   export let color = 'white'
   export let size = 6
-  export let round = false
-  // console.log({ topPercent, leftPercent, size, round })
+  export let round = true
 </script>
 
 <div
-  class="pointholder"
+  class="holder"
   style="--accent-color: {color}; --size: {size}px; left: {leftPercent}%; top: {topPercent}%; "
 >
   {#if label}
     <div class="label minilabel">{label}</div>
   {/if}
-  <div class="point" style="border-radius: {round ? '50%' : '0'};" />
+  <div class="pointholder">
+    <div class="point" style="border-radius: {round ? '100%' : '0'};" />
+  </div>
 </div>
 
 <style>
-  .pointholder {
+  .holder {
     position: absolute;
+    width: 100%;
+    height: 100%;
   }
   .label {
     position: absolute;
     left: 0;
-    top: 0.3em;
+    top: calc(0.3em + var(--size) / 2);
     text-align: center;
-    transform: translateX(-50%) translateY(calc(var(--size) / 2));
+    transform: translateX(-50%);
     color: var(--accent-color);
   }
-  .point {
-    width: var(--size);
-    height: var(--size);
-    background: var(--accent-color);
+
+  .pointholder {
     position: absolute;
     top: calc(-1 * var(--size) / 2);
     left: calc(-1 * var(--size) / 2);
+    width: var(--size);
+    padding-top: var(--size);
+  }
+  .point {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-color);
   }
 </style>

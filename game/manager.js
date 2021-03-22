@@ -38,15 +38,16 @@ const game = {
   },
 
   // ---------------- Game Properties ----------------
+
   db: {},
   isReady: false,
   gameDiameter: () => {
-    return Math.sqrt(this.guilds?.length || 1) * 15
+    return Math.sqrt(this.guilds?.length || 1) * 2
   },
   guilds: [],
   caches: [],
   planets: [],
-  npcs: [],
+  attackRemnants: [],
   startTime: Date.now(),
   lastTick: Date.now(),
 
@@ -55,6 +56,21 @@ const game = {
   ...coreLoop,
 
   // ---------------- Game Functions ----------------
+
+  async export() {
+    const guilds = this.guilds.map((g) => g.saveableData()),
+      planets = this.planets.map((p) => p.saveableData()),
+      caches = this.caches,
+      attackRemnants = this.attackRemnants
+    return {
+      startTime: this.startTime,
+      gameDiameter: this.gameDiameter,
+      guilds,
+      caches,
+      planets,
+      attackRemnants,
+    }
+  },
 
   timeUntilNextTick() {
     const currentTickProgress = Date.now() - this.lastTick
@@ -172,6 +188,14 @@ const game = {
               pointIsInsideCircle(x, y, ...c.location, range),
             )
           : [],
+      attackRemnants:
+        !type || type === `attackRemnants`
+          ? this.attackRemnants.filter(
+              (c) =>
+                pointIsInsideCircle(x, y, ...c.attacker.location, range) ||
+                pointIsInsideCircle(x, y, ...c.defender.location, range),
+            )
+          : [],
     }
   },
 
@@ -271,10 +295,6 @@ const game = {
       id,
       updates: { active: false },
     })
-  },
-
-  tick() {
-    return this.update()
   },
 }
 

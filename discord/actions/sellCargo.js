@@ -45,12 +45,18 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+    voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
   if (!voteResult.result) {
     voteEmbed.description = story.sell.cargo.voteFailed(cargoData, amount, cost)
-    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+    voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
 
@@ -75,5 +81,8 @@ module.exports = async ({ msg, type, cost, guild, amount }) => {
     ` ` +
     WEIGHT_UNITS
 
-  voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+  voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+    console.trace()
+    console.log(e)
+  })
 }

@@ -5,7 +5,7 @@
   export let leftPercent
   export let label
   export let color = 'green'
-  export let size = 6
+  export let size = 0
   export let round = true
 
   let sizeToUse = Math.min(100000, Math.max(3, size))

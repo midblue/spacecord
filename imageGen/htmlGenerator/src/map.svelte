@@ -7,8 +7,7 @@
   import MapDistanceCircles from './components/MapDistanceCircles.svelte'
   import Starfield from './components/Starfield.svelte'
 
-  export let ship
-  export let planets
+  const { ship, planets } = APP_DATA
 
   const edgeBuffer = 0.7
 
@@ -54,10 +53,10 @@
   const bufferDistance = diameter * edgeBuffer + 0.0001
   const displayDiameter = diameter + bufferDistance
 
-  const pixelsPerKilometer = 600 / displayDiameter / KM_PER_AU
+  const percentPerKilometer = 1 / displayDiameter / KM_PER_AU
 
   pointsToShow.forEach((p) => {
-    if (p.radius) p.size = Math.max(4, p.radius * 2 * pixelsPerKilometer)
+    if (p.radius) p.size = p.radius * 2 * percentPerKilometer
   })
 
   let auBetweenLines = 1

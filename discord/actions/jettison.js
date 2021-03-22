@@ -41,7 +41,10 @@ module.exports = async ({ msg, guild }) => {
 
   const getAmountToJettison = async (sentMessage) => {
     if (await canEdit(sentMessage))
-      sentMessage.reactions.removeAll().catch(console.log)
+      sentMessage.reactions.removeAll().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
       `And how ${cargoToJettison.type === `credits` ? `many` : `much`} ${
@@ -49,7 +52,10 @@ module.exports = async ({ msg, guild }) => {
       }${cargoToJettison.displayName} would you like to jettison?`,
     )
     if (await canEdit(sentMessage))
-      sentMessage.edit(detailsEmbed).catch(console.log)
+      sentMessage.edit(detailsEmbed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     else sentMessage = (await send(msg, detailsEmbed))[0]
 
     const amountPossessed = cargoToJettison.amount
@@ -117,18 +123,28 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+    if (await canEdit(sentMessage))
+      sentMessage.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
   }
 
   const getMessageToAttach = async (sentMessage) => {
     if (await canEdit(sentMessage))
-      sentMessage.reactions.removeAll().catch(console.log)
+      sentMessage.reactions.removeAll().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     detailsEmbed.fields = []
     detailsEmbed.setDescription(
       `Would you like to attach a message to your dropped ${cargoToJettison.emoji}${cargoToJettison.displayName}?`,
     )
     if (await canEdit(sentMessage))
-      sentMessage.edit(detailsEmbed).catch(console.log)
+      sentMessage.edit(detailsEmbed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
     else sentMessage = (await send(msg, detailsEmbed))[0]
 
     const messageReactions = []
@@ -192,11 +208,19 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+    if (await canEdit(sentMessage))
+      sentMessage.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
   }
 
   const finalJettisonVote = async (sentMessage) => {
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+    if (await canEdit(sentMessage))
+      sentMessage.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
 
     detailsEmbed.setTitle(
       `Jettison ${amountToJettison.toFixed(2)} ${
@@ -222,12 +246,18 @@ module.exports = async ({ msg, guild }) => {
     detailsEmbed.fields = []
     if (voteResult.insufficientVotes) {
       detailsEmbed.description = story.vote.insufficientVotes()
-      voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
+      voteResult.sentMessage.edit(detailsEmbed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
       return
     }
     if (!voteResult.result) {
       detailsEmbed.description = story.attack.voteFailed()
-      voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
+      voteResult.sentMessage.edit(detailsEmbed).catch((e) => {
+        console.trace()
+        console.log(e)
+      })
       return
     }
 
@@ -249,7 +279,10 @@ module.exports = async ({ msg, guild }) => {
       cargoToJettison,
       amountToJettison,
     )
-    voteResult.sentMessage.edit(detailsEmbed).catch(console.log)
+    voteResult.sentMessage.edit(detailsEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     guild.ship.jettison(cargoToJettison, amountToJettison, messageToAttach)
   }
 
@@ -275,6 +308,10 @@ module.exports = async ({ msg, guild }) => {
       embed: detailsEmbed,
     })
 
-    if (await canEdit(sentMessage)) sentMessage.delete().catch(console.log)
+    if (await canEdit(sentMessage))
+      sentMessage.delete().catch((e) => {
+        console.trace()
+        console.log(e)
+      })
   }
 }

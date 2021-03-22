@@ -55,7 +55,7 @@ module.exports = (guild) => {
     const startLocation = [...guild.ship.location]
     const vectorFromPlanet = degreesToUnitVector(angle(planet, guild.ship))
     const locationOffset = 0.0005
-    const boostAmount = 0.001
+    const boostAmount = 0.000001
     guild.ship.location = [
       startLocation[0] + vectorFromPlanet[0] * locationOffset,
       startLocation[1] + vectorFromPlanet[1] * locationOffset,

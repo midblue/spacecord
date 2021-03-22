@@ -1,38 +1,81 @@
 const { log } = require(`../gamecommon`)
 const cargo = require(`../basics/cargo`)
 
-const cacheExpirationTime = TICK_INTERVAL * 500
-let loopInterval, saveInterval
+const cacheExpirationTime = TICK_INTERVAL * 50000
+const attackRemnantExpirationTime = TICK_INTERVAL * 600
+let tickInterval, mediumInterval, slowInterval
 
 module.exports = {
   async start() {
     log(`init`, `Starting game`)
     this.lastTick = Date.now()
 
-    if (loopInterval) clearInterval(loopInterval)
-    if (saveInterval) clearInterval(saveInterval)
-    loopInterval = setInterval(async () => {
-      await this.update()
+    if (tickInterval) clearInterval(tickInterval)
+    if (mediumInterval) clearInterval(mediumInterval)
+    if (slowInterval) clearInterval(slowInterval)
+
+    tickInterval = setInterval(async () => {
+      await this.tick()
     }, TICK_INTERVAL)
 
-    saveInterval = setInterval(async () => {
-      console.log(``)
-      log(``, `============= SAVING GAME =============`)
-      await this.save()
-      console.log(``)
-    }, SAVE_INTERVAL)
+    mediumInterval = setInterval(async () => {
+      await this.medium()
+    }, MEDIUM_INTERVAL)
+
+    slowInterval = setInterval(async () => {
+      await this.slow()
+    }, SLOW_INTERVAL)
   },
 
-  async update() {
+  async tick() {
     this.lastTick = Date.now()
 
     // update guilds
-    const updates = this.guilds.map(async (guild) => {
-      await guild.stepUpdate()
-    })
+    const updates = this.guilds
+      .filter((g) => g.active)
+      .map(async (guild) => {
+        await guild.stepUpdate()
+      })
     await Promise.all(updates)
     // log(`update`, `Updated all ${this.guilds.length} ships`)
+  },
 
+  async medium() {
+    // expire old attack remnants
+    const attackRemnantCutoff = Date.now() - attackRemnantExpirationTime
+    let deletedAttackRemnantCount = 0
+    for (let attackRemnantIndex in this.attackRemnants) {
+      const attackRemnant = this.attackRemnants[attackRemnantIndex]
+      if (attackRemnant.time < attackRemnantCutoff) {
+        this.attackRemnants.splice(attackRemnantIndex, 1)
+        deletedAttackRemnantCount++
+      }
+    }
+    if (deletedAttackRemnantCount) {
+      log(
+        `update`,
+        `Removed ${deletedAttackRemnantCount} expired attackRemnants`,
+      )
+    }
+
+    // spawn caches randomly
+    if (this.caches.length <= this.gameDiameter() / 4 && Math.random() < 0.5) {
+      const amount = Math.ceil(Math.random() * 40 + 3) * 100
+      this.spawnCache({
+        location: [
+          Math.random() * this.gameDiameter() - this.gameDiameter() / 2,
+          Math.random() * this.gameDiameter() - this.gameDiameter() / 2,
+        ],
+        type: Object.keys(cargo)[
+          Math.floor(Math.random() * Object.keys(cargo).length)
+        ],
+        amount: amount,
+      })
+      log(`update`, `Spawned a cache`)
+    }
+  },
+
+  async slow() {
     // expire old caches
     const cacheCutoff = Date.now() - cacheExpirationTime
     let deletedCacheCount = 0
@@ -49,23 +92,11 @@ module.exports = {
       log(`update`, `Removed ${deletedCacheCount} expired caches`)
     }
 
-    // // spawn caches randomly
-    // if (this.caches.length <= this.gameDiameter() / 2 && Math.random() < 0.0009) {
-    //   const amount = Math.ceil(Math.random() * 40 + 3) * 100
-    //   this.spawnCache({
-    //     location: [
-    //       math.random() * this.gameDiameter() - this.gameDiameter() / 2,
-    //       math.random() * this.gameDiameter() - this.gameDiameter() / 2,
-    //     ],
-    //     type: Object.keys(cargo)[
-    //       math.floor(Math.random() * Object.keys(cargo).length)
-    //     ],
-    //     amount: amount,
-    //   })
-    // }
+    this.save()
   },
 
   async save() {
+    log(``, `============= SAVING GAME =============`)
     const updates = this.guilds.map(async (guild) => {
       await guild.saveToDb()
     })

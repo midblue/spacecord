@@ -52,10 +52,10 @@ module.exports = (guild) => {
         name: `🔍 Your Scanner`,
         value: scanner.displayName,
       })
-      fields.push({
-        name: `⚡️Your Ship Power`,
-        value: guild.ship.power + ` ` + POWER_UNIT,
-      })
+      // fields.push({
+      //   name: `⚡️Your Ship Power`,
+      //   value: guild.ship.power + ` ` + POWER_UNIT,
+      // })
     }
     const enemyTotalEngineeringLevel = otherShip.members.reduce(
       (total, m) => total + (m.level?.engineering || 0),
@@ -110,7 +110,7 @@ module.exports = (guild) => {
       actions.push({
         emoji: `⚔️`,
         label: `Start Attack Vote ` + usageTag(0, `poll`),
-        async action({ msg, guild }) {
+        async action({ msg }) {
           attackShip({ msg, guild, otherShip })
         },
       })

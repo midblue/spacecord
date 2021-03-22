@@ -215,7 +215,10 @@ module.exports = (guild) => {
               reallyDoIt.embed.title = `Broadcast Results`
               reallyDoIt.embed.description = message
               reallyDoIt.embed.fields = resultFields
-              reallyDoIt.sentMessage.edit(reallyDoIt.embed).catch(console.log)
+              reallyDoIt.sentMessage.edit(reallyDoIt.embed).catch((e) => {
+                console.trace()
+                console.log(e)
+              })
             } else {
               // guild.ship.logEntry(o.failureLog(user, reallyDoIt.voters.length))
               guild.message(story.broadcast.voteFailed(), msg)

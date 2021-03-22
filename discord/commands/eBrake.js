@@ -1,3 +1,4 @@
+const powerRequirements = require(`../../game/basics/guild/powerRequirements`)
 const story = require(`../../game/basics/story/story`)
 const { log } = require(`../botcommon`)
 
@@ -19,6 +20,10 @@ module.exports = {
   },
   async action({ msg, guild, authorCrewMemberObject }) {
     log(msg, `Emergency Brake`, msg.channel.name)
+
+    // ---------- use power
+    const powerRes = guild.ship.usePower(powerRequirements.eBrake)
+    if (!powerRes.ok) return send(msg, powerRes.message)
 
     // ---------- use stamina
     const member =

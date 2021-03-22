@@ -1,16 +1,23 @@
 <script>
+  const KM_PER_AU = 149597900
+
   import Box from './components/Box.svelte'
   import MapPoint from './components/MapPoint.svelte'
   import MapDistanceCircles from './components/MapDistanceCircles.svelte'
   import MapCircle from './components/MapCircle.svelte'
   import Starfield from './components/Starfield.svelte'
 
-  export let ship
-  export let planets
-  export let ships
-  export let caches
-  export let range
-  export let repair = 1
+  const {
+    ship,
+    attackRadius,
+    interactRadius,
+    scanRadius,
+    planets,
+    ships,
+    caches,
+    range,
+  } = APP_DATA
+  const repair = APP_DATA.repair || 1
 
   const allColors = ['white', 'green', 'yellow', 'red', 'purple']
   const getColor = (c) =>
@@ -18,7 +25,7 @@
       ? c
       : allColors[Math.floor(Math.random() * allColors.length)]
   const getSize = (s) =>
-    Math.random() < repair ? s : s + (Math.random() - 0.5) * (1 - repair) * 5
+    Math.random() < repair ? s : s + (Math.random() - 0.5) * (1 - repair) * 0.1
   const getRound = (r) => (Math.random() < repair ? r : Math.random() > 0.5)
   const getLocation = (coords) => {
     return coords.map((c) =>
@@ -29,33 +36,35 @@
   }
 
   let pointsToShow = [
-    {
-      location: getLocation(ship.location),
-      color: getColor('white'),
-      size: getSize(6),
-      round: getRound(false),
-    },
     ...planets.map((p) => ({
       color: getColor('green'),
       location: getLocation(p.location),
       radius: p.radius,
       round: getRound(true),
+      name: p.name,
     })),
     ...caches.map((c) => ({
       color: getColor('yellow'),
       location: getLocation(c.location),
-      size: getSize(6),
+      size: getSize(0.01),
       round: getRound(false),
     })),
     ...ships.map((s) => ({
       color: getColor('red'),
       location: getLocation(s.location),
-      size: getSize(6),
+      size: getSize(0.01),
       round: getRound(false),
-    })), //name: s.name,
+      name: s.name,
+    })),
+    {
+      location: getLocation(ship.location),
+      color: getColor('white'),
+      size: getSize(0.01),
+      round: getRound(false),
+    },
   ]
 
-  const center = pointsToShow[0].location
+  const center = pointsToShow[pointsToShow.length - 1].location
   let upperBound = center[1] + range
   let leftBound = center[0] - range
 
@@ -64,11 +73,13 @@
   let auBetweenLines = 1
   while (auBetweenLines / diameter < 0.15) auBetweenLines *= 2
 
-  const pixelsPerKilometer = 600 / diameter / 1.496e8
+  const percentPerKilometer = 1 / diameter / KM_PER_AU
+
   pointsToShow.forEach((p) => {
     if (p.radius)
-      p.size = getSize(Math.max(4, p.radius * 2 * pixelsPerKilometer))
+      p.size = getSize(Math.max(0.013, p.radius * 2 * percentPerKilometer))
   })
+  // console.log(pointsToShow)
 
   pointsToShow = pointsToShow.map((p) => {
     return {
@@ -79,20 +90,46 @@
     }
   })
 
-  const shipPoint = pointsToShow[0]
+  const shipPoint = pointsToShow[pointsToShow.length - 1]
 
   const blackoutCircle = {
     topPercent: shipPoint.topPercent,
     leftPercent: shipPoint.leftPercent,
-    radiusPercent: (range / diameter) * 100,
+    radiusPercent: range / diameter,
     blackout: true,
   }
+
+  const circlesToShow = []
+  if (attackRadius)
+    circlesToShow.push({
+      topPercent: shipPoint.topPercent,
+      leftPercent: shipPoint.leftPercent,
+      radiusPercent: percentPerKilometer * attackRadius * KM_PER_AU,
+      label: 'Attack',
+      color: 'red',
+    })
+  if (interactRadius)
+    circlesToShow.push({
+      topPercent: shipPoint.topPercent,
+      leftPercent: shipPoint.leftPercent,
+      radiusPercent: percentPerKilometer * interactRadius * KM_PER_AU,
+      label: 'Interact',
+      color: 'white',
+    })
+  if (scanRadius)
+    circlesToShow.push({
+      topPercent: shipPoint.topPercent,
+      leftPercent: shipPoint.leftPercent,
+      radiusPercent: percentPerKilometer * scanRadius * KM_PER_AU,
+      label: 'Ship Scan',
+      color: 'cyan',
+    })
 
   const rotateAmount =
     Math.random() < repair ? 0 : (Math.random() - 0.5) * (1 - repair) * 180
 </script>
 
-<Starfield />
+<!-- <Starfield /> -->
 <div style="--ui: #fd0; --bg: #210;">
   <Box
     label="Area Scan"
@@ -106,6 +143,9 @@
   >
     <div style="transform: rotate({rotateAmount}deg);">
       <MapDistanceCircles centerPoint={shipPoint} {diameter} />
+      {#each circlesToShow as c}
+        <MapCircle {...c} />
+      {/each}
       <MapCircle {...blackoutCircle} />
       {#each pointsToShow as p}
         <MapPoint {...p} />

@@ -1,12 +1,18 @@
 <script>
+  import { onMount } from 'svelte'
+
   export let label
   export let label2
   export let label3
   export let label4
+
+  let boxEl
+
+  onMount(async () => {})
 </script>
 
 <div class="boxholder">
-  <div class="box">
+  <div class="box" bind:this={boxEl}>
     <slot />
   </div>
 
@@ -33,32 +39,32 @@
   }
   .boxholder {
     position: relative;
-    width: var(--main-width);
-    height: var(--main-width);
-    padding: 1.2rem;
+    width: calc(var(--main-width) - 1.2rem * 2);
+    height: calc(var(--main-height) - 1.2rem * 2);
+    margin: 1.2rem;
   }
   .box {
     position: relative;
   }
   .label {
     position: absolute;
-    left: 1.2rem;
-    top: 0.4em;
+    left: 0;
+    top: -1.2em;
   }
   .toprightlabel {
     position: absolute;
-    right: 1.2rem;
-    top: 0.4em;
+    right: 0;
+    top: -1.2em;
   }
   .bottomleftlabel {
     position: absolute;
-    left: 1.2rem;
-    bottom: 0.4em;
+    left: 0;
+    bottom: -1.2em;
   }
   .bottomrightlabel {
     position: absolute;
-    right: 1.2rem;
-    bottom: 0.4em;
+    right: 0;
+    bottom: -1.2em;
   }
   .box {
     position: relative;

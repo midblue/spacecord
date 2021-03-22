@@ -5,7 +5,7 @@ module.exports = {
   baseHp: 20,
   maxThrust: 0.5,
   mass: 800,
-  fuelUse: 0.9,
+  fuelUse: 12,
   directions: 4,
   powerLevels: 2,
   requirements: { piloting: 5 },

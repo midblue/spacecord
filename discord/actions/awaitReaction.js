@@ -35,7 +35,13 @@ module.exports = async ({
           }...`,
         )
       }
-      if (reactions && reactions.length && reactions[0].label && embed) {
+      if (
+        reactions &&
+        reactions.length &&
+        reactions[0].label &&
+        embed &&
+        !embed.fields?.find((f) => f.id === `commandLabel`)
+      ) {
         embed.fields.push({
           id: `commandLabel`,
           name: commandsLabel || `Commands`,
@@ -52,7 +58,10 @@ module.exports = async ({
         msg.edit &&
         !canceled.isCanceled
       )
-        msg.edit(embed).catch(console.log)
+        msg.edit(embed).catch((e) => {
+          console.trace()
+          console.log(e, msg.content, msg)
+        })
     }
 
     if (
@@ -60,9 +69,14 @@ module.exports = async ({
       reactions.length &&
       msg &&
       !msg.deleted &&
+      msg.react &&
       !canceled.isCanceled
     ) {
-      for (const r of reactions) msg.react(r.emoji).catch(console.log)
+      for (const r of reactions)
+        msg.react(r.emoji).catch((e) => {
+          console.trace()
+          console.log(e, msg.content, msg)
+        })
     }
 
     const collectedReactions = []
@@ -75,17 +89,25 @@ module.exports = async ({
       if (embed) {
         delete embed.footer
         if (embed.fields) {
-          // console.log(JSON.stringify(embed.fields) + '121221313123')
           const fieldIndex = embed.fields.findIndex(
             (f) => f.id === `commandLabel`,
           )
-          if (fieldIndex) embed.fields.splice(fieldIndex, 1)
+          if (fieldIndex !== -1) {
+            embed.fields.splice(fieldIndex, 1)
+          }
         }
-        if (msg && !msg.deleted && msg.edit && !canceled.isCanceled)
-          msg.edit(embed).catch(console.log)
+        if (msg && !msg.deleted && msg.edit && !canceled.isCanceled) {
+          await msg.edit(embed).catch((e) => {
+            console.trace()
+            console.log(e)
+          })
+        }
       }
-      if ((await canEdit(msg)) && !canceled.isCanceled)
-        msg.reactions.removeAll().catch(console.log)
+      if ((await canEdit(msg)) && msg.reactions && !canceled.isCanceled)
+        msg.reactions.removeAll().catch((e) => {
+          console.trace()
+          console.log(e, msg.content, msg)
+        })
       resolve(collectedReactions)
     }
 
@@ -106,6 +128,7 @@ module.exports = async ({
       const channel =
         (await client.channels.fetch(data.channel_id)) ||
         (await user.createDM())
+      console.trace()
       if (channel.id !== msg.channel.id) return
       const message = await channel.messages.fetch(data.message_id)
       if (!message || message.id !== msg.id) return
@@ -118,7 +141,10 @@ module.exports = async ({
         const reaction = await new Discord.MessageReaction(client, data, msg)
         if (await canEdit(message))
           try {
-            await reaction.users.remove(data.user_id).catch(console.log)
+            await reaction.users.remove(data.user_id).catch((e) => {
+              console.trace()
+              console.log(e)
+            })
           } catch (e) {}
       }
 

@@ -44,12 +44,18 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
   voteEmbed.fields = []
   if (voteResult.insufficientVotes) {
     voteEmbed.description = story.vote.insufficientVotes()
-    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+    voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
   if (!voteResult.result) {
     voteEmbed.description = story.buy.equipment.voteFailed(part, cost)
-    voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+    voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+      console.trace()
+      console.log(e)
+    })
     return
   }
 
@@ -81,5 +87,8 @@ module.exports = async ({ msg, part, cost, guild, willReplace }) => {
       ? `\nYou're overburdened! You won't be able to move until you drop or sell something.`
       : ``)
 
-  voteResult.sentMessage.edit(voteEmbed).catch(console.log)
+  voteResult.sentMessage.edit(voteEmbed).catch((e) => {
+    console.trace()
+    console.log(e)
+  })
 }

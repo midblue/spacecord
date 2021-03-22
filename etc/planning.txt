@@ -1,7 +1,17 @@
+bot auto generates its own channels when it joins a server and uses them for command types
+put them insde their own channel grouping
+channel description shows commands
+ship status, captain's quarters (read-only for non captains), crew quarters
+default back to PMs if doesn't exist
+.useascaptainchannel etc
+server option to use PMs instead
+
+
 gravity has no effect within a little wider than planet radius
 hit a planet = auto land
 auto save everything on quit
 
+.go <planet name> to boost specifically toward a planet
 .close <AU radius> for .path command zoomed to radius around ship
 
 "SPIKES"
@@ -11,7 +21,6 @@ on Discord
 realistic physics
 slow-paced
 massively multi-team
-
 
 skiffs for individual players to go off and do their own thing within a certain range of the main server ship
 also big thing was the messages in the main bot channel quickly overwhelming, said training and looking at shops etc stuff should be in DMs

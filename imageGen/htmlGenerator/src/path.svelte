@@ -7,8 +7,7 @@
   import MapPath from './components/MapPath.svelte'
   import MapDistanceCircles from './components/MapDistanceCircles.svelte'
 
-  export let ship
-  export let planets
+  const { ship, planets } = APP_DATA
 
   const edgeBuffer = 0.3
 
@@ -50,12 +49,12 @@
   const bufferDistance = diameter * edgeBuffer + 0.0001 // to fix top-left-corner bugs
   const displayDiameter = diameter + bufferDistance
 
-  const pixelsPerKilometer = 542.41 / displayDiameter / KM_PER_AU
+  const percentPerKilometer = 1 / displayDiameter / KM_PER_AU
 
   let entityPoints = [
     ...planets.map((p) => ({
       name: p.name,
-      size: Math.max(4, p.radius * 2 * pixelsPerKilometer),
+      size: p.radius * 2 * percentPerKilometer,
       location: p.location,
       color: p.validColor || p.color,
       type: 'planet',

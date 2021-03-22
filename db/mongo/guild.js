@@ -4,7 +4,7 @@ const { remove: removeCrewMember } = require(`./crewMember`)
 
 module.exports = {
   async getAll() {
-    const guilds = await Guild.find({})
+    const guilds = await Guild.find({ active: true })
     const guildObjects = []
     for (let guild of guilds) {
       guildObjects.push(await getGuildObjectForGame(guild))

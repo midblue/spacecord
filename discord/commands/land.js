@@ -1,7 +1,7 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const nearby = require(`./nearby`)
-const planet = require(`./planet`)
+const runGuildCommand = require(`../actions/runGuildCommand`)
 
 module.exports = {
   tag: `land`,
@@ -9,13 +9,19 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:land)$`, `gi`).exec(content)
   },
-  async action({ msg, settings, client, guild }) {
+  async action({ msg, settings, client, guild, authorCrewMemberObject }) {
     log(msg, `Land`, msg.guild?.name)
 
-    if (guild.ship.status.docked) {
-      return planet.action({ msg, settings, client, guild })
-    }
+    if (guild.ship.status.docked)
+      return runGuildCommand({
+        msg,
+        commandTag: `planet`,
+      })
 
-    nearby.action({ msg, guild, filter: `planets` })
+    return runGuildCommand({
+      msg,
+      commandTag: `nearby`,
+      props: { filter: `planets` },
+    })
   },
 }

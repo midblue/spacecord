@@ -7,6 +7,9 @@ const defaults = {
   durabilityLostOnUse: 0.03,
   accuracy: 0.3,
   damage: 1,
+  repairDifficulty: 1,
+  baseCost: 200,
+  rechargeTime: 1, // todo
   hitPercent(distance, enemyShip) {
     if (!distance) distance = this.range / 2
     return (
@@ -23,9 +26,6 @@ const defaults = {
   currentDamage() {
     return this.damage * this.repair
   },
-  repairDifficulty: 1,
-  baseCost: 200,
-  rechargeTime: 1,
 }
 
 // * get all exports from files in this folder

@@ -9,6 +9,8 @@
   updateMsStore.subscribe((value) => (updateMs = value))
   let view
   viewStore.subscribe((value) => (view = value))
+  let scale
+  scaleStore.subscribe((value) => (scale = value))
 
   const FLAT_SCALE = 100
 
@@ -18,7 +20,7 @@
   async function getGameData() {
     const res = await fetch('/game')
     gameData = await res.json()
-    // console.log(gameData)
+    console.log(gameData)
     redraw(gameData)
   }
   onMount(getGameData)
@@ -44,7 +46,6 @@
   let maxView = { left: 0, top: 0, width: 1, height: 1 }
   let svgElement
   let ships = [],
-    trails = [],
     planets = [],
     caches = [],
     attackRemnants = [],
@@ -64,28 +65,47 @@
         minSize: 0.01,
         color: el.validColor || el.color,
         name: el.name,
-        z: 2,
       })),
       ...caches.map((el) => ({
         type: 'cache',
         location: el.location,
         color: 'yellow',
-        z: 3,
       })),
       ...ships.map((el) => ({
         type: 'ship',
         location: el.location,
         name: el.name,
-        z: 4,
         shipData: el,
-      })),
-      ...attackRemnants.map((el) => ({
-        type: 'attackRemnant',
-        location: el.location,
-        z: 5,
       })),
     ]
     points.forEach((el) => (el.location[1] *= -1)) // flip y values since svg counts up from the top down
+
+    attackRemnants = attackRemnants.map((ar) => {
+      const targetJiggle = ar.didHit
+        ? [0, 0]
+        : ar.attacker.location.map((coord, index) => {
+            const randomButStableNumber =
+              Math.round((coord + ar.defender.location[index]) * 100000000) % 10
+            return randomButStableNumber * 0.000001
+          })
+      return {
+        type: 'attackRemnant',
+        z: 5,
+        ...ar,
+        attacker: {
+          ...ar.attacker,
+          location: [ar.attacker.location[0], ar.attacker.location[1] * -1],
+        },
+        defender: {
+          ...ar.defender,
+          location: [
+            ar.defender.location[0] + targetJiggle[0],
+            ar.defender.location[1] * -1 + targetJiggle[1],
+          ],
+        },
+      }
+    })
+    console.log(attackRemnants)
 
     const maxes = common.getMaxes(points.map((p) => p.location))
     Object.keys(maxes).forEach((k) => (maxes[k] *= FLAT_SCALE))
@@ -116,27 +136,20 @@
     }
 
     if (view.width === 0) viewStore.set({ ...maxView })
-
-    trails = ships.map((s) => [
-      ...s.pastLocations.map((l) => [l[0], l[1] * -1]),
-      s.location,
-    ])
   }
 
   // set up mouse interaction ------------------------------------
 
   let isPanning = false,
     startPoint,
-    endPoint,
-    scale
-
-  scaleStore.subscribe((value) => {
-    scale = value
-  })
+    endPoint
 
   onMount(() => {
     svgElement.onmousewheel = (e) => {
       e.preventDefault()
+      if (scale <= 0.1 && e.deltaY > 0) return
+      if (scale > 8000 && e.deltaY < 0) return
+
       const dw = view.width * e.deltaY * 0.03
       const dh = view.height * e.deltaY * 0.03
 
@@ -208,12 +221,8 @@
       <Cache {...point} />
     {/each}
 
-    {#each points.filter((p) => p.type === 'attackRemnant') as point}
-      <AttackRemnant {...point} />
-    {/each}
-
-    {#each trails as trail}
-      <Path points={trail} z={3} />
+    {#each attackRemnants as attack}
+      <AttackRemnant {...attack} />
     {/each}
   </svg>
 </div>

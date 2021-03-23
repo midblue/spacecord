@@ -20,6 +20,8 @@ module.exports = {
 
     /*
     introduce the game and how it works
+    explain factions
+      ask for faction choice
     ask for the okay (from admins only) to make game channels
     once ok is received,
     create game member roles

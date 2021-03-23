@@ -104,6 +104,9 @@
 </g>
 
 <style>
+  g {
+    position: relative;
+  }
   text {
     text-transform: uppercase;
     font-weight: bold;

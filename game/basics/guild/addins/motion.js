@@ -74,7 +74,7 @@ module.exports = (guild) => {
     message.push(...resourceRes.message)
     ok = ok && resourceRes.ok
 
-    guild.ship.pastLocations.push([...ship.location])
+    guild.ship.pastLocations.push([...guild.ship.location])
 
     guild.saveToDb()
     return { message, ok }
@@ -186,6 +186,7 @@ module.exports = (guild) => {
         ship.velocity[1] +=
           gravityForceVector[1] / shipMass / KM_PER_AU / M_PER_KM
 
+        // if we hit the planet
         if (distance(guild.ship, planet) <= planet.radius / KM_PER_AU) {
           const landRes = guild.ship.land({ planet })
           guild.message(landRes.message)
@@ -203,9 +204,11 @@ module.exports = (guild) => {
         //   )
       }
 
-      const newX = currentLocation[0] + ship.velocity[0]
-      const newY = currentLocation[1] + ship.velocity[1]
-      ship.location = [newX, newY]
+      if (!ship.status.docked) {
+        const newX = currentLocation[0] + ship.velocity[0]
+        const newY = currentLocation[1] + ship.velocity[1]
+        ship.location = [newX, newY]
+      }
 
       guild.ship.moveCount = (guild.ship.moveCount || 0) + 1
       if (guild.ship.moveCount % 120 === 0) {

@@ -6,7 +6,7 @@
     radius,
     color = 'yellow',
     name,
-    z
+    z = 3
 </script>
 
 <Point {location} {minSize} {radius} {color} {name} {z} />

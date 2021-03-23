@@ -1,4 +1,4 @@
-GAME_TITLE = `◢🆂🅿🅲◣` // `𝕾𝖕𝖆𝖈𝖊 𝕵𝖆𝖒` `ƧPΛᄃΣ BΛЯ`
+GAME_TITLE = `🆂🅿a🅲e` // `𝕾𝖕𝖆𝖈𝖊 𝕵𝖆𝖒` `ƧPΛᄃΣ BΛЯ` `◢🆂🅿🅲◣`
 INVITE_LINK = `https://discord.com/api/oauth2/authorize?client_id=${process.env.BOT_ID}&permissions=268561472&scope=bot`
 
 APP_COLOR = `#00bbff`

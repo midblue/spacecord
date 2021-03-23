@@ -1,5 +1,6 @@
 <script>
   import Point from './Point.svelte'
+  import Path from './Path.svelte'
 
   import { popOver as popOverStore } from '../js/stores.js'
 
@@ -8,16 +9,20 @@
     radius,
     color,
     name,
-    z,
+    z = 4,
     shipData
 
   let hovering
+
+  let trail = []
+  $: trail = [...shipData.pastLocations.map((l) => [l[0], l[1] * -1]), location]
 
   function enter() {
     hovering = true
     popOverStore.set({
       type: 'ship',
       name,
+      location,
       members: shipData.members.length,
       cargo: shipData.cargo,
       credits: shipData.credits,
@@ -35,11 +40,13 @@
   {minSize}
   {radius}
   {color}
-  {name}
+  name={shipData.status.docked ? false : name}
   {z}
   on:enter={enter}
   on:leave={leave}
 />
+
+<Path points={trail} z={z - 1} />
 
 <style>
 </style>

@@ -193,7 +193,7 @@ ${
     sentMessage = (await guild.message(attackRes.message))[0]
     resultEmbed = attackRes.message
   }
-  console.log(sentMessage, `addadasad1111`)
+  // console.log(sentMessage, `addadasad1111`)
 
   // ---------- pick a place to attack
   // todo

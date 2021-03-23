@@ -8,7 +8,7 @@
     radius,
     color,
     name,
-    z
+    z = 2
 
   let hovering = false
   const earthRadiusInAU = 6371 / 149597900
@@ -17,7 +17,7 @@
 
   function enter() {
     hovering = true
-    popOverStore.set({ type: 'planet', name })
+    popOverStore.set({ type: 'planet', name, location })
   }
 
   function leave() {

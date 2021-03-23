@@ -8,8 +8,16 @@
   <div class="popover">
     <div class="popoverbox">
       <h3>{popOver.name}</h3>
-      <div class="sub">{popOver.type}</div>
+      <div class="sub">
+        {popOver.type.substring(0, 1).toUpperCase() + popOver.type.substring(1)}
+      </div>
+      <div class="sub">
+        [{Math.round(popOver.location[0] * 100000) / 100000}, {Math.round(
+          popOver.location[1] * -100000,
+        ) / 100000}]
+      </div>
     </div>
+
     {#if popOver.type === 'ship'}
       <div class="popoverbox">
         <div class="datarow"><b>Members</b>: {popOver.members}</div>
@@ -18,10 +26,23 @@
           <b>Cargo</b>
           <ul>
             {#each popOver.cargo as c}
-              <li class="subrow">{c.cargoType}: {c.amount}</li>
+              <li class="subrow">
+                {c.cargoType.substring(0, 1).toUpperCase() +
+                  c.cargoType.substring(1)}: {Math.round(c.amount)}
+              </li>
             {/each}
           </ul>
         </div>
+      </div>
+    {/if}
+
+    {#if popOver.type === 'attack'}
+      <div class="popoverbox">
+        <div class="datarow"><b>{popOver.didHit ? `Hit!` : 'Miss!'}</b></div>
+        <div class="datarow">
+          <b>Time</b>: {new Date(popOver.time).toLocaleTimeString()}
+        </div>
+        <div class="datarow"><b>Weapon</b>: {popOver.weaponId}</div>
       </div>
     {/if}
   </div>

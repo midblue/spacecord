@@ -22,11 +22,10 @@ module.exports = {
 
     if (!equipment) {
       let allRepairableEquipment = []
-      for (const [equipmentType, list] of guild.ship.equipment) {
+      for (let { equipmentType, list } of guild.ship.equipment)
         allRepairableEquipment.push(
           ...list.map((e, index) => ({ ...e, type: equipmentType, index })),
         )
-      }
 
       allRepairableEquipment = allRepairableEquipment
         .filter((e) => e.repair < 1)
@@ -56,7 +55,7 @@ module.exports = {
             index: e.index,
             add: 1,
           }) // 1 = full repair
-          authorCrewMemberObject(res.message)
+          authorCrewMemberObject.message(res.message)
         },
       }))
 

@@ -13,12 +13,20 @@ const depart = require(`../../../../discord/actions/depart`)
 module.exports = (guild) => {
   guild.ship.land = ({ planet }) => {
     guild.ship.status.docked = planet.name
-    const unitVectorFromPlanetToShip = getUnitVectorBetween(planet, guild.ship),
+    const unitVectorFromPlanetToShip = getUnitVectorBetween(guild.ship, planet),
       landingLocation = unitVectorFromPlanetToShip.map(
-        (v) => (v * planet.radius) / KM_PER_AU,
+        (v, index) => planet.location[index] + v * (planet.radius / KM_PER_AU),
       )
     guild.ship.location = landingLocation
     guild.ship.velocity = [0, 0]
+    console.log(
+      planet.name,
+      planet.location,
+      unitVectorFromPlanetToShip,
+      landingLocation,
+      guild.ship.location,
+    )
+    guild.ship.pastLocations.push([...guild.ship.location])
 
     if (planet.recharge && guild.ship.power < guild.ship.maxPower()) {
       guild.ship.power = guild.ship.maxPower()
@@ -37,6 +45,7 @@ module.exports = (guild) => {
       commandTag: `planet`,
       guild,
     })
+
     return {
       ok: true,
       message: story.land.generalPlanet(guild.ship, planet),

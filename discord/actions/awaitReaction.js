@@ -128,7 +128,6 @@ module.exports = async ({
       const channel =
         (await client.channels.fetch(data.channel_id)) ||
         (await user.createDM())
-      console.trace()
       if (channel.id !== msg.channel.id) return
       const message = await channel.messages.fetch(data.message_id)
       if (!message || message.id !== msg.id) return

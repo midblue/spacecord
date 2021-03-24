@@ -5,12 +5,20 @@ function spawn(guild) {
     joined: Date.now(),
     stamina: 1,
     level: [
-      { skill: `piloting`, level: 2 },
-      { skill: `engineering`, level: 2 },
-      { skill: `mechanics`, level: 4 },
-      // {skill: 'linguistics', level: 0,},
-      { skill: `munitions`, level: 0 },
-      { skill: `legacy`, level: 0 },
+      { skill: `piloting`, level: 1, },
+      { skill: `engineering`, level: 1 },
+      { skill: `mechanics`, level: 1 },
+      // {skill: 'linguistics', level: 1,},
+      { skill: `munitions`, level: 1 },
+      { skill: `legacy`, level: 1 },
+    ],
+    xp: [
+      { skill: `piloting`, xp: 0, },
+      { skill: `engineering`, xp: 0 },
+      { skill: `mechanics`, xp: 0 },
+      // {skill: 'linguistics', xp:0,},
+      { skill: `munitions`, xp: 0 },
+      { skill: `legacy`, xp: 0 },
     ],
   }
   liveify(data, guild)

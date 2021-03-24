@@ -1,6 +1,7 @@
 const send = require(`../actions/send`)
 const { username, applyCustomParams, canEdit } = require(`../botcommon`)
 const defaultServerSettings = require(`../defaults/defaultServerSettings`)
+const game = require(`../../game/manager`)
 
 // * get all commands from files in this folder
 const fs = require(`fs`)
@@ -28,7 +29,6 @@ module.exports = {
     system = false,
   }) => {
     const settings = defaultServerSettings // todo link to real settings eventually
-    const game = client.game
     const pm = !msg.channel || msg.channel.type === `dm`
 
     for (const command of commands) {
@@ -64,7 +64,7 @@ module.exports = {
 
         if (pm && (!command.public || command.tag === `debug`)) {
           const currentGuildId = (
-            (await client.game.db.user.get({
+            (await game.db.user.get({
               id: msg.author.id,
             })) || {}
           ).activeGuild
@@ -165,7 +165,7 @@ module.exports = {
         // in case the server changes their name, update it here
         if (guild && msg.guild && msg.guild.name !== guild.name) {
           guild.name = msg.guild.name
-          client.game.db.guild.update({
+          game.db.guild.update({
             id: msg.guild.id,
             updates: { name: msg.guild.name },
           })
@@ -186,7 +186,7 @@ module.exports = {
           )
           const user =
             memberInfo &&
-            (await client.game.db.user.get({
+            (await game.db.user.get({
               id: memberInfo.userId,
             }))
           if (user && user.activeGuild !== msg.guild.id) {

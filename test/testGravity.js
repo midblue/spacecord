@@ -333,7 +333,7 @@ describe(`Gravity`, async () => {
 
   after(() => {
     fs.writeFileSync(
-      path.resolve(`./`, `test/output`, `motion.txt`),
+      path.resolve(`./`, `test/output`, `gravity.txt`),
       outputToWriteToFile.join(`\n`),
     )
   })

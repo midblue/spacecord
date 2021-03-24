@@ -34,8 +34,8 @@ module.exports = (guild) => {
     }
     return (
       interactableThings.guilds.length +
-        interactableThings.planets.length +
-        interactableThings.caches.length >
+      interactableThings.planets.length +
+      interactableThings.caches.length >
       0
     )
   }
@@ -128,8 +128,8 @@ module.exports = (guild) => {
         value: guild.ship.status.stranded
           ? `Out of Fuel!`
           : guild.ship.effectiveSpeed()
-          ? guild.ship.getSpeedString()
-          : `Stopped`,
+            ? guild.ship.getSpeedString()
+            : `Stopped`,
       })
 
       fields.push({
@@ -184,11 +184,6 @@ module.exports = (guild) => {
           (guild.ship.power / guild.ship.maxPower() || 0) * 100,
         )}%)`,
     })
-
-    // fields.push({
-    //   name: `⏱ Next Tick`,
-    //   value: msToTimeString(guild.context.timeUntilNextTick()) + ` (real-time)`,
-    // })
 
     return {
       headline: ``, // `All systems normal.`, // todo

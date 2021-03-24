@@ -22,10 +22,12 @@ const game = {
     this.db = db
 
     const guilds = await db.guild.getAll()
+    this.guilds = []
     guilds.forEach((g) => this.loadExistingGuild(g))
     log(`init`, `Loaded ${this.guilds.length} guilds from db`)
 
     const caches = await db.cache.getAll()
+    this.caches = []
     caches.forEach((c) => this.loadCache(c))
     log(`init`, `Loaded ${this.caches.length} caches from db`)
 
@@ -73,11 +75,6 @@ const game = {
       planets,
       attackRemnants,
     }
-  },
-
-  timeUntilNextTick() {
-    const currentTickProgress = Date.now() - this.lastTick
-    return TICK_INTERVAL - currentTickProgress
   },
 
   loadCache(cache) {
@@ -173,31 +170,31 @@ const game = {
       guilds:
         !type || type === `guilds`
           ? this.guilds.filter(
-              (g) =>
-                !g.ship.status.dead &&
-                !excludeIds.includes(g.id) &&
-                pointIsInsideCircle(x, y, ...g.ship.location, range),
-            )
+            (g) =>
+              !g.ship.status.dead &&
+              !excludeIds.includes(g.id) &&
+              pointIsInsideCircle(x, y, ...g.ship.location, range),
+          )
           : [],
       planets:
         !type || type === `planets`
           ? this.planets.filter((p) =>
-              pointIsInsideCircle(x, y, ...p.location, range),
-            )
+            pointIsInsideCircle(x, y, ...p.location, range),
+          )
           : [],
       caches:
         !type || type === `caches`
           ? this.caches.filter((c) =>
-              pointIsInsideCircle(x, y, ...c.location, range),
-            )
+            pointIsInsideCircle(x, y, ...c.location, range),
+          )
           : [],
       attackRemnants:
         !type || type === `attackRemnants`
           ? this.attackRemnants.filter(
-              (c) =>
-                pointIsInsideCircle(x, y, ...c.attacker.location, range) ||
-                pointIsInsideCircle(x, y, ...c.defender.location, range),
-            )
+            (c) =>
+              pointIsInsideCircle(x, y, ...c.attacker.location, range) ||
+              pointIsInsideCircle(x, y, ...c.defender.location, range),
+          )
           : [],
     }
   },
@@ -227,32 +224,35 @@ const game = {
     })
   },
 
-  spawnCache(cacheData) {
+  async spawnCache(cacheData) {
     const cacheDataToSave = { ...cacheData, created: Date.now() }
-    this.db.cache.add({ ...cacheData, created: Date.now() })
+    const savedCache = await this.db.cache.add(cacheDataToSave)
     caches.liveify(cacheDataToSave)
+    cacheDataToSave.id = savedCache._id || savedCache.id
     this.caches.push(cacheDataToSave)
+    return cacheDataToSave
   },
-  deleteCache(cacheId) {
-    this.db.cache.remove(cacheId)
+  async deleteCache(cacheId) {
     this.caches.splice(
       this.caches.findIndex((c) => c.id === cacheId),
       1,
     )
+    await this.db.cache.remove(cacheId)
     return { ok: true }
   },
 
-  spawnAttackRemnant(attackRemnantData) {
+  async spawnAttackRemnant(attackRemnantData) {
     const attackRemnantDataToSave = { ...attackRemnantData, time: Date.now() }
-    this.db.attackRemnant.add({ ...attackRemnantData, time: Date.now() })
+    const savedRemnant = await this.db.attackRemnant.add(attackRemnantDataToSave)
+    attackRemnantDataToSave.id = savedRemnant._id || savedRemnant.id
     this.attackRemnants.push(attackRemnantDataToSave)
   },
-  deleteAttackRemnant(attackRemnantId) {
-    this.db.attackRemnant.remove(attackRemnantId)
+  async deleteAttackRemnant(attackRemnantId) {
     this.attackRemnants.splice(
       this.attackRemnants.findIndex((c) => c.id === attackRemnantId),
       1,
     )
+    this.db.attackRemnant.remove(attackRemnantId)
     return { ok: true }
   },
 

@@ -1,10 +1,10 @@
 const { msg } = require(`./messages`)
+const game = require(`../../game/manager`)
+const spawnAction = require(`../../discord/commands/spawn`).action
+const bot = require(`../../discord/bot`)
 
 module.exports = {
-  async addShip(props) {
-    const game = require(`../../game/manager`)
-    const spawnAction = require(`../../discord/commands/spawn`).action
-    const bot = require(`../../discord/bot`)
+  async addShip(props = {}) {
     await spawnAction({
       msg,
       authorIsAdmin: true,

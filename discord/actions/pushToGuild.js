@@ -2,7 +2,7 @@ const send = require(`./send`)
 const { log } = require(`../botcommon`)
 const { client } = require(`../bot`)
 const awaitReaction = require(`./awaitReaction`)
-const manager = require(`../../game/manager`)
+const game = require(`../../game/manager`)
 
 module.exports = async ({
   id,
@@ -22,7 +22,7 @@ module.exports = async ({
       return log(discordGuild, `message`, `Failed to find guild`, id, channelId)
     }
 
-    if (!channelId) channelId = (await client.game.guild(id))?.guild?.channel
+    if (!channelId) channelId = (await game.guild(id))?.guild?.channel
     const discordChannel = await discordGuild.channels.fetch(channelId)
     if (!discordChannel) {
       return log(
@@ -37,7 +37,7 @@ module.exports = async ({
     sentMessages = await send(msg, message)
   }
   if (awaitReactionOptions) {
-    const gameGuildRes = await manager.guild(id)
+    const gameGuildRes = await game.guild(id)
     if (!gameGuildRes.ok) return
     awaitReaction({
       embed: message,

@@ -1,0 +1,6 @@
+> init            |,Loaded 1 guilds from db
+> init            |,Loaded 0 caches from db
+> init            |,Loaded 0 attack remnants from db
+> init            |,Loaded 11 planets
+> init            |,Starting game
+> init            |,================ Game Init Complete ================

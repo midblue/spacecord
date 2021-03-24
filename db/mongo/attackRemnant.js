@@ -16,7 +16,7 @@ module.exports = {
   },
 
   async remove(id) {
-    const res = AttackRemnant.deleteOne(
+    const res = await AttackRemnant.deleteOne(
       { _id: id },
       (e) => e && console.log(`attackRemnant delete error`, e),
     )

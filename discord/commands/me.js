@@ -45,23 +45,18 @@ module.exports = {
           name: `💪 Stamina`,
           value:
             percentToTextBars(authorCrewMemberObject.stamina || 0) +
-            `\n${
-              Math.round(
-                (authorCrewMemberObject.stamina || 0) *
-                  authorCrewMemberObject.maxStamina() *
-                  10,
-              ) / 10
+            `\n${Math.round(
+              (authorCrewMemberObject.stamina || 0) *
+              authorCrewMemberObject.maxStamina() *
+              10,
+            ) / 10
             }/${Math.round(authorCrewMemberObject.maxStamina() * 10) / 10}`,
           inline: true,
         },
         {
           name: `🛌 Stamina Gain`,
-          value: `\`+ 💪${
-            Math.round(authorCrewMemberObject.staminaGainPerTick() * 10) / 10
-          }\` stamina/${TIME_UNIT}
-(Next ${TIME_UNIT} in \`${msToTimeString(
-            guild.context.timeUntilNextTick(),
-          )}\`)`,
+          value: `\`+ 💪${Math.round(authorCrewMemberObject.staminaGainPerTick() * 100) / 100
+            }\` stamina/${TIME_UNIT}`,
           inline: true,
         },
       ],

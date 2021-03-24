@@ -1,5 +1,6 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
+const game = require(`../../game/manager`)
 
 module.exports = {
   tag: `spawn`,
@@ -18,7 +19,7 @@ module.exports = {
   async action({ msg, settings, client, authorIsAdmin }) {
     log(msg, `Spawn`, msg.guild?.name)
 
-    const res = await client.game.spawn({
+    const res = await game.spawn({
       discordGuild: msg.guild,
       channelId: msg.channel.id,
     })

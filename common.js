@@ -48,7 +48,7 @@ module.exports = {
   pointIsInsideCircle(centerX, centerY, pointX, pointY, radius) {
     return (
       (pointX - centerX) * (pointX - centerX) +
-        (pointY - centerY) * (pointY - centerY) <
+      (pointY - centerY) * (pointY - centerY) <
       radius * radius
     )
   },
@@ -129,7 +129,7 @@ module.exports = {
   captainTag: `\`👩‍✈️Captain\``,
   distance,
   angle,
-  getUnitVectorBetween,
+  getUnitVectorFromThatBodyToThisBody,
   degreesToUnitVector,
   degreesToArrow,
   radiansToDegrees,
@@ -233,9 +233,12 @@ function degreesToUnitVector(degrees) {
   return [r * Math.cos(rad), r * Math.sin(rad)]
 }
 
-function getUnitVectorBetween(thisBody, thatBody) {
+function getUnitVectorFromThatBodyToThisBody(thisBody, thatBody) {
+  if (thisBody.location[0] === thatBody.location[0] && thisBody.location[1] === thatBody.location[1]) {
+    return [0, 0]
+  }
   const angleBetween = angle(...thatBody.location, ...thisBody.location)
   return degreesToUnitVector(angleBetween)
 }
 
-const possibleRandomCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,   `
+const possibleRandomCharacters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890., `

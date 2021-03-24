@@ -245,3 +245,5 @@ I couldn't understand exactly what they were saying because they were Gray facti
 
 
 
+Kubernetes of it all
+replicasets, persistent volumes, which provider to host, use VM or just a container engine?

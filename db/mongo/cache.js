@@ -13,7 +13,7 @@ module.exports = {
   },
 
   async remove(id) {
-    const res = Cache.deleteOne(
+    const res = await Cache.deleteOne(
       { _id: id },
       (e) => e && console.log(`cache delete error`, e),
     )

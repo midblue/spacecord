@@ -5,6 +5,8 @@ const { expect } = require(`chai`)
 const mongoose = require(`mongoose`)
 const { msg } = require(`./tools/messages`)
 const models = require(`../db/mongo/models`)
+const { db, runOnReady, init: initDb } = require(`../db/mongo/db`)
+const game = require(`../game/manager`)
 
 let outputToWriteToFile = []
 
@@ -73,12 +75,26 @@ describe(`Database`, () => {
     for (let c of collections)
       await mongoose.connection.collection(c.name).drop()
   })
+
+  before(() => {
+    console.log = (...args) => {
+      outputToWriteToFile.push(
+        args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
+      )
+    }
+  })
+
+  after(() => {
+    fs.writeFileSync(
+      path.resolve(`./`, `test/output`, `database.txt`),
+      outputToWriteToFile.join(`\n`),
+    )
+  })
 })
 
 describe(`Game Start`, () => {
   it(`should be able to initialize the db`, async () => {
     return new Promise(async (resolve) => {
-      const { runOnReady, init: initDb } = require(`../db/mongo/db`)
       runOnReady(async () => {
         assert(true, `Db is ready`)
         resolve()
@@ -88,17 +104,13 @@ describe(`Game Start`, () => {
   })
 
   it(`should be able to initialize the game`, async () => {
-    const { db } = require(`../db/mongo/db`)
-
-    const game = require(`../game/manager`)
     await game.init(db)
     assert(game.isReady, `Game is ready`)
+    assert(game.gameDiameter() > 0)
   })
 
   it(`should be able to initialize the discord bot & connect to discord`, async function () {
     this.timeout(15000)
-    const game = require(`../game/manager`)
-
     const bot = require(`../discord/bot`)
     await bot.init(game)
     assert(bot.client.readyAt, `Bot is ready`)
@@ -152,7 +164,6 @@ describe(`Base Data Initialization & Updates`, () => {
   })
 
   it(`should be able to spawn a new user and add a member to a guild, and all references should be correct`, async () => {
-    const game = require(`../game/manager`)
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
     const { crewMember } = await gameGuild.ship.addCrewMember({
@@ -181,7 +192,7 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       guild.members.find((m) => m.userId === user.id).crewMemberId ===
-        crewMember.crewMemberId,
+      crewMember.crewMemberId,
       `Guild has link to crew member and user`,
     )
 
@@ -190,7 +201,6 @@ describe(`Base Data Initialization & Updates`, () => {
   })
 
   it(`should have the correct properties saved on equipment and cargo`, async () => {
-    const game = require(`../game/manager`)
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
     assert(gameGuild.ship.equipment[0])
@@ -208,7 +218,6 @@ describe(`Base Data Initialization & Updates`, () => {
   })
 
   it(`should be able to save data updates to the guild and ship`, async () => {
-    const game = require(`../game/manager`)
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
     gameGuild.name = `The Whizzard's Palace`
@@ -225,7 +234,6 @@ describe(`Base Data Initialization & Updates`, () => {
   })
 
   it(`should be able to save data updates to the cargo and equipment`, async () => {
-    const game = require(`../game/manager`)
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
     gameGuild.ship.cargo.find((c) => c.cargoType === `fuel`).amount = 69
@@ -239,6 +247,21 @@ describe(`Base Data Initialization & Updates`, () => {
     expect(
       dbShip.equipment.find((e) => e.equipmentType === `weapon`).list[0].repair,
     ).to.equal(0.69)
+  })
+
+  before(() => {
+    console.log = (...args) => {
+      outputToWriteToFile.push(
+        args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
+      )
+    }
+  })
+
+  after(() => {
+    fs.writeFileSync(
+      path.resolve(`./`, `test/output`, `gameStart.txt`),
+      outputToWriteToFile.join(`\n`),
+    )
   })
 })
 
@@ -254,17 +277,3 @@ describe(`Base Data Initialization & Updates`, () => {
 //   })
 // })
 
-before(() => {
-  console.log = (...args) => {
-    outputToWriteToFile.push(
-      args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
-    )
-  }
-})
-
-after(() => {
-  fs.writeFileSync(
-    path.resolve(`./`, `test/output`, `setup.txt`),
-    outputToWriteToFile.join(`\n`),
-  )
-})

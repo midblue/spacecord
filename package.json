@@ -20,7 +20,8 @@
   "nodemonConfig": {
     "ext": "js,svelte",
     "ignore": [
-      "imageGen/htmlGenerator/templates/*.js"
+      "imageGen/htmlGenerator/templates/*.js",
+      "test"
     ]
   },
   "dependencies": {

@@ -122,10 +122,7 @@ module.exports = (guild) => {
   guild.ship.effectiveSpeed = () => {
     if (guild.ship.status.docked) return 0
 
-    return Math.sqrt(
-      guild.ship.velocity[0] * guild.ship.velocity[0] +
-        guild.ship.velocity[1] * guild.ship.velocity[1],
-    )
+    return Math.sqrt(guild.ship.velocity[0] ** 2 + guild.ship.velocity[1] ** 2)
   }
 
   guild.ship.isOOB = () => {
@@ -251,8 +248,7 @@ module.exports = (guild) => {
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
-    return `${
-      Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 10000) / 10000
-    } ${DISTANCE_UNIT}/hour`
+    return `${Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 10000) / 10000
+      } ${DISTANCE_UNIT}/hour`
   }
 }

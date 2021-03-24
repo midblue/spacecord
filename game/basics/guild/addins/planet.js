@@ -4,7 +4,7 @@ const {
   capitalize,
   captainTag,
   usageTag,
-  getUnitVectorBetween,
+  getUnitVectorFromThatBodyToThisBody,
   angle,
   degreesToUnitVector,
 } = require(`../../../../common`)
@@ -13,7 +13,7 @@ const depart = require(`../../../../discord/actions/depart`)
 module.exports = (guild) => {
   guild.ship.land = ({ planet }) => {
     guild.ship.status.docked = planet.name
-    const unitVectorFromPlanetToShip = getUnitVectorBetween(guild.ship, planet),
+    const unitVectorFromPlanetToShip = getUnitVectorFromThatBodyToThisBody(planet, guild.ship),
       landingLocation = unitVectorFromPlanetToShip.map(
         (v, index) => planet.location[index] + v * (planet.radius / KM_PER_AU),
       )

@@ -1,29 +1,24 @@
-    Made sure no collections exist before running tests.
-
-> init            |,Loaded 0 guilds from db
-> init            |,Loaded 0 caches from db
-> init            |,Loaded 0 attack remnants from db
-> init            |,Loaded 11 planets
-> init            |,Starting game
-> init            |,================ Game Init Complete ================
-Logged in as j's test bot#8561 in 2 guilds
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-> guildStatus     |,Unable to find guild in db:,605053799404666880
-> addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'CS Neurotoxin' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
-> addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
-Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
-Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
-> addCrew         |,Added new crew member,secondUserId,for user,secondUserId,to guild,Test Guild
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
-Test sent message:,```Your server already has a ship! It's called 'CS Neurotoxin'.```
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+Test sent message:,```Your server already has a ship! It's called 'LWSS Navigator'.```

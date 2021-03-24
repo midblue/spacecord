@@ -23,7 +23,7 @@ module.exports = {
 
     // ---------- use power
     const powerRes = guild.ship.usePower(powerRequirements.eBrake)
-    if (!powerRes.ok) return send(msg, powerRes.message)
+    if (!powerRes.ok) return authorCrewMemberObject.message(powerRes.message)
 
     // ---------- use stamina
     const member =

@@ -33,13 +33,16 @@ describe(`Database`, () => {
     const caches = require(`../db/mongo/cache`)
     await caches.add({ amount: 1 })
 
+    const attackRemnants = require(`../db/mongo/attackRemnant`)
+    await attackRemnants.add({ didHit: true })
+
     const planets = require(`../db/mongo/planet`)
     await planets.add({ name: `test` })
 
     assert(true)
   })
 
-  it(`should have guilds, caches, planets, ships, users, crewmembers collections`, async () => {
+  it(`should have guilds, caches, planets, ships, users, crewmembers, attackremnants collections`, async () => {
     const collections = (
       await mongoose.connection.db.listCollections().toArray()
     ).map((c) => c.name)
@@ -50,10 +53,11 @@ describe(`Database`, () => {
       `ships`,
       `users`,
       `crewmembers`,
+      `attackremnants`,
     ])
   })
 
-  it(`should be able to retrieve a test document from guilds, planets, and caches`, async () => {
+  it(`should be able to retrieve a test document from guilds, planets, attackRemnants, and caches`, async () => {
     const models = require(`../db/mongo/models`)
     let guild = await models.Guild.findOne()
     expect(guild).to.have.property(`id`)
@@ -61,6 +65,8 @@ describe(`Database`, () => {
     expect(planet).to.have.property(`id`)
     let cache = await models.Cache.findOne()
     expect(cache).to.have.property(`id`)
+    let attackRemnant = await models.AttackRemnant.findOne()
+    expect(attackRemnant).to.have.property(`id`)
 
     // clean up
     const collections = await mongoose.connection.db.listCollections().toArray()
@@ -208,7 +214,7 @@ describe(`Base Data Initialization & Updates`, () => {
     gameGuild.name = `The Whizzard's Palace`
     gameGuild.ship.status.docked = ``
 
-    await gameGuild.save()
+    await gameGuild.saveToDb()
     assert(`could save guild`)
 
     const dbGuild = await models.Guild.findOne({ _id: gameGuild.id })
@@ -226,7 +232,7 @@ describe(`Base Data Initialization & Updates`, () => {
     gameGuild.ship.equipment.find(
       (e) => e.equipmentType === `weapon`,
     ).list[0].repair = 0.69
-    await gameGuild.save()
+    await gameGuild.saveToDb()
 
     const dbShip = await models.Ship.findOne({ guildId: gameGuild.id })
     expect(dbShip.cargo.find((c) => c.cargoType === `fuel`).amount).to.equal(69)

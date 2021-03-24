@@ -5,6 +5,7 @@ const routes = {
   ship: require(`./ship`),
   user: require(`./user`),
   crewMember: require(`./crewMember`),
+  attackRemnant: require(`./attackRemnant`),
 }
 let ready = false
 const toRun = []

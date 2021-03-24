@@ -13,3 +13,5 @@ const apiRoutes = require(`./routes/api`)
 app.use(apiRoutes.routes())
 
 app.listen(6969)
+
+// console.log(`God view server listening on port 6969`)

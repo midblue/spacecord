@@ -143,14 +143,15 @@ module.exports = (guild) => {
         advantageAccuracyMultiplier,
       )
 
-      guild.context.attackRemnants.push({
-        time: Date.now(),
+      guild.context.spawnAttackRemnant({
         attacker: {
           name: guild.ship.name,
           shipId: guild.ship.id,
           location: [...guild.ship.location],
         },
         weaponId: weapon.id,
+        damage: 0,
+        destroyedShip: false,
         didHit: false,
         defender: {
           name: enemyShip.name,
@@ -227,8 +228,7 @@ module.exports = (guild) => {
       ],
     )
 
-    guild.context.attackRemnants.push({
-      time: Date.now(),
+    guild.context.spawnAttackRemnant({
       attacker: {
         name: guild.ship.name,
         shipId: guild.ship.id,

@@ -18,10 +18,15 @@
     const diameter = Math.max(width, height)
     while (auBetweenLines / diameter < 0.15) auBetweenLines *= 2
 
+    console.log(width, height, auBetweenLines)
     roundFactor = 1
-    while (Math.abs(Math.round(auBetweenLines * roundFactor)) < 1)
+    while (
+      Math.abs(Math.round((auBetweenLines * roundFactor) / FLAT_SCALE)) < 1
+    )
       roundFactor *= 10
     roundFactor *= 100
+
+    console.log(auBetweenLines, roundFactor)
 
     horizontalMarkersToDraw = []
     verticalMarkersToDraw = []

@@ -1,7 +1,8 @@
 const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
-const { game } = require(`../../game/manager`)
+const game = require(`../../game/manager`)
+const equipment = require(`../../game/basics/equipment/equipment`)
 
 module.exports = {
   tag: `debug`,
@@ -27,6 +28,7 @@ module.exports = {
             guilds: game.guilds.length,
             planets: game.planets.length,
             caches: game.caches.length,
+            attackRemnants: game.caches.attackRemnants,
             startTime: game.startTime,
           }
           return JSON.stringify(data, null, 2)
@@ -212,6 +214,22 @@ module.exports = {
           return `set ` + type + ` to ` + newStatus
         },
       },
+      train: {
+        description: `train`,
+        action: async () => {
+          const id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const { guild, ok } = await client.game.guild(id)
+          if (!ok) return `no guild with id ` + id
+          const member = guild.ship.members.find((m) => m.id === msg.author.id)
+          if (!member) return `no member with id ` + msg.author.id
+          member.addXp(`engineering`, 5000, true)
+          member.addXp(`piloting`, 5000, true)
+          member.addXp(`mechanics`, 5000, true)
+          member.addXp(`munitions`, 5000, true)
+          guild.saveToDb()
+          return `added XP`
+        },
+      },
       stamina: {
         description: `stamina`,
         action: async () => {
@@ -267,6 +285,25 @@ module.exports = {
           })
           guild.saveToDb()
           return `killed ` + id
+        },
+      },
+      kit: {
+        description: `kit <id>`,
+        action: async (str) => {
+          let match = /^([^ ]+)$/.exec(str)
+          let id = match && match[1]
+          if (!id || id === `this` || id === `undefined`)
+            id = msg.guild?.id || msg.author?.crewMemberObject?.guildId
+          const { guild } = await client.game.guild(id)
+          if (!guild) return `no guild found for ` + id
+          guild.ship.addPart(equipment.chassis.corsair, 0)
+          guild.ship.addPart(equipment.battery.battery2, 0)
+          guild.ship.addPart(equipment.engine.basic2, 0)
+          guild.ship.addPart(equipment.transceiver.transceiver2, 0)
+          guild.ship.addPart(equipment.weapon.brick, 0)
+          guild.ship.addPart(equipment.weapon.sniper, 0)
+          guild.saveToDb()
+          return `kitted ` + id
         },
       },
     }

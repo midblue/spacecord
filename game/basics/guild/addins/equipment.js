@@ -183,16 +183,22 @@ module.exports = (guild) => {
       })
     }
 
-    if (e.directions) {
+    // if (e.directions) {
+    //   fields.push({
+    //     name: `🧭 Movement Directions`,
+    //     value: e.directions,
+    //   })
+    // }
+    // if (e.powerLevels) {
+    //   fields.push({
+    //     name: `⏩ Speed Levels`,
+    //     value: e.powerLevels,
+    //   })
+    // }
+    if (e.maxThrust) {
       fields.push({
-        name: `🧭 Movement Directions`,
-        value: e.directions,
-      })
-    }
-    if (e.powerLevels) {
-      fields.push({
-        name: `⏩ Speed Levels`,
-        value: e.powerLevels,
+        name: `⏩ Max Thrust`,
+        value: e.maxThrust + ` ${WEIGHT_UNITS}•m/s`,
       })
     }
 

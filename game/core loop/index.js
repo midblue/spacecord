@@ -1,8 +1,8 @@
 const { log } = require(`../gamecommon`)
 const cargo = require(`../basics/cargo`)
 
-const cacheExpirationTime = TICK_INTERVAL * 50000
-const attackRemnantExpirationTime = TICK_INTERVAL * 600
+const cacheExpirationTime = TICK_INTERVAL * 60 * 1000
+const attackRemnantExpirationTime = TICK_INTERVAL * 60 * 60
 let tickInterval, mediumInterval, slowInterval
 
 module.exports = {
@@ -46,8 +46,8 @@ module.exports = {
     let deletedAttackRemnantCount = 0
     for (let attackRemnantIndex in this.attackRemnants) {
       const attackRemnant = this.attackRemnants[attackRemnantIndex]
-      if (attackRemnant.time < attackRemnantCutoff) {
-        this.attackRemnants.splice(attackRemnantIndex, 1)
+      if (attackRemnant && attackRemnant.time < attackRemnantCutoff) {
+        this.deleteAttackRemnant(attackRemnant.id)
         deletedAttackRemnantCount++
       }
     }

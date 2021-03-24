@@ -16,7 +16,7 @@ module.exports = (guild) => {
       .find((e) => e.equipmentType === `engine`)
       .list.reduce((total, engine) => engine.maxThrust + total, 0)
 
-    return rawMaxThrust * 1000
+    return rawMaxThrust
   }
 
   guild.ship.getVelocityFromThrustVector = ({ power, angle }) => {

@@ -2032,7 +2032,7 @@ var ui = (function () {
   	return child_ctx;
   }
 
-  // (41:2) {#each horizontalMarkersToDraw as y}
+  // (46:2) {#each horizontalMarkersToDraw as y}
   function create_each_block_1(ctx) {
   	let line;
   	let line_x__value;
@@ -2112,7 +2112,7 @@ var ui = (function () {
   	};
   }
 
-  // (61:2) {#each verticalMarkersToDraw as x}
+  // (66:2) {#each verticalMarkersToDraw as x}
   function create_each_block$2(ctx) {
   	let line;
   	let line_x__value;
@@ -2324,9 +2324,11 @@ var ui = (function () {
   				let auBetweenLines = 1 / 2 ** 8;
   				const diameter = Math.max(width, height);
   				while (auBetweenLines / diameter < 0.15) auBetweenLines *= 2;
+  				console.log(width, height, auBetweenLines);
   				$$invalidate(6, roundFactor = 1);
-  				while (Math.abs(Math.round(auBetweenLines * roundFactor)) < 1) $$invalidate(6, roundFactor *= 10);
+  				while (Math.abs(Math.round(auBetweenLines * roundFactor / FLAT_SCALE$2)) < 1) $$invalidate(6, roundFactor *= 10);
   				$$invalidate(6, roundFactor *= 100);
+  				console.log(auBetweenLines, roundFactor);
   				$$invalidate(4, horizontalMarkersToDraw = []);
   				$$invalidate(5, verticalMarkersToDraw = []);
   				const center = [left + width / 2, top + height / 2];

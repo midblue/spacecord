@@ -46,9 +46,10 @@ module.exports = {
     delete updates.userId
     delete updates.crewMemberId
     delete updates._id
-    delete updates.__v
     Object.keys(updates).forEach((key) => (crewMember[key] = updates[key]))
-    await crewMember.save()
+    try {
+      await crewMember.save()
+    } catch (e) {}
     // console.log(`crewMember update result`, crewMember)
     return crewMember
   },

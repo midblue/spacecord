@@ -95,6 +95,31 @@ const schemas = {
     },
   ),
 
+  AttackRemnant: mongoose.Schema(
+    {
+      _id: { type: String },
+      time: { type: Number, default: Date.now() },
+      attacker: {
+        name: String,
+        shipId: String,
+        location: [Number],
+      },
+      weaponId: String,
+      didHit: Boolean,
+      damage: Number,
+      destroyedShip: Boolean,
+      defender: {
+        name: String,
+        shipId: String,
+        location: [Number],
+      },
+    },
+    {
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    },
+  ),
+
   Planet: mongoose.Schema(
     { _id: { type: String }, name: String },
     {

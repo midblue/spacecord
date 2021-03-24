@@ -18,11 +18,10 @@ describe(`Gravity`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [0, 0],
-      color: `white`,
+      mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,
@@ -40,11 +39,10 @@ describe(`Gravity`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [0, 0],
-      color: `white`,
+      mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,
@@ -62,12 +60,10 @@ describe(`Gravity`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [0, 0],
-      color: `white`,
       mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,
@@ -87,16 +83,14 @@ describe(`Gravity`, async () => {
     ).not.to.deep.equal([0, 0])
   })
 
-  it(`should have a vector pointing from thatBody to thisBody between two objects in horizontal line`, async () => {
+  it(`should have a vector pointing from thatBody to thisBody between two objects in a horizontal line`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [2, 0],
-      color: `white`,
       mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,
@@ -122,16 +116,14 @@ describe(`Gravity`, async () => {
     expect(forceVectorOnShip).to.be.deep.almost(expectedForceVector)
   })
 
-  it(`should have the correct vector pointing from thatBody to thisBody between two objects in vertical line`, async () => {
+  it(`should have the correct vector pointing from thatBody to thisBody between two objects in a vertical line`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [0, 2],
-      color: `white`,
       mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,
@@ -161,12 +153,10 @@ describe(`Gravity`, async () => {
     const game = require(`../game/manager`)
 
     const testPlanet = {
-      name: `Test Planet 1`,
       location: [2, 2],
-      color: `white`,
       mass: 100000,
     }
-    game.planets.push(testPlanet)
+    game.planets = [testPlanet]
 
     const testShip = await addShip({
       name: `Test Ship 1`,

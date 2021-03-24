@@ -3,10 +3,8 @@ module.exports = {
   description: `Standard workhorse engine. What it lacks in power it makes up for in affordability and 4 whole directions of movement.`,
   displayName: `Sparkler 2000`,
   baseHp: 20,
-  maxThrust: 0.5,
+  maxThrust: 500,
   mass: 800,
   fuelUse: 12,
-  directions: 4,
-  powerLevels: 2,
   requirements: { piloting: 5 },
 }

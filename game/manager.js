@@ -16,7 +16,7 @@ const coreLoop = require(`./core loop/`)
 // they provide an interface to game functions and handle conversions
 // from discord types to game types, and vice versa.
 //
-//
+
 const game = {
   async init(db) {
     this.db = db
@@ -28,6 +28,9 @@ const game = {
     const caches = await db.cache.getAll()
     caches.forEach((c) => this.loadCache(c))
     log(`init`, `Loaded ${this.caches.length} caches from db`)
+
+    this.attackRemnants = await db.attackRemnant.getAll()
+    log(`init`, `Loaded ${this.attackRemnants.length} attack remnants from db`)
 
     this.planets = await spawnPlanets({ context: this })
     log(`init`, `Loaded ${this.planets.length} planets`)
@@ -230,11 +233,24 @@ const game = {
     caches.liveify(cacheDataToSave)
     this.caches.push(cacheDataToSave)
   },
-
   deleteCache(cacheId) {
     this.db.cache.remove(cacheId)
     this.caches.splice(
       this.caches.findIndex((c) => c.id === cacheId),
+      1,
+    )
+    return { ok: true }
+  },
+
+  spawnAttackRemnant(attackRemnantData) {
+    const attackRemnantDataToSave = { ...attackRemnantData, time: Date.now() }
+    this.db.attackRemnant.add({ ...attackRemnantData, time: Date.now() })
+    this.attackRemnants.push(attackRemnantDataToSave)
+  },
+  deleteAttackRemnant(attackRemnantId) {
+    this.db.attackRemnant.remove(attackRemnantId)
+    this.attackRemnants.splice(
+      this.attackRemnants.findIndex((c) => c.id === attackRemnantId),
       1,
     )
     return { ok: true }

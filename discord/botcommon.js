@@ -66,7 +66,7 @@ async function username(msgOrUserOrChannel, id, guildId, client) {
     user = (await getUserInGuildById(guild, id)) || {}
   }
   if (!user) return `System`
-  return user.nickname || user.username || user.user.username || `Unknown User`
+  return user.nickname || user.username || user.user?.username || `Unknown User`
 }
 
 const customParams = [

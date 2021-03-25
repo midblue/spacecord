@@ -6,6 +6,10 @@
   let scale
   scaleStore.subscribe((value) => (scale = value))
 
+  import { winSizeMultiplier as winSizeMultiplierStore } from '../js/stores.js'
+  let winSizeMultiplier
+  winSizeMultiplierStore.subscribe((value) => (winSizeMultiplier = value))
+
   const FLAT_SCALE = 100
 
   export let points = []
@@ -51,7 +55,7 @@
       x2={line.to[0] * FLAT_SCALE}
       y2={line.to[1] * FLAT_SCALE}
       stroke={line.color || stroke}
-      stroke-width={(strokeWidth * FLAT_SCALE) / scale}
+      stroke-width={(strokeWidth * FLAT_SCALE * winSizeMultiplier) / scale}
     />
   {/each}
 </g>

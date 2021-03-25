@@ -15,7 +15,7 @@
   let hovering
 
   let trail = []
-  $: trail = [...shipData.pastLocations.map((l) => [l[0], l[1] * -1]), location]
+  $: trail = [...shipData.pastLocations, location]
 
   function enter() {
     hovering = true
@@ -35,6 +35,7 @@
   }
 </script>
 
+<Path points={trail} z={z - 1} />
 <Point
   {location}
   {minSize}
@@ -45,8 +46,6 @@
   on:enter={enter}
   on:leave={leave}
 />
-
-<Path points={trail} z={z - 1} />
 
 <style>
 </style>

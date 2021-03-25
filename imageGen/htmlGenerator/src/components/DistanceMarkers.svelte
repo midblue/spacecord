@@ -5,6 +5,10 @@
     scale = value
   })
 
+  import { winSizeMultiplier as winSizeMultiplierStore } from '../js/stores.js'
+  let winSizeMultiplier
+  winSizeMultiplierStore.subscribe((value) => (winSizeMultiplier = value))
+
   const FLAT_SCALE = 100
 
   export let top, left, width, height
@@ -18,15 +22,12 @@
     const diameter = Math.max(width, height)
     while (auBetweenLines / diameter < 0.15) auBetweenLines *= 2
 
-    console.log(width, height, auBetweenLines)
     roundFactor = 1
     while (
       Math.abs(Math.round((auBetweenLines * roundFactor) / FLAT_SCALE)) < 1
     )
       roundFactor *= 10
     roundFactor *= 100
-
-    console.log(auBetweenLines, roundFactor)
 
     horizontalMarkersToDraw = []
     verticalMarkersToDraw = []
@@ -50,13 +51,13 @@
       y1={y}
       y2={y}
       stroke={'white'}
-      stroke-width={(0.002 * FLAT_SCALE) / scale}
+      stroke-width={(0.0025 * FLAT_SCALE * winSizeMultiplier) / scale}
     />
     <text
       x={left + width * 0.003}
       y={y - height * 0.01}
       text-anchor="left"
-      font-size={(0.022 * FLAT_SCALE) / scale}
+      font-size={(0.03 * FLAT_SCALE * winSizeMultiplier) / scale}
       fill={'white'}
     >
       {Math.round((y / FLAT_SCALE) * roundFactor) / roundFactor}
@@ -70,13 +71,13 @@
       y1={top}
       y2={top + height}
       stroke={'white'}
-      stroke-width={(0.002 * FLAT_SCALE) / scale}
+      stroke-width={(0.0025 * FLAT_SCALE * winSizeMultiplier) / scale}
     />
     <text
       x={x + width * 0.003}
-      y={top + height * 0.016}
+      y={top + height * 0.022}
       text-anchor="left"
-      font-size={(0.022 * FLAT_SCALE) / scale}
+      font-size={(0.03 * FLAT_SCALE * winSizeMultiplier) / scale}
       fill={'white'}
     >
       {Math.round((x / FLAT_SCALE) * roundFactor) / roundFactor}
@@ -86,7 +87,7 @@
 
 <style>
   g {
-    z-index: 1;
+    z-index: 10;
     position: relative;
   }
   line {

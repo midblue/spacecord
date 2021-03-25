@@ -1,8 +1,9 @@
 <script>
   import Outline from './Outline.svelte'
 
-  export let width, height
+  export let width, height, location
 
+  const FLAT_SCALE = 100
   let circlesToDraw = []
 
   $: if (width) {
@@ -17,7 +18,12 @@
 
 <g class="distancecircles">
   {#each circlesToDraw as radius}
-    <Outline location={[0, 0]} {radius} label={radius + ' AU'} />
+    <Outline
+      {location}
+      {radius}
+      color="#bbb"
+      label={radius / FLAT_SCALE + ' AU'}
+    />
   {/each}
 </g>
 

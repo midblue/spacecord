@@ -21,7 +21,8 @@
     "ext": "js,svelte",
     "ignore": [
       "imageGen/htmlGenerator/templates/*.js",
-      "test"
+      "test",
+      "imageGen/htmlGenerator/templates"
     ]
   },
   "dependencies": {

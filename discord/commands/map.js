@@ -27,10 +27,11 @@ module.exports = {
       msg,
       new Discord.MessageAttachment(
         await generateImage(`map`, {
-          ship: guild.saveableData().ship,
+          guilds: [guild.saveableData()],
           planets: guild.context.planets
             .filter((p) => guild.ship.seen.planets.includes(p.name))
             .map((p) => ({ ...p, context: undefined })),
+          buffer: 0.2,
         }),
         `map.png`,
       ),

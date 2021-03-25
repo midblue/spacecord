@@ -6,11 +6,14 @@ module.exports = async (templateName = `map`, data = {}) => {
   return await nodeHtmlToImage({
     html,
     type: `png`,
-    puppeteerArgs: { args: [`--no-sandbox`], executablePath: `/usr/bin/chromium-browser` },
+    puppeteerArgs: {
+      defaultViewport: { width: 800, height: 800 },
+      args: [`--no-sandbox`],
+      executablePath: `/usr/bin/chromium-browser`,
+    },
     encoding: `buffer`,
   })
 }
-
 
 // // * get all exports from files in this folder
 // const fs = require(`fs`)

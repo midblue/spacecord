@@ -37,13 +37,30 @@ module.exports = {
       }
     }
     const map = await generateImage(`scan1`, {
-      range,
-      ship: guild.saveableData().ship,
-      attackRadius: guild.ship.attackRadius(),
-      interactRadius: guild.ship.interactRadius(),
-      scanRadius: guild.ship.shipScanRadius(),
+      label: this.displayName,
+      radius: range,
+      center: guild.ship.location,
+      guilds: [
+        ...scanResult.guilds.map((g) => ({
+          ...g.saveableData(),
+          color: `red`,
+        })),
+        guild.saveableData(),
+      ],
+      radii: [
+        { label: `attack`, color: `#fb0`, radius: guild.ship.attackRadius() },
+        {
+          label: `interact`,
+          color: `#fb0`,
+          radius: guild.ship.interactRadius(),
+        },
+        {
+          label: `scan ship`,
+          color: `#fb0`,
+          radius: guild.ship.shipScanRadius(),
+        },
+      ],
       planets: scanResult.planets.map((p) => ({ ...p, context: undefined })),
-      ships: scanResult.guilds.map((g) => g.saveableData().ship),
       caches: scanResult.caches,
       repair: repair / this.needsRepairAt,
     })

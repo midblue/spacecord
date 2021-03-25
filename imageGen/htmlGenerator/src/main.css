@@ -1,17 +1,17 @@
 :root {
-  --main-width: 750px;
+  --main-width: 100%;
   --main-height: var(--main-width);
 
   --text-size: 24px;
   --text-size-small: calc(var(--text-size) * 0.75);
   --text-size-tiny: calc(var(--text-size) * 0.6);
 
-  --font-stack: 'Avenir', monospace;
+  --font-stack: 'Avenir', 'Helvetica', sans-serif;
 
-  --bg: #001100;
-  --bg-rgb: 0, 17, 0;
+  --bg: #000000;
+  --bg-rgb: 0, 0, 0;
 
-  --ui: #0f0;
+  --ui: #ddd;
 }
 
 html {

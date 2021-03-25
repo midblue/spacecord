@@ -2,12 +2,11 @@
   import { onDestroy, onMount, createEventDispatcher } from 'svelte'
   import {
     scale as scaleStore,
-    updateMs as updateMsStore,
     view as viewStore,
+    winSizeMultiplier as winSizeMultiplierStore,
   } from '../js/stores.js'
-  let updateMs, scale, view
+  let scale, view, winSizeMultiplier
   const unsubscribe = []
-  unsubscribe.push(updateMsStore.subscribe((value) => (updateMs = value)))
   unsubscribe.push(
     scaleStore.subscribe((value) => {
       scale = value
@@ -16,6 +15,11 @@
   unsubscribe.push(
     viewStore.subscribe((value) => {
       view = value
+    }),
+  )
+  unsubscribe.push(
+    winSizeMultiplierStore.subscribe((value) => {
+      winSizeMultiplier = value
     }),
   )
   onDestroy(() => unsubscribe.forEach((u) => u()))
@@ -85,17 +89,20 @@
   <circle
     cx={location[0] * FLAT_SCALE}
     cy={location[1] * FLAT_SCALE}
-    r={Math.max(minSize / scale, radius) * FLAT_SCALE}
+    r={Math.max(minSize / scale, radius) * FLAT_SCALE * winSizeMultiplier}
     fill={color || 'white'}
   />
   {#if name && scale >= 0.9}
     <text
       x={location[0] * FLAT_SCALE}
       y={location[1] * FLAT_SCALE +
-        Math.max(minSize / scale, radius) * FLAT_SCALE * -1 -
+        Math.max(minSize / scale, radius) *
+          FLAT_SCALE *
+          winSizeMultiplier *
+          -1 -
         view.height * 0.005}
       text-anchor="middle"
-      font-size={(0.03 * FLAT_SCALE) / scale}
+      font-size={(0.03 * FLAT_SCALE * winSizeMultiplier) / scale}
       fill={color || 'white'}
     >
       {name}

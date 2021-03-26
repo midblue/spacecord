@@ -16,7 +16,7 @@
     color,
     label,
     blackout,
-    opacity = 0.3,
+    opacity = 0.4,
     dash = false
 </script>
 

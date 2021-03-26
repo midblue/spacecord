@@ -94,7 +94,7 @@
     opacity: 0.1;
   }
   text {
-    opacity: 0.4;
+    opacity: 0.3;
     font-weight: bold;
   }
 </style>

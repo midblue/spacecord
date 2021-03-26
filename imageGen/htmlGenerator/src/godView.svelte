@@ -19,7 +19,7 @@
     async function getGameData() {
       const res = await fetch('/game')
       gameData = await res.json()
-      console.log(gameData)
+      // console.log(gameData)
     }
     onMount(getGameData)
 

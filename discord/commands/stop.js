@@ -14,7 +14,7 @@ module.exports = {
   test(content, settings) {
     return new RegExp(`^${settings.prefix}(?:stop)$`, `gi`).exec(content)
   },
-  async action({ settings, msg, match, guild, authorCrewMemberObject }) {
+  async action({ msg, match, guild, authorCrewMemberObject }) {
     log(msg, `Stop`, match)
 
     // ---------- use stamina
@@ -25,7 +25,15 @@ module.exports = {
     const ang = angle(0, 0, ...guild.ship.velocity)
     let power = 1
 
-    const thrustAmplification = 1 // todo use piloting etc to determine
+    const crewMemberPilotingSkill = authorCrewMemberObject.skillLevelDetails(
+      `piloting`,
+    ).level
+    const engineRequirements =
+      guild.ship.getRequirements(`engine`).requirements.piloting || 1
+    const thrustAmplification = Math.max(
+      0.1,
+      Math.min(3, crewMemberPilotingSkill / engineRequirements),
+    )
     power *= thrustAmplification
 
     const res = await guild.ship.thrust({

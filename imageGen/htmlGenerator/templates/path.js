@@ -1276,9 +1276,13 @@ var ui = (function () {
   			text_1 = svg_element("text");
   			t = text(/*name*/ ctx[4]);
   			attr(text_1, "x", text_1_x_value = /*location*/ ctx[0][0] * FLAT_SCALE);
-  			attr(text_1, "y", text_1_y_value = /*location*/ ctx[0][1] * FLAT_SCALE + Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[6], /*radius*/ ctx[2]) * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8] * -1 - /*view*/ ctx[7].height * 0.005);
+
+  			attr(text_1, "y", text_1_y_value = /*location*/ ctx[0][1] * FLAT_SCALE + Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[7], /*radius*/ ctx[2]) * FLAT_SCALE * (/*multiplyScale*/ ctx[6]
+  			? /*winSizeMultiplier*/ ctx[9]
+  			: 1) * -1 - /*view*/ ctx[8].height * 0.005);
+
   			attr(text_1, "text-anchor", "middle");
-  			attr(text_1, "font-size", text_1_font_size_value = 0.03 * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[6]);
+  			attr(text_1, "font-size", text_1_font_size_value = 0.03 * FLAT_SCALE * /*winSizeMultiplier*/ ctx[9] / /*scale*/ ctx[7]);
   			attr(text_1, "fill", text_1_fill_value = /*color*/ ctx[3] || "white");
   			attr(text_1, "class", "svelte-so4ps9");
   		},
@@ -1293,11 +1297,13 @@ var ui = (function () {
   				attr(text_1, "x", text_1_x_value);
   			}
 
-  			if (dirty & /*location, minSize, scale, radius, winSizeMultiplier, view*/ 455 && text_1_y_value !== (text_1_y_value = /*location*/ ctx[0][1] * FLAT_SCALE + Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[6], /*radius*/ ctx[2]) * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8] * -1 - /*view*/ ctx[7].height * 0.005)) {
+  			if (dirty & /*location, minSize, scale, radius, multiplyScale, winSizeMultiplier, view*/ 967 && text_1_y_value !== (text_1_y_value = /*location*/ ctx[0][1] * FLAT_SCALE + Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[7], /*radius*/ ctx[2]) * FLAT_SCALE * (/*multiplyScale*/ ctx[6]
+  			? /*winSizeMultiplier*/ ctx[9]
+  			: 1) * -1 - /*view*/ ctx[8].height * 0.005)) {
   				attr(text_1, "y", text_1_y_value);
   			}
 
-  			if (dirty & /*winSizeMultiplier, scale*/ 320 && text_1_font_size_value !== (text_1_font_size_value = 0.03 * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[6])) {
+  			if (dirty & /*winSizeMultiplier, scale*/ 640 && text_1_font_size_value !== (text_1_font_size_value = 0.03 * FLAT_SCALE * /*winSizeMultiplier*/ ctx[9] / /*scale*/ ctx[7])) {
   				attr(text_1, "font-size", text_1_font_size_value);
   			}
 
@@ -1320,7 +1326,7 @@ var ui = (function () {
   	let circle_fill_value;
   	let mounted;
   	let dispose;
-  	let if_block = /*name*/ ctx[4] && /*scale*/ ctx[6] >= 0.9 && create_if_block$2(ctx);
+  	let if_block = /*name*/ ctx[4] && /*scale*/ ctx[7] >= 0.9 && create_if_block$2(ctx);
 
   	return {
   		c() {
@@ -1329,7 +1335,11 @@ var ui = (function () {
   			if (if_block) if_block.c();
   			attr(circle, "cx", circle_cx_value = /*location*/ ctx[0][0] * FLAT_SCALE);
   			attr(circle, "cy", circle_cy_value = /*location*/ ctx[0][1] * FLAT_SCALE);
-  			attr(circle, "r", circle_r_value = Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[6], /*radius*/ ctx[2]) * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8]);
+
+  			attr(circle, "r", circle_r_value = Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[7], /*radius*/ ctx[2]) * FLAT_SCALE * (/*multiplyScale*/ ctx[6]
+  			? /*winSizeMultiplier*/ ctx[9]
+  			: 1));
+
   			attr(circle, "fill", circle_fill_value = /*color*/ ctx[3] || "white");
   			attr(g, "class", "point svelte-so4ps9");
   			set_style(g, "z-index", /*z*/ ctx[5]);
@@ -1341,8 +1351,8 @@ var ui = (function () {
 
   			if (!mounted) {
   				dispose = [
-  					listen(g, "mouseenter", /*mouseenter_handler*/ ctx[10]),
-  					listen(g, "mouseleave", /*mouseleave_handler*/ ctx[11])
+  					listen(g, "mouseenter", /*mouseenter_handler*/ ctx[11]),
+  					listen(g, "mouseleave", /*mouseleave_handler*/ ctx[12])
   				];
 
   				mounted = true;
@@ -1357,7 +1367,9 @@ var ui = (function () {
   				attr(circle, "cy", circle_cy_value);
   			}
 
-  			if (dirty & /*minSize, scale, radius, winSizeMultiplier*/ 326 && circle_r_value !== (circle_r_value = Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[6], /*radius*/ ctx[2]) * FLAT_SCALE * /*winSizeMultiplier*/ ctx[8])) {
+  			if (dirty & /*minSize, scale, radius, multiplyScale, winSizeMultiplier*/ 710 && circle_r_value !== (circle_r_value = Math.max(/*minSize*/ ctx[1] / /*scale*/ ctx[7], /*radius*/ ctx[2]) * FLAT_SCALE * (/*multiplyScale*/ ctx[6]
+  			? /*winSizeMultiplier*/ ctx[9]
+  			: 1))) {
   				attr(circle, "r", circle_r_value);
   			}
 
@@ -1365,7 +1377,7 @@ var ui = (function () {
   				attr(circle, "fill", circle_fill_value);
   			}
 
-  			if (/*name*/ ctx[4] && /*scale*/ ctx[6] >= 0.9) {
+  			if (/*name*/ ctx[4] && /*scale*/ ctx[7] >= 0.9) {
   				if (if_block) {
   					if_block.p(ctx, dirty);
   				} else {
@@ -1400,15 +1412,15 @@ var ui = (function () {
   	const unsubscribe = [];
 
   	unsubscribe.push(scale.subscribe(value => {
-  		$$invalidate(6, scale$1 = value);
+  		$$invalidate(7, scale$1 = value);
   	}));
 
   	unsubscribe.push(view.subscribe(value => {
-  		$$invalidate(7, view$1 = value);
+  		$$invalidate(8, view$1 = value);
   	}));
 
   	unsubscribe.push(winSizeMultiplier.subscribe(value => {
-  		$$invalidate(8, winSizeMultiplier$1 = value);
+  		$$invalidate(9, winSizeMultiplier$1 = value);
   	}));
 
   	onDestroy(() => unsubscribe.forEach(u => u()));
@@ -1418,7 +1430,8 @@ var ui = (function () {
   		{ radius = 0 } = $$props,
   		{ color } = $$props,
   		{ name } = $$props,
-  		{ z } = $$props;
+  		{ z } = $$props,
+  		{ multiplyScale = true } = $$props;
 
   	const dispatch = createEventDispatcher();
   	const mouseenter_handler = () => dispatch("enter");
@@ -1431,6 +1444,7 @@ var ui = (function () {
   		if ("color" in $$props) $$invalidate(3, color = $$props.color);
   		if ("name" in $$props) $$invalidate(4, name = $$props.name);
   		if ("z" in $$props) $$invalidate(5, z = $$props.z);
+  		if ("multiplyScale" in $$props) $$invalidate(6, multiplyScale = $$props.multiplyScale);
   	};
 
   	return [
@@ -1440,6 +1454,7 @@ var ui = (function () {
   		color,
   		name,
   		z,
+  		multiplyScale,
   		scale$1,
   		view$1,
   		winSizeMultiplier$1,
@@ -1459,7 +1474,8 @@ var ui = (function () {
   			radius: 2,
   			color: 3,
   			name: 4,
-  			z: 5
+  			z: 5,
+  			multiplyScale: 6
   		});
   	}
   }
@@ -1485,8 +1501,8 @@ var ui = (function () {
   	point0 = new Point({
   			props: {
   				location: /*location*/ ctx[0],
-  				minSize: /*minSizeAdjustedForActualSize*/ ctx[6] * 8,
-  				radius: /*radius*/ ctx[1] * 8,
+  				minSize: /*minSizeAdjustedForActualSize*/ ctx[6] * 4,
+  				radius: /*radius*/ ctx[1] * 4,
   				color: `url('#${/*name*/ ctx[3]}')`,
   				z: 1
   			}
@@ -1499,7 +1515,8 @@ var ui = (function () {
   				radius: /*radius*/ ctx[1],
   				color: /*color*/ ctx[2],
   				name: /*name*/ ctx[3],
-  				z: /*z*/ ctx[4]
+  				z: /*z*/ ctx[4],
+  				multiplyScale: false
   			}
   		});
 
@@ -1547,7 +1564,8 @@ var ui = (function () {
 
   			const point0_changes = {};
   			if (dirty & /*location*/ 1) point0_changes.location = /*location*/ ctx[0];
-  			if (dirty & /*radius*/ 2) point0_changes.radius = /*radius*/ ctx[1] * 8;
+  			if (dirty & /*minSizeAdjustedForActualSize*/ 64) point0_changes.minSize = /*minSizeAdjustedForActualSize*/ ctx[6] * 4;
+  			if (dirty & /*radius*/ 2) point0_changes.radius = /*radius*/ ctx[1] * 4;
   			if (dirty & /*name*/ 8) point0_changes.color = `url('#${/*name*/ ctx[3]}')`;
   			point0.$set(point0_changes);
 
@@ -1557,6 +1575,7 @@ var ui = (function () {
 
   			const point1_changes = {};
   			if (dirty & /*location*/ 1) point1_changes.location = /*location*/ ctx[0];
+  			if (dirty & /*minSizeAdjustedForActualSize*/ 64) point1_changes.minSize = /*minSizeAdjustedForActualSize*/ ctx[6];
   			if (dirty & /*radius*/ 2) point1_changes.radius = /*radius*/ ctx[1];
   			if (dirty & /*color*/ 4) point1_changes.color = /*color*/ ctx[2];
   			if (dirty & /*name*/ 8) point1_changes.name = /*name*/ ctx[3];
@@ -1586,8 +1605,11 @@ var ui = (function () {
   }
 
   function instance$4($$self, $$props, $$invalidate) {
+  	let winSizeMultiplier$1;
+  	winSizeMultiplier.subscribe(value => $$invalidate(10, winSizeMultiplier$1 = value));
+
   	let { location } = $$props,
-  		{ minSize = 0.01 } = $$props,
+  		{ minSize = 0.015 } = $$props,
   		{ radius } = $$props,
   		{ color } = $$props,
   		{ name } = $$props,
@@ -1595,7 +1617,7 @@ var ui = (function () {
 
   	let hovering = false;
   	const earthRadiusInAU = 6371 / 149597900;
-  	let minSizeAdjustedForActualSize = ((radius - earthRadiusInAU) / earthRadiusInAU * 0.5 + 1) * minSize;
+  	let minSizeAdjustedForActualSize = 0;
 
   	function enter() {
   		$$invalidate(5, hovering = true);
@@ -1616,6 +1638,12 @@ var ui = (function () {
   		if ("z" in $$props) $$invalidate(4, z = $$props.z);
   	};
 
+  	$$self.$$.update = () => {
+  		if ($$self.$$.dirty & /*radius, minSize, winSizeMultiplier*/ 1538) {
+  			$$invalidate(6, minSizeAdjustedForActualSize = ((radius - earthRadiusInAU) / earthRadiusInAU * 0.5 + 1) * minSize * winSizeMultiplier$1);
+  		}
+  	};
+
   	return [
   		location,
   		radius,
@@ -1626,7 +1654,8 @@ var ui = (function () {
   		minSizeAdjustedForActualSize,
   		enter,
   		leave,
-  		minSize
+  		minSize,
+  		winSizeMultiplier$1
   	];
   }
 
@@ -2331,7 +2360,7 @@ var ui = (function () {
   	}
   }
 
-  var css_248z$7 = "g.svelte-1a8qcd1{z-index:10;position:relative}line.svelte-1a8qcd1{opacity:0.1}text.svelte-1a8qcd1{opacity:0.4;font-weight:bold}";
+  var css_248z$7 = "g.svelte-16harj0{z-index:10;position:relative}line.svelte-16harj0{opacity:0.1}text.svelte-16harj0{opacity:0.3;font-weight:bold}";
   styleInject(css_248z$7);
 
   /* imageGen/htmlGenerator/src/components/DistanceMarkers.svelte generated by Svelte v3.32.3 */
@@ -2373,13 +2402,13 @@ var ui = (function () {
   			attr(line, "y2", line_y__value_1 = /*y*/ ctx[12]);
   			attr(line, "stroke", "white");
   			attr(line, "stroke-width", line_stroke_width_value = 0.0025 * FLAT_SCALE$2 * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[7]);
-  			attr(line, "class", "svelte-1a8qcd1");
+  			attr(line, "class", "svelte-16harj0");
   			attr(text_1, "x", text_1_x_value = /*left*/ ctx[1] + /*width*/ ctx[2] * 0.003);
   			attr(text_1, "y", text_1_y_value = /*y*/ ctx[12] - /*height*/ ctx[3] * 0.01);
   			attr(text_1, "text-anchor", "left");
   			attr(text_1, "font-size", text_1_font_size_value = 0.03 * FLAT_SCALE$2 * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[7]);
   			attr(text_1, "fill", "white");
-  			attr(text_1, "class", "svelte-1a8qcd1");
+  			attr(text_1, "class", "svelte-16harj0");
   		},
   		m(target, anchor) {
   			insert(target, line, anchor);
@@ -2453,13 +2482,13 @@ var ui = (function () {
   			attr(line, "y2", line_y__value = /*top*/ ctx[0] + /*height*/ ctx[3]);
   			attr(line, "stroke", "white");
   			attr(line, "stroke-width", line_stroke_width_value = 0.0025 * FLAT_SCALE$2 * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[7]);
-  			attr(line, "class", "svelte-1a8qcd1");
+  			attr(line, "class", "svelte-16harj0");
   			attr(text_1, "x", text_1_x_value = /*x*/ ctx[9] + /*width*/ ctx[2] * 0.003);
   			attr(text_1, "y", text_1_y_value = /*top*/ ctx[0] + /*height*/ ctx[3] * 0.022);
   			attr(text_1, "text-anchor", "left");
   			attr(text_1, "font-size", text_1_font_size_value = 0.03 * FLAT_SCALE$2 * /*winSizeMultiplier*/ ctx[8] / /*scale*/ ctx[7]);
   			attr(text_1, "fill", "white");
-  			attr(text_1, "class", "svelte-1a8qcd1");
+  			attr(text_1, "class", "svelte-16harj0");
   		},
   		m(target, anchor) {
   			insert(target, line, anchor);
@@ -2539,7 +2568,7 @@ var ui = (function () {
   				each_blocks[i].c();
   			}
 
-  			attr(g, "class", "distancemarkers svelte-1a8qcd1");
+  			attr(g, "class", "distancemarkers svelte-16harj0");
   		},
   		m(target, anchor) {
   			insert(target, g, anchor);
@@ -2844,7 +2873,7 @@ var ui = (function () {
   		{ color } = $$props,
   		{ label } = $$props,
   		{ blackout } = $$props,
-  		{ opacity = 0.3 } = $$props,
+  		{ opacity = 0.4 } = $$props,
   		{ dash = false } = $$props;
 
   	$$self.$$set = $$props => {
@@ -3066,39 +3095,39 @@ var ui = (function () {
 
   function get_each_context$4(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[17] = list[i];
+  	child_ctx[18] = list[i];
   	return child_ctx;
   }
 
   function get_each_context_1$1(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[20] = list[i];
+  	child_ctx[21] = list[i];
   	return child_ctx;
   }
 
   function get_each_context_2(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[23] = list[i];
+  	child_ctx[24] = list[i];
   	return child_ctx;
   }
 
   function get_each_context_3(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[23] = list[i];
+  	child_ctx[24] = list[i];
   	return child_ctx;
   }
 
   function get_each_context_4(ctx, list, i) {
   	const child_ctx = ctx.slice();
-  	child_ctx[23] = list[i];
+  	child_ctx[24] = list[i];
   	return child_ctx;
   }
 
-  // (241:4) {#each planets as point}
+  // (248:4) {#each planets as point}
   function create_each_block_4(ctx) {
   	let planet;
   	let current;
-  	const planet_spread_levels = [/*point*/ ctx[23]];
+  	const planet_spread_levels = [/*point*/ ctx[24]];
   	let planet_props = {};
 
   	for (let i = 0; i < planet_spread_levels.length; i += 1) {
@@ -3117,7 +3146,7 @@ var ui = (function () {
   		},
   		p(ctx, dirty) {
   			const planet_changes = (dirty & /*planets*/ 16)
-  			? get_spread_update(planet_spread_levels, [get_spread_object(/*point*/ ctx[23])])
+  			? get_spread_update(planet_spread_levels, [get_spread_object(/*point*/ ctx[24])])
   			: {};
 
   			planet.$set(planet_changes);
@@ -3137,11 +3166,11 @@ var ui = (function () {
   	};
   }
 
-  // (245:4) {#each ships as point}
+  // (252:4) {#each ships as point}
   function create_each_block_3(ctx) {
   	let ship;
   	let current;
-  	const ship_spread_levels = [/*point*/ ctx[23]];
+  	const ship_spread_levels = [/*point*/ ctx[24]];
   	let ship_props = {};
 
   	for (let i = 0; i < ship_spread_levels.length; i += 1) {
@@ -3160,7 +3189,7 @@ var ui = (function () {
   		},
   		p(ctx, dirty) {
   			const ship_changes = (dirty & /*ships*/ 8)
-  			? get_spread_update(ship_spread_levels, [get_spread_object(/*point*/ ctx[23])])
+  			? get_spread_update(ship_spread_levels, [get_spread_object(/*point*/ ctx[24])])
   			: {};
 
   			ship.$set(ship_changes);
@@ -3180,11 +3209,11 @@ var ui = (function () {
   	};
   }
 
-  // (249:4) {#each caches as point}
+  // (256:4) {#each caches as point}
   function create_each_block_2(ctx) {
   	let cache;
   	let current;
-  	const cache_spread_levels = [/*point*/ ctx[23]];
+  	const cache_spread_levels = [/*point*/ ctx[24]];
   	let cache_props = {};
 
   	for (let i = 0; i < cache_spread_levels.length; i += 1) {
@@ -3203,7 +3232,7 @@ var ui = (function () {
   		},
   		p(ctx, dirty) {
   			const cache_changes = (dirty & /*caches*/ 32)
-  			? get_spread_update(cache_spread_levels, [get_spread_object(/*point*/ ctx[23])])
+  			? get_spread_update(cache_spread_levels, [get_spread_object(/*point*/ ctx[24])])
   			: {};
 
   			cache.$set(cache_changes);
@@ -3223,11 +3252,11 @@ var ui = (function () {
   	};
   }
 
-  // (253:4) {#each attackRemnants as attack}
+  // (260:4) {#each attackRemnants as attack}
   function create_each_block_1$1(ctx) {
   	let attackremnant;
   	let current;
-  	const attackremnant_spread_levels = [/*attack*/ ctx[20]];
+  	const attackremnant_spread_levels = [/*attack*/ ctx[21]];
   	let attackremnant_props = {};
 
   	for (let i = 0; i < attackremnant_spread_levels.length; i += 1) {
@@ -3246,7 +3275,7 @@ var ui = (function () {
   		},
   		p(ctx, dirty) {
   			const attackremnant_changes = (dirty & /*attackRemnants*/ 64)
-  			? get_spread_update(attackremnant_spread_levels, [get_spread_object(/*attack*/ ctx[20])])
+  			? get_spread_update(attackremnant_spread_levels, [get_spread_object(/*attack*/ ctx[21])])
   			: {};
 
   			attackremnant.$set(attackremnant_changes);
@@ -3266,7 +3295,7 @@ var ui = (function () {
   	};
   }
 
-  // (257:4) {#each radii as radiusData}
+  // (264:4) {#each radii as radiusData}
   function create_each_block$4(ctx) {
   	let outline;
   	let current;
@@ -3274,10 +3303,10 @@ var ui = (function () {
   	outline = new Outline({
   			props: {
   				location: [/*gameData*/ ctx[0].center[0], /*gameData*/ ctx[0].center[1] * -1],
-  				radius: /*radiusData*/ ctx[17].radius * FLAT_SCALE$5,
-  				color: /*radiusData*/ ctx[17].color,
-  				label: /*radiusData*/ ctx[17].label,
-  				opacity: 0.3,
+  				radius: /*radiusData*/ ctx[18].radius * FLAT_SCALE$5,
+  				color: /*radiusData*/ ctx[18].color,
+  				label: /*radiusData*/ ctx[18].label,
+  				opacity: 0.4,
   				dash: /*view*/ ctx[1].width * 0.01
   			}
   		});
@@ -3293,9 +3322,9 @@ var ui = (function () {
   		p(ctx, dirty) {
   			const outline_changes = {};
   			if (dirty & /*gameData*/ 1) outline_changes.location = [/*gameData*/ ctx[0].center[0], /*gameData*/ ctx[0].center[1] * -1];
-  			if (dirty & /*radii*/ 128) outline_changes.radius = /*radiusData*/ ctx[17].radius * FLAT_SCALE$5;
-  			if (dirty & /*radii*/ 128) outline_changes.color = /*radiusData*/ ctx[17].color;
-  			if (dirty & /*radii*/ 128) outline_changes.label = /*radiusData*/ ctx[17].label;
+  			if (dirty & /*radii*/ 128) outline_changes.radius = /*radiusData*/ ctx[18].radius * FLAT_SCALE$5;
+  			if (dirty & /*radii*/ 128) outline_changes.color = /*radiusData*/ ctx[18].color;
+  			if (dirty & /*radii*/ 128) outline_changes.label = /*radiusData*/ ctx[18].label;
   			if (dirty & /*view*/ 2) outline_changes.dash = /*view*/ ctx[1].width * 0.01;
   			outline.$set(outline_changes);
   		},
@@ -3314,7 +3343,7 @@ var ui = (function () {
   	};
   }
 
-  // (268:4) {#if !gameData?.center}
+  // (275:4) {#if !gameData?.center}
   function create_if_block_2$2(ctx) {
   	let distancemarkers;
   	let current;
@@ -3357,7 +3386,7 @@ var ui = (function () {
   	};
   }
 
-  // (271:4) {#if gameData?.center}
+  // (278:4) {#if gameData?.center}
   function create_if_block_1$2(ctx) {
   	let distancecircles;
   	let current;
@@ -3412,7 +3441,7 @@ var ui = (function () {
   	};
   }
 
-  // (277:4) {#if gameData?.radius}
+  // (284:4) {#if gameData?.radius}
   function create_if_block$4(ctx) {
   	let outline;
   	let current;
@@ -3943,6 +3972,8 @@ var ui = (function () {
   	});
 
   	function redraw() {
+  		if (!gameData) return;
+
   		$$invalidate(3, ships = (gameData.guilds || []).map(el => ({
   			type: "ship",
   			location: el.ship.location,
@@ -3955,7 +3986,6 @@ var ui = (function () {
   			type: "planet",
   			location: el.location,
   			radius: el.radius / KM_PER_AU,
-  			minSize: 0.01,
   			color: el.validColor || el.color,
   			name: el.name
   		})));
@@ -4056,7 +4086,7 @@ var ui = (function () {
   	};
 
   	// set up mouse interaction ------------------------------------
-  	let isPanning = false, startPoint, endPoint;
+  	let isPanning = false, startPoint, endPoint, awaitingDragFrame = false;
 
   	onMount(() => {
   		$$invalidate(
@@ -4098,19 +4128,25 @@ var ui = (function () {
   			2,
   			svgElement.onmousemove = function (e) {
   				if (!isPanning) return;
-  				const elBCR = svgElement.getBoundingClientRect();
   				endPoint = [e.x, e.y];
-  				const dx = (startPoint[0] - endPoint[0]) / elBCR.width * view$1.width;
-  				const dy = (startPoint[1] - endPoint[1]) / elBCR.height * view$1.height;
+  				if (awaitingDragFrame) return;
+  				awaitingDragFrame = true;
 
-  				view.set({
-  					left: view$1.left + dx,
-  					top: view$1.top + dy,
-  					width: view$1.width,
-  					height: view$1.height
+  				requestAnimationFrame(() => {
+  					const elBCR = svgElement.getBoundingClientRect();
+  					const dx = (startPoint[0] - endPoint[0]) / elBCR.width * view$1.width;
+  					const dy = (startPoint[1] - endPoint[1]) / elBCR.height * view$1.height;
+
+  					view.set({
+  						left: view$1.left + dx,
+  						top: view$1.top + dy,
+  						width: view$1.width,
+  						height: view$1.height
+  					});
+
+  					startPoint = [e.x, e.y];
+  					awaitingDragFrame = false;
   				});
-
-  				startPoint = [e.x, e.y];
   			},
   			svgElement
   		);

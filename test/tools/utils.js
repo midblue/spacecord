@@ -12,6 +12,7 @@ module.exports = {
     })
     const spawnedGuild = (await game.guild(msg.guild.id)).guild
     for (let prop in props) spawnedGuild.ship[prop] = props[prop]
+
     return spawnedGuild.ship
   },
 }

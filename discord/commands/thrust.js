@@ -1,6 +1,5 @@
 const { log, canEdit } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
-const send = require(`../actions/send`)
 const story = require(`../../game/basics/story/story`)
 
 module.exports = {
@@ -15,18 +14,11 @@ module.exports = {
   },
   test(content, settings) {
     return new RegExp(
-      `^${settings.prefix}(?:g|go|t|thrust|boost)(?: ?<?([\\d.]+)>?(?:,? <?([\\d.]+)%?>?)?)?$`,
+      `^${settings.prefix}(?:g|go|t|thrust|boost)(?: ?<?([\\d.]+)>?(?:,? <?([\\d.]+)%?>?)?)?( ?all)?$`,
       `gi`,
     ).exec(content)
   },
-  async action({
-    settings,
-    msg,
-    match,
-    author,
-    guild,
-    authorCrewMemberObject,
-  }) {
+  async action({ settings, msg, match, guild, authorCrewMemberObject }) {
     log(msg, `Thrust`, match)
 
     if (guild.ship.status.docked)
@@ -50,7 +42,21 @@ module.exports = {
       if (power < 0) power = 0
       power /= 100
 
-      const thrustAmplification = 1 // todo use piloting etc to determine
+      const crewMemberPilotingSkill = authorCrewMemberObject.skillLevelDetails(
+        `piloting`,
+      ).level
+      const engineRequirements =
+        guild.ship.getRequirements(`engine`).requirements.piloting || 1
+      const thrustAmplification = Math.max(
+        0.1,
+        Math.min(3, crewMemberPilotingSkill / engineRequirements),
+      )
+      console.log(
+        `thrustAmp`,
+        crewMemberPilotingSkill,
+        engineRequirements,
+        thrustAmplification,
+      )
       power *= thrustAmplification
 
       const res = await guild.ship.thrust({

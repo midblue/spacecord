@@ -21,20 +21,18 @@ module.exports = {
       content,
     )
   },
-  async action({ msg, settings, client, guild, ship }) {
+  async action({ msg, guild, authorCrewMemberObject }) {
     log(msg, `Scan Area`, msg.guild?.name)
 
     // ---------- use stamina
-    const authorCrewMemberObject = guild.ship.members.find(
-      (m) => m.id === msg.author.id,
-    )
-    if (!authorCrewMemberObject) return console.log(`no user found in scanArea`)
     const staminaRes = authorCrewMemberObject.useStamina(`scan`)
     if (!staminaRes.ok) return
 
-    const scanRes = await ship.scanArea()
-    if (!scanRes.ok)
-      return setTimeout(() => guild.message(scanRes.message), 1000) // waiting for out of power message to go first
+    const scanRes = await guild.ship.scanArea(false, authorCrewMemberObject)
+    if (!scanRes.ok) {
+      setTimeout(() => guild.message(scanRes.message), 250) // waiting for out of power message to go first
+      return
+    }
 
     if (scanRes.image) {
       await guild.message(
@@ -103,5 +101,7 @@ module.exports = {
       guild.message(scanRes.message)
       if (msg.pm) authorCrewMemberObject.message(scanRes.message)
     }
+
+    return true
   },
 }

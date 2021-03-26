@@ -1,9 +1,12 @@
 const defaults = {
   type: `telemetry`,
+  displayName: `telemetry`,
+  emoji: `📽`,
   description: ``,
   mass: 700,
   baseHp: 10,
   repairDifficulty: 1,
+  powerUse: 2,
   durabilityLostOnUse: 0.02,
   baseCost: 80,
 }

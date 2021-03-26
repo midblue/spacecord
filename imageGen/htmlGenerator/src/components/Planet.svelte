@@ -1,10 +1,14 @@
 <script>
   import Point from './Point.svelte'
 
+  import { winSizeMultiplier as winSizeMultiplierStore } from '../js/stores.js'
+  let winSizeMultiplier
+  winSizeMultiplierStore.subscribe((value) => (winSizeMultiplier = value))
+
   import { popOver as popOverStore } from '../js/stores.js'
 
   export let location,
-    minSize = 0.01,
+    minSize = 0.015,
     radius,
     color,
     name,
@@ -12,8 +16,11 @@
 
   let hovering = false
   const earthRadiusInAU = 6371 / 149597900
-  let minSizeAdjustedForActualSize =
-    (((radius - earthRadiusInAU) / earthRadiusInAU) * 0.5 + 1) * minSize
+  let minSizeAdjustedForActualSize = 0
+  $: minSizeAdjustedForActualSize =
+    (((radius - earthRadiusInAU) / earthRadiusInAU) * 0.5 + 1) *
+    minSize *
+    winSizeMultiplier
 
   function enter() {
     hovering = true
@@ -36,8 +43,8 @@
 <g class={'atmosphere' + (hovering ? ' hovering' : '')}>
   <Point
     {location}
-    minSize={minSizeAdjustedForActualSize * 8}
-    radius={radius * 8}
+    minSize={minSizeAdjustedForActualSize * 4}
+    radius={radius * 4}
     color={`url('#${name}')`}
     z={1}
   />
@@ -50,6 +57,7 @@
   {color}
   {name}
   {z}
+  multiplyScale={false}
   on:enter={enter}
   on:leave={leave}
 />

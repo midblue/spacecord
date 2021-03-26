@@ -4,7 +4,7 @@ const defaults = () => ({
   shipyard: {},
   location: [0, 0],
   color: `green`,
-  mass: 5.974e29, // kg
+  mass: 5.974e30, // kg // 5.974e29
   radius: 6371, // km
 })
 

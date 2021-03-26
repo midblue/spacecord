@@ -1,4 +1,3 @@
-const powerRequirements = require(`../../game/basics/guild/powerRequirements`)
 const story = require(`../../game/basics/story/story`)
 const { log } = require(`../botcommon`)
 
@@ -22,19 +21,22 @@ module.exports = {
     log(msg, `Emergency Brake`, msg.channel.name)
 
     // ---------- use power
-    const powerRes = guild.ship.usePower(powerRequirements.eBrake)
-    if (!powerRes.ok) return authorCrewMemberObject.message(powerRes.message)
+    const powerRes = guild.ship.usePower(`eBrake`)
+    if (!powerRes.ok) {
+      authorCrewMemberObject.message(powerRes.message)
+      return
+    }
 
     // ---------- use stamina
     const member =
       authorCrewMemberObject ||
       guild.ship.members.find((m) => m.id === msg.author.id)
     if (!member) return console.log(`no user found in eBrake`)
-    const staminaRequired = authorCrewMemberObject.staminaRequiredFor(`eBrake`)
-    const staminaRes = member.useStamina(staminaRequired)
+    const staminaRes = member.useStamina(`eBrake`)
     if (!staminaRes.ok) return
 
     guild.ship.hardStop()
-    return guild.message(story.move.eBrake(msg.author.id))
+    guild.message(story.move.eBrake(msg.author.id))
+    return true
   },
 }

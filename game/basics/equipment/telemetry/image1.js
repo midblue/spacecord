@@ -36,6 +36,8 @@ module.exports = {
         repair,
       }
     }
+
+    const guildData = guild.saveableData()
     const map = await generateImage(`scan1`, {
       label: this.displayName,
       radius: range,
@@ -45,7 +47,7 @@ module.exports = {
           ...g.saveableData(),
           color: `red`,
         })),
-        guild.saveableData(),
+        { ...guildData, ship: { ...guildData.ship, name: null } },
       ],
       radii: [
         { label: `attack`, color: `#fb0`, radius: guild.ship.attackRadius() },

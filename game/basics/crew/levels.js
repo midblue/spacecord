@@ -1,5 +1,5 @@
 const levels = [
-  0, 0,
+  0,
   400,
   900,
   1400,
@@ -80,7 +80,7 @@ const levels = [
   882000,
   891000,
   1686300,
-  2121500
+  2121500,
 ]
 
 module.exports = levels

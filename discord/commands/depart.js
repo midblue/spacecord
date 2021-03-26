@@ -15,6 +15,6 @@ module.exports = {
 
     if (!guild.ship.status.docked) return
 
-    depart({ msg, guild })
+    return await depart({ msg, guild })
   },
 }

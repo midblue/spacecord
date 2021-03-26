@@ -31,7 +31,8 @@
     radius = 0,
     color,
     name,
-    z
+    z,
+    multiplyScale = true
 
   const dispatch = createEventDispatcher()
 
@@ -89,7 +90,9 @@
   <circle
     cx={location[0] * FLAT_SCALE}
     cy={location[1] * FLAT_SCALE}
-    r={Math.max(minSize / scale, radius) * FLAT_SCALE * winSizeMultiplier}
+    r={Math.max(minSize / scale, radius) *
+      FLAT_SCALE *
+      (multiplyScale ? winSizeMultiplier : 1)}
     fill={color || 'white'}
   />
   {#if name && scale >= 0.9}
@@ -98,7 +101,7 @@
       y={location[1] * FLAT_SCALE +
         Math.max(minSize / scale, radius) *
           FLAT_SCALE *
-          winSizeMultiplier *
+          (multiplyScale ? winSizeMultiplier : 1) *
           -1 -
         view.height * 0.005}
       text-anchor="middle"

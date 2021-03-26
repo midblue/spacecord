@@ -52,6 +52,7 @@
   $: if (gameData?.textScaleMultiplier) getSizeMultiplier()
 
   function redraw() {
+    if (!gameData) return
     ships = (gameData.guilds || []).map((el) => ({
       type: 'ship',
       location: el.ship.location,
@@ -63,7 +64,6 @@
       type: 'planet',
       location: el.location,
       radius: el.radius / KM_PER_AU,
-      minSize: 0.01,
       color: el.validColor || el.color,
       name: el.name,
     }))
@@ -173,7 +173,8 @@
 
   let isPanning = false,
     startPoint,
-    endPoint
+    endPoint,
+    awaitingDragFrame = false
 
   onMount(() => {
     svgElement.onmousewheel = (e) => {
@@ -207,18 +208,24 @@
 
     svgElement.onmousemove = function (e) {
       if (!isPanning) return
-      const elBCR = svgElement.getBoundingClientRect()
       endPoint = [e.x, e.y]
-      const dx = ((startPoint[0] - endPoint[0]) / elBCR.width) * view.width
-      const dy = ((startPoint[1] - endPoint[1]) / elBCR.height) * view.height
+      if (awaitingDragFrame) return
+      awaitingDragFrame = true
+      requestAnimationFrame(() => {
+        const elBCR = svgElement.getBoundingClientRect()
 
-      viewStore.set({
-        left: view.left + dx,
-        top: view.top + dy,
-        width: view.width,
-        height: view.height,
+        const dx = ((startPoint[0] - endPoint[0]) / elBCR.width) * view.width
+        const dy = ((startPoint[1] - endPoint[1]) / elBCR.height) * view.height
+
+        viewStore.set({
+          left: view.left + dx,
+          top: view.top + dy,
+          width: view.width,
+          height: view.height,
+        })
+        startPoint = [e.x, e.y]
+        awaitingDragFrame = false
       })
-      startPoint = [e.x, e.y]
     }
 
     svgElement.onmouseup = function (e) {
@@ -260,7 +267,7 @@
         radius={radiusData.radius * FLAT_SCALE}
         color={radiusData.color}
         label={radiusData.label}
-        opacity={0.3}
+        opacity={0.4}
         dash={view.width * 0.01}
       />
     {/each}

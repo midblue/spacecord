@@ -7,6 +7,7 @@ const savedConsoleLogRef = console.log
 // ******* test order ********
 
 require(`./testGameSetup.js`)
+require(`./testGravity.js`)
 require(`./testCoreLoop.js`)
 require(`./testPlanets.js`)
 require(`./testCaches.js`)
@@ -14,11 +15,11 @@ require(`./testAttackRemnants.js`)
 require(`./testShipEquipment.js`)
 require(`./testShipRepair.js`)
 require(`./testShipCargo.js`)
-require(`./testShipPower.js`)
 require(`./testShipCombat.js`)
+require(`./testShipMotion.js`)
+require(`./testShipPower.js`)
 require(`./testMemberSkills.js`)
 require(`./testMemberStamina.js`)
-require(`./testGravity.js`)
 
 before(async () => {
   const hostname = `127.0.0.1`

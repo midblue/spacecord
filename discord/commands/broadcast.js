@@ -21,6 +21,7 @@ module.exports = {
     const broadcastRes = ship.broadcastOptions()
     if (!broadcastRes.ok)
       return authorCrewMemberObject.message(broadcastRes.message)
+
     const embed = new Discord.MessageEmbed()
       .setColor(APP_COLOR)
       .setTitle(`Broadcast`)

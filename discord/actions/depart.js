@@ -70,4 +70,6 @@ module.exports = async ({ msg, guild, planet }) => {
     console.trace()
     console.log(e)
   })
+
+  return true
 }

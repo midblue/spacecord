@@ -8,7 +8,7 @@ module.exports = (guild) => {
     // todo battery durability here and in addPower
     if (amount <= guild.ship.power) {
       guild.ship.power -= amount
-      return { ok: true, message }
+      return { ok: true }
     }
     if (notify) {
       message = story.power.insufficient(guild, amount)
@@ -26,11 +26,11 @@ module.exports = (guild) => {
       )
   }
 
-  guild.ship.addPower = (generateResult) => {
+  guild.ship.addPower = (powerToAdd) => {
     const currentPower = guild.ship.power
     const maxPower = guild.ship.maxPower()
     // todo eventually have more efficient power generating upgrades
-    let toAdd = generateResult
+    let toAdd = powerToAdd
     if (currentPower + toAdd > maxPower) toAdd = maxPower - currentPower
     if (toAdd < 0) toAdd = 0 // don't kill an overcharge
     guild.ship.power = currentPower + toAdd
@@ -40,7 +40,7 @@ module.exports = (guild) => {
       generatedPower: toAdd,
       currentPower: guild.ship.power,
       message: story.power.add.treadmill(
-        generateResult,
+        powerToAdd,
         toAdd,
         guild.ship.power,
         maxPower,

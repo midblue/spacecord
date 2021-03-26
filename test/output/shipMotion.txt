@@ -1,0 +1,6 @@
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+> guildStatus     |,Unable to find guild in db:,605053799404666880
+> addGuild        |,Added guild to game,Test Guild,605053799404666880
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Basilisk' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Attempted to double add,244651135984467968,to guild,605053799404666880
+Test sent message:,```Test User is already a crew member on this ship!```

@@ -174,9 +174,9 @@ module.exports = (guild) => {
                 (total, u) =>
                   total +
                   ((guild.ship.members.find((m) => m.id === u.id)?.level
-                    ?.linguistics || 0) +
+                    ?.linguistics || 1) +
                     (guild.ship.members.find((m) => m.id === u.id)?.level
-                      ?.engineering || 0)),
+                      ?.engineering || 1)),
                 0,
               )
               guild.ship.logEntry(

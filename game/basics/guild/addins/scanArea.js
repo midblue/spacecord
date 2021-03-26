@@ -1,21 +1,22 @@
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
-const {
-  velocityToDegrees,
-  velocityToArrow,
-  percentToTextBars,
-  distance,
-} = require(`../../../../common`)
+const { percentToTextBars } = require(`../../../../common`)
 const story = require(`../../story/story`)
-const getCache = require(`../../../../discord/actions/getCache`)
 
 module.exports = (guild) => {
-  guild.ship.scanArea = async (eyesOnly) => {
+  guild.ship.scanArea = async (eyesOnly, crewMember) => {
     const messages = []
     const telemetry = (guild.ship.equipment.find(
       (e) => e.equipmentType === `telemetry`,
     ).list || [])[0]
 
     let range = guild.ship.interactRadius()
+
+    const requirementsRes = guild.ship.getRequirements(
+      `telemetry`,
+      {},
+      crewMember,
+    )
+    const tooLowLevel = !requirementsRes.ok
 
     let haveEnoughPower = true
     let powerRes = { ok: true }
@@ -25,7 +26,7 @@ module.exports = (guild) => {
     if (!powerRes.ok) haveEnoughPower = false
     if (powerRes.message) messages.push(powerRes.message)
 
-    if (!telemetry || !haveEnoughPower || eyesOnly) {
+    if (!telemetry || !haveEnoughPower || eyesOnly || tooLowLevel) {
       const scanResult = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
@@ -39,6 +40,9 @@ module.exports = (guild) => {
       let preMessage = `Since you're out of power,`
       if (!telemetry) preMessage = `Since you don't have any telemetry`
       if (eyesOnly) preMessage = `Deciding that technology is for the weak,`
+      if (tooLowLevel)
+        preMessage = `${requirementsRes.message} 
+Instead,`
       messages.push(
         preMessage +
           ` you look out out the window. 

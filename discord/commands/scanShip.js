@@ -9,6 +9,15 @@ module.exports = {
     log(msg, `Scan Ship`, msg.guild?.name)
     if (!otherShip) return
 
+    // ---------- check requirements
+    const requirementsRes = guild.ship.getRequirements(
+      `scanner`,
+      null,
+      authorCrewMemberObject,
+    )
+    if (!requirementsRes.ok)
+      return authorCrewMemberObject.message(requirementsRes.message)
+
     // ---------- use stamina
     if (!authorCrewMemberObject) return console.log(`no user found in scanShip`)
     const staminaRes = authorCrewMemberObject.useStamina(`scanShip`)

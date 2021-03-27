@@ -11,7 +11,7 @@ module.exports = (guild) => {
     guild.ship.equipment
       .find((e) => e.equipmentType === equipmentType)
       .list.forEach((equipment) => {
-        for (const r of Object.keys(equipment.requirements)) {
+        for (const r of Object.keys(equipment.requirements || {})) {
           if (equipment.requirements[r] > (requirements[r] || 1)) {
             requirements[r] = equipment.requirements[r]
           }
@@ -20,7 +20,7 @@ module.exports = (guild) => {
     let ok = true
     if (
       member &&
-      Object.keys(requirements).find(
+      Object.keys(requirements || {}).find(
         (skill) =>
           requirements[skill] >
           (member?.level?.find((l) => l.skill === skill).level || 1),

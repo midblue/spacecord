@@ -7,10 +7,13 @@ const {
 } = require(`../../../../common`)
 const equipmentTypes = require(`../../equipment/equipmentTypes`)
 const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
+const { liveify } = require(`../../equipment/equipment`)
+const story = require(`../../story/story`)
 
 module.exports = (guild) => {
   guild.ship.addPart = (part, cost) => {
     part = { ...part }
+    liveify(part)
     let soldCredits = 0
     let soldPart
     if (equipmentTypes[part.type].singleton) {
@@ -51,6 +54,32 @@ module.exports = (guild) => {
     guild.ship.equipment
       .find((e) => e.equipmentType === part.type)
       .list.splice((p) => p === part, 1)
+  }
+
+  guild.ship.repairEquipment = ({ type, index, add, newRepairLevel }) => {
+    const equipment = guild.ship.equipment.find((e) => e.equipmentType === type)
+      .list[index]
+    if (!equipment) {
+      return {
+        ok: false,
+        message: story.repair.equipment.notFound(),
+      }
+    }
+
+    if (add) equipment.repair += add
+    if (newRepairLevel) equipment.repair = newRepairLevel
+    if (equipment.repair > 1) equipment.repair = 1
+    equipment.repaired = Date.now()
+
+    guild.saveToDb()
+    return {
+      ok: true,
+      message: story.repair.equipment.success(
+        equipment.displayName,
+        equipment.repair,
+      ),
+      equipment,
+    }
   }
 
   guild.ship.equipmentInfo = (type) => {

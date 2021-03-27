@@ -1,3 +1,2 @@
-> update          |,Spawned a cache
 >                 |,============= SAVING GAME =============
 > init            |,Starting game

@@ -9,7 +9,7 @@ const chaiAlmost = require(`chai-almost`)
 chai.use(chaiAlmost())
 const utils = require(`./tools/utils`)
 const game = require(`../game/manager`)
-const equipment = require(`../game/basics/equipment/equipment`)
+const { equipment } = require(`../game/basics/equipment/equipment`)
 
 let outputToWriteToFile = []
 

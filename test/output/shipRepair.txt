@@ -1,0 +1,35 @@
+Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
+> guildStatus     |,Unable to find guild in db:,605053799404666880
+> addGuild        |,Added guild to game,Test Guild,605053799404666880
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'LWSS Navigator' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+> addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
+Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
+Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
+found,1
+{
+  "id": "battery1",
+  "type": "battery",
+  "description": "Small cell-type ship battery.",
+  "mass": 1000,
+  "baseHp": 10,
+  "repairDifficulty": 1,
+  "durabilityLostOnUse": 0.01,
+  "baseCost": 100,
+  "emoji": "🔋",
+  "displayName": "C Cell",
+  "capacity": 12,
+  "_id": "605faf86e3e76b3cb983b513",
+  "repaired": 1616883590925,
+  "repair": 1
+}
+found,1
+Test Guild 2      (805015489632796692) | Spawn: Test Guild 2 (System) 
+> guildStatus     |,Unable to find guild in db:,805015489632796692
+> addGuild        |,Added guild to game,Test Guild 2,805015489632796692
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Dakota' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+> addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild 2
+found,0.99
+Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
+Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
+found,0.98
+hit check:,true,0.22592392620009402,had to be greater than,0.12747394025711856

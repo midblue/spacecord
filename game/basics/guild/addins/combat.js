@@ -106,7 +106,13 @@ module.exports = (guild) => {
     const finalAccuracy = adjustedAccuracy * advantageAccuracyMultiplier
     const accuracyTarget = Math.random()
     const didHit = finalAccuracy > accuracyTarget
-    console.log(`hit check:`, didHit, finalAccuracy, accuracyTarget)
+    console.log(
+      `hit check:`,
+      didHit,
+      finalAccuracy,
+      `had to be greater than`,
+      accuracyTarget,
+    )
 
     outputEmbed.setTitle = didHit ? `Hit!` : `Miss!`
     outputEmbed.fields = [
@@ -133,8 +139,7 @@ module.exports = (guild) => {
     ]
 
     // durability loss
-    weapon.repair -= weapon.durabilityLostOnUse
-    if (weapon.repair < 0) weapon.repair = 0
+    weapon.useDurability()
 
     // miss
     if (!didHit) {

@@ -9,7 +9,7 @@ const chaiAlmost = require(`chai-almost`)
 chai.use(chaiAlmost())
 const utils = require(`./tools/utils`)
 const game = require(`../game/manager`)
-const equipment = require(`../game/basics/equipment/equipment`)
+const { equipment } = require(`../game/basics/equipment/equipment`)
 const scanArea = require(`../discord/commands/scanArea`).action
 
 let outputToWriteToFile = []
@@ -88,16 +88,16 @@ describe(`Member Skills`, () => {
   before(async () => {
     try {
       await mongoose.connection.collection(`guilds`).drop()
-    } catch (e) { }
+    } catch (e) {}
     try {
       await mongoose.connection.collection(`ships`).drop()
-    } catch (e) { }
+    } catch (e) {}
     try {
       await mongoose.connection.collection(`users`).drop()
-    } catch (e) { }
+    } catch (e) {}
     try {
       await mongoose.connection.collection(`crewmembers`).drop()
-    } catch (e) { }
+    } catch (e) {}
     game.guilds = []
     console.log = (...args) => {
       outputToWriteToFile.push(

@@ -1,6 +1,6 @@
 const factionsData = require(`../factions`)
 const cargoData = require(`../cargo`)
-const equipmentData = require(`../equipment/equipment`)
+const { equipment } = require(`../equipment/equipment`)
 const addins = require(`./addins`)
 const createDefaultGuild = require(`./createDefaultGuild`)
 const memberLiveify = require(`../crew/crew`).liveify
@@ -45,7 +45,7 @@ function liveify(guild, context) {
   guild.ship.equipment.forEach((e) => {
     e.list = e.list
       .map((part) => {
-        const itemData = equipmentData[e.equipmentType][part.id]
+        const itemData = equipment[e.equipmentType][part.id]
         return {
           ...itemData,
           ...part,

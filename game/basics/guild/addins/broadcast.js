@@ -131,7 +131,7 @@ module.exports = (guild) => {
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
-              equipment.rechargeTime * TICK_INTERVAL >
+                equipment.rechargeTime * TICK_INTERVAL >
               Date.now()
             ) {
               return guild.message(
@@ -249,6 +249,9 @@ module.exports = (guild) => {
     const powerRes = guild.ship.usePower(equipment.powerUse)
     if (!powerRes.ok) return guild.message(powerRes.message, msg)
 
+    const durabilityRes = equipment.useDurability()
+    if (!durabilityRes.ok) return guild.message(durabilityRes.message, msg)
+
     let skillMod = 0.5
     skillMod += Math.min(1, collectiveSkill / 40) // .5 to 1.5
     const biasedRange = equipment.range * skillMod * equipment.repair
@@ -268,7 +271,7 @@ module.exports = (guild) => {
     guild.saveToDb()
 
     // durability loss
-    equipment.repair -= equipment.durabilityLostOnUse
+    equipment.useDurability()
     if (equipment.repair < 0) equipment.repair = 0
 
     const message = story.broadcast[broadcastType].send({
@@ -283,7 +286,7 @@ module.exports = (guild) => {
       biasedRange,
       garbleAmount,
       message,
-      receivedGuilds
+      receivedGuilds,
     }
   }
 }

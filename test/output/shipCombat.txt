@@ -1,39 +1,21 @@
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
 > guildStatus     |,Unable to find guild in db:,605053799404666880
 > addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Providence' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Phalanx' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
 Test Guild 2      (805015489632796692) | Spawn: Test Guild 2 (System) 
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
 > guildStatus     |,Unable to find guild in db:,805015489632796692
 > addGuild        |,Added guild to game,Test Guild 2,805015489632796692
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Opal Star' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'The Promise' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild 2
-hit check:,true,19999716.957290348,0.9816553472756788
+hit check:,true,19999716.957290348,had to be greater than,0.5352882349795898
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
-hit check:,false,-199999.99799999568,0.04124103666351031
-hit check:,true,17476204.63313025,0.4470585072516797
-hit check:,true,19971715.52903538,0.5206890864030509
-hit check:,true,19128593.011969686,0.623684966707444
-hit check:,true,19971715.52903538,0.7583288732360771
-hit check:,true,16247422.933514614,0.48422374104649935
-{
-  "type": "credits",
-  "amount": 80,
-  "location": [
-    1.001,
-    1.001
-  ],
-  "created": 1616855025327
-}
-{
-  "type": "fuel",
-  "amount": 160,
-  "location": [
-    1.001,
-    1.001
-  ],
-  "created": 1616855025347
-}
+hit check:,false,-199999.99799999568,had to be greater than,0.9177477974605537
+hit check:,true,18514929.914815478,had to be greater than,0.24553697012533715
+hit check:,true,17405364.381349213,had to be greater than,0.8355138421694515
+hit check:,true,17801724.99426674,had to be greater than,0.8109219334815674
+hit check:,true,19971715.52903538,had to be greater than,0.9250598535829151
+hit check:,true,15509186.555909824,had to be greater than,0.7571817079404

@@ -5,9 +5,16 @@ module.exports = (guild) => {
   guild.ship.usePower = (amount, notify = true) => {
     if (typeof amount === `string`) amount = powerRequirements[amount]
     let message
-    // todo battery durability here and in addPower
     if (amount <= guild.ship.power) {
       guild.ship.power -= amount
+
+      guild.ship.equipment
+        .find((e) => e.equipmentType === `battery`)
+        .list.forEach((battery) => {
+          console.log(`found`, battery.repair)
+          battery.useDurability()
+        })
+
       return { ok: true }
     }
     if (notify) {
@@ -28,6 +35,13 @@ module.exports = (guild) => {
 
   guild.ship.addPower = (powerToAdd) => {
     const currentPower = guild.ship.power
+
+    guild.ship.equipment
+      .find((e) => e.equipmentType === `battery`)
+      .list.forEach((battery) => {
+        battery.useDurability()
+      })
+
     const maxPower = guild.ship.maxPower()
     // todo eventually have more efficient power generating upgrades
     let toAdd = powerToAdd
@@ -35,6 +49,7 @@ module.exports = (guild) => {
     if (toAdd < 0) toAdd = 0 // don't kill an overcharge
     guild.ship.power = currentPower + toAdd
     if (guild.ship.power < 0) guild.ship.power = 0
+
     return {
       ok: true,
       generatedPower: toAdd,

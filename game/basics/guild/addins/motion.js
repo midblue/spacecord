@@ -41,9 +41,7 @@ module.exports = (guild) => {
       return { ok: false, message: story.move.docked() }
 
     // determine amplification based on skill level
-    const crewMemberPilotingSkill = thruster.skillLevelDetails(
-      `piloting`,
-    ).level
+    const crewMemberPilotingSkill = thruster.skillLevelDetails(`piloting`).level
     const engineRequirements =
       guild.ship.getRequirements(`engine`).requirements.piloting || 1
     const thrustAmplification = Math.max(
@@ -122,11 +120,12 @@ module.exports = (guild) => {
         .find((e) => e.equipmentType === `engine`)
         .list.forEach((engine) => {
           // durability loss
-          engine.repair -= engine.durabilityLostOnUse * powerPercent
-          if (engine.repair < 0) {
-            engine.repair = 0
+          engine.useDurability(
+            (engine.durabilityLostOnUse || 0.01) * powerPercent,
+          )
+          if (engine.repair <= 0) {
             ok = false
-            message.push(story.repair.equipment.beakdown(engine))
+            message.push(story.repair.equipment.breakdown(engine))
           }
         })
     }
@@ -262,7 +261,8 @@ module.exports = (guild) => {
     return arrow + ` ` + degrees.toFixed(0) + ` degrees`
   }
   guild.ship.getSpeedString = () => {
-    return `${Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 10000) / 10000
-      } ${DISTANCE_UNIT}/hour`
+    return `${
+      Math.round(guild.ship.effectiveSpeed() * TICKS_PER_HOUR * 10000) / 10000
+    } ${DISTANCE_UNIT}/hour`
   }
 }

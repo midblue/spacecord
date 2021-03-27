@@ -14,8 +14,7 @@ module.exports = {
   requirements: { engineering: 6 },
   use({ scanResult, x, y }) {
     const previousRepair = this.repair
-    this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
-    if (this.repair < 0) this.repair = 0
+    this.useDurability()
 
     const repair = this.repair
     const range = this.range

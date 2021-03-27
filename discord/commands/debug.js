@@ -2,7 +2,7 @@ const send = require(`../actions/send`)
 const { log } = require(`../botcommon`)
 const Discord = require(`discord.js-light`)
 const game = require(`../../game/manager`)
-const equipment = require(`../../game/basics/equipment/equipment`)
+const { equipment } = require(`../../game/basics/equipment/equipment`)
 
 module.exports = {
   tag: `debug`,

@@ -1,6 +1,6 @@
 const send = require(`../actions/send`)
 const { log, canEdit } = require(`../botcommon`)
-const equipment = require(`../../game/basics/equipment/equipment`)
+const { equipment } = require(`../../game/basics/equipment/equipment`)
 const Discord = require(`discord.js-light`)
 const { capitalize, numberToEmoji, usageTag } = require(`../../common`)
 const awaitReaction = require(`../actions/awaitReaction`)

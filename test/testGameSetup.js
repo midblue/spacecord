@@ -79,7 +79,9 @@ describe(`Database`, () => {
   before(() => {
     console.log = (...args) => {
       outputToWriteToFile.push(
-        args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
+        args.map((a) =>
+          typeof a === `object` ? JSON.stringify(a, null, 2) : a,
+        ),
       )
     }
   })
@@ -192,7 +194,7 @@ describe(`Base Data Initialization & Updates`, () => {
 
     assert(
       guild.members.find((m) => m.userId === user.id).crewMemberId ===
-      crewMember.crewMemberId,
+        crewMember.crewMemberId,
       `Guild has link to crew member and user`,
     )
 
@@ -203,6 +205,7 @@ describe(`Base Data Initialization & Updates`, () => {
   it(`should have the correct properties saved on equipment and cargo`, async () => {
     const gameGuild = (await game.guild(msg.guild.id)).guild
 
+    console.log(gameGuild.ship.equipment[0])
     assert(gameGuild.ship.equipment[0])
     expect(gameGuild.ship.equipment[0]).to.have.property(`equipmentType`)
     expect(gameGuild.ship.equipment[0]).to.have.property(`list`)
@@ -252,7 +255,9 @@ describe(`Base Data Initialization & Updates`, () => {
   before(() => {
     console.log = (...args) => {
       outputToWriteToFile.push(
-        args.map((a) => (typeof a === `object` ? JSON.stringify(a, null, 2) : a)),
+        args.map((a) =>
+          typeof a === `object` ? JSON.stringify(a, null, 2) : a,
+        ),
       )
     }
   })
@@ -276,4 +281,3 @@ describe(`Base Data Initialization & Updates`, () => {
 //     assert(true)
 //   })
 // })
-

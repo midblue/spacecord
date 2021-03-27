@@ -9,22 +9,6 @@ module.exports = {
   scanUndetectability: 50,
   durabilityLostOnUse: 0.01,
   use(otherShip) {
-    const previousRepair = this.repair
-    this.repair = (this.repair ?? 1) - (this.durabilityLostOnUse ?? 0.01)
-    if (this.repair < 0) this.repair = 0
-
-    const repair = this.repair
-
-    if (repair <= 0) {
-      if (previousRepair !== repair) {
-        guild.ship.logEntry(story.repair.breakdown(this.displayName))
-      }
-      return {
-        ok: false,
-        message: story.repair.breakdown(this.displayName),
-      }
-    }
-
     return {
       ok: true,
       result: [

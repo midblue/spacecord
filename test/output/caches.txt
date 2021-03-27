@@ -1,30 +1,3 @@
-{
-  "location": [
-    -0.8219662898842288,
-    0.5337451787958387
-  ],
-  "type": "fuel",
-  "amount": 1000,
-  "created": 1616855024788
-}
-{
-  "location": [
-    3,
-    3
-  ],
-  "type": "credits",
-  "amount": 100,
-  "created": 1616855024805
-}
-{
-  "location": [
-    0,
-    0
-  ],
-  "type": "credits",
-  "amount": 100,
-  "created": 1616855024811
-}
 > init            |,Loaded 1 guilds from db
 > init            |,Loaded 0 caches from db
 > init            |,Loaded 0 attack remnants from db

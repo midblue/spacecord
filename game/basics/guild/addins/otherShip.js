@@ -23,6 +23,21 @@ module.exports = (guild) => {
       }
     }
 
+    const previousRepair = scanner.repair
+    scanner.useDurability()
+    const repair = scanner.repair
+
+    if (repair <= 0) {
+      if (previousRepair !== repair) {
+        guild.ship.logEntry(story.repair.breakdown(scanner.displayName))
+      }
+      return {
+        fields,
+        ok: false,
+        message: story.repair.breakdown(scanner.displayName),
+      }
+    }
+
     const powerRes = guild.ship.usePower(scanner.powerUse)
     if (!powerRes.ok && powerRes.message) {
       return {

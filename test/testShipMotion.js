@@ -65,6 +65,7 @@ describe(`Ship Motion`, () => {
     const member = guild.ship.members[0]
     member.stamina = 1000
   })
+
   it(`should have ships land on the proper location on the surface when they collide with planets`, async () => {
     const guild = game.guilds[0]
     guild.ship.velocity = [1, 0]

@@ -1,11 +1,11 @@
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
 > guildStatus     |,Unable to find guild in db:,605053799404666880
 > addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'CS Hammer' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Deonida' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
 appliedThrust,{
   "message": [
-    "%username%244651135984467968% added `0.05 kg•m/s` of thrust at an angle of `90 degrees`.\nThe ship is now going `0.18 AU/hour` at :arrow_down: 270 degrees. (Previously `0 AU/hour` at :arrow_right: 0 degrees)"
+    "%username%244651135984467968% added `0.1 kg•m/s` of thrust at an angle of `90 degrees`.\nThe ship is now going `0.36 AU/hour` at :arrow_down: 270 degrees. (Previously `0 AU/hour` at :arrow_right: 0 degrees)"
   ],
   "ok": true,
   "thrustUnitVector": [
@@ -19,8 +19,9 @@ appliedThrust,{
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
 Test Guild        (605053799404666880) | Brake (System) 
-Test sent message:,Test User added `0.05 kg•m/s` of thrust at an angle of `0 degrees`.
-The ship is now going `3599.82 AU/hour` at :arrow_right: 0 degrees. (Previously `3600 AU/hour` at :arrow_right: 0 degrees)
+Test sent message:,Test User added `0.1 kg•m/s` of thrust at an angle of `0 degrees`.
+The ship is now going `3599.64 AU/hour` at :arrow_right: 0 degrees. (Previously `3600 AU/hour` at :arrow_right: 0 degrees)
+> guildStatus     |,Unable to find guild in db:,805015489632796692
 position,[
   0,
   0

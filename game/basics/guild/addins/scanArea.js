@@ -11,6 +11,10 @@ module.exports = (guild) => {
 
     let range = guild.ship.interactRadius()
 
+    let broken
+    const { ok } = telemetry.useDurability()
+    if (!ok) broken = true
+
     const requirementsRes = guild.ship.getRequirements(
       `telemetry`,
       {},
@@ -20,13 +24,13 @@ module.exports = (guild) => {
 
     let haveEnoughPower = true
     let powerRes = { ok: true }
-    if (telemetry && !eyesOnly) {
+    if (telemetry && !eyesOnly && !broken) {
       powerRes = guild.ship.usePower(telemetry.powerUse)
     }
     if (!powerRes.ok) haveEnoughPower = false
     if (powerRes.message) messages.push(powerRes.message)
 
-    if (!telemetry || !haveEnoughPower || eyesOnly || tooLowLevel) {
+    if (!telemetry || !haveEnoughPower || eyesOnly || tooLowLevel || broken) {
       const scanResult = guild.context.scanArea({
         x: guild.ship.location[0],
         y: guild.ship.location[1],
@@ -43,6 +47,8 @@ module.exports = (guild) => {
       if (tooLowLevel)
         preMessage = `${requirementsRes.message} 
 Instead,`
+      if (broken)
+        preMessage = `Your ${telemetry.emoji}${telemetry.displayName} is broken down, so`
       messages.push(
         preMessage +
           ` you look out out the window. 

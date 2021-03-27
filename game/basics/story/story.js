@@ -302,7 +302,7 @@ module.exports = {
   },
   repair: {
     equipment: {
-      beakdown: (model) => `Your ${model} has broken down.`,
+      breakdown: (model) => `Your ${model} has broken down.`,
       notFound: () =>
         `Sorry, I couldn't find the equipment you're trying to repair.`,
       success: (name, repairLevel) =>

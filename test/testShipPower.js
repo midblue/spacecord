@@ -9,7 +9,7 @@ const chaiAlmost = require(`chai-almost`)
 chai.use(chaiAlmost())
 const utils = require(`./tools/utils`)
 const game = require(`../game/manager`)
-const equipment = require(`../game/basics/equipment/equipment`)
+const { equipment } = require(`../game/basics/equipment/equipment`)
 const powerRequirements = require(`../game/basics/guild/powerRequirements`)
 
 let outputToWriteToFile = []
@@ -90,13 +90,13 @@ describe(`Ship Power`, () => {
   before(async () => {
     try {
       await mongoose.connection.collection(`guilds`).drop()
-    } catch (e) { }
+    } catch (e) {}
     try {
       await mongoose.connection.collection(`ships`).drop()
-    } catch (e) { }
+    } catch (e) {}
     try {
       await mongoose.connection.collection(`users`).drop()
-    } catch (e) { }
+    } catch (e) {}
     game.guilds = []
     console.log = (...args) => {
       outputToWriteToFile.push(

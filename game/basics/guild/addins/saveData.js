@@ -2,7 +2,7 @@ const db = require(`../../../manager`).db
 const createDefaultGuild = require(`../createDefaultGuild`)
 const factionsData = require(`../../factions`)
 const cargoData = require(`../../cargo`)
-const equipmentData = require(`../../equipment/equipment`)
+const { equipment } = require(`../../equipment/equipment`)
 
 module.exports = (guild) => {
   guild.saveableMembers = () => {
@@ -37,7 +37,7 @@ module.exports = (guild) => {
     // remove base properties from items onboard
     guildToSave.ship.equipment.forEach((e) => {
       e.list.forEach((part) => {
-        const itemData = equipmentData[e.equipmentType][part.id]
+        const itemData = equipment[e.equipmentType][part.id]
         for (const prop in itemData) if (prop !== `id`) delete part[prop]
       })
     })

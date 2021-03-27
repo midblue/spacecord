@@ -131,7 +131,7 @@ module.exports = (guild) => {
           async action({ user, msg }) {
             if (
               (guild.lastBroadcast?.time || 0) +
-                equipment.rechargeTime * TICK_INTERVAL >
+              equipment.rechargeTime * TICK_INTERVAL >
               Date.now()
             ) {
               return guild.message(
@@ -255,7 +255,7 @@ module.exports = (guild) => {
     const garbleAmount =
       equipment.maxGarble / (collectiveSkill / 4) + (1 - equipment.repair)
 
-    guild.context.broadcast({
+    receivedGuilds = guild.context.broadcast({
       x: guild.ship.location[0],
       y: guild.ship.location[1],
       range: biasedRange,
@@ -283,6 +283,7 @@ module.exports = (guild) => {
       biasedRange,
       garbleAmount,
       message,
+      receivedGuilds
     }
   }
 }

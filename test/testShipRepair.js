@@ -13,61 +13,33 @@ const game = require(`../game/manager`)
 let outputToWriteToFile = []
 
 describe(`Ship Repair`, () => {
-  it(`should use engine durability on thrust`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use engine durability on thrust`)
 
-  it(`should use telemetry durability on scan`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use telemetry durability on scan`)
 
-  it(`should use battery durability on scan`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use battery durability on scan`)
 
-  it(`should use ship scanner durability on ship scan`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use ship scanner durability on ship scan`)
 
-  it(`should use transceiver durability on broadcast`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use transceiver durability on broadcast`)
 
-  it(`should use weapon durability on attack`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should use weapon durability on attack`)
 
-  it(`should be possible to repair equipment`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should be possible to repair equipment`)
 
-  it(`should not be possible to repair equipment above 100%`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to repair equipment above 100%`)
 
-  it(`should not be possible to use a broken engine`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken engine`)
 
-  it(`should not be possible to use a broken telemetry system`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken telemetry system`)
 
-  it(`should not be possible to use a broken battery`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken battery`)
 
-  it(`should not be possible to use a broken ship scanner`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken ship scanner`)
 
-  it(`should not be possible to use a broken transceiver`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken transceiver`)
 
-  it(`should not be possible to use a broken weapon`, async () => {
-    assert(false, `Tony Kong <(B{|)`)
-  })
+  it(`should not be possible to use a broken weapon`)
 
   before(() => {
     console.log = (...args) => {

@@ -42,23 +42,6 @@ module.exports = {
       if (power < 0) power = 0
       power /= 100
 
-      const crewMemberPilotingSkill = authorCrewMemberObject.skillLevelDetails(
-        `piloting`,
-      ).level
-      const engineRequirements =
-        guild.ship.getRequirements(`engine`).requirements.piloting || 1
-      const thrustAmplification = Math.max(
-        0.1,
-        Math.min(3, crewMemberPilotingSkill / engineRequirements),
-      )
-      console.log(
-        `thrustAmp`,
-        crewMemberPilotingSkill,
-        engineRequirements,
-        thrustAmplification,
-      )
-      power *= thrustAmplification
-
       const res = await guild.ship.thrust({
         power,
         angle,
@@ -72,8 +55,7 @@ module.exports = {
         .setTitle(`Thrust`)
         .setDescription(
           `Adjust the ship's trajectory by firing the thrusters!
-This works by sending a message in the format \`${
-            settings.prefix
+This works by sending a message in the format \`${settings.prefix
           }thrust <angle> <thrust %>\`.
 
 Your power scales with your piloting skill and legacy among the crew, but lowers with ship mass.
@@ -82,8 +64,7 @@ Fuel will be used in accordance with the amount of thrust you generate.
 🧭Angles are in degrees: \`0\` is right, \`90\` is up, \`180\` is left, and so on.
 ⏩Thrust defaults to 100 percent, and is \`0\`-\`100\` based on the engines' current maximum output.
 
-Example usage: \`${settings.prefix}thrust 275\`, \`${
-            settings.prefix
+Example usage: \`${settings.prefix}thrust 275\`, \`${settings.prefix
           }thrust 12 75\`, etc.
 Send a message in that format to fire the thrusters!
 Be aware: the ship will gain momentum in the opposite direction that you fire in.

@@ -3,7 +3,7 @@ const factions = require(`../factions`)
 const planets = require(`../planet/index`).naiveList
 
 module.exports = function ({ discordGuild, channelId }) {
-  const planet = planets[Math.floor(Math.random() * planets.length)]
+  const planet = planets[Math.floor(Math.random() * planets.length)] || {}
   const ship = {
     name: getShipName(),
     launched: Date.now(),
@@ -11,11 +11,11 @@ module.exports = function ({ discordGuild, channelId }) {
     captain: false,
     status: {
       dead: false,
-      docked: planet.name,
+      docked: planet ? planet.name : false,
     },
     power: 5,
     members: [],
-    seen: { planets: [planet.name] },
+    seen: { planets: planet ? [planet.name] : [] },
     log: [],
     lastAttack: 0,
     equipment: [
@@ -109,10 +109,12 @@ module.exports = function ({ discordGuild, channelId }) {
       //   amount: 2000,
       // },
     ],
-    location: [
-      planet.location[0],
-      planet.location[1] + planet.radius / KM_PER_AU,
-    ],
+    location: planet
+      ? [
+        planet.location[0],
+        planet.location[1] + planet.radius / KM_PER_AU,
+      ]
+      : [0, 0],
     pastLocations: [],
     velocity: [0, 0],
     speed: 0,

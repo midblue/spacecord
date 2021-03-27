@@ -88,11 +88,17 @@ describe(`Member Skills`, () => {
   before(async () => {
     try {
       await mongoose.connection.collection(`guilds`).drop()
+    } catch (e) { }
+    try {
       await mongoose.connection.collection(`ships`).drop()
+    } catch (e) { }
+    try {
       await mongoose.connection.collection(`users`).drop()
+    } catch (e) { }
+    try {
       await mongoose.connection.collection(`crewmembers`).drop()
-      game.guilds = []
-    } catch (e) {}
+    } catch (e) { }
+    game.guilds = []
     console.log = (...args) => {
       outputToWriteToFile.push(
         args.map((a) =>

@@ -2,7 +2,7 @@ const { log, canEdit } = require(`../botcommon`)
 const { angle } = require(`../../common`)
 
 module.exports = {
-  tag: `stop`,
+  tag: `brake`,
   equipmentType: `engine`,
   pmOnly: true,
   documentation: {
@@ -12,10 +12,10 @@ module.exports = {
     priority: 74,
   },
   test(content, settings) {
-    return new RegExp(`^${settings.prefix}(?:stop)$`, `gi`).exec(content)
+    return new RegExp(`^${settings.prefix}(?:brake|stop|slowdown)$`, `gi`).exec(content)
   },
-  async action({ msg, match, guild, authorCrewMemberObject }) {
-    log(msg, `Stop`, match)
+  async action({ msg, guild, authorCrewMemberObject }) {
+    log(msg, `Brake`)
 
     // ---------- use stamina
     if (!authorCrewMemberObject) return console.log(`no user found in thrust`)
@@ -25,17 +25,6 @@ module.exports = {
     const ang = angle(0, 0, ...guild.ship.velocity)
     let power = 1
 
-    const crewMemberPilotingSkill = authorCrewMemberObject.skillLevelDetails(
-      `piloting`,
-    ).level
-    const engineRequirements =
-      guild.ship.getRequirements(`engine`).requirements.piloting || 1
-    const thrustAmplification = Math.max(
-      0.1,
-      Math.min(3, crewMemberPilotingSkill / engineRequirements),
-    )
-    power *= thrustAmplification
-
     const res = await guild.ship.thrust({
       power,
       angle: ang,
@@ -43,5 +32,7 @@ module.exports = {
     })
     if (!res.ok) authorCrewMemberObject.message(res.message)
     else guild.message(res.message, msg)
+
+    return { thrustAngle: ang }
   },
 }

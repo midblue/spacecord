@@ -1,4 +1,3 @@
-const story = require(`../../story/story`)
 module.exports = (guild) => {
   guild.ship.addCargo = async (type, amount, cost) => {
     if (!guild.ship.cargo.find((c) => c.cargoType === type)) {

@@ -45,7 +45,7 @@ describe(`Ship Cargo`, () => {
     const guild = game.guilds[0]
     const fuel = guild.ship.cargo.find((c) => c.cargoType === `fuel`)
     fuel.amount = 1
-    guild.ship.jettison(`fuel`, 1, `Hello`)
+    await guild.ship.jettison(fuel, 1, `Hello`)
     assert(game.caches[0])
     chai.expect(game.caches[0].message).to.equal(`Hello`)
   })

@@ -50,4 +50,4 @@ function liveify(planet, context) {
   }
 }
 
-module.exports = { spawnAll, naiveList: planets }
+module.exports = { spawnAll, naiveList: planets, liveify }

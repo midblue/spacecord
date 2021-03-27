@@ -6,5 +6,5 @@ module.exports = {
   accuracy: 99999999,
   range: 1,
   damage: 1,
-  rechargeTime: 0,
+  rechargeTime: 10,
 }

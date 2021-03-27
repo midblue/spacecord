@@ -14,6 +14,7 @@ const { expect } = require(`chai`)
 const brake = require(`../discord/commands/brake`)
 const depart = require(`../discord/commands/depart`)
 const { degreesToUnitVector } = require(`../common`)
+const liveifyPlanet = require(`../game/basics/planet`).liveify
 
 let outputToWriteToFile = []
 
@@ -33,7 +34,6 @@ describe(`Ship Motion`, () => {
 
     console.log(`appliedThrust`, thrust, thrust.thrustUnitVector)
     chai.expect(thrust.thrustUnitVector).to.be.deep.almost([0, 1])
-
   })
 
   it(`brake/slowdown command should fire thrusters in same direction as ship velocity`, async () => {
@@ -48,10 +48,12 @@ describe(`Ship Motion`, () => {
     shipBrake = await brake.action({
       msg,
       guild: guild,
-      authorCrewMemberObject: member
+      authorCrewMemberObject: member,
     })
 
-    chai.expect(degreesToUnitVector(shipBrake.thrustAngle)).to.be.deep.almost([1, 0])
+    chai
+      .expect(degreesToUnitVector(shipBrake.thrustAngle))
+      .to.be.deep.almost([1, 0])
   })
 
   it(`should have ships land and become 'docked' on the surface when they collide with planets`, async () => {
@@ -62,7 +64,6 @@ describe(`Ship Motion`, () => {
 
     const member = guild.ship.members[0]
     member.stamina = 1000
-
   })
   it(`should have ships land on the proper location on the surface when they collide with planets`, async () => {
     const guild = game.guilds[0]
@@ -72,15 +73,15 @@ describe(`Ship Motion`, () => {
 
     const member = guild.ship.members[0]
     member.stamina = 1000
-
   })
 
   it(`ship should be placed x% out from planet surface when it departs a planet it is landed on`, async () => {
     const testPlanet = {
       location: [0, 0],
-      radius: 6e21, // earth radius in km 
+      radius: 6e21, // earth radius in km
       mass: 100000,
     }
+    liveifyPlanet(testPlanet, game)
     game.planets = [testPlanet]
 
     const guild = game.guilds[0]
@@ -91,12 +92,9 @@ describe(`Ship Motion`, () => {
     const member = guild.ship.members[0]
     member.stamina = 1000
 
-
     await guild.ship.depart({ msg, guild: guild, planet: testPlanet })
 
     chai.expect(guild.ship.location).to.be.deep.almost()
-
-
   })
 
   it(`should `, async () => {
@@ -114,7 +112,6 @@ describe(`Ship Motion`, () => {
     })
     game.ships = [testShip]
 
-
     // assert(false, `Tony Kong <(B{|)`)
   })
 
@@ -125,7 +122,7 @@ describe(`Ship Motion`, () => {
       await mongoose.connection.collection(`users`).drop()
       game.guilds = []
       game.planets = []
-    } catch (e) { }
+    } catch (e) {}
 
     console.log = (...args) => {
       outputToWriteToFile.push(

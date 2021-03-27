@@ -35,6 +35,8 @@ GRAVITATIONAL_CONSTANT = 6.6743 * 10 ** -11
 GRAV_TOLERANCE = 10 ** -9
 LIGHTSPEED = 72.1935409205 // AU per hour
 
+DEATH_LOOT_PERCENT = 0.8
+
 SLEEP = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms)

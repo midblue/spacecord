@@ -1,4 +1,8 @@
-const { distance, percentToTextBars } = require(`../../../../common`)
+const {
+  distance,
+  percentToTextBars,
+  msToTimeString,
+} = require(`../../../../common`)
 const story = require(`../../story/story`)
 const Discord = require(`discord.js-light`)
 
@@ -9,8 +13,8 @@ const enemyNonVotingAdjustment = 0.8
 module.exports = (guild) => {
   guild.ship.canAttack = () => {
     if (
-      !guild.ship.equipment.find((e) => e.equipmentType === `weapon`).list
-        .length
+      !guild.ship.equipment.find((e) => e.equipmentType === `weapon`)?.list
+        ?.length
     )
       return false
     const canAttackWeapons = guild.ship.equipment
@@ -24,6 +28,7 @@ module.exports = (guild) => {
     if (!canAttackWeapons.length) return false
     return canAttackWeapons
   }
+
   guild.ship.nextAttackInMs = () => {
     return Math.max(
       0,
@@ -38,18 +43,18 @@ module.exports = (guild) => {
     )
   }
 
-  guild.ship.checkForDeath = () => {
+  guild.ship.checkForDeath = async () => {
     if (guild.ship.status.dead) return true
     const dead = guild.ship.currentHp() < 0.0001
     if (dead) {
       guild.ship.status.dead = true
       guild.message(story.ship.die(guild.ship))
-      guild.ship.jettisonAll(0.8)
+      await guild.ship.jettisonAll(DEATH_LOOT_PERCENT)
     }
     return dead
   }
 
-  guild.ship.attackShip = ({
+  guild.ship.attackShip = async ({
     enemyShip,
     weapon,
     target,
@@ -59,6 +64,13 @@ module.exports = (guild) => {
       return { ok: false, message: story.attack.docked(enemyShip) }
     }
 
+    if (!guild.ship.canAttack())
+      return {
+        ok: false,
+        message: story.attack.tooSoon(
+          msToTimeString(guild.ship.nextAttackInMs()),
+        ),
+      }
     weapon.lastAttack = Date.now()
 
     const outputEmbed = new Discord.MessageEmbed()
@@ -127,7 +139,7 @@ module.exports = (guild) => {
     // miss
     if (!didHit) {
       // notify other guild
-      enemyShip.takeDamage({
+      await enemyShip.takeDamage({
         miss: true,
         targetEquipment: target,
         attacker: guild.ship,
@@ -143,7 +155,7 @@ module.exports = (guild) => {
         advantageAccuracyMultiplier,
       )
 
-      guild.context.spawnAttackRemnant({
+      await guild.context.spawnAttackRemnant({
         attacker: {
           name: guild.ship.name,
           shipId: guild.ship.id,
@@ -190,7 +202,7 @@ module.exports = (guild) => {
       damageTaken,
       totalDamageTaken,
       destroyedShip,
-    } = enemyShip.takeDamage({
+    } = await enemyShip.takeDamage({
       targetEquipment: target,
       damage: finalDamage,
       attacker: guild.ship,
@@ -228,7 +240,7 @@ module.exports = (guild) => {
       ],
     )
 
-    guild.context.spawnAttackRemnant({
+    await guild.context.spawnAttackRemnant({
       attacker: {
         name: guild.ship.name,
         shipId: guild.ship.id,
@@ -248,10 +260,16 @@ module.exports = (guild) => {
     return {
       ok: true,
       message: outputEmbed,
+      didHit,
+      weapon,
+      damageTaken,
+      totalDamageTaken,
+      destroyedShip,
+      damage: finalDamage,
     }
   }
 
-  guild.ship.takeDamage = ({
+  guild.ship.takeDamage = async ({
     miss = false,
     targetEquipment,
     damage,
@@ -292,9 +310,9 @@ module.exports = (guild) => {
 
     if (!miss) {
       // deal damage to armor
-      let unbrokenArmor = ship.equipment
-        .find((e) => e.equipmentType === `armor`)
-        .list.filter((a) => a.repair)
+      let unbrokenArmor = (
+        ship.equipment.find((e) => e.equipmentType === `armor`)?.list || []
+      ).filter((a) => a.repair)
       let randomUnbrokenArmor =
         unbrokenArmor[Math.floor(unbrokenArmor.length * Math.random())]
       const newUnbrokenFilter = (a) => a !== randomUnbrokenArmor
@@ -343,7 +361,7 @@ module.exports = (guild) => {
         if (!target) {
           let allUnbrokenEquipmentAsArray = []
           guild.ship.equipment.forEach(({ list }) =>
-            allUnbrokenEquipmentAsArray.push(...{ list }),
+            allUnbrokenEquipmentAsArray.push(...(list || [])),
           )
           allUnbrokenEquipmentAsArray = allUnbrokenEquipmentAsArray.filter(
             (e) => e.repair && e.baseHp,
@@ -422,7 +440,7 @@ module.exports = (guild) => {
           advantageDamageMultiplier,
           totalDamageTaken,
         )
-    guild.ship.logEntry(outputEmbed.description)
+    // guild.ship.logEntry(outputEmbed.description)
 
     let reactions
     if (attacker.name !== `God`) {
@@ -432,7 +450,7 @@ module.exports = (guild) => {
     // notify
     guild.message(outputEmbed, null, reactions)
 
-    const destroyedShip = guild.ship.checkForDeath()
+    const destroyedShip = await guild.ship.checkForDeath()
 
     guild.saveToDb()
 

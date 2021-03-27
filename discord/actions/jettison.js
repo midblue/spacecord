@@ -283,7 +283,11 @@ module.exports = async ({ msg, guild }) => {
       console.trace()
       console.log(e)
     })
-    guild.ship.jettison(cargoToJettison, amountToJettison, messageToAttach)
+    await guild.ship.jettison(
+      cargoToJettison,
+      amountToJettison,
+      messageToAttach,
+    )
   }
 
   if (actualCargo.length === 0) return send(msg, `No cargo to jettison!`)

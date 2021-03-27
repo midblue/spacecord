@@ -10,20 +10,21 @@ const runGuildCommand = require(`../../../../discord/actions/runGuildCommand`)
 
 module.exports = (guild) => {
   guild.ship.addPart = (part, cost) => {
+    part = { ...part }
     let soldCredits = 0
     let soldPart
     if (equipmentTypes[part.type].singleton) {
       soldPart = guild.ship.equipment.find((e) => e.equipmentType === part.type)
-        .list[0]
+        ?.list?.[0]
       if (soldPart) {
         soldCredits = Math.round(
-          (soldPart.baseCost || 0) * 0.5 * (cost / (part.baseCost || 0)),
+          (soldPart.baseCost || 0) * 0.5 * ((cost || 0) / (part.baseCost || 0)),
         ) // half price, adjusted to the deal that you're getting now
         guild.ship.credits += soldCredits
       }
     }
 
-    guild.ship.credits -= cost
+    guild.ship.credits -= cost || 0
 
     part.repair = 1
     part.repaired = Date.now()
@@ -46,7 +47,7 @@ module.exports = (guild) => {
   }
 
   guild.ship.removePart = (part, cost) => {
-    guild.ship.credits += cost
+    guild.ship.credits += cost || 0
     guild.ship.equipment
       .find((e) => e.equipmentType === part.type)
       .list.splice((p) => p === part, 1)

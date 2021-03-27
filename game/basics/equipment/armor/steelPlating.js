@@ -5,4 +5,5 @@ module.exports = {
   mass: 3000,
   baseHp: 30,
   damageToArmorMultiplier: 0.8,
+  armorCoverage: 0.5,
 }

@@ -170,31 +170,31 @@ const game = {
       guilds:
         !type || type === `guilds`
           ? this.guilds.filter(
-            (g) =>
-              !g.ship.status.dead &&
-              !excludeIds.includes(g.id) &&
-              pointIsInsideCircle(x, y, ...g.ship.location, range),
-          )
+              (g) =>
+                !g.ship.status.dead &&
+                !excludeIds.includes(g.id) &&
+                pointIsInsideCircle(x, y, ...g.ship.location, range),
+            )
           : [],
       planets:
         !type || type === `planets`
           ? this.planets.filter((p) =>
-            pointIsInsideCircle(x, y, ...p.location, range),
-          )
+              pointIsInsideCircle(x, y, ...p.location, range),
+            )
           : [],
       caches:
         !type || type === `caches`
           ? this.caches.filter((c) =>
-            pointIsInsideCircle(x, y, ...c.location, range),
-          )
+              pointIsInsideCircle(x, y, ...c.location, range),
+            )
           : [],
       attackRemnants:
         !type || type === `attackRemnants`
           ? this.attackRemnants.filter(
-            (c) =>
-              pointIsInsideCircle(x, y, ...c.attacker.location, range) ||
-              pointIsInsideCircle(x, y, ...c.defender.location, range),
-          )
+              (c) =>
+                pointIsInsideCircle(x, y, ...c.attacker.location, range) ||
+                pointIsInsideCircle(x, y, ...c.defender.location, range),
+            )
           : [],
     }
   },
@@ -208,20 +208,20 @@ const game = {
     garbleAmount,
     messageProps,
   }) {
-    const guildsInRangeToHear = this.scanArea({
-      x,
-      y,
-      range,
-      excludeIds,
-    }).guilds
-    console.log(range, x, y, excludeIds, guildsInRangeToHear)
+    const guildsInRangeToHear =
+      this.scanArea({
+        x,
+        y,
+        range,
+        excludeIds,
+      }).guilds || []
     guildsInRangeToHear.forEach((g) => {
       const d = distance(x, y, ...g.ship.location)
       const dPercent = d / range
       const garb = garbleAmount * dPercent
       const m = message(...messageProps, garb)
       g.message(m)
-      g.ship.logEntry(m)
+      // g.ship.logEntry(m)
     })
     return guildsInRangeToHear
   },
@@ -245,7 +245,9 @@ const game = {
 
   async spawnAttackRemnant(attackRemnantData) {
     const attackRemnantDataToSave = { ...attackRemnantData, time: Date.now() }
-    const savedRemnant = await this.db.attackRemnant.add(attackRemnantDataToSave)
+    const savedRemnant = await this.db.attackRemnant.add(
+      attackRemnantDataToSave,
+    )
     attackRemnantDataToSave.id = savedRemnant._id || savedRemnant.id
     this.attackRemnants.push(attackRemnantDataToSave)
   },

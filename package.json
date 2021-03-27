@@ -13,6 +13,7 @@
     "rs": "docker-compose down --remove-orphans && docker-compose up",
     "l": "docker-compose logs --tail=200 --follow",
     "lint": "eslint . --ext .js --fix",
+    "coverage": "nyc --reporter=text mocha ./test/tests.js",
     "test": "mocha ./test/tests.js"
   },
   "author": "",
@@ -55,6 +56,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-svelte3": "^3.1.1",
     "mocha": "8.3.0",
+    "nyc": "^15.1.0",
     "prettier-plugin-svelte": "^2.1.6",
     "rollup": "^2.39.0",
     "rollup-plugin-postcss": "^4.0.0",

@@ -5,3 +5,4 @@ data
 imageGen/htmlGenerator/output
 imageGen/htmlGenerator/templates
 progressshots
+.nyc_output

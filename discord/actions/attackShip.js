@@ -185,7 +185,7 @@ ${
   // if there are no targets that your scanner can detect, then just go ahead and just attack anywhere
   if (!targets.length) {
     // ---------- do an attack
-    const attackRes = guild.ship.attackShip({
+    const attackRes = await guild.ship.attackShip({
       enemyShip: otherShip,
       weapon: weaponToUse,
       collectiveMunitionsSkill,

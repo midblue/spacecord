@@ -1,40 +1,38 @@
 module.exports = (guild) => {
-  guild.ship.jettison = (cargo, amount, message) => {
+  guild.ship.jettison = async (cargo, amount, message) => {
+    console.log(cargo)
     if (cargo.type === `credits`) {
       guild.ship.credits -= amount
-      if (guild.ship.credits < 0.0001)
-        guild.ship.credits = 0
-    }
-    else {
+      if (guild.ship.credits < 0.0001) guild.ship.credits = 0
+    } else {
       cargo.amount -= amount
-      if (cargo.amount < 0.0001)
-        cargo.amount = 0
+      if (cargo.amount < 0.0001) cargo.amount = 0
     }
-    guild.context.spawnCache({
-      type: cargo.type,
+    await guild.context.spawnCache({
+      type: cargo.cargoType,
       amount,
       location: [...guild.ship.location],
       message,
-      shipName: guild.ship.name
+      shipName: guild.ship.name,
     })
   }
 
-  guild.ship.jettisonAll = (percent = 1) => {
+  guild.ship.jettisonAll = async (percent = 1) => {
     if (guild.ship.credits) {
-      guild.context.spawnCache({
+      await guild.context.spawnCache({
         type: `credits`,
         amount: Math.round(guild.ship.credits * percent),
-        location: [...guild.ship.location]
+        location: [...guild.ship.location],
       })
       guild.ship.credits = 0
     }
-    guild.ship.cargo.forEach((cargo) => {
-      guild.context.spawnCache({
-        type: cargo.type,
+    for (let cargo of guild.ship.cargo) {
+      await guild.context.spawnCache({
+        type: cargo.cargoType,
         amount: cargo.amount * percent,
-        location: [...guild.ship.location]
+        location: [...guild.ship.location],
       })
-    })
+    }
     guild.ship.cargo = []
   }
 }

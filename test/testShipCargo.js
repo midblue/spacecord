@@ -12,17 +12,11 @@ const utils = require(`./tools/utils`)
 let outputToWriteToFile = []
 
 describe(`Ship Cargo`, () => {
-    it(`should be possible to add cargo to a ship`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should be possible to add cargo to a ship`,)
 
-    it(`should be possible to remove cargo from a ship`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should be possible to remove cargo from a ship`,)
 
-    it(`should not be possible to remove more cargo from a ship than it is currently carrying`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should not be possible to remove more cargo from a ship than it is currently carrying`,)
 
     before(() => {
         console.log = (...args) => {

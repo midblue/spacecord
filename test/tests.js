@@ -18,6 +18,7 @@ require(`./testShipCargo.js`)
 require(`./testShipCombat.js`)
 require(`./testShipMotion.js`)
 require(`./testShipPower.js`)
+require(`./testShipBroadcast.js`)
 require(`./testMemberSkills.js`)
 require(`./testMemberStamina.js`)
 

@@ -214,6 +214,7 @@ const game = {
       range,
       excludeIds,
     }).guilds
+    console.log(range, x, y, excludeIds, guildsInRangeToHear)
     guildsInRangeToHear.forEach((g) => {
       const d = distance(x, y, ...g.ship.location)
       const dPercent = d / range
@@ -222,6 +223,7 @@ const game = {
       g.message(m)
       g.ship.logEntry(m)
     })
+    return guildsInRangeToHear
   },
 
   async spawnCache(cacheData) {

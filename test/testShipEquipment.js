@@ -13,25 +13,15 @@ const game = require(`../game/manager`)
 let outputToWriteToFile = []
 
 describe(`Ship Equipment`, () => {
-    it(`should have live properties on ship equipment`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should have live properties on ship equipment`,)
 
-    it(`should be possible to sell equipment, and to get credits for selling`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should be possible to sell equipment, and to get credits for selling`,)
 
-    it(`should be possible to buy equipment, and to spend credits on it`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should be possible to buy equipment, and to spend credits on it`,)
 
-    it(`should properly replace singleton items on add`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should properly replace singleton items on add`,)
 
-    it(`should properly give new equipment live properties on add`, async () => {
-        assert(false, `Tony Kong <(B{|)`)
-    })
+    it(`should properly give new equipment live properties on add`,)
 
     before(() => {
         console.log = (...args) => {

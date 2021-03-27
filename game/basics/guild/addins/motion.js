@@ -39,6 +39,19 @@ module.exports = (guild) => {
       ok = true
     if (guild.ship.status.docked)
       return { ok: false, message: story.move.docked() }
+
+    // determine amplification based on skill level
+    const crewMemberPilotingSkill = thruster.skillLevelDetails(
+      `piloting`,
+    ).level
+    const engineRequirements =
+      guild.ship.getRequirements(`engine`).requirements.piloting || 1
+    const thrustAmplification = Math.max(
+      0.1,
+      Math.min(3, crewMemberPilotingSkill / engineRequirements),
+    )
+    power *= thrustAmplification
+
     const fuel = guild.ship.cargo.find((c) => c.cargoType === `fuel`)
     if (!fuel.amount) return { ok: false, message: story.fuel.insufficient() }
     const prevSpeedString = guild.ship.getSpeedString(),
@@ -56,6 +69,7 @@ module.exports = (guild) => {
     const velocityFromThrustMagnitude = Math.sqrt(
       velocityFromThrustVector[0] ** 2 + velocityFromThrustVector[1] ** 2,
     )
+    const thrustUnitVector = degreesToUnitVector(angle)
     message.push(
       story.move.thrust(
         velocityFromThrustMagnitude,
@@ -77,7 +91,7 @@ module.exports = (guild) => {
     guild.ship.pastLocations.push([...guild.ship.location])
 
     guild.saveToDb()
-    return { message, ok }
+    return { message, ok, thrustUnitVector }
   }
 
   guild.ship.useMoveResources = (powerPercent, thrustApplied) => {

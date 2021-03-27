@@ -12,7 +12,7 @@ const game = require(`../game/manager`)
 
 let outputToWriteToFile = []
 
-describe(`Ship Equipment`, () => {
+describe(`Ship Repair`, () => {
   it(`should use engine durability on thrust`, async () => {
     assert(false, `Tony Kong <(B{|)`)
   })
@@ -81,7 +81,7 @@ describe(`Ship Equipment`, () => {
 
   after(() => {
     fs.writeFileSync(
-      path.resolve(`./`, `test/output`, `shipEquipment.txt`),
+      path.resolve(`./`, `test/output`, `shipRepair.txt`),
       outputToWriteToFile.join(`\n`),
     )
   })

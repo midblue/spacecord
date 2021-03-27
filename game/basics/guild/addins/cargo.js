@@ -7,7 +7,9 @@ module.exports = (guild) => {
     guild.ship.credits -= cost * amount
   }
   guild.ship.removeCargo = async (type, amount, cost) => {
-    guild.ship.cargo.find((c) => c.cargoType === type).amount -= amount
+    const cargo = guild.ship.cargo.find((c) => c.cargoType === type)
+    cargo.amount -= amount
+    if (cargo.amount < 0) cargo.amount = 0
     guild.ship.credits += cost * amount
   }
 }

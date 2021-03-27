@@ -17,7 +17,7 @@ module.exports = (guild) => {
         .list[0]
       if (soldPart) {
         soldCredits = Math.round(
-          soldPart.baseCost * 0.5 * (cost / part.baseCost),
+          (soldPart.baseCost || 0) * 0.5 * (cost / (part.baseCost || 0)),
         ) // half price, adjusted to the deal that you're getting now
         guild.ship.credits += soldCredits
       }

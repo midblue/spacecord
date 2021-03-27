@@ -13,8 +13,8 @@ const equipment = require(`../game/basics/equipment/equipment`)
 
 let outputToWriteToFile = []
 
-describe(`Ship Repair`, async () => {
-  it(`should use engine durability on thrust`, () => {
+describe(`Ship Repair`, () => {
+  it(`should use engine durability on thrust`, async () => {
     const ship1 = await utils.addShip({
       location: [1, 1],
       status: { docked: false, dead: false },
@@ -28,7 +28,7 @@ describe(`Ship Repair`, async () => {
     )
     ship1.equipment.find((e) => e.equipmentType === `weapon`).list = []
     ship1.addPart(equipment.weapon.debugAlwaysHit1)
-    assert(false, 'tompkins')
+    assert(false, `tompkins`)
   })
 
   it(`should use telemetry durability on scan`)

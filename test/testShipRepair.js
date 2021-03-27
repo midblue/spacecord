@@ -13,7 +13,7 @@ const equipment = require(`../game/basics/equipment/equipment`)
 
 let outputToWriteToFile = []
 
-describe(`Ship Repair`, () => {
+describe(`Ship Repair`, async () => {
   it(`should use engine durability on thrust`, () => {
     const ship1 = await utils.addShip({
       location: [1, 1],

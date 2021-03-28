@@ -105,6 +105,8 @@ module.exports = {
           (total / max) * 100,
         )}%)`,
     },
+    batteriesBroken: () =>
+      `Your ship's batteries are in disrepair, and no power can be used until they are fixed.`,
   },
   broadcast: {
     tooSoon: (model) =>

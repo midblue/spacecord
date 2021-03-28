@@ -80,6 +80,9 @@ describe(`Ship Combat`, () => {
       if (e.equipmentType === `chassis`) return { ...e }
       return { ...e, list: [] }
     })
+    ship2.equipment.find(
+      (e) => e.equipmentType === `chassis`,
+    ).list[0].repair = 1
     ship2.location = [1.001, 1.001]
     ship1.removePart(
       ship1.equipment.find((e) => e.equipmentType === `weapon`).list[0],
@@ -92,6 +95,7 @@ describe(`Ship Combat`, () => {
       target: null,
       collectiveMunitionsSkill: 100,
     })
+    console.log(res)
 
     assert(res.didHit)
     chai

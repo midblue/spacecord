@@ -8,13 +8,13 @@ Logged in as j's test bot#8561 in 2 guilds
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
 > guildStatus     |,Unable to find guild in db:,605053799404666880
 > addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Dakota' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Gravity' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
 > addCrew         |,Added new crew member,secondUserId,for user,secondUserId,to guild,Test Guild
 {
-  "_id": "605faf86e3e76b3cb983b454",
+  "_id": "60603b72c6207a42c3cc8163",
   "equipmentType": "chassis",
   "list": [
     {
@@ -30,8 +30,8 @@ Test sent message:,What will you do, captain? Use `.ship` to check the status of
       "emoji": "🐦",
       "displayName": "Hummingbird 001",
       "description": "A useful chassis for beginners. Because it is too small to be effectively targeted by enemy weapons systems, it can slip through almost any blockade unscathed.",
-      "_id": "605faf86e3e76b3cb983b455",
-      "repaired": 1616883590162,
+      "_id": "60603b72c6207a42c3cc8164",
+      "repaired": 1616919410406,
       "repair": 1
     }
   ]

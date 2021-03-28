@@ -145,15 +145,83 @@ describe(`Ship Repair`, () => {
     chai.expect(res.ok).to.equal(false)
   })
 
-  it(`should not be possible to use a broken telemetry system`)
+  it(`should not be possible to use a broken telemetry system`, async () => {
+    const guild = game.guilds[0]
+    guild.ship.power = 100
+    const part = guild.ship.equipment.find(
+      (e) => e.equipmentType === `telemetry`,
+    ).list[0]
+    part.requirements = null
+    part.repair = 0
+    const res = await guild.ship.scanArea(false, guild.ship.members[0])
+    chai.expect(res.ok).to.equal(false)
+    // * prep for next test
+    part.repair = 1
+  })
 
-  it(`should not be possible to use a broken battery`)
+  it(`should not be possible to use a broken battery`, async () => {
+    const guild = game.guilds[0]
+    guild.ship.power = 100
+    guild.ship.equipment.find((e) => e.equipmentType === `battery`).list = []
+    guild.ship.addPart(equipment.battery.battery1)
+    const part = guild.ship.equipment.find((e) => e.equipmentType === `battery`)
+      .list[0]
+    part.requirements = null
+    part.repair = 0
+    const res = await guild.ship.scanArea(false, guild.ship.members[0])
+    chai.expect(res.ok).to.equal(false)
+    // * prep for next test
+    part.repair = 1
+  })
 
-  it(`should not be possible to use a broken ship scanner`)
+  it(`should not be possible to use a broken ship scanner`, async () => {
+    const ship1 = game.guilds[0].ship
+    const ship2 = game.guilds[1].ship
+    const part = ship1.equipment.find((e) => e.equipmentType === `scanner`)
+      .list[0]
+    part.repair = 0
+    part.requirements = null
+    const res = ship1.scanOtherShip(ship2)
+    assert(!res.ok)
+  })
 
-  it(`should not be possible to use a broken transceiver`)
+  it(`should not be possible to use a broken transceiver`, async () => {
+    const guild = game.guilds[0]
+    const part = guild.ship.equipment.find(
+      (e) => e.equipmentType === `transceiver`,
+    ).list[0]
+    part.requirements = null
+    part.repair = 0
+    const res = await guild.ship.broadcast({
+      broadcastType: `distress`,
+      equipment: part,
+      yesPercent: 1,
+      collectiveSkill: 1,
+    })
+    console.log(res)
+    chai.expect(res.ok).to.equal(false)
+  })
 
-  it(`should not be possible to use a broken weapon`)
+  it(`should not be possible to use a broken weapon`, async () => {
+    const ship1 = game.guilds[0].ship
+    const ship2 = game.guilds[1].ship
+    ship1.equipment.find((e) => e.equipmentType === `weapon`).list = []
+    ship1.addPart(equipment.weapon.debugAlwaysHit1)
+    const part = ship1.equipment.find((e) => e.equipmentType === `weapon`)
+      .list[0]
+    part.repair = 0
+    part.requirements = null
+    console.log(part)
+    const res = await ship1.attackShip({
+      enemyShip: ship2,
+      weapon: part,
+      target: null,
+      collectiveMunitionsSkill: 100,
+    })
+    console.log(res)
+
+    chai.expect(res.ok).to.equal(false)
+  })
 
   before(async () => {
     try {

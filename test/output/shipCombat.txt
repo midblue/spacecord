@@ -1,21 +1,108 @@
 Test Guild        (605053799404666880) | Spawn: Test Guild (System) 
 > guildStatus     |,Unable to find guild in db:,605053799404666880
 > addGuild        |,Added guild to game,Test Guild,605053799404666880
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Phalanx' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'CS Shade' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild
 Test Guild 2      (805015489632796692) | Spawn: Test Guild 2 (System) 
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
 > guildStatus     |,Unable to find guild in db:,805015489632796692
 > addGuild        |,Added guild to game,Test Guild 2,805015489632796692
-Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'The Promise' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
+Test sent message:,```You find yourself aboard a discount Hummingbird 001 dubbed 'Leo' by its bawdry crew. The rusty hull groans under your weight as you make your way along the bridge.```
 > addCrew         |,Added new crew member,244651135984467968,for user,244651135984467968,to guild,Test Guild 2
-hit check:,true,19999716.957290348,had to be greater than,0.5352882349795898
+hit check:,true,16279065.428306622,had to be greater than,0.9791084436057198
 Test sent message:,```Gazing out of the cockpit at the open galaxy around you, you crack a wry smile. "Captain Test User, eh?" you chuckle. "I wonder how long that'll last?"```
 Test sent message:,What will you do, captain? Use `.ship` to check the status of your ship.
-hit check:,false,-199999.99799999568,had to be greater than,0.9177477974605537
-hit check:,true,18514929.914815478,had to be greater than,0.24553697012533715
-hit check:,true,17405364.381349213,had to be greater than,0.8355138421694515
-hit check:,true,17801724.99426674,had to be greater than,0.8109219334815674
-hit check:,true,19971715.52903538,had to be greater than,0.9250598535829151
-hit check:,true,15509186.555909824,had to be greater than,0.7571817079404
+hit check:,false,-199999.99799999568,had to be greater than,0.6172981653805985
+hit check:,true,15897454.421671217,had to be greater than,0.8295909596279964
+{
+  "ok": true,
+  "message": {
+    "title": null,
+    "type": "rich",
+    "description": "Your 💎 Debug always hit hits the enemy, dealing 1.9 damage, a critical hit!",
+    "url": null,
+    "timestamp": null,
+    "color": 65365,
+    "fields": [
+      {
+        "name": "Weapon",
+        "value": "💎 Debug always hit",
+        "inline": true
+      },
+      {
+        "name": "Range",
+        "value": "0.001 AU",
+        "inline": true
+      },
+      {
+        "name": "Base Hit %",
+        "value": "998585776%",
+        "inline": true
+      },
+      {
+        "name": "Total Munitions Skill",
+        "value": 100,
+        "inline": true
+      },
+      {
+        "name": "Damage Breakdown",
+        "value": "🐦 Hummingbird 001: 1.9 damage"
+      }
+    ],
+    "thumbnail": null,
+    "image": null,
+    "author": null,
+    "footer": null
+  },
+  "didHit": true,
+  "weapon": {
+    "id": "debugAlwaysHit1",
+    "type": "weapon",
+    "description": "Debug always hit",
+    "range": 1,
+    "mass": 0,
+    "baseHp": 20,
+    "durabilityLostOnUse": 0.03,
+    "accuracy": 99999999,
+    "damage": 1,
+    "repairDifficulty": 1,
+    "baseCost": 200,
+    "rechargeTime": 10,
+    "emoji": "💎",
+    "displayName": "Debug always hit",
+    "repair": 0.97,
+    "repaired": 1616919411700,
+    "lastAttack": 1616919411700
+  },
+  "damageTaken": [
+    {
+      "equipment": {
+        "id": "starter",
+        "type": "chassis",
+        "baseCost": 1,
+        "interactRadius": 0.03,
+        "mass": 5000,
+        "baseHp": 40,
+        "repairDifficulty": 1,
+        "agility": 0.9,
+        "maxMass": 15000,
+        "emoji": "🐦",
+        "displayName": "Hummingbird 001",
+        "description": "A useful chassis for beginners. Because it is too small to be effectively targeted by enemy weapons systems, it can slip through almost any blockade unscathed.",
+        "_id": "60603b73c6207a42c3cc8302",
+        "repaired": 1616919411619,
+        "repair": 0.9527000779588536
+      },
+      "damage": 1.8919968816458566,
+      "wasDisabled": false
+    }
+  ],
+  "totalDamageTaken": 1.8919968816458566,
+  "destroyedShip": false,
+  "damage": 1.8919968816458559
+}
+hit check:,true,19971715.52903538,had to be greater than,0.04803586825259076
+hit check:,true,19971715.52903538,had to be greater than,0.008962937533661508
+hit check:,true,15955086.380290914,had to be greater than,0.6593210336164803
+hit check:,true,19971715.52903538,had to be greater than,0.9178489459757817

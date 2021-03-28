@@ -5,13 +5,22 @@ module.exports = (guild) => {
   guild.ship.usePower = (amount, notify = true) => {
     if (typeof amount === `string`) amount = powerRequirements[amount]
     let message
+
+    const batteriesBroken = guild.ship.equipment
+      .find((e) => e.equipmentType === `battery`)
+      .list.reduce(
+        (allAreBroken, battery) => allAreBroken && battery.repair <= 0,
+        true,
+      )
+    if (batteriesBroken)
+      return { ok: false, message: story.power.batteriesBroken() }
+
     if (amount <= guild.ship.power) {
       guild.ship.power -= amount
 
       guild.ship.equipment
         .find((e) => e.equipmentType === `battery`)
         .list.forEach((battery) => {
-          console.log(`found`, battery.repair)
           battery.useDurability()
         })
 
@@ -19,7 +28,7 @@ module.exports = (guild) => {
     }
     if (notify) {
       message = story.power.insufficient(guild, amount)
-      guild.ship.logEntry(story.power.insufficient(guild, amount))
+      // guild.ship.logEntry(story.power.insufficient(guild, amount))
     }
     return { ok: false, message }
   }

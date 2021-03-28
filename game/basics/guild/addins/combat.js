@@ -64,6 +64,18 @@ module.exports = (guild) => {
       return { ok: false, message: story.attack.docked(enemyShip) }
     }
 
+    const brokenWeapons =
+      guild.ship.equipment.find((e) => e.equipmentType === `weapon`)?.list
+        ?.length &&
+      guild.ship.equipment
+        .find((e) => e.equipmentType === `weapon`)
+        .list.reduce((allBroken, w) => allBroken && w.repair <= 0, true)
+    if (brokenWeapons)
+      return {
+        ok: false,
+        message: story.attack.brokenWeapons(),
+      }
+
     if (!guild.ship.canAttack())
       return {
         ok: false,

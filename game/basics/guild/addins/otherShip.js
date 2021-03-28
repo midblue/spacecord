@@ -34,7 +34,7 @@ module.exports = (guild) => {
       return {
         fields,
         ok: false,
-        message: story.repair.breakdown(scanner.displayName),
+        message: story.repair.equipment.breakdown(scanner.displayName),
       }
     }
 

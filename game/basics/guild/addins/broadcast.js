@@ -247,10 +247,16 @@ module.exports = (guild) => {
     collectiveSkill,
   }) => {
     const powerRes = guild.ship.usePower(equipment.powerUse)
-    if (!powerRes.ok) return guild.message(powerRes.message, msg)
+    if (!powerRes.ok) {
+      guild.message(powerRes.message, msg)
+      return { ok: false, message: powerRes.message }
+    }
 
     const durabilityRes = equipment.useDurability()
-    if (!durabilityRes.ok) return guild.message(durabilityRes.message, msg)
+    if (!durabilityRes.ok) {
+      guild.message(durabilityRes.message, msg)
+      return { ok: false, message: durabilityRes.message }
+    }
 
     let skillMod = 0.5
     skillMod += Math.min(1, collectiveSkill / 40) // .5 to 1.5
@@ -283,6 +289,7 @@ module.exports = (guild) => {
     })
 
     return {
+      ok: true,
       biasedRange,
       garbleAmount,
       message,
